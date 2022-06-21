@@ -9,7 +9,7 @@ Esto nos permitira un mejor manejo al momento de las prácticas.
 Los pasos que deberás realizar son los siguientes:
 
 1. Clonar el repositorio individual y su estructura.
-    <pre><code>git clone git@github.com:bootcamp-go/wave-5-live-coding.git</pre></code>
+    <pre><code>git clone git@github.com:bootcamp-go/wave-5-backpack.git</pre></code>
 2. Crear una rama con la nombre **apellido_nombre**.
     <pre><code>git checkout -b apellido_nombre</pre></code>
     *este comando crea un rama y cambia automaticamente a esa*
