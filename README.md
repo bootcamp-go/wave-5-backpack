@@ -4,7 +4,7 @@
 
 Cada uno de ustedes deberá crear su rama de la siguiente manera **apellido_nombre** con la misma estructura de master.
 
-Esto nos permitira un mejor manejo al momento de las prácticas.
+Esto nos permitira un espacio donde puedan ir guardando sus avances en las practicas.
 
 Los pasos que deberás realizar son los siguientes:
 
