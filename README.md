@@ -15,7 +15,7 @@ Los pasos para empezar a utilizar la mochila son los siguientes:
 2. Crear una rama con la nombre <mark>apellido_nombre</mark>.
     <pre><code>git checkout -b <mark>apellido_nombre</mark></pre></code>
     *este comando crea un rama y cambia automaticamente a esa*
-    <pre><code>echo "## Esta es la mochila de **<mark>apellido_nombre</mark>**" >> README.md'</pre></code>
+    <pre><code>echo "## Esta es la mochila de **<mark>apellido_nombre</mark>**" >> README.md</pre></code>
     <pre><code>git add . </pre></code>
     <pre><code>git commit -m "inital" </pre></code>
     <pre><code>git push origin <mark>apellido_nombre</mark></pre></code>
