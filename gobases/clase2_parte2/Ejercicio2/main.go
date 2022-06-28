@@ -4,7 +4,7 @@ import "fmt"
 
 var (
 	edad              = 23
-	empleado          = false
+	empleado          = true
 	antiguedadTrabajo = 2
 	salario           = 110000
 )
@@ -26,17 +26,13 @@ func main() {
 	} else {
 		fmt.Printf("El cliente es menor \n")
 	}
-	if edad > 23 && empleado == true && antiguedadTrabajo > 1 {
+	if edad > 22 && empleado == true && antiguedadTrabajo > 1 {
 		fmt.Printf("Credito aprobado \n")
-		if edad > 23 && empleado == true && antiguedadTrabajo > 1 {
-			fmt.Printf("Credito aprobado \n")
-			if salario > 100000 {
-				fmt.Printf("El cliente no paga intereses \n")
-			} else {
-				fmt.Printf("El cliente paga intereses \n")
-			}
+		if salario > 100000 {
+			fmt.Printf("El cliente no paga intereses \n")
+		} else {
+			fmt.Printf("El cliente paga intereses \n")
 		}
-
 	} else {
 		fmt.Printf("Credito rechazado \n")
 	}
