@@ -10,5 +10,8 @@ func main(){
 		fmt.Println(string(Palabra[i]))
 	}
 
+	for _, v :=range Palabra{ // using for range , where de index is not used change for character _ to omit 
+		fmt.Printf(v)
+	}
 
 }
