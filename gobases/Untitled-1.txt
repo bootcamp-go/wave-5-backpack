@@ -1,0 +1,13 @@
+var 1nombre string              // var nombre string
+var apellido string             // OK
+var int edad                    // var edad int
+1apellido := 6                  // apellido := 6
+var licencia_de_conducir = true // var licencia_de_conducir bool = true
+var estatura de la persona int  // var estaturaDeLaPersona int
+cantidadDeHijos := 2            // OK
+
+var apellido string = "Gomez"   //OK
+var edad int = "35"             //var edad int = 35
+boolean := "false";             //mala practica es de tipo STRING
+var sueldo string = 45857.90    //var sueldo float64 = 45857.90
+var nombre string = "Julián"    // OK
