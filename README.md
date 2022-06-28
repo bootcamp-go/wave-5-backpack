@@ -19,7 +19,7 @@ Los pasos para empezar a utilizar la mochila son los siguientes:
     <pre><code>git add . </pre></code>
     <pre><code>git commit -m "inital" </pre></code>
     <pre><code>git push origin <mark>apellido_nombre</mark></pre></code>
-> Luego se deberá trabajar con el flujo habitual.
+Luego se deberá trabajar con el flujo habitual.
     <pre><code> git pull origin <mark>apellido_nombre</mark></pre></code>
     <pre><code> git add .</pre></code>
     <pre><code> git commit -m "mensaje"</pre></code>
