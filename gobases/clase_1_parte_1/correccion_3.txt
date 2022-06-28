@@ -1,0 +1,7 @@
+var 1nombre string // No se pueden comenzar con un número cambiar a nombre1
+var apellido string // Esta Correcta
+var int edad // El tipo no esta en el lugar correcto debe ir al último de la declaración var edad int
+1apellido := 6 // No se pueden comenzar con un número las variables cambiar a apellido1
+var licencia_de_conducir = true // falta el tipo de dato y convención de naming para las variables camelCase debe quedar como var licenciaDeConducir bool = true
+var estatura de la persona int // mal escrito el nombre de la variable debe estart en una sola palabra y en camelCase -- var estaturaDeLaPersona int
+cantidadDeHijos := 2 // es correcto

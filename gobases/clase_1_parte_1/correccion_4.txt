@@ -1,0 +1,5 @@
+var apellido string = "Gomez" // es correcto
+var edad int = "35" // es tipo string debe ser de tipo entero solo 35 sin comillas
+boolean := "false"; // es tipo string debe ser de tipo boolean false sin comillas
+var sueldo string = 45857.90 // es de tipo float32 o float64
+var nombre string = "Julián" // es correcto
