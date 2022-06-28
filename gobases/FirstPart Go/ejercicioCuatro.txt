@@ -1,0 +1,13 @@
+//INCORRECTAS Y SU CORRECCION
+  var edad int = "35"
+  var edad int = 35 
+
+  boolean := "false";
+  boolean := false;
+
+  var sueldo string = 45857.90
+  var sueldo float32 = 45857.90
+
+//CORRECTAS
+  var apellido string = "Gomez"
+  var nombre string = "Julián"

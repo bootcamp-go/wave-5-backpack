@@ -1,0 +1,18 @@
+
+//INCORRECTAS Y SU CORRECCION
+    var 1nombre string ("Incorrectas")
+    var nombre string
+
+    1apellido := 6
+    apellido := 6
+
+    var estatura de la persona int
+    var estaturaDeLaPersona int
+
+    var int edad
+    var edad int
+
+//CORRECTAS
+    var apellido string
+    var licencia_de_conducir = true
+    cantidadDeHijos := 2
