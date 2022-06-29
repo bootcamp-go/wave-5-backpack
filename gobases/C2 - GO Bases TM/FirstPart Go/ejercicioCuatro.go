@@ -12,7 +12,14 @@ func main(){
 		Maximum = "maximum"
 	)
 
-	minFunc, _ := operation(Minimum)
+	minFunc, err := operation(Minimum)
+	//Así con todos los errores, pero decidí omitirlo
+	//por tamaño del código
+	if err != nil {
+		fmt.Println(err)
+	}else{
+		fmt.Printf("valor mínimo:%.2f\n", minValue)
+	}
 	averageFunc, _ := operation(Average)
 	maxFunc, _ := operation(Maximum)
 
@@ -21,16 +28,15 @@ func main(){
 	maxValue := maxFunc(2, 3, 3, 4, 1, 2, 4, 5)
 
 	fmt.Println("Estadísticas")
-	fmt.Printf("valor mínimo:%.2f", minValue)
-	fmt.Printf("valor promedio:%.2f", averageValue)
-	fmt.Printf("valor máximo:%.2f", maxValue)
-
+	fmt.Printf("valor mínimo:%.2f\n", minValue)
+	fmt.Printf("valor promedio:%.2f\n", averageValue)
+	fmt.Printf("valor máximo:%.2f\n", maxValue)
 }
 
 func minFunction(valores ...float64) float64{
-	valueMin := 0.0
+	valueMin := valores[0]
 	for _, valor := range valores{
-		if valueMin <= valor {
+		if valueMin >= valor {
 			valueMin = valor
 		}
 	}
@@ -46,7 +52,7 @@ func averageFunction(valores ...float64) float64{
 }
 
 func maxFunction(valores ...float64) float64{
-	valueMax := 800000000.0
+	valueMax := valores[0]
 	for _, valor := range valores{
 		if valueMax <= valor {
 			valueMax = valor
@@ -63,6 +69,6 @@ func operation(calculo string) (func(valores ...float64) float64, error){
 			return averageFunction,nil
 		case "maximum":
 			return maxFunction,nil
-		return nil, errors.New("La operación no es válida")
 	}
+	return nil, errors.New("La operación no es válida")
 }
