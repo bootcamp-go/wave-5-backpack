@@ -12,8 +12,8 @@ func main() {
 			count += 1
 		}
 	}
-	fmt.Println("Hay", count, "empleados con más de 21 años")
+	fmt.Printf("Hay %+v empleados con más de 21 años \n", count)
 	employees["Federico"] = 25
 	delete(employees, "Pedro")
-	fmt.Print(employees)
+	fmt.Println(employees)
 }
