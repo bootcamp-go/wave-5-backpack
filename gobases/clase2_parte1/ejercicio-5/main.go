@@ -18,35 +18,35 @@ func main() {
 	if msg != nil {
 		fmt.Println(msg)
 	} else {
-		fmt.Println("Cantidad de alimento para 5 tarantulas: ", funcAnimal(5), " g")
+		fmt.Println("Cantidad de alimento para 5 tarantulas:", funcAnimal(5), "kg")
 	}
 
 	funcAnimal, msg = Animal(HAMSTER)
 	if msg != nil {
 		fmt.Println(msg)
 	} else {
-		fmt.Println("Cantidad de alimento para 5 hamsters: ", funcAnimal(5), " g")
+		fmt.Println("Cantidad de alimento para 5 hamsters:", funcAnimal(5), "kg")
 	}
 
 	funcAnimal, msg = Animal(PERRO)
 	if msg != nil {
 		fmt.Println(msg)
 	} else {
-		fmt.Println("Cantidad de alimento para 5 perros: ", funcAnimal(5), " g")
+		fmt.Println("Cantidad de alimento para 5 perros:", funcAnimal(5), "kg")
 	}
 
 	funcAnimal, msg = Animal(GATO)
 	if msg != nil {
 		fmt.Println(msg)
 	} else {
-		fmt.Println("Cantidad de alimento para 5 gatos: ", funcAnimal(5), " g")
+		fmt.Println("Cantidad de alimento para 5 gatos:", funcAnimal(5), "kg")
 	}
 
 	funcAnimal, msg = Animal("Conejo")
 	if msg != nil {
 		fmt.Println(msg)
 	} else {
-		fmt.Println("Cantidad de alimento para 5 conejos: ", funcAnimal(5), " g")
+		fmt.Println("Cantidad de alimento para 5 conejos:", funcAnimal(5), "kg")
 	}
 
 }
@@ -67,21 +67,21 @@ func Animal(animal string) (func(cantidad int) float64, error) {
 }
 
 func animalTarantula(cantidad int) float64 {
-	// Resultado dado en g
-	return float64(cantidad) * 150
+	// Resultado dado en kg
+	return float64(cantidad) * (150.0 / 1000.0)
 }
 
 func animalHamster(cantidad int) float64 {
-	// Resultado dado en g
-	return float64(cantidad) * 250
+	// Resultado dado en kg
+	return float64(cantidad) * (250.0 / 1000.0)
 }
 
 func animalPerro(cantidad int) float64 {
-	// Resultado dado en g
-	return float64(cantidad) * 5 * 1000
+	// Resultado dado en kg
+	return float64(cantidad) * 5
 }
 
 func animalGato(cantidad int) float64 {
-	// Resultado dado en g
-	return float64(cantidad) * 10 * 1000
+	// Resultado dado en kg
+	return float64(cantidad) * 10
 }
