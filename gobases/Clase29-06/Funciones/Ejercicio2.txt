@@ -1,0 +1,26 @@
+package main
+
+import (
+	"errors"
+	"fmt"
+)
+
+func promedio(notas ...float64) (float64, error) {
+	var acumulador float64
+	var contador float64
+	for _, value := range notas {
+		if value < 0 {
+			return 0, errors.New("Las notas no pueden ser negativas")
+		}
+		acumulador = acumulador + value
+		contador++
+	}
+	return (acumulador / float64(len(notas))), nil
+}
+
+func main() {
+
+	r, j := promedio(3, 3, 3)
+	fmt.Println("Su promedio es: ", r, j)
+
+}

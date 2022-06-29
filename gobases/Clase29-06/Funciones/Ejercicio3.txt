@@ -1,0 +1,32 @@
+package main
+
+import "fmt"
+
+const (
+	A = "A"
+	B = "B"
+	C = "C"
+)
+
+func salarios(minutos float64, categoria string) float64 {
+	var salario float64
+	switch categoria {
+	case A:
+		return (1000 * minutos / 60)
+	case B:
+		salario = (1500 * minutos / 60)
+		return (salario + salario*0.20)
+	case C:
+		salario = (3000 * minutos / 60)
+		return (salario + salario*0.50)
+	}
+	return 0
+}
+
+func main() {
+
+	r := salarios(60, B)
+
+	fmt.Println("Su salario es :", r)
+
+}

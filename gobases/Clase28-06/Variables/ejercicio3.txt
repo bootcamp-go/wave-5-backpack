@@ -1,0 +1,7 @@
+var 1nombre string -> no puede iniciar con 1
+  var apellido string -> correcta
+  var int edad -> var edad int
+  1apellido := 6 -> no puede iniciar con 1
+  var licencia_de_conducir = true -> correcta
+  var estatura de la persona int -> var estaturaDeLaPersona int
+  cantidadDeHijos := 2 -> correcta
