@@ -20,71 +20,70 @@ import (
 
 // Una función para cada animal que calcule la cantidad de alimento en base a la cantidad del tipo de animal especificado.
 
-
 func main() {
-  perroFunc, err := Animal("perro")
-  if err != nil {
-    log.Println(err)
-  }
-  fmt.Printf("Necesito %v kg de comida para 5 perros\n", perroFunc(5))
+	perroFunc, err := Animal("perro")
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Printf("Necesito %v kg de comida para 5 perros\n", perroFunc(5))
 
-  gatoFunc, err := Animal("gato")
-  if err != nil {
-    log.Println(err)
-  }
-  fmt.Printf("Necesito %v kg de comida para 3 gatos\n", gatoFunc(3)) 
-  
-  hamsterFunc, err := Animal("hamster")
-  if err != nil {
-    log.Println(err)
-  }
-  fmt.Printf("Necesito %v gr de comida para 7 hamsters\n", hamsterFunc(7))
+	gatoFunc, err := Animal("gato")
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Printf("Necesito %v kg de comida para 3 gatos\n", gatoFunc(3))
 
-  tarantulaFunc, err := Animal("tarantula")
-  if err != nil {
-    log.Println(err)
-  }
-  fmt.Printf("Necesito %v gr de comida para 2 tarantulas\n", tarantulaFunc(2))
+	hamsterFunc, err := Animal("hamster")
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Printf("Necesito %v gr de comida para 7 hamsters\n", hamsterFunc(7))
+
+	tarantulaFunc, err := Animal("tarantula")
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Printf("Necesito %v gr de comida para 2 tarantulas\n", tarantulaFunc(2))
 }
 
 const (
-  perro = "perro"
-  gato = "gato"
-  hamster = "hamster"
-  tarantula = "tarantula"
+	perro     = "perro"
+	gato      = "gato"
+	hamster   = "hamster"
+	tarantula = "tarantula"
 )
 
 func Animal(animal string) (func(n uint) uint, error) {
-  switch animal {
-  case perro:
-    return perroFunc, nil
-  case gato:
-    return gatoFunc, nil
-  case hamster:
-    return hamsterFunc, nil
-  case tarantula:
-    return tarantulaFunc, nil
-  }
+	switch animal {
+	case perro:
+		return perroFunc, nil
+	case gato:
+		return gatoFunc, nil
+	case hamster:
+		return hamsterFunc, nil
+	case tarantula:
+		return tarantulaFunc, nil
+	}
 
-  return nil, errors.New("Animal no conocido")
+	return nil, errors.New("Animal no conocido")
 }
 
 // Retorna la cantidad de alimento necesario en kg
 func perroFunc(n uint) uint {
-  return n * 10
+	return n * 10
 }
 
 // Retorna la cantidad de alimento necesario en kg
 func gatoFunc(n uint) uint {
-  return n * 5 
+	return n * 5
 }
 
 // Retorna la cantidad de alimento necesario en gr
 func hamsterFunc(n uint) uint {
-  return n * 250
+	return n * 250
 }
 
 // Retorna la cantidad de alimento necesario en gr
 func tarantulaFunc(n uint) uint {
-  return n * 150
+	return n * 150
 }

@@ -20,7 +20,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	min := minOp(3,6,10,-3)
+	min := minOp(3, 6, 10, -3)
 	fmt.Printf("Min: %v\n", min)
 
 	maxOp, err := operacion("maximo")
@@ -28,7 +28,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	max := maxOp(-5,3,256,123)
+	max := maxOp(-5, 3, 256, 123)
 	fmt.Printf("Max: %v\n", max)
 
 	promOp, err := operacion("promedio")
@@ -36,61 +36,61 @@ func main() {
 		log.Fatal(err)
 	}
 
-	prom := promOp(3,-4,9,10)
+	prom := promOp(3, -4, 9, 10)
 	fmt.Printf("Promedio: %v\n", prom)
 }
 
 const (
-  min = "minimo"
-  max = "maximo"
-  prom = "promedio"
+	min  = "minimo"
+	max  = "maximo"
+	prom = "promedio"
 )
 
-func operacion(operacion string) (func(n ...int) float64, error){
-  switch operacion {
-  case min:
-    return opMin, nil
-  case max:
-    return opMax, nil
-  case prom:
-    return opProm, nil
-  }
+func operacion(operacion string) (func(n ...int) float64, error) {
+	switch operacion {
+	case min:
+		return opMin, nil
+	case max:
+		return opMax, nil
+	case prom:
+		return opProm, nil
+	}
 
-  return nil, errors.New("operación no conocida")
+	return nil, errors.New("operación no conocida")
 }
 
 func opMin(nums ...int) float64 {
-  min := math.MaxInt
+	min := math.MaxInt
 
-  for _, v := range nums {
-    if  v < min {
-      min = v
-    }
-  }
+	for _, v := range nums {
+		if v < min {
+			min = v
+		}
+	}
 
-  return float64(min)
+	return float64(min)
 }
 
 func opMax(nums ...int) float64 {
-  max := math.MinInt
+	max := math.MinInt
 
-  for _, v := range nums {
-    if v > max {
-      max = v
-    }
-  }
+	for _, v := range nums {
+		if v > max {
+			max = v
+		}
+	}
 
-  return float64(max)
+	return float64(max)
 }
 
 func opProm(nums ...int) float64 {
-  total := float64(len(nums))
-  sum := 0
+	total := float64(len(nums))
+	sum := 0
 
-  for _, v := range nums {
-    sum += v
-  }
-  promedio := float64(sum)/total
+	for _, v := range nums {
+		sum += v
+	}
+	promedio := float64(sum) / total
 
-  return promedio
+	return promedio
 }
