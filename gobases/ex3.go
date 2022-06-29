@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func main() {
+func ex3() {
 	words := "Hola como va?"
 	word := strings.Split(words, "")
 	fmt.Println("cantidad de caracteres:", len(word))

@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func main() {
+func ex1() {
 
 	var (
 		nombre    = "Pablo"

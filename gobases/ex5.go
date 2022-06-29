@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func main() {
+func ex5() {
 	nro := 12
 
 	monthNo := []string{"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"}
