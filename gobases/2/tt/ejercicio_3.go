@@ -21,7 +21,7 @@ type producto struct {
 }
 
 type Producto interface {
-	CalcularCosto()
+	CalcularCosto() float64
 }
 
 type Ecommerce interface {
@@ -33,10 +33,6 @@ func main() {
 	producto1 := nuevoProducto(pequeño, "pegamento", 5.50)
 	producto2 := nuevoProducto(mediano, "pala", 102.25)
 	producto3 := nuevoProducto(grande, "motor", 2030.00)
-
-	producto1.CalcularCosto()
-	producto2.CalcularCosto()
-	producto3.CalcularCosto()
 
 	tienda := nuevaTienda()
 
@@ -56,15 +52,16 @@ func nuevaTienda() Ecommerce {
 	return &tienda{}
 }
 
-func (p *producto) CalcularCosto() {
+func (p *producto) CalcularCosto() float64 {
 	switch p.tipo {
 	case "pequeño":
-		p.precio = p.precio
+		return p.precio
 	case "mediano":
-		p.precio = p.precio * 1.03
+		return p.precio * 1.03
 	case "grande":
-		p.precio = p.precio*1.06 + 2500
+		return p.precio*1.06 + 2500
 	}
+	return 0
 }
 
 func (t *tienda) Agregar(np producto) {
@@ -74,7 +71,7 @@ func (t *tienda) Agregar(np producto) {
 func (t *tienda) Total() float64 {
 	var total float64
 	for _, v := range t.p {
-		total += v.precio
+		total += v.CalcularCosto()
 	}
 
 	return total
