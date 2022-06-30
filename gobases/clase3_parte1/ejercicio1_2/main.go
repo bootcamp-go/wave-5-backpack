@@ -57,11 +57,11 @@ func (l *ListaProductos) readFromCSV(data []byte) {
 }
 
 func (l ListaProductos) print() {
-	fmt.Println("ID\t\t\t    Precio\t\t\tCantidad")
+	fmt.Println("ID\t    Precio\tCantidad")
 	for _, prod := range l.Productos {
-		fmt.Printf("%s\t\t\t%10.2f\t\t\t%8d\n", prod.Id, prod.Precio, prod.Cantidad)
+		fmt.Printf("%s\t%10.2f\t%8d\n", prod.Id, prod.Precio, prod.Cantidad)
 	}
-	fmt.Printf("Total\t\t\t%10.2f\t\t\t\n", l.calcularTotal())
+	fmt.Printf("Total\t%10.2f\t\n", l.calcularTotal())
 }
 
 func (l ListaProductos) calcularTotal() float64 {
