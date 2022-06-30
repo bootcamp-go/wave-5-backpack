@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"time"
 )
 
 func TaxSalary(salary float64) float64 {
@@ -105,19 +106,50 @@ func operation(op string, vals ...float64) (float64, error) {
 	}
 
 }
-func Animal(op string) (string, error) {
+func Animal(op string) (float64, error) {
 	switch op {
 	case "Perro":
-		return "10Kg", nil
+		return 10, nil
 	case "Gato":
-		return "5Kg", nil
+		return 5, nil
 	case "Tarantula":
-		return "150g", nil
+		return 0.15, nil
 	case "Hamster":
-		return "250g", nil
+		return 0.25, nil
 	default:
-		return "", errors.New("No existe ese animal")
+		return 0, errors.New("No existe ese animal")
 	}
+}
+
+type Student struct {
+	Id        int       `json:"id"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
+	Document  Document  `json:"document"`
+	EntryDate time.Time `json:"entryDate"`
+}
+
+type Document struct {
+	DocumentNumber int    `json:"documentNumber"`
+	DocumentType   string `json:"documentType"`
+}
+
+func CreateStudent() (stu Student) {
+	stu = Student{
+		Id:        1,
+		FirstName: "John",
+		LastName:  "Doe",
+		Document: Document{
+			DocumentNumber: 123456,
+			DocumentType:   "DNI",
+		},
+		EntryDate: time.Now(),
+	}
+	return stu
+}
+
+func Detail(stu Student) {
+	fmt.Println(stu)
 }
 
 func main() {
@@ -125,5 +157,7 @@ func main() {
 	//fmt.Println(School(5.0, 5.0, 5.0))
 	//fmt.Println(SalaryCalc(60, "C"))
 	//fmt.Println(operation("Minsßßimo", 9, 10, 8))
-	fmt.Println(Animal("Perro"))
+	//fmt.Println(Animal("Perro"))
+	var stu = CreateStudent()
+	Detail(stu)
 }
