@@ -51,7 +51,7 @@ func (m *Matrix) Set(puntos ...float32) {
 func (m *Matrix) Print() {
 	for _, line := range m.matriz {
 		for _, number := range line {
-			fmt.Printf("%3.2f  ", number)
+			fmt.Printf("%7.2f", number)
 
 		}
 		fmt.Println()
