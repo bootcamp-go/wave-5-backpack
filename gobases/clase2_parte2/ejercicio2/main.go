@@ -1,52 +1,52 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 type Matrix struct {
-	valor      [][]float64
-	x          int
-	y          int
-	cuadratica bool
-	maximo     float64
+	valores []float64
+	alto    int
+	ancho   int
 }
 
-func (m *Matrix) SetMatrix(x int, y int, params ...float64) {
-	m.x = y
-	m.y = x
-	c := 0
-	mayor := params[0]
-	for i := 0; i < m.x; i++ {
-		m.valor = append(m.valor, []float64{})
-		for j := 0; j < m.y; j++ {
-			m.valor[i] = append(m.valor[i], params[c])
-			//Para saber el mayor
-			if params[c] > mayor {
-				mayor = params[c]
-			}
-			c++
+func (m Matrix) Set() {
+	if len(m.valores) != m.ancho*m.alto {
+		fmt.Println("La cantidad de valores no coincide con las dimensiones especificadas")
+	}
+
+}
+func (m Matrix) Cuadratica() bool {
+	if (m.alto == m.ancho) && m.alto != 0 {
+		return true
+	}
+	return false
+}
+func (m Matrix) Max() float64 {
+	max := -math.MaxFloat64
+	for _, elemento := range m.valores {
+		if elemento > max {
+			max = elemento
 		}
 	}
-	m.maximo = mayor
-	if m.x == m.y {
-		m.cuadratica = true
-	} else {
-		m.cuadratica = false
+	return max
+}
+func (m Matrix) Print() {
+	if len(m.valores) == 0 {
+		fmt.Println("La matriz está vacía")
+	}
+	for fila := 0; fila < m.alto; fila++ {
+		fmt.Printf("\t%.0f\n", m.valores[fila*m.ancho:fila*m.ancho+m.ancho])
 	}
 }
-
-func (m *Matrix) Print() {
-	for i := 0; i < m.x; i++ {
-		for j := 0; j < m.y; j++ {
-			fmt.Printf("%.2f ", m.valor[i][j])
-		}
-		fmt.Printf("\n")
-	}
-}
-
 func main() {
-	mx := Matrix{}
-	fmt.Println("Matrix")
-	mx.SetMatrix(8, 3, 2, 2, 5, 6, 7, 8, 9, 10, 11, 20)
-	mx.Print()
-	fmt.Println("¿Es cuadrática?", mx.cuadratica, "\nNúmero máximo", mx.maximo)
+	m := Matrix{
+		valores: []float64{1, 2, 3, 4, 54, 65, 76, 87, 87},
+		alto:    3,
+		ancho:   3,
+	}
+	Matrix.Set(m)
+	Matrix.Print(m)
+	Matrix.Cuadratica(m)
 }
