@@ -7,7 +7,7 @@ import (
 
 func main() {
 	var kg float32 = 1000.00
-	alimento, error := animal("tarantula")
+	alimento, error := animal("hamster")
 	if error != nil {
 		fmt.Println("Ocurrio un error, debido a que la mascota ingresada no existe")
 	} else {
