@@ -23,6 +23,21 @@ func (matriz Matriz) printMatriz() {
 			}
 			indice++
 		}
-		fmt.Println()
+		fmt.Print("\n")
 	}
+}
+
+func (matriz *Matriz) valorMax(valores []float64) {
+	var max float64
+
+	for i, valor := range valores {
+		if i == 0 {
+			max = valor
+		} else if valor > max {
+			max = valor
+		}
+
+	}
+
+	matriz.ValorMaximo = max
 }
