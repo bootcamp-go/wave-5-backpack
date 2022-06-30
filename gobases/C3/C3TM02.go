@@ -16,11 +16,10 @@ func leerArchivo(archivo string) string {
 	}
 
 }
-func main() {
 
-	//fmt.Println(leerArchivo("./productos.txt"))
+func print(archivo string) {
 	delimitador := "\n"
-	productos := strings.Split(leerArchivo("./productos.txt"), delimitador)
+	productos := strings.Split(archivo, delimitador)
 	fmt.Print("ID\tPrecio\t\tCantidad\n")
 	for _, linea := range productos {
 		items := strings.Split(linea, ";")
@@ -29,5 +28,10 @@ func main() {
 		}
 		fmt.Println("")
 	}
+}
+func main() {
+
+	//fmt.Println(leerArchivo("./productos.txt"))
+	print(leerArchivo("./productos.txt"))
 
 }
