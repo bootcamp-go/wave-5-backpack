@@ -2,18 +2,36 @@ package main
 
 import "fmt"
 
-type Alumnos struct {
-	Nombre string
-	Apellido string
-	DNI int
-	fecha string
+type Usuario struct{
+	Nombre, Apellido string
+	edad int
+	correo, contraseña string
+	
 }
 
-func (a Alumnos) detalle(){
-	fmt.Printf("Nombre: %s \nApellido: %s \nDNI: %d \nFecha de ingreso: %s \n", a.Nombre, a.Apellido, a.DNI, a.fecha)
+func (u *Usuario) imprimir()  {
+	fmt.Printf("Nombre completo: %s %s \nEdad: %d\nCorreo: %s\nContraseña: %s\n", u.Nombre, u.Apellido,u.edad,u.correo,u.contraseña)
+}
+
+func (u *Usuario) editNombre(nombre, apellido string){
+	u.Nombre = nombre
+	u.Apellido = apellido
+}
+
+func (u *Usuario) editEdad(edad int){
+	u.edad = edad
+}
+
+func (u *Usuario) editCorreo(correo string){
+	u.correo = correo
+}
+
+func (u *Usuario) editContraseña(contraseña string){
+	u.Nombre = contraseña
 }
 
 func main(){
-	alumno := Alumnos{"Daniela","Bedoya",1001,"04-05-2002"}
-	alumno.detalle()
+	user1 := Usuario{"Daniela", "Bedoya", 20, "email@gmail.com", "123"}
+
+	user1.imprimir()
 }
