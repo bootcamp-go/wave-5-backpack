@@ -1,0 +1,4 @@
+id;precio;cantidad
+1;10;3
+2;20;4
+3;30;6

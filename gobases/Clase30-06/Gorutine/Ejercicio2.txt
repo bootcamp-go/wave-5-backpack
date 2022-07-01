@@ -1,0 +1,56 @@
+/*
+Una importante empresa de ventas web necesita agregar una funcionalidad para agregar productos a los usuarios. Para ello requieren que tanto los usuarios como los productos tengan la misma
+dirección de memoria en el main del programa como en las funciones.
+Se necesitan las estructuras:
+Usuario: Nombre, Apellido, Correo, Productos (array de productos).
+Producto: Nombre, precio, cantidad.
+Se requieren las funciones:
+Nuevo producto: recibe nombre y precio, y retorna un producto.
+Agregar producto: recibe usuario, producto y cantidad, no retorna nada, agrega el producto al usuario.
+Borrar productos: recibe un usuario, borra los productos del usuario.
+*/
+
+package main
+
+import "fmt"
+
+type Usuario struct {
+	Nombre    string
+	Apellido  string
+	Correo    string
+	Productos []Producto
+}
+
+type Producto struct {
+	Nombre   string
+	Precio   int
+	Cantidad int
+}
+
+func nuevoProducto(name string, precio int) Producto {
+	return Producto{name, precio, 0}
+}
+
+func (user *Usuario) agregarProducto(produ Producto, cant int) {
+
+	produ.Cantidad = cant
+	user.Productos = append(user.Productos, produ)
+}
+
+func (user *Usuario) borrarProducto() {
+	user.Productos = nil
+}
+
+func main() {
+
+	p1 := nuevoProducto("jamon", 20)
+	u1 := Usuario{"naim", "rossetti", "hola", nil}
+	u1.agregarProducto(p1, 2)
+
+	fmt.Println(u1.Productos)
+
+	u1.borrarProducto()
+
+	fmt.Println(u1.Productos)
+
+}

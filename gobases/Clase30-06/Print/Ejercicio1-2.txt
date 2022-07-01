@@ -1,0 +1,35 @@
+/*
+Una empresa que se encarga de vender productos de limpieza necesita:
+Implementar una funcionalidad para guardar un archivo de texto, con la información de productos comprados, separados por punto y coma (csv).
+Debe tener el id del producto, precio y la cantidad.
+Estos valores pueden ser hardcodeados o escritos en duro en una variable.
+*/
+
+package main
+
+import (
+	"fmt"
+	"os"
+	"text/tabwriter"
+)
+
+func main() {
+
+	d1 := []byte("id;precio;cantidad\n1;10;3\n2;20;4\n3;30;6")
+	err1 := os.WriteFile("./myFile.txt", d1, 0644)
+	if err1 != nil {
+		fmt.Println(err1)
+	}
+
+	//data, err := os.ReadFile("./myFile.txt")
+	//if err != nil {
+	//	fmt.Println(err)
+	//}
+
+	//text := string(data)
+	//separado := strings.Split(text, "\n")
+
+	w := tabwriter.NewWriter(os.Stdout, 0, 0, 1, '.', tabwriter.AlignRight|tabwriter.Debug)
+
+	fmt.Fprintln(w, "a\tb\tc")
+}
