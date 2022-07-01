@@ -3,11 +3,12 @@ package main
 import "fmt"
 
 type usuario struct {
-	Nombre   string
-	Apellido string
-	Edad     int
-	Correo   string
-	Password string
+	Nombre    string
+	Apellido  string
+	Edad      int
+	Correo    string
+	Password  string
+	Productos []producto
 }
 
 func (u usuario) detalleU() {
