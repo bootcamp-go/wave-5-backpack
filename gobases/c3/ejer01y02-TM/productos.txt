@@ -1,0 +1,2 @@
+ID, Precio, Cantidad
+1, 2.240000, 1
