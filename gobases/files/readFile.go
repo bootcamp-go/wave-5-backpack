@@ -11,9 +11,10 @@ import (
 
 func main() {
 	// open file
-	f, err := os.Open("personal.csv")
+	f, err := os.Open("persona.csv")
 	if err != nil {
-		log.Fatal(err)
+		//log.Fatal(err)
+		panic(err)
 	}
 
 	// remember to close the file at the end of the program
