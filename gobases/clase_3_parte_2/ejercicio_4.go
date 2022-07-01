@@ -6,6 +6,63 @@ import (
 	"time"
 )
 
+type SortAlgorithm struct {
+	name      string
+	operation SortingOperation
+}
+
+type SortingOperation func([]int) []int
+
+type Bench interface {
+	run() BenchResult
+}
+
+type SortingBench struct {
+	algo SortAlgorithm
+	data []int
+}
+
+func (s SortingBench) run() BenchResult {
+	start := time.Now()
+	s.algo.operation(s.data)
+	return BenchResult{name: s.algo.name, timeExecution: time.Since(start)}
+}
+
+type Benchmark interface {
+	run()
+}
+
+type AsyncBenchmark struct {
+	name   string
+	benchs []Bench
+}
+
+type BenchResult struct {
+	name          string
+	timeExecution time.Duration
+}
+
+func (ab *AsyncBenchmark) runAsyncBench(bench Bench, resulChan chan BenchResult) {
+	result := bench.run()
+	resulChan <- result
+}
+
+func (ab *AsyncBenchmark) run() {
+	channels := make([]chan BenchResult, 0)
+	for _, bench := range ab.benchs {
+		benchChannel := make(chan BenchResult)
+		go ab.runAsyncBench(bench, benchChannel)
+		channels = append(channels, benchChannel)
+
+	}
+	fmt.Printf("Async Benchmark Corriendo %s \n", ab.name)
+	for _, channel := range channels {
+		result := <-channel
+		fmt.Printf("Tiempo para %s  %s \n", result.name, result.timeExecution)
+	}
+	fmt.Printf("Async Benchmark Termino %s \n", ab.name)
+}
+
 func insercion(arr []int) []int {
 	for i := 0; i < len(arr); i++ {
 		for j := i; j > 0 && arr[j-1] > arr[j]; j-- {
@@ -46,34 +103,55 @@ func seleccion(input []int) []int {
 	return input
 }
 
-type testingFunc func([]int) []int
-
-func bench(oper testingFunc, data []int, executionTime chan time.Duration) {
+func bench(algo SortAlgorithm, data []int, executionTime chan time.Duration) {
 	start := time.Now()
-	oper(data)
+	algo.operation(data)
 	executionTime <- time.Since(start)
 }
 
-func runBenchmark(name string, data []int) {
-	inserChan, burbChan, selChan := make(chan time.Duration), make(chan time.Duration), make(chan time.Duration)
+func newSortingsToBenchs(sortingAlgos []SortAlgorithm, data []int) []Bench {
+	benchs := make([]Bench, 0)
+	for _, sortingAlgo := range sortingAlgos {
+		benchs = append(benchs, SortingBench{
+			algo: sortingAlgo,
+			data: data,
+		})
+	}
+	return benchs
+}
 
-	go bench(burbuja, data, burbChan)
-	go bench(insercion, data, inserChan)
-	go bench(seleccion, data, selChan)
-	fmt.Printf("Benchmark Corriendo %s \n", name)
-	fmt.Printf("Tiempo Insercion  %s \n", <-inserChan)
-	fmt.Printf("Tiempo Burbuja    %s \n", <-burbChan)
-	fmt.Printf("Tiempo Seleccion  %s \n", <-selChan)
-	fmt.Printf("Benchmark Completado %s \n", name)
-	println()
+type UseCase struct {
+	name string
+	data []int
+}
+
+func newAsyncBenchmarksSortingAlgorthms(sortingOpes []SortAlgorithm, tests ...UseCase) []AsyncBenchmark {
+	benchMarks := make([]AsyncBenchmark, 0)
+	for _, test := range tests {
+		benchs := newSortingsToBenchs(sortingOpes, test.data)
+		benchMarks = append(benchMarks, AsyncBenchmark{
+			name:   test.name,
+			benchs: benchs,
+		})
+	}
+	return benchMarks
 }
 
 func main() {
-	variable1 := rand.Perm(100)
-	variable2 := rand.Perm(1000)
-	variable3 := rand.Perm(10000)
-	println()
-	runBenchmark("Test de 100 números aleatorios", variable1)
-	runBenchmark("Test de 1000 números aleatorios", variable2)
-	runBenchmark("Test de 10000 números aleatorios", variable3)
+	sortingsAlgorthms := []SortAlgorithm{
+		{name: "insercion", operation: insercion},
+		{name: "burbuja", operation: burbuja},
+		{name: "seleccion", operation: seleccion}}
+	benchMarks := newAsyncBenchmarksSortingAlgorthms(
+		sortingsAlgorthms,
+		UseCase{name: "100 datos", data: rand.Perm(100)},
+		UseCase{name: "1000 datos", data: rand.Perm(1000)},
+		UseCase{name: "10000 datos", data: rand.Perm(10000)},
+	)
+
+	for _, benchMark := range benchMarks {
+		benchMark.run()
+		fmt.Println()
+	}
+
 }
