@@ -46,6 +46,9 @@ func New(tipoProducto string, precio float64) Producto {
 	return &Tienda{precio: precio, tipoProducto: tipoProducto}
 }
 
+
+
+
 func (p Tienda) Precio() float64 {
 	switch p.tipoProducto {
 	case pequenio: // Precio del producto más el costo de mantenerlo en tienda
