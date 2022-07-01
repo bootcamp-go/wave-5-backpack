@@ -1,0 +1,4 @@
+Legajo	Nombre	Apellido	DNI	Telefono	Domicilio
+1	Luz	Lucumi	112233	2340024	Cra 10 # 34-14
+2	Carime	Hernandez	445566	2340025	Cra 20 # 24-10
+4MarthaHernandez3123425 1232233Calle 26
