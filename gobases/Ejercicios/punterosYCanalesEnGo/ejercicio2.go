@@ -6,10 +6,21 @@ type producto struct {
 	Cantidad int
 }
 
-func newProducto(nombre string, precio float64) producto {
+func sumarProductos(p []producto, prod chan float64) {
+	total := 0.0
+
+	for _, producto := range p {
+		total += (producto.Precio * float64(producto.Cantidad))
+	}
+
+	prod <- total
+}
+
+func newProducto(nombre string, precio float64, cantidad int) producto {
 	return producto{
-		Nombre: nombre,
-		Precio: precio,
+		Nombre:   nombre,
+		Precio:   precio,
+		Cantidad: cantidad,
 	}
 }
 
