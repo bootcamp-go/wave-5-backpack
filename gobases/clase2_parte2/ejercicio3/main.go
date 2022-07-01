@@ -3,65 +3,75 @@ package main
 import "fmt"
 
 func main() {
-	ecomm1 := nuevaTienda()
-	prod1 := nuevoProducto("Grande", "Tele", 42.12)
-	prod2 := nuevoProducto("Grande", "Sillon", 51.2)
-	prod3 := nuevoProducto("Pequeño", "Mesa", 31.21)
-	prod4 := nuevoProducto("Mediano", "Play", 131.13)
-	ecomm1.Agregar(prod1)
-	ecomm1.Agregar(prod2)
-	ecomm1.Agregar(prod3)
-	ecomm1.Agregar(prod4)
 
-	fmt.Println("El total de los productos de la tienda es de: ", ecomm1.Total())
-}
+	p1 := producto{
+		tipoProd: "PEQUEÑO",
+		nombre:   "LG",
+		precio:   200,
+	}
 
-type tienda struct {
-	prods []producto
+	p2 := producto{
+		tipoProd: "PEQUEÑO",
+		nombre:   "LG",
+		precio:   200,
+	}
+
+	tienda1 := nuevaTienda()
+	tienda1.agregar(p1)
+	tienda1.agregar(p2)
+	fmt.Println("El total es:", tienda1.total())
+
 }
 
 type producto struct {
-	tipoProducto string
-	nombre       string
-	precio       float64
+	tipoProd string
+	nombre   string
+	precio   float64
+}
+
+type tienda struct {
+	listaProds []producto
+}
+
+func nuevaTienda() Ecommer {
+	return &tienda{}
+}
+
+func (t *tienda) agregar(p producto) {
+	t.listaProds = append(t.listaProds, p)
+}
+
+func (t *tienda) total() float64 {
+	total := 0.0
+	for _, prodI := range t.listaProds {
+		total += float64(prodI.calcularCosto())
+	}
+	return float64(total)
 }
 
 type Producto interface {
-	CalcularCosto() float64
+	calcularCosto() float64
 }
 
-type Ecommerce interface {
-	Total() float64
-	Agregar(prod producto)
+type Ecommer interface {
+	total() float64
+	agregar(p producto)
 }
 
-func (t *tienda) Agregar(prod producto) {
-	t.prods = append(t.prods, prod)
+func nuevoProducto(tp string, n string, pre float64) Producto {
+	return &producto{tipoProd: tp, nombre: n, precio: pre}
 }
 
-func (t *tienda) Total() float64 {
-	var aux float64 = 0
-	for _, pr := range t.prods {
-		aux += pr.precio + pr.CalcularCosto()
-	}
-	return aux
-}
-
-func (p producto) CalcularCosto() float64 {
-	switch p.tipoProducto {
-	case "Mediano":
-		return p.precio * 0.03
-	case "Grande":
-		return p.precio*0.06 + 1500.0
+func (p producto) calcularCosto() float64 {
+	switch p.tipoProd {
+	case "PEQUEÑO":
+		return p.precio
+	case "MEDIANO":
+		return p.precio * 1.03
+	case "GRANDE":
+		return p.precio*1.06 + 2500.0
 	default:
-		return 0
+		return 0.0
 	}
-}
 
-func nuevoProducto(tP string, nom string, pre float64) (p producto) {
-	return producto{tipoProducto: tP, nombre: nom, precio: pre}
-}
-
-func nuevaTienda() Ecommerce {
-	return &tienda{}
 }
