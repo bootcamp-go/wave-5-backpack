@@ -21,5 +21,4 @@ func main() {
 	fmt.Println("Empleados mayores a 21 años: ", mayoresA21)
 
 	fmt.Println("Map después de las operaciones: ", employees)
-
 }
