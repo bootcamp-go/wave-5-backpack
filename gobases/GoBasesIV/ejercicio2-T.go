@@ -1,35 +1,25 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"math/rand"
 	"os"
-	"strings"
 )
 
-func main() {
-
-	res, err := random(33, 10)
-
-	if err != nil {
-		panic("Hubo un error con el legajo")
-	}
-	fmt.Println(res)
-
-	str := "customers.txt"
-	read(str, res)
-
+type Cliente struct {
+	Legajo         int64
+	NombreApellido string
+	DNI            int64
+	Telefono       string
+	Domicilio      string
 }
 
-func random(max, min int) (int, error) {
-	num := rand.Intn(max-min) + min
-	return num, nil
+func generarId() (int64, error) {
+	var id int64 = int64(rand.Int())
+	return id, nil
 }
 
-func read(str string, lega int) {
-
-	file, err := os.Open(str)
+func verificarCliente(id int64) {
 
 	defer func() {
 		err := recover()
@@ -39,17 +29,59 @@ func read(str string, lega int) {
 		}
 	}()
 
+	read, err := os.Open("./customers.txt")
+
 	if err != nil {
-		panic("error: el archivo indicado no fue encontrado o está dañado")
+		panic("error: el archivo indicado no fue encontrado o esta danado")
 	}
-	scanner := bufio.NewScanner(file)
+	defer read.Close()
+}
 
-	for scanner.Scan() {
-		line := scanner.Text()
-		items := strings.Split(line, ",")
+func NewCliente(legajo, dni int64, nombreapellido, telefono, domicilio string) (*Cliente, error) {
 
-		fmt.Println(items[0])
+	defer func() {
+		err := recover()
 
+		if err != nil {
+			fmt.Println("Se detectaron varios errores en tiempo de ejecucion")
+		}
+	}()
+
+	if legajo != 0 {
+		panic("Legajo no puede ser 0")
 	}
+	if dni != 0 {
+		panic("DNI no puede ser 0")
+	}
+	if nombreapellido != "" {
+		panic("Nombre y apellidos son requeridos")
+	}
+	if telefono != "" {
+		panic("Telefono requerido")
+	}
+	if domicilio != "" {
+		panic("Direccion son requeridas")
+	}
+
+	return &Cliente{Legajo: legajo, DNI: dni, NombreApellido: nombreapellido, Telefono: telefono, Domicilio: domicilio}, nil
+}
+
+func main() {
+
+	var (
+		dni            int64  = 12345
+		nombreapellido string = "Juan David Serna"
+		telefono       string = "312424124"
+		domicilio      string = "Tulua"
+	)
+
+	legajoId, err := generarId()
+
+	if err != nil {
+		panic(err)
+	}
+
+	verificarCliente(legajoId)
+	NewCliente(legajoId, dni, nombreapellido, telefono, domicilio)
 
 }
