@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strings"
 )
 
 // Ejercicio 3 - Productos
@@ -47,7 +48,7 @@ func (t tienda) Total() {
 	for _, v := range t.productos {
 		total += v.CalcularCosto()
 	}
-	fmt.Printf("El total de los productos es de %.2f pesos", total)
+	fmt.Printf("El total de los productos es de %s pesos\n\n", formatearMoneda(total))
 }
 
 // Funcion para agregar productos a la tienda
@@ -89,12 +90,36 @@ type Ecommerce interface {
 
 // Funcion para crear un nuevo producto
 func nuevoProducto(tipo string, nombre string, precio float64) Producto {
-	return &producto{tipo: tipo, nombre: nombre, precio: precio}
+	return producto{tipo: tipo, nombre: nombre, precio: precio}
 }
 
 // Funcion para crear nueva tienda
 func nuevaTienda() Ecommerce {
-	return &tienda{}
+	return &tienda{productos: make([]producto, 0)}
+}
+
+// Función para dar formato a moneda
+func formatearMoneda(m float64) string {
+	// Formateamos la cantidad a string
+	money := fmt.Sprintf("%.2f", m)
+	// Separamos la cantidad de su decimal
+	moneyElements := strings.Split(money, ".")
+	// Invertimos la cantidad
+	moneyInverted := ""
+	for _, v := range moneyElements[0] {
+		moneyInverted = string(v) + moneyInverted
+	}
+	// Reinvertimos la cantidad y agregamos las comas
+	moneyValid := ""
+	for i, v := range moneyInverted {
+		if (i+1)%3 == 0 && (i+1) != len(moneyInverted) {
+			moneyValid = "," + string(v) + moneyValid
+		} else {
+			moneyValid = string(v) + moneyValid
+		}
+	}
+	// Regresamos el resultado
+	return "$" + moneyValid + "." + moneyElements[1]
 }
 
 func main() {
@@ -103,20 +128,25 @@ func main() {
 
 	// Creamos 3 productos
 	p_cucharas := nuevoProducto(SMALL, "cucharas", 100.0)
-	fmt.Println(p_cucharas.CalcularCosto())
+	fmt.Println(formatearMoneda(p_cucharas.CalcularCosto()))
 	p_tazas := nuevoProducto(MEDIUM, "tazas", 150.0)
-	fmt.Println(p_tazas.CalcularCosto())
+	fmt.Println(formatearMoneda(p_tazas.CalcularCosto()))
 	p_sillas := nuevoProducto(BIG, "sillas", 400.0)
-	fmt.Println(p_sillas.CalcularCosto())
+	fmt.Println(formatearMoneda(p_sillas.CalcularCosto()))
 
 	// Creamos nueva tienda y agregamos los 3 productos creados
 	nt := nuevaTienda()
 	var i_cucharas interface{} = p_cucharas
-	nt.Agregar(i_cucharas.(producto))
+	ic := i_cucharas.(producto)
+	nt.Agregar(ic)
+
 	var i_tazas interface{} = p_tazas
-	nt.Agregar(i_tazas.(producto))
+	it := i_tazas.(producto)
+	nt.Agregar(it)
+
 	var i_sillas interface{} = p_sillas
-	nt.Agregar(i_sillas.(producto))
+	is := i_sillas.(producto)
+	nt.Agregar(is)
 
 	// Mostramos el total de los productos de la tienda
 	nt.Total()
