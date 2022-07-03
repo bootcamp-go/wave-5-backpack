@@ -1,48 +1,55 @@
+/*Una empresa de redes sociales requiere implementar una estructura usuario con funciones que vayan
+ agregando información a la estructura. Para optimizar y ahorrar memoria requieren que la estructura usuarios ocupe el mismo
+ lugar en memoria para el main del programa y para las funciones:
+La estructura debe tener los campos: Nombre, Apellido, edad, correo y contraseña
+Y deben implementarse las funciones:
+cambiar nombre: me permite cambiar el nombre y apellido.
+cambiar edad: me permite cambiar la edad.
+cambiar correo: me permite cambiar el correo.
+cambiar contraseña: me permite cambiar la contraseña.
+*/
 package main
 
 import "fmt"
 
 func main() {
-	//definida dentro del mail la var estructura
-	//parametro de funcion un puntero de la estructura.
-
-	type Usuarios struct {
-		Nombre      string
-		Apellido    string
-		Edad        int
-		correo      string
-		contrasenia string
+	mati := Usuario{
+		Nombre:      "Matias",
+		Apellido:    "Fante",
+		Edad:        33,
+		Correo:      "mati@mati.com",
+		Contrasenia: "123456",
 	}
+	fmt.Println("Los valores antes del cambio son:", mati)
 
-	u := Usuarios{
-		Nombre:      "Yvo",
-		Apellido:    "Pintos",
-		Edad:        30,
-		correo:      "yvonnepintos",
-		contrasenia: "12345",
-	}
-	cambiarNombre(&u.Nombre)
-	fmt.Println("El nuevo nombre es:", u.Nombre)
-	cambiarEdad(&u.Edad)
-	fmt.Println("La nueva edad es:", u.Edad)
-	cambiarCorreo(&u.correo)
-	fmt.Println("El nuevo correo es:", u.correo)
-	cambiarContrasenia(&u.contrasenia)
-	fmt.Println("La nueva clave es:", u.contrasenia)
+	cambiarNombre(&mati, "Pedro")
+	cambiarEdad(&mati, 40)
+	cambiarCorreo(&mati, "pedrito@pedro.com")
+	cambiarContrasenia(&mati, "678")
+
+	fmt.Println("Los valores luego de los cambios son:", mati)
 }
 
-func cambiarNombre(nombre *string) {
-	*nombre = "fruta"
+type Usuario struct {
+	Nombre      string
+	Apellido    string
+	Edad        int
+	Correo      string
+	Contrasenia string
 }
 
-func cambiarEdad(edad *int) {
-	*edad = 44
+func cambiarNombre(u *Usuario, nombre string) {
+	u.Nombre = nombre
 }
 
-func cambiarCorreo(correo *string) {
-	*correo = "blabla@bla.com"
+func cambiarEdad(u *Usuario, edad int) {
+	u.Edad = edad
 }
 
-func cambiarContrasenia(contra *string) {
-	*contra = "324234234234"
+func cambiarCorreo(u *Usuario, mail string) {
+	u.Correo = mail
+}
+
+func cambiarContrasenia(u *Usuario, clave string) {
+	u.Contrasenia = clave
 }
