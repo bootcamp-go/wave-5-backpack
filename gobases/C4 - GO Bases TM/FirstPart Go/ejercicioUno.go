@@ -6,7 +6,7 @@ import (
 
 //En mi estructura creo la variable para el mensaje
 type MyError struct {
-	msg    string
+	msg string
 }
 
 //Implementando Error()
@@ -15,13 +15,13 @@ func (e *MyError) Error() string {
 }
 
 //Lanzando el mensaje de error
-func messageError(salario int) (error) {
+func messageError(salario int) error {
 	return &MyError{
-		msg:    fmt.Sprint("error: el salario ingresado: $",salario,", no alcanza el mínimo imponible"),
+		msg: fmt.Sprint("error: el salario ingresado: $", salario, ", no alcanza el mínimo imponible"),
 	}
 }
 
-func main(){
+func main() {
 	var salary int = 140000
 	err := messageError(salary)
 
@@ -29,7 +29,7 @@ func main(){
 	if salary < 150000 {
 		fmt.Println(err)
 		return
-	}else{
+	} else {
 		fmt.Println("Debe pagar impuesto")
 	}
 }
