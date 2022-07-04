@@ -39,7 +39,16 @@ func verificarCliente(cliente *Cliente) (bool, error) {
 }
 
 func main() {
-	var i int = 1
+	c1 := Cliente{
+		Nombre: "Luis",
+	}
+	_, err := verificarCliente(&c1)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	archivo := "customers.txt"
+	leerArchivo(archivo)
+	i := 1
 	a := crearIdLegajo(&i)
 	b := crearIdLegajo(&i)
 	c := crearIdLegajo(&i)
