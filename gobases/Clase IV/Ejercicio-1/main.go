@@ -18,6 +18,8 @@ func (m *mycustomError) Error() string {
 
 }
 
+// Funcion que realiza verificación de salario
+
 func salaryVerification(salary int) error {
 
 	if salary < 150000 {
