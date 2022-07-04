@@ -9,10 +9,10 @@ import (
 
 func main() {
 	file, err := os.Open("./gobases/3/tm/ejercicio_1.csv")
+	defer file.Close()
 	if err != nil {
 		fmt.Println(err)
 	}
-	defer file.Close()
 
 	reader := csv.NewReader(file)
 	rows, err := reader.ReadAll()
