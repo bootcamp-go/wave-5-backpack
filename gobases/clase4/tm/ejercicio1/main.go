@@ -27,16 +27,16 @@ func main() {
 }
 
 type errorImpuesto struct {
+	msj string
 }
 
 func (e *errorImpuesto) Error() string {
-  return fmt.Sprintln("error: el salario ingresado no alcanza el mínimo imponible")
+  return fmt.Sprintf("error: %s\n", e.msj)
 }
 
 func checkImpuesto(salary int) error {
   if salary < 150000 {
-    err := &errorImpuesto{}
-    return err
+    return &errorImpuesto{"el salario ingresado no alcanza el mínimo imponible"}
   }
 
   return nil
