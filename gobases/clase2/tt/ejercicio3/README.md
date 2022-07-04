@@ -11,7 +11,7 @@ Varias tiendas de ecommerce necesitan realizar una funcionalidad en Go para admi
 - Grande: El costo del producto + un 6%  por mantenimiento, y un costo adicional  por envío de $2500.
 
 ## Requerimientos:
-- Crear una estructura “tienda” que guarde una lista de productos. 
+- Crear una estructura “tienda” que guarde una lista de productos.
 - Crear una estructura “producto” que guarde el tipo de producto, nombre y precio
 
 - Crear una interface “Producto” que tenga el método “CalcularCosto”
