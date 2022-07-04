@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
 
 func main() {
 	/*//1
@@ -29,6 +33,8 @@ func main() {
 
 	fmt.Println(usuario)
 	*/
+
+	/*//3
 	var productos []producto
 	var servicios []servicio
 	var mantenimientos []mantenimiento
@@ -59,4 +65,33 @@ func main() {
 	go sumarMantenimiento(mantenimientos, cM)
 
 	fmt.Println("Monto final: ", (<-cP + <-cS + <-cM))
+	*/
+
+	//4
+	array1 := rand.Perm(100)
+	array2 := rand.Perm(1000)
+	array3 := rand.Perm(10000)
+
+	cI := make(chan time.Duration)
+	cB := make(chan time.Duration)
+	cS := make(chan time.Duration)
+
+	go ordenamientoInsercion(cI, array1)
+	go ordenamientoInsercion(cB, array2)
+	go ordenamientoInsercion(cS, array3)
+
+	fmt.Printf("Insercion:\nArreglo x100: %v\nArreglo x1000: %v\nArreglo x10000: %v\n\n", <-cI, <-cB, <-cS)
+
+	go ordenamientoBurbuja(cI, array1)
+	go ordenamientoBurbuja(cB, array2)
+	go ordenamientoBurbuja(cS, array3)
+
+	fmt.Printf("Burbuja:\nArreglo x100: %v\nArreglo x1000: %v\nArreglo x10000: %v\n\n", <-cI, <-cB, <-cS)
+
+	go ordenamientoSeleccion(cI, array1)
+	go ordenamientoSeleccion(cB, array2)
+	go ordenamientoSeleccion(cS, array3)
+
+	fmt.Printf("Seleccion:\nArreglo x100: %v\nArreglo x1000: %v\nArreglo x10000: %v\n", <-cI, <-cB, <-cS)
+
 }
