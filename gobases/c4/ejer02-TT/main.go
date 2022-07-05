@@ -50,7 +50,6 @@ func generarID() (int, error) {
 	legajo++
 
 	return legajo, nil
-
 }
 
 func verificarUsuario(id int) {
@@ -125,6 +124,12 @@ func main() {
 		panic(err)
 	}
 
+	legajoId2, err := generarID()
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(legajoId2)
 	verificarUsuario(legajoId)
 
 	cliente := Cliente{legajoId, "Sebastian", "Sosa", 32242, 123456, ""}
