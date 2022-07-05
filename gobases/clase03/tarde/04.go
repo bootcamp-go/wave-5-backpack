@@ -150,17 +150,17 @@ func Print(t1 *Info, t2 *Info, t3 *Info, elementos int) {
 	fmt.Println()
 	fmt.Println("******************************************************************")
 	fmt.Println("Tiempo de ejecución ordenamiento burbuja de", elementos, " 🕛 ", t1.Tiempo)
-	fmt.Println("Resultado burbuja: ", t1.Resultado)
+	//fmt.Println("Resultado burbuja: ", t1.Resultado)
 	fmt.Println()
 
 	fmt.Println("******************************************************************")
 	fmt.Println("Tiempo de ejecución ordenamiento inserción de", elementos, " 🕛 ", t2.Tiempo)
-	fmt.Println("Resultado Inserción: ", t2.Resultado)
+	//fmt.Println("Resultado Inserción: ", t2.Resultado)
 	fmt.Println()
 
 	fmt.Println("******************************************************************")
 	fmt.Println("Tiempo de ejecución ordenamiento selección de", elementos, "🕛 ", t3.Tiempo)
-	fmt.Println("Resultado Selección: ", t3.Resultado)
+	//fmt.Println("Resultado Selección: ", t3.Resultado)
 	fmt.Println()
 }
 

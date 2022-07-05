@@ -39,8 +39,12 @@ type Mantenimientos struct {
 
 func SumarProductos(productos *[]Productos, c chan float64){
 	var total float64 = 0
+	i :=1 // solo me sirve para imprimir la iteración y entender cómo funciona
 	for _, producto := range *productos {
 		total += producto.Precio * float64(producto.Cantidad)
+
+		fmt.Println("Sumando Productos", i)// solo me sirve para imprimir la iteración y entender cómo funciona
+		i++// solo me sirve para imprimir la iteración y entender cómo funciona
 	}
 	fmt.Printf("Total Prouctos: $%v\n", total)
 	c <- total
@@ -49,12 +53,15 @@ func SumarProductos(productos *[]Productos, c chan float64){
 
 func SumarServicios(servicios *[]Servicios, c chan float64) {
 	var total float64 = 0
+	i :=1 // solo me sirve para imprimir la iteración y entender cómo funciona
 	for _, servicio := range *servicios {
 		if servicio.minutosTrabajados < 30 {
 			total += servicio.Precio * 30.0
 		}else {
 			total += servicio.Precio * float64(servicio.minutosTrabajados)
 		}
+		fmt.Println("Sumando Servicios", i)// solo me sirve para imprimir la iteración y entender cómo funciona
+		i++// solo me sirve para imprimir la iteración y entender cómo funciona
 	}
 	fmt.Printf("Total Servicios: $%v\n", total)
 	c <- total
@@ -64,8 +71,11 @@ func SumarServicios(servicios *[]Servicios, c chan float64) {
 
 func SumarMantenimientos(mantenimientos *[]Mantenimientos, c chan float64) {
 	var total float64 = 0
+	i :=1 // solo me sirve para imprimir la iteración y entender cómo funciona
 	for _, mantenimiento := range *mantenimientos {
 		total += mantenimiento.Precio
+		fmt.Println("Sumando Mantenimiento", i)// solo me sirve para imprimir la iteración y entender cómo funciona
+		i++// solo me sirve para imprimir la iteración y entender cómo funciona
 	}
 	fmt.Printf("Total Mantenimientos: $%v\n", total)
 	c <- total
