@@ -38,7 +38,7 @@ func customErrorTest(cantidad int) error {
 	if cantidad < 150000 {
 		return &customError{
 			cantidad: cantidad,
-			msg:      "ERROR: el salario ingresado no alcanza el mínimo impoible 😞",
+			msg:      "ERROR: el salario ingresado no alcanza el mínimo imponible 😞",
 		}
 	}
 	return nil
