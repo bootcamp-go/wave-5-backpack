@@ -15,7 +15,7 @@ func main() {
 		panic(err)
 	}
 	bookings := service.NewBookings(tickets)
-	ticketCreated, err := bookings.Create(service.Ticket{
+	_, err = bookings.Create(service.Ticket{
 		Id:          1212,
 		Names:       "Pepe Perez",
 		Email:       "pepeperez@gmail.com",
@@ -25,8 +25,6 @@ func main() {
 	})
 	if err != nil {
 		fmt.Printf("%+v\n", err.Error())
-	} else {
-		fmt.Printf("%+v\n", ticketCreated)
 	}
 
 	ticketFound, err := bookings.Read(100)
@@ -36,7 +34,7 @@ func main() {
 		fmt.Printf("%+v\n", ticketFound)
 	}
 
-	ticketUpdated, err := bookings.Update(
+	_, err = bookings.Update(
 		1212,
 		service.Ticket{
 			Id:          1212,
@@ -49,23 +47,13 @@ func main() {
 	)
 	if err != nil {
 		fmt.Printf("%+v\n", err)
-	} else {
-		fmt.Printf("%+v\n", ticketUpdated)
 	}
-	tokenForDeleteId := 1212
-	ticketForDelete, err := bookings.Read(tokenForDeleteId)
-	if err != nil {
-		fmt.Printf("%+v\n", err.Error())
-	} else {
-		fmt.Printf("%+v\n", ticketForDelete)
-	}
+	tokenForDeleteId := 1
 	deletedId, err := bookings.Delete(tokenForDeleteId)
 	if err != nil {
 		fmt.Printf("%+v\n", err)
 	} else {
 		fmt.Printf("Token id: %d deleted\n", deletedId)
 	}
-	ticketDeleted, err := bookings.Read(tokenForDeleteId)
-	fmt.Printf("%+v %v\n", ticketDeleted, err)
 	file.Write(bookings.ReadAll())
 }

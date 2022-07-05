@@ -79,12 +79,7 @@ func (b *bookings) Read(id int) (Ticket, error) {
 }
 
 func (b *bookings) ReadAll() []Ticket {
-	var res []Ticket
-	for i := 0; i < len(b.Tickets); i++ {
-		res = append(res, b.Tickets[i])
-	}
-	return res
-
+	return b.Tickets
 }
 
 func (b *bookings) Update(id int, t Ticket) (Ticket, error) {
