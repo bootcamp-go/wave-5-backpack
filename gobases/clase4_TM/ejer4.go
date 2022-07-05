@@ -50,7 +50,7 @@ func calcSalary(hours int, priceHour float64) (float64, error) {
 
 func calcBonusPerSemester(s []employeeMonth) (float64, error) {
 	var maxSalary float64
-	for i, _ := range s {
+	for i, _ := range s { // i assume that's the slice contain less tha 6 months , if theres more information should evaluate len<6 of slice
 		monthSalary, err := calcSalary(s[i].hoursWorked, s[i].price)
 		if err != nil {
 			return 0.0, err
