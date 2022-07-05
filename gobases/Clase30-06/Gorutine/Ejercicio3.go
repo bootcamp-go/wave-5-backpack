@@ -50,7 +50,7 @@ func sumarServicios(servi []Servicios, c chan int) {
 	acumulador := 0
 	for _, value := range servi {
 		if value.minuotosTrabajados < 30 {
-			acumulador = acumulador + value.minuotosTrabajados*value.precio
+			acumulador = acumulador + 30*value.precio
 		} else {
 			j := value.minuotosTrabajados / 30
 			resto := value.minuotosTrabajados % 30

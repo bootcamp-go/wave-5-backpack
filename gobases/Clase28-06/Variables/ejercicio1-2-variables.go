@@ -1,6 +1,10 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/ddadumitrescu/hellomod"
+)
 
 var (
 	name   = "Naim Rossetti"
@@ -18,5 +22,7 @@ func main() {
 
 	fmt.Println("DATOS CLIMATICOS:\n ")
 	fmt.Printf("Temperatura: %d \n Humedad: %d\n Presion: %v", temperatura, humedad, presion)
+
+	hellomod.SayHello()
 
 }
