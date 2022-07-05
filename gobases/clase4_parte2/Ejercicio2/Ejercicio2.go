@@ -33,7 +33,7 @@ func crearIdLegajo(i *int) int {
 
 func verificarCliente(cliente *Cliente) (bool, error) {
 	if cliente.Nombre == "" || cliente.Apellido == "" || cliente.Telefono == "" || cliente.Domicilio == "" || cliente.Legajo == 0 {
-		return false, errors.New("Algun valor no esta inicializado")
+		return false, errors.New("algun valor no esta inicializado")
 	}
 	return true, nil
 }
