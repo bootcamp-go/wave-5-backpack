@@ -1,15 +1,35 @@
 package main
 
-import "fmt"
-
-// Ejercicio 2
-
-var temperatura int = 21
-var humedad int = 73
-var presionAtm int = 1027
+import (
+	"errors"
+	"fmt"
+)
 
 func main() {
-	fmt.Println("Temperatura: ", temperatura, "°C")
-	fmt.Println("Humedad: ", humedad, "%")
-	fmt.Println("Presion Atmosferica: ", presionAtm, "hPa")
+	prom, err := promedio(1, 2, 3, 4, 5)
+	fmt.Println("Números: ", 1, 2, 3, 4, 5)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("El promedio es: ", prom)
+	}
+
+	prom, err = promedio(1, 2, -3, 4, 5)
+	fmt.Println("Números: ", 1, 2, -3, 4, 5)
+	if err != nil {
+		fmt.Println(err)
+	} else {
+		fmt.Println("El promedio es: ", prom)
+	}
+}
+
+func promedio(nEnteros ...int) (int, error) {
+	suma := 0
+	for _, n := range nEnteros {
+		if n < 0 {
+			return 0, errors.New("Ingrese solo enteros positivos")
+		}
+		suma += n
+	}
+	return suma / len(nEnteros), nil
 }

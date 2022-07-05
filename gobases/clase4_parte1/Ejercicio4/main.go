@@ -24,12 +24,13 @@ func cantidadSalario(minTrabajadosPorMes float64, categoria string) float64 {
 		horasC := horas * 3000
 		porcentajeAdicionalC := horasC * 0.50
 		return horasC + porcentajeAdicionalC
+
 	}
 	return 0
 }
 
 func main() {
-	fmt.Println("Salario A: ", (cantidadSalario(3000, categoriaA)), "\n")
-	fmt.Println("Salario B: ", (cantidadSalario(3000, categoriaB)), "\n")
-	fmt.Println("Salario C: ", (cantidadSalario(3000, categoriaC)), "\n")
+	fmt.Println("Salario A: ", (cantidadSalario(3000, categoriaA)))
+	fmt.Println("Salario B: ", (cantidadSalario(3000, categoriaB)))
+	fmt.Println("Salario C: ", (cantidadSalario(3000, categoriaC)))
 }

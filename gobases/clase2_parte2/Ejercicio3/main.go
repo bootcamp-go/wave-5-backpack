@@ -2,39 +2,43 @@ package main
 
 import "fmt"
 
-func main() {
-	var mes = 2
-	switch mes {
-	case 1:
-		fmt.Println("Enero")
-	case 2:
-		fmt.Println("Febrero")
-	case 3:
-		fmt.Println("Marzo")
-	case 4:
-		fmt.Println("Abril")
-	case 5:
-		fmt.Println("Mayo")
-	case 6:
-		fmt.Println("Junio")
-	case 7:
-		fmt.Println("Julio")
-	case 8:
-		fmt.Println("Agosto")
-	case 9:
-		fmt.Println("Septiembre")
-	case 10:
-		fmt.Println("Octubre")
-	case 11:
-		fmt.Println("Noviembre")
-	case 12:
-		fmt.Println("Diciembre")
+var (
+	pequeno string = "PEQUEÑO"
+	mediano string = "MEDIANO"
+	grande  string = "GRANDE"
+)
 
+type Producto interface {
+	Precio() float64
+}
+
+type Tienda struct {
+	precio       float64
+	tipoProducto string
+}
+
+func New(tipoProducto string, precio float64) Producto {
+	return &Tienda{precio: precio, tipoProducto: tipoProducto}
+}
+
+func (p Tienda) Precio() float64 {
+	switch p.tipoProducto {
+	case pequeno: // Precio del producto más el costo de mantenerlo en tienda
+		return p.precio
+	case mediano:
+		mantencion := (p.precio * 3) / 100
+		return p.precio + mantencion
+	case grande:
+		mantencion := (p.precio * 6) / 100
+		return p.precio + mantencion + 2500 // costo de envío
+	default:
+		return 0
 	}
 }
 
-// Opcion 2
-/*func main() {
-	var meses = map[int]string{1: "Enero", 2: "Febrero", 3: "Marzo", 4: "Abril", 5: "Mayo"}
-	fmt.Println(meses[4])
-}*/
+func main() {
+	var precio float64 = 200
+
+	tienda := New(grande, precio)
+	fmt.Printf("Precio total del producto: 💰 %.2f\nEl producto es: %s \n", tienda.Precio(), grande)
+}

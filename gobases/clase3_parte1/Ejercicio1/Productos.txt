@@ -1,0 +1,4 @@
+Id Producto   Precio   Cantidad 
+   1           2000       1 
+   2           4000       4 
+   4           1000       3

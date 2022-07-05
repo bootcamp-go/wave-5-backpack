@@ -1,39 +1,52 @@
 package main
 
-import "fmt"
-
-var (
-	edad              = 23
-	empleado          = true
-	antiguedadTrabajo = 2
-	salario           = 110000
+import (
+	"fmt"
+	"math"
 )
 
-func main() {
+type Matrix struct {
+	valores []float64
+	alto    int
+	ancho   int
+}
 
-	if edad > 22 {
-		fmt.Printf("El cliente es mayor a 22 \n")
-		if empleado == true {
-			fmt.Printf("Cliente laborando \n")
-			if antiguedadTrabajo > 1 {
-				fmt.Printf("Cliente con mas de un 1 ano de antiguedad \n")
-			} else {
-				fmt.Printf("Cliente con menos de un 1 ano de antiguedad \n")
-			}
-		} else {
-			fmt.Printf("El cliente no esta laborando \n")
-		}
-	} else {
-		fmt.Printf("El cliente es menor \n")
+func (m Matrix) Set() {
+	if len(m.valores) != m.ancho*m.alto {
+		fmt.Println("La cantidad de valores no coincide con las dimensiones especificadas")
 	}
-	if edad > 22 && empleado == true && antiguedadTrabajo > 1 {
-		fmt.Printf("Credito aprobado \n")
-		if salario > 100000 {
-			fmt.Printf("El cliente no paga intereses \n")
-		} else {
-			fmt.Printf("El cliente paga intereses \n")
-		}
-	} else {
-		fmt.Printf("Credito rechazado \n")
+
+}
+func (m Matrix) Cuadratica() bool {
+	if (m.alto == m.ancho) && m.alto != 0 {
+		return true
 	}
+	return false
+}
+func (m Matrix) Max() float64 {
+	max := -math.MaxFloat64
+	for _, elemento := range m.valores {
+		if elemento > max {
+			max = elemento
+		}
+	}
+	return max
+}
+func (m Matrix) Print() {
+	if len(m.valores) == 0 {
+		fmt.Println("La matriz está vacía")
+	}
+	for fila := 0; fila < m.alto; fila++ {
+		fmt.Printf("\t%.0f\n", m.valores[fila*m.ancho:fila*m.ancho+m.ancho])
+	}
+}
+func main() {
+	m := Matrix{
+		valores: []float64{1, 2, 3, 4, 54, 65, 76, 87, 87},
+		alto:    3,
+		ancho:   3,
+	}
+	Matrix.Set(m)
+	Matrix.Print(m)
+	Matrix.Cuadratica(m)
 }
