@@ -42,6 +42,24 @@ type tienda struct {
 	productos []producto
 }
 
+// Estructura de Producto
+type producto struct {
+	tipo   string
+	nombre string
+	precio float64
+}
+
+// Intercace Producto
+type Producto interface {
+	CalcularCosto() float64
+}
+
+// Interface Ecommerce
+type Ecommerce interface {
+	Total()
+	Agregar(Producto)
+}
+
 // Funcion para obtener el total de los productos de la tienda
 func (t tienda) Total() {
 	total := 0.0
@@ -52,15 +70,8 @@ func (t tienda) Total() {
 }
 
 // Funcion para agregar productos a la tienda
-func (t *tienda) Agregar(p producto) {
-	t.productos = append(t.productos, p)
-}
-
-// Estructura de Producto
-type producto struct {
-	tipo   string
-	nombre string
-	precio float64
+func (t *tienda) Agregar(p Producto) {
+	t.productos = append(t.productos, p.(producto))
 }
 
 // Funcion para calcular el costo dependiendo del tipo de producto
@@ -75,17 +86,6 @@ func (p producto) CalcularCosto() float64 {
 	default:
 		return 0.0
 	}
-}
-
-// Intercace Producto
-type Producto interface {
-	CalcularCosto() float64
-}
-
-// Interface Ecommerce
-type Ecommerce interface {
-	Total()
-	Agregar(producto)
 }
 
 // Funcion para crear un nuevo producto
@@ -127,26 +127,18 @@ func main() {
 	fmt.Println("")
 
 	// Creamos 3 productos
-	p_cucharas := nuevoProducto(SMALL, "cucharas", 100.0)
-	fmt.Println(formatearMoneda(p_cucharas.CalcularCosto()))
-	p_tazas := nuevoProducto(MEDIUM, "tazas", 150.0)
-	fmt.Println(formatearMoneda(p_tazas.CalcularCosto()))
-	p_sillas := nuevoProducto(BIG, "sillas", 400.0)
-	fmt.Println(formatearMoneda(p_sillas.CalcularCosto()))
+	pCucharas := nuevoProducto(SMALL, "cucharas", 100.0)
+	fmt.Println(formatearMoneda(pCucharas.CalcularCosto()))
+	pTazas := nuevoProducto(MEDIUM, "tazas", 150.0)
+	fmt.Println(formatearMoneda(pTazas.CalcularCosto()))
+	pSillas := nuevoProducto(BIG, "sillas", 400.0)
+	fmt.Println(formatearMoneda(pSillas.CalcularCosto()))
 
 	// Creamos nueva tienda y agregamos los 3 productos creados
 	nt := nuevaTienda()
-	var i_cucharas interface{} = p_cucharas
-	ic := i_cucharas.(producto)
-	nt.Agregar(ic)
-
-	var i_tazas interface{} = p_tazas
-	it := i_tazas.(producto)
-	nt.Agregar(it)
-
-	var i_sillas interface{} = p_sillas
-	is := i_sillas.(producto)
-	nt.Agregar(is)
+	nt.Agregar(pCucharas.(producto))
+	nt.Agregar(pTazas.(producto))
+	nt.Agregar(pSillas.(producto))
 
 	// Mostramos el total de los productos de la tienda
 	nt.Total()
