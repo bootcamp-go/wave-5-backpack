@@ -1,0 +1,52 @@
+[
+    {
+        "id": 1,
+        "name": "Cristian",
+        "lastname": "Ladino",
+        "email": "test@gmail.com",
+        "age": 23,
+        "height": 1.68,
+        "active": true,
+        "creation-date": "21-07-2022"
+    },
+    {
+        "id": 2,
+        "name": "Camilo",
+        "lastname": "Pinzon",
+        "email": "test1@gmail.com",
+        "age": 30,
+        "height": 1.78,
+        "active": false,
+        "creation-date": "01-09-2021"
+    },
+    {
+        "id": 3,
+        "name": "Jessica",
+        "lastname": "Bonilla",
+        "email": "test3@gmail.com",
+        "age": 20,
+        "height": 1.70,
+        "active": true,
+        "creation-date": "11-02-2022"
+    },
+    {
+        "id": 4,
+        "name": "Camila",
+        "lastname": "Ramos",
+        "email": "test4@gmail.com",
+        "age": 26,
+        "height": 1.60,
+        "active": false,
+        "creation-date": "29-01-2021"
+    },
+    {
+        "id": 5,
+        "name": "Pepito",
+        "lastname": "Perez",
+        "email": "test5@gmail.com",
+        "age": 33,
+        "height": 1.69,
+        "active": true,
+        "creation-date": "07-07-2022"
+    }
+]
