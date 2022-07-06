@@ -7,14 +7,14 @@ import (
 func main() {
 	router := gin.Default()
 
-	router.GET("/products", func(ctx *gin.Context) {
-		// ctx.JSON(200, gin.H{
-		// 	"message": "Hola Francisco",
-		// })
+	//router.GET("/products", func(ctx *gin.Context) {
+	// ctx.JSON(200, gin.H{
+	// 	"message": "Hola Francisco",
+	// })
+	//})
 
-		GetAll(ctx.Writer, ctx.Request)
+	router.GET("/products", GetAll)
 
-	})
 	router.Run()
 
 }

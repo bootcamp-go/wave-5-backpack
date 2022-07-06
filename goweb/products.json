@@ -1,4 +1,34 @@
 {
-    "products": []
+    "products": [
+        {
+            "ID": 1,
+            "Nombre": "Televisor 50´",
+            "Color": "Negro",
+            "Precio": 100000,
+            "Stock": 100,
+            "Codigo": "AR45RD1",
+            "Publicado": true,
+            "FechaCreacion": "20-02-22"
+        },
+        {
+            "ID": 2,
+            "Nombre": "Celular S4",
+            "Color": "Gris",
+            "Precio": 50000,
+            "Stock": 300,
+            "Codigo": "AR44RD4",
+            "Publicado": true,
+            "FechaCreacion": "15-02-19"
+        },
+        {
+            "ID": 3,
+            "Nombre": "Monitor 32´",
+            "Color": "Negro",
+            "Precio": 80000,
+            "Stock": 50,
+            "Codigo": "AR51OD8",
+            "Publicado": true,
+            "FechaCreacion": "10-02-21"
+        }
+    ]
 }
-
