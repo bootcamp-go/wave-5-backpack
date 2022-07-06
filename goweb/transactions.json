@@ -5,8 +5,8 @@
     "moneda": "ARS",
     "monto": 1500.99,
     "emisor": "BBVA",
-    "receptor": "id cuenta mp",
-    "date_transaction": "2022-07-4",
+    "receptor": "Mercado Pago",
+    "date_transaction": "2022-07-4"
   },
   {
     "id": 2,
@@ -14,8 +14,8 @@
     "moneda": "ARS",
     "monto": 1250.30,
     "emisor": "BBVA",
-    "receptor": "id cuenta mp",
-    "date_transaction": "2022-07-5",
+    "receptor": "Mercado Pago",
+    "date_transaction": "2022-07-5"
   },
   {
     "id": 3,
@@ -23,7 +23,7 @@
     "moneda": "ARS",
     "monto": 1250.30,
     "emisor": "BBVA",
-    "receptor": "id cuenta mp",
-    "date_transaction": "2022-07-6",
-  },
+    "receptor": "Mercado Pago",
+    "date_transaction": "2022-07-6"
+  }
 ]
