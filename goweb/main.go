@@ -9,26 +9,35 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// Definición estructura de json
+
+type transacciones struct {
+	Id                 int     `json:"id"`
+	Codigo_transaccion string  `json:"codigo_transaccion"`
+	Moneda             string  `json:"moneda"`
+	Monto              float64 `json:"monto"`
+	Emisor             string  `json:"emisor"`
+	Receptor           string  `json:"receptor"`
+	Fecha_transaccion  string  `json:"fecha_transaccion"`
+}
+
+// Se define variable [] de transacciones para transformar []byte data a formato transacciones struct
+
+var t []transacciones
+
+// Se crea el handler GetAll
+
+func GetAll(ctx *gin.Context) {
+	ctx.JSON(200, gin.H{
+		"data": t,
+	})
+}
+
 func main() {
-
-	// Definición estructura de json
-
-	type transacciones struct {
-		Id                 int     `json:"id"`
-		Codigo_transaccion string  `json:"codigo_transaccion"`
-		Moneda             string  `json:"moneda"`
-		Monto              float64 `json:"monto"`
-		Emisor             string  `json:"emisor"`
-		Receptor           string  `json:"receptor"`
-		Fecha_transaccion  string  `json:"fecha_transaccion"`
-	}
 
 	// Se obtiene la data del archivo creado
 
 	data, _ := os.ReadFile("./transacciones.json")
-
-	// Se define variable [] de transacciones para transformar []byte data a formato transacciones struc
-	var t []transacciones
 
 	if err := json.Unmarshal(data, &t); err != nil {
 		fmt.Println("error aqui")
@@ -45,16 +54,8 @@ func main() {
 		})
 	})
 
-	// Se crea el handler GetAll y end point transacciones
-
-	GetAll := func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
-			"data": t,
-		})
-	}
+	// Se crea el end point transacciones
 
 	router.GET("/transacciones", GetAll)
-
-	// Se crea
 	router.Run()
 }
