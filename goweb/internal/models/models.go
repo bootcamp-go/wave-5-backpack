@@ -1,7 +1,7 @@
 package models
 
 type Transaction struct {
-  ID int64 `json:"id"`
+  ID int `json:"id"`
   Cod string `json:"cod_transaction"`
   Moneda string `json:"moneda"`
   Monto float64 `json:"monto"`
