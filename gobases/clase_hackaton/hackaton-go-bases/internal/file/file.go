@@ -133,7 +133,6 @@ func guardarArchivo(tickets []interfaces.Ticket) error {
 	}
 	registrosBytes := []byte(ticketsConcatenados)
 	err := os.WriteFile(PATH, registrosBytes, 0644)
-	//fmt.Println(ticketsConcatenados)
 	return err
 }
 

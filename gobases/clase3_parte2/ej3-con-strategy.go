@@ -14,7 +14,7 @@ type Producto interface {
 
 type Ecommerce interface {
 	total() float32
-	agregar(producto Producto)
+	agregar(producto producto)
 }
 
 type tienda struct {
@@ -59,8 +59,8 @@ func nuevoProducto(tipoProducto Producto, nombre string, precio float32) product
 	return producto{tipoProducto, nombre, precio}
 }
 
-func nuevaTienda() tienda {
-	return tienda{}
+func nuevaTienda() Ecommerce {
+	return &tienda{}
 }
 
 func (t *tienda) agregar(productoNuevo producto) {
