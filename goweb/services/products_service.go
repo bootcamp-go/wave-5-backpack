@@ -6,6 +6,7 @@ import (
 	"goweb/models"
 	"log"
 	"os"
+	"strconv"
 )
 
 var PATH string = "./resources/products.json"
@@ -25,4 +26,27 @@ func ReadAllProducts() ([]models.Product, error) {
 	}
 
 	return productos, nil
+}
+
+func GetById(id string) (models.Product, error) {
+	productos, err := ReadAllProducts()
+	if err != nil {
+		log.Println(err)
+		return models.Product{}, err
+	}
+
+	strId, err := strconv.Atoi(id)
+	if err != nil {
+		log.Println(err)
+		return models.Product{}, err
+	}
+
+	for _, producto := range productos {
+		if producto.Id == strId {
+			return producto, nil
+		}
+	}
+
+	log.Println("no se encontro el producto con id: ", id)
+	return models.Product{}, errors.New("producto no encontrado")
 }
