@@ -1,6 +1,7 @@
 package service
 
 import (
+	"errors"
 	"fmt"
 )
 
@@ -31,80 +32,96 @@ func NewBookings(Tickets []Ticket) Bookings {
 	return &bookings{Tickets: Tickets}
 }
 
-func (b *bookings) Create(t Ticket) (Ticket, error) {
-
-	defer func() {
-		err := recover()
-
-		if err != nil {
-			fmt.Println("Se detectaron varios errores al crear el ticket")
+func (b *bookings) Read(id int) (Ticket, error) {
+	var find bool = false
+	var ticket Ticket
+	for _, values := range b.Tickets {
+		if values.Id == id {
+			find = true
+			ticket = values
 		}
-	}()
-
-	_, err := b.Read(t.Id)
-
-	if err != nil {
-		panic("Id already exists")
 	}
 
-	if t.Id == 0 {
-		panic("Id no puede ser 0")
+	if !find {
+		return Ticket{}, fmt.Errorf("this ticket not exists id: %d", id)
 	}
 
-	if t.Names == "" {
-		panic("Nombre debe completarse")
-	}
-
-	if t.Email == "" {
-		panic("Email requerido")
-	}
-
-	if t.Destination == "" {
-		panic("Destination requerido")
-	}
-
-	if t.Date == "" {
-		panic("Fecha requerido")
-	}
-
-	if t.Price <= 0 {
-		panic("Precio debe ser mayor a 0")
-	}
-
-	b.Tickets = append(b.Tickets, t)
-
-	return Ticket{t.Id, t.Names, t.Email, t.Destination, t.Date, t.Price}, nil
+	return ticket, nil
 }
 
-func (b *bookings) Read(id int) (Ticket, error) {
+func (b *bookings) Create(t Ticket) (Ticket, error) {
 
-	for i, tickets := range b.Tickets {
-		if b.Tickets[i].Id == id {
-			return Ticket{tickets.Id, tickets.Names, tickets.Email, tickets.Destination, tickets.Date, tickets.Price}, nil
-		}
+	err := ValidateTicket(t)
+	if err != nil {
+		return Ticket{}, nil
 	}
-	return Ticket{}, fmt.Errorf("Ticket not found")
+
+	id := len(b.Tickets) + 1
+
+	t.Id = id
+	b.Tickets = append(b.Tickets, t)
+	return t, nil
 }
 
 func (b *bookings) Update(id int, t Ticket) (Ticket, error) {
+	err := ValidateTicket(t)
+	if err != nil {
+		return Ticket{}, nil
+	}
 
-	for i := range b.Tickets {
-		if b.Tickets[i].Id == id {
-			return Ticket{t.Id, t.Names, t.Email, t.Destination, t.Date, t.Price}, nil
+	var find bool = false
+	var ticket Ticket
+	for _, values := range b.Tickets {
+		if values.Id == id {
+			find = true
+			ticket = t
+			ticket.Id = id
 		}
 	}
 
-	return Ticket{}, fmt.Errorf("Ticket not found")
+	if !find {
+		return Ticket{}, fmt.Errorf("this ticket not exists id: %d", id)
+	}
+
+	return ticket, nil
 }
 
 func (b *bookings) Delete(id int) (int, error) {
 
-	for i := range b.Tickets {
-		if b.Tickets[i].Id == id {
-			b.Tickets = []Ticket{}
-			return id, nil
+	var find bool = false
+	for _, t := range b.Tickets {
+		if t.Id == id {
+			find = true
 		}
 	}
 
-	return 0, fmt.Errorf("Ticket not found")
+	if !find {
+		return 0, fmt.Errorf("el ticket id %d no existe", id)
+	}
+
+	return id, nil
+}
+
+func ValidateTicket(t Ticket) error {
+	if t.Date == "" {
+		return errors.New("el campo data es requerido")
+	}
+
+	if t.Destination == "" {
+		return errors.New("el campo destino es requerido")
+	}
+
+	if t.Email == "" {
+		return errors.New("el campo email es requerido")
+	}
+
+	if t.Names == "" {
+		return errors.New("el campo nombres es requerido")
+	}
+
+	if t.Price == 0 {
+		return errors.New("el campo precio es requerido")
+	}
+
+	return nil
 }

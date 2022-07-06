@@ -1,7 +1,6 @@
 package file
 
 import (
-	"encoding/csv"
 	"fmt"
 	"hackaton-go-bases/internal/service"
 	"os"
@@ -10,13 +9,13 @@ import (
 )
 
 type File struct {
-	path string
+	Path string
 }
 
 func (f *File) Read() ([]service.Ticket, error) {
 
 	var data []service.Ticket
-	read, err := os.ReadFile(f.path)
+	read, err := os.ReadFile(f.Path)
 	file := string(read)
 	rows := strings.Split(file, "\n")
 
@@ -26,7 +25,7 @@ func (f *File) Read() ([]service.Ticket, error) {
 	}
 
 	for _, row := range rows {
-		ticketS := strings.Split(row, ";")
+		ticketS := strings.Split(row, ",")
 		id, err := strconv.Atoi(ticketS[0])
 		if err != nil {
 			fmt.Print(err)
@@ -43,20 +42,12 @@ func (f *File) Read() ([]service.Ticket, error) {
 	return data, nil
 }
 
-func (f *File) Write(t service.Ticket) error {
+func (f *File) Write(t []service.Ticket) error {
 
-	data, err := os.OpenFile(f.path, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
-	if err != nil {
-		return err
+	resultado := ""
+	for _, value := range t {
+		resultado += fmt.Sprintf("%d,%s,%s,%s,%s,%d\n", value.Id, value.Names, value.Email, value.Destination, value.Date, value.Price)
 	}
-	d := []string{strconv.Itoa(t.Id), t.Names, t.Email, t.Destination, t.Date, strconv.Itoa(t.Price)}
-	csvFile := csv.NewWriter(data)
-	err = csvFile.Write(d)
-	csvFile.Flush()
-	data.Close()
-	if err != nil {
-		return err
-	}
-
-	return nil
+	err := os.WriteFile(f.Path, []byte(resultado), 0644)
+	return err
 }
