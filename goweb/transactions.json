@@ -1,0 +1,29 @@
+[
+    {
+        "id": 10,
+        "code": "30ba",
+        "currency": "COP",
+        "amount": 300.5,
+        "issuer": "kevin",
+        "recipient": "daniel",
+        "date": "10 july 2022"
+    },
+    {
+        "id": 11,
+        "code": "3a5h",
+        "currency": "COP",
+        "amount": 10000.5,
+        "issuer": "camila",
+        "recipient": "kevin",
+        "date": "13 july 2022"
+    },
+    {
+        "id": 7,
+        "code": "1t7a",
+        "currency": "COP",
+        "amount": 900.0,
+        "issuer": "daniel",
+        "recipient": "santiago",
+        "date": "10 february 2022"
+    }
+]
