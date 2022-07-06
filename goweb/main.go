@@ -3,8 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"os"
+
+	"github.com/gin-gonic/gin"
 )
 
 type user struct {
@@ -21,8 +22,7 @@ type user struct {
 func GetAll(ctx *gin.Context) {
 	data, err := os.ReadFile("./users.json")
 	if err != nil {
-		fmt.Println("error en lectura", err)
-		ctx.JSON(404, err)
+		ctx.JSON(500, gin.H{"error": err.Error()})
 	}
 
 	var users []user
@@ -30,14 +30,24 @@ func GetAll(ctx *gin.Context) {
 	ctx.JSON(200, users)
 }
 
-func GetOne(ctx *gin.Context) {
+func GetById(ctx *gin.Context) {
 	data, err := os.ReadFile("./users.json")
+	var users []user
+	json.Unmarshal([]byte(data), &users)
+
 	if err != nil {
-		fmt.Println("error en lectura", err)
-		ctx.JSON(404, err)
+		ctx.JSON(500, gin.H{"error": err.Error()})
+	}
+	id := ctx.Param("id")
+
+	for _, user := range users {
+		if fmt.Sprint(user.Id) == id{
+			ctx.JSON(200, user)
+			return
+		}
 	}
 
-	ctx.JSON(200, data)
+	ctx.JSON(404, gin.H{"error": err.Error()})
 
 }
 
@@ -46,10 +56,14 @@ func GetOne(ctx *gin.Context) {
 func main() {
 	server := gin.Default()
 
-	server.GET("/users", GetAll)
-	server.GET("/one", GetOne)
+	users := server.Group("/users")
+	{
+		users.GET("/", GetAll)
+		users.GET("/:id", GetById)
+	}
+
 	// c.JSON(200, gin.H{"msg": "Hola, Eimita"})
 
-	server.Run()
+	server.Run(":8080")
 
 }
