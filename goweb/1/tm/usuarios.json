@@ -1,0 +1,12 @@
+ [
+    {
+        "id": 1,
+        "nombre": "Agustin",
+        "apellido": "Nigrelli",
+        "email": "agustin.nigrelli@mercadolibre.com",
+        "edad": 32,
+        "altura": 1.72,
+        "activo": true,
+        "creacion": "06-07-2022"
+    }
+]
