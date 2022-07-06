@@ -1,0 +1,38 @@
+[
+    {
+        "id": "12345",
+        "code": "ABCDEF123",
+        "moneda": "CLP",
+        "monto": 15000,
+        "emisor": "Cristobal Monsalve",
+        "receptor": "Juan Perez",
+        "fecha": "06-07-2022"
+    },
+    {
+        "id": "56783",
+        "code": "H678YTG",
+        "moneda": "USD",
+        "monto": 500,
+        "emisor": "NN",
+        "receptor": "Carlos Rodriguez",
+        "fecha": "01-07-2022"
+    },
+    {
+        "id": "9464723",
+        "code": "Y23TFGH1",
+        "moneda": "USD",
+        "monto": 1000,
+        "emisor": "Camila Gonzalez",
+        "receptor": "Juan Perez",
+        "fecha": "29-06-2022"
+    },
+    {
+        "id": "98765",
+        "code": "UHJ76GBN43",
+        "moneda": "CLP",
+        "monto": 100000,
+        "emisor": "Cristobal Monsalve",
+        "receptor": "NN",
+        "fecha": "16-06-2022"
+    }
+]
