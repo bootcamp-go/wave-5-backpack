@@ -1,0 +1,34 @@
+{
+    "productos":[
+        {
+            "id": 1,
+            "nombre": "tennis deportivos",
+            "color": "rojo",
+            "precio": 200000,
+            "stock": 10,
+            "codigo": "A0001",
+            "publicado": true,
+            "fecha_de_creacion": "06-07-2022"
+        },
+        {
+            "id": 2,
+            "nombre": "tennis deportivos",
+            "color": "rojo",
+            "precio": 200000,
+            "stock": 10,
+            "codigo": "A0002",
+            "publicado": true,
+            "fecha_de_creacion": "06-07-2022"
+        },
+        {
+            "id": 3,
+            "nombre": "tennis deportivos",
+            "color": "rojo",
+            "precio": 200000,
+            "stock": 10,
+            "codigo": "A0003",
+            "publicado": true,
+            "fecha_de_creacion": "06-07-2022"
+        }
+    ]
+}
