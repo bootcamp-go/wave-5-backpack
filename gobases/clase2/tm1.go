@@ -14,7 +14,7 @@ func impuestos(sueldo float32) float32 {
 			return sueldo * 0.17
 		}
 	} else {
-		return 0.0
+		return 0
 	}
 }
 
