@@ -1,22 +1,19 @@
-{
-	"usuario1": {
-		"id": 10,
-		"nombre": "a",
-		"apellido": "a",
-		"email": "a@a.com",
-		"edad": 25,
-		"altura": 1.80,
-		"activo": true,
-		"fecha_de_creacion": "2022-02-02"
-	},
-    "usuario2": {
-		"id": 10,
-		"nombre": "a",
-		"apellido": "a",
-		"email": "a@a.com",
-		"edad": 25,
-		"altura": 1.80,
-		"activo": true,
-		"fecha_de_creacion": "2022-02-02"
-	}
-}
+[{
+	"id": 0,
+	"nombre": "a",
+	"apellido": "a",
+	"email": "a@a.com",
+	"edad": 30,
+	"altura": 1.75,
+	"activo": true,
+	"fecha_de_creacion": "2022-02-20"
+}, {
+	"id": 1,
+	"nombre": "b",
+	"apellido": "b",
+	"email": "b@b.com",
+	"edad": 32,
+	"altura": 1.823,
+	"activo": false,
+	"fecha_de_creacion": "2022-02-22"
+}]
