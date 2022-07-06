@@ -18,11 +18,12 @@ type Usuarios struct {
 func main() {
 	router := gin.Default()
 
-	// router.GET("/HolaNombre", func(c *gin.Context) {
-	// 	c.JSON(200, gin.H{
-	// 		"mesage": "Hola Jose",
-	// 	})
-	// })
+	router.GET("/HolaNombre", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"mesage": "Hola Jose",
+		})
+	})
+
 	router.GET("/GetAll", func(ctx *gin.Context) {
 		var u []Usuarios
 		j, _ := os.ReadFile("./usuarios.json")
