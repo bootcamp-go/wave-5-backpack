@@ -1,0 +1,29 @@
+[
+  {
+    "id": 1,
+    "cod_transaction": "abc1234",
+    "moneda": "ARS",
+    "monto": 1500.99,
+    "emisor": "BBVA",
+    "receptor": "id cuenta mp",
+    "date_transaction": "2022-07-4",
+  },
+  {
+    "id": 2,
+    "cod_transaction": "abc1235",
+    "moneda": "ARS",
+    "monto": 1250.30,
+    "emisor": "BBVA",
+    "receptor": "id cuenta mp",
+    "date_transaction": "2022-07-5",
+  },
+  {
+    "id": 3,
+    "cod_transaction": "abc1236",
+    "moneda": "ARS",
+    "monto": 1250.30,
+    "emisor": "BBVA",
+    "receptor": "id cuenta mp",
+    "date_transaction": "2022-07-6",
+  },
+]
