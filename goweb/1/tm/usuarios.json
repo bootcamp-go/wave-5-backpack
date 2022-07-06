@@ -1,11 +1,41 @@
  [
     {
         "id": 1,
-        "nombre": "Agustin",
-        "apellido": "Nigrelli",
-        "email": "agustin.nigrelli@mercadolibre.com",
+        "nombre": "Harry",
+        "apellido": "Potter",
+        "email": "harry.potter@gryffindor.com",
         "edad": 32,
         "altura": 1.72,
+        "activo": true,
+        "creacion": "06-07-2022"
+    },
+    {
+        "id": 2,
+        "nombre": "Ronald",
+        "apellido": "Weasley",
+        "email": "ronald.weasleyffindor.com",
+        "edad": 31,
+        "altura": 1.71,
+        "activo": false,
+        "creacion": "06-07-2022"
+    },
+    {
+        "id": 3,
+        "nombre": "Draco",
+        "apellido": "Malfoy",
+        "email": "draco.malfoy@slytherin.com",
+        "edad": 33,
+        "altura": 1.68,
+        "activo": true,
+        "creacion": "06-07-2022"
+    },
+    {
+        "id": 4,
+        "nombre": "Cho",
+        "apellido": "Chang",
+        "email": "cho.chang@ravenclaw.com",
+        "edad": 32,
+        "altura": 1.65,
         "activo": true,
         "creacion": "06-07-2022"
     }
