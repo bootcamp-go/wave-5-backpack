@@ -1,0 +1,12 @@
+[
+    { "id": 0, "codigo": "NKL6346MNJL546", "moneda": "ARG", "monto": 200, "emisor": "Nicolas Aldeco", "receptor": "Nicolas Tesone", "fecha": "06-07-2022"},
+    { "id": 1, "codigo": "NJ736BUI3673GB", "moneda": "ARG", "monto": 800, "emisor": "Nicolas Tesone", "receptor": "Nicolas Aldeco", "fecha": "05-07-2022"},
+    { "id": 2, "codigo": "42JKNFR897NJKE", "moneda": "ARG", "monto": 600, "emisor": "Tamara Lebendiker", "receptor": "Cecilia Fernández", "fecha": "04-07-2022"},
+    { "id": 3, "codigo": "890VNB312FDG56", "moneda": "ARG", "monto": 1200, "emisor": "Cecilia Fernández", "receptor": "Tamara Lebendiker", "fecha": "04-07-2022"},
+    { "id": 4, "codigo": "DSA879NJK3452L", "moneda": "ARG", "monto": 500, "emisor": "Vincent Conace", "receptor": "Juan Machuca", "fecha": "04-07-2022"},
+    { "id": 5, "codigo": "BN132ADS879543", "moneda": "ARG", "monto": 7500, "emisor": "Juan Machuca", "receptor": "Vincent Conace", "fecha": "03-07-2022"},
+    { "id": 6, "codigo": "MKLACS89787923", "moneda": "COL", "monto": 950, "emisor": "Juan Serna", "receptor": "Luz Jimenez", "fecha": "03-07-2022"},
+    { "id": 7, "codigo": "LMK24879SDFHRT", "moneda": "COL", "monto": 100, "emisor": "Luz Jimenez", "receptor": "Juan Serca", "fecha": "02-07-2022"},
+    { "id": 8, "codigo": "980ADS67532KJA", "moneda": "MXN", "monto": 2000, "emisor": "Jessica Escobar", "receptor": "Luz Lucumi", "fecha": "02-07-2022"},
+    { "id": 9, "codigo": "MKL12388923467", "moneda": "MXN", "monto": 5000, "emisor": "Andrea Esquivel", "receptor": "Julián Rentería", "fecha": "01-07-2022"}
+]
