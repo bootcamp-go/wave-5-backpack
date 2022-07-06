@@ -24,6 +24,7 @@ func main() {
 
 	newticket := service.Ticket(service.Ticket{Id: 1002, Names: "Juan Perez", Email: "test@gmail.com", Destination: "test", Date: "15:00", Price: 46500})
 	booking.Create(newticket)
+
 	fmt.Println(newticket)
 	fmt.Println(booking.Update(1, newticket))
 
@@ -41,6 +42,10 @@ func main() {
 		booking.Update(10001, newticket)
 	}
 
+	tickets = append(tickets, t2)
+
 	fmt.Println(t2)
+
+	file.Write(tickets)
 
 }
