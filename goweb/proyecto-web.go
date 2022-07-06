@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -61,5 +62,35 @@ func main() {
 }
 
 func getAll(c *gin.Context) {
-	c.IndentedJSON(http.StatusOK, transaciones)
+
+	codigo_transaccion := c.Query("codigo_transaccion")
+	moneda := c.Query("moneda")
+	emisor := c.Query("emisor")
+	receptor := c.Query("receptor")
+	fechaTransaccion := c.Query("fecha_transaccion")
+	monto := c.Query("monto")
+	id := c.Query("id")
+	idInt, errId := strconv.Atoi(id)
+	montoFloat, errMonto := strconv.ParseFloat(monto, 64)
+
+	if errId != nil && id != "" {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "id inválido"})
+		return
+	}
+
+	if errMonto != nil && monto != "" {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "monto inválido"})
+		return
+	}
+
+	transaccionesFiltradas := []Transaccion{}
+
+	// El filtrado es con "o lógico". O sea, cualquier condición que se cumpla, se devuelve como resultado
+	for _, transaccion := range transaciones {
+		if transaccion.Id == idInt || transaccion.CodigoTransaccion == codigo_transaccion || transaccion.Moneda == moneda || transaccion.Monto == montoFloat || transaccion.Emisor == emisor || transaccion.Receptor == receptor || transaccion.FechaTransaccion == fechaTransaccion {
+			transaccionesFiltradas = append(transaccionesFiltradas, transaccion)
+		}
+	}
+
+	c.IndentedJSON(http.StatusOK, transaccionesFiltradas)
 }
