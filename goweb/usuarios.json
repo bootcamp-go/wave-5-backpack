@@ -1,0 +1,22 @@
+{
+	"usuario1": {
+		"id": 10,
+		"nombre": "a",
+		"apellido": "a",
+		"email": "a@a.com",
+		"edad": 25,
+		"altura": 1.80,
+		"activo": true,
+		"fecha_de_creacion": "2022-02-02"
+	},
+    "usuario2": {
+		"id": 10,
+		"nombre": "a",
+		"apellido": "a",
+		"email": "a@a.com",
+		"edad": 25,
+		"altura": 1.80,
+		"activo": true,
+		"fecha_de_creacion": "2022-02-02"
+	}
+}
