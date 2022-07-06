@@ -17,7 +17,9 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Printf("%v /n", tickets)
+	fmt.Println("no error reading file")
+	//fmt.Printf("%v \n", tickets)
+	fmt.Println("end of reading file")
 
 }
 
@@ -72,20 +74,51 @@ type File struct {
 //
 func (f *File) ReadFile() ([]Ticket, error) {
 
+	var fileSliceFormat []Ticket
 	file, err := os.ReadFile("./tickets.csv")
 
 	//fmt.Printf("%v", file)
 	if err != nil {
 		return []Ticket{}, errors.New("cannot read file")
 	}
-
+	// type Ticket struct {
+	// 	Id                              int
+	// 	Names, Email, Destination, Date string
+	// 	Price                           int
+	// }
 	for _, v := range file {
-		if v == 110 {
-			fmt.Println(v)
+		var position int // position on slice type ticket
+		var temp Ticket
+		switch position {
+		case 0:
+			temp.Id += int(v)
+		case 1:
+			temp.Names += string(v)
+		case 2:
+			temp.Email += string(v)
+		case 3:
+			temp.Destination += string(v)
+		case 4:
+			temp.Date += string(v)
+		case 5:
+			temp.Price += int(v)
 		}
-	}
 
-	return nil, nil
+		if v == 44 { //separamos por commas ASCII 44d
+			var count, index int
+			count++
+			position++
+			if v == 13 { // encontramos el fin de la fila
+				fileSliceFormat[index] = temp
+				index++
+				position = 0
+			}
+
+			fmt.Printf("%v \n", temp.Names)
+		}
+
+	}
+	return fileSliceFormat, nil
 }
 
 func (f *File) Write(Ticket) error {
