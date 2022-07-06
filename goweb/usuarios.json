@@ -7,7 +7,7 @@
       "edad":34,
       "altura":165.0,
       "activo":true,
-      "fecha_creacion":"2022-06-16"
+      "fecha_creacion":"2022-06-16T12:00:00.00-05:00"
    },
    {
       "id":2,
@@ -17,7 +17,7 @@
       "edad":28,
       "altura":170.0,
       "activo":true,
-      "fecha_creacion":"2022-06-17"
+      "fecha_creacion":"2022-06-17T12:00:00.00-05:00"
    },
    {
       "id":3,
@@ -27,7 +27,7 @@
       "edad":26,
       "altura":159.0,
       "activo":true,
-      "fecha_creacion":"2022-06-18"
+      "fecha_creacion":"2022-06-18T12:00:00.00-05:00"
    },
    {
       "id":4,
@@ -37,7 +37,7 @@
       "edad":31,
       "altura":172.0,
       "activo":true,
-      "fecha_creacion":"2022-06-19"
+      "fecha_creacion":"2022-06-19T12:00:00.00-05:00"
    },
    {
       "id":5,
@@ -47,7 +47,7 @@
       "edad":29,
       "altura":182.0,
       "activo":true,
-      "fecha_creacion":"2022-06-20"
+      "fecha_creacion":"2022-06-20T12:00:00.00-05:00"
    },
    {
       "id":6,
@@ -57,7 +57,7 @@
       "edad":25,
       "altura":179.0,
       "activo":true,
-      "fecha_creacion":"2022-06-21"
+      "fecha_creacion":"2022-06-21T12:00:00.00-05:00"
    },
    {
       "id":7,
@@ -67,7 +67,7 @@
       "edad":33,
       "altura":156.0,
       "activo":true,
-      "fecha_creacion":"2022-06-22"
+      "fecha_creacion":"2022-06-22T12:00:00.00-05:00"
    },
    {
       "id":8,
@@ -77,6 +77,6 @@
       "edad":27,
       "altura":161.0,
       "activo":true,
-      "fecha_creacion":"2022-06-23"
+      "fecha_creacion":"2022-06-23T12:00:00.00-05:00"
    }
 ]
