@@ -12,6 +12,18 @@ type File struct {
 	Path string
 }
 
+func pasarAString(bookings []service.Ticket) string {
+	
+	var datos string
+	for _, b := range bookings {
+		datos += fmt.Sprintf("%d,%s,%s,%s,%s,%d\n",b.Id,b.Names,b.Email,b.Destination,b.Date,b.Price)
+	}
+
+	datos = datos[:len(datos)-1]
+
+	return datos
+}
+
 func (f File) Read() ([]service.Ticket, error) {
 	archivo, err := os.ReadFile(f.Path)
 	if err !=nil{
@@ -36,37 +48,19 @@ func (f File) Read() ([]service.Ticket, error) {
 	return data, nil
 }
 
-/* func pasarAString(bookings []service.Ticket) string {
-	
-	var datos string
-	for _, b := range bookings {
-		datos += fmt.Sprintf("%d,%s,%s,%s,%s,%d\n",b.Id,b.Names,b.Email,b.Destination,b.Date,b.Price)
-	}
-
-	datos = datos[:len(datos)-1]
-
-	return datos
-} */
-
-func pasarAString(t service.Ticket) string {
-	
-	var datos string
-	datos = fmt.Sprintf("%d,%s,%s,%s,%s,%d",t.Id,t.Names,t.Email,t.Destination,t.Date,t.Price)
-
-	return datos
-}
 
 func (f *File) Write(t service.Ticket) error {
-	ticketToAdd := []byte(pasarAString(t))
 
-	data, noData := os.ReadFile(f.Path)
+	data, noData := f.Read()
 	if noData != nil {
 		return noData
 	}
 
-	data = ticketToAdd
+	data = append(data, t)
+	dataS := pasarAString(data)
+	dataByte := []byte(dataS)
 
-	err := os.WriteFile(f.Path, data, 0644)
+	err := os.WriteFile(f.Path, dataByte, 0644)
 	
 	if err != nil {
 		return err

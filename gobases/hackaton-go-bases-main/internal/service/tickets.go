@@ -44,6 +44,7 @@ func (b *bookings) Create(t Ticket) (Ticket, error) {
 	return t, nil
 }
 
+
 func (b *bookings) Read(id int) (Ticket, error) {
 	for _, ticket := range b.Tickets{
 		if ticket.Id == id{
@@ -83,7 +84,7 @@ func (b *bookings) Delete(id int) (int, error) {
 	for i, values :=range b.Tickets{ 
 		if values.Id == id{
 			find = true
-			b.Tickets = append(b.Tickets[:i], b.Tickets[i+1:]...)
+			b.Tickets = append(b.Tickets[:i], b.Tickets[i+1:]...) // REVISAR DONDE LO PONE BOOTCAMP
 			break
 		}
 	}
