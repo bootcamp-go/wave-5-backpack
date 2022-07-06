@@ -35,21 +35,25 @@ func main() {
 		log.Fatal(err)
 	}
 
-	// Se crea el routuer y los end points
+	// Se crea el routuer y los end points para generar el saludo
 
 	router := gin.Default()
 
 	router.GET("/saludo", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "Hola Sala 2 saludo",
+			"message": "Hola ! ",
 		})
 	})
 
-	router.GET("/transacciones", func(c *gin.Context) {
-		c.JSON(200, gin.H{
+	// Se crea el handler GetAll y end point transacciones
+
+	GetAll := func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{
 			"data": t,
 		})
-	})
+	}
+
+	router.GET("/transacciones", GetAll)
 
 	// Se crea
 	router.Run()
