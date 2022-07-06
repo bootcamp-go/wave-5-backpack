@@ -2,6 +2,7 @@ package file
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"strconv"
 	"strings"
@@ -24,7 +25,15 @@ func (f *File) Read() ([]service.Ticket, error) {
 	return readData(data), nil
 }
 
-func (f *File) Write(service.Ticket) error {
+func (f *File) Write(tickets []service.Ticket) error {
+	// Guardamos el archivo en disco
+	ticketsByte := []byte(generarCSV(tickets))
+	err := os.WriteFile(f.path, ticketsByte, 0644)
+
+	if err != nil {
+		return errors.New("no se pudo guardar la información")
+	}
+
 	return nil
 }
 
@@ -84,4 +93,17 @@ func readData(bytes []byte) []service.Ticket {
 	}
 
 	return data
+}
+
+// Función para generar la cadena de texto del CSV
+func generarCSV(t []service.Ticket) string {
+	// Cadena de texto para guardar la información del CSV
+	ticketsString := ""
+
+	// Generamos la información en formato CSV
+	for _, t := range t {
+		ticketsString += fmt.Sprintf("%d,%s,%s,%s,%s,%d\n", t.Id, t.Names, t.Email, t.Destination, t.Date, t.Price)
+	}
+
+	return ticketsString
 }
