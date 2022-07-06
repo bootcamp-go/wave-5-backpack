@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/anesquivel/hackathon/internal/file"
-	"github.com/anesquivel/hackathon/internal/service"
+	"github.com/anesquivel/wave-5-backpack/tree/esquivel_andrea/gobases/hackathon/internal/file"
+	"github.com/anesquivel/wave-5-backpack/tree/esquivel_andrea/gobases/hackathon/internal/service"
 )
 
 func main() {
