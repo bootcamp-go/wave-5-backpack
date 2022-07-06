@@ -11,6 +11,8 @@ import (
 
 func main() {
 
+	// Definición estructura de json
+
 	type transacciones struct {
 		Id                 int     `json:"id"`
 		Codigo_transaccion string  `json:"codigo_transaccion"`
@@ -21,14 +23,19 @@ func main() {
 		Fecha_transaccion  string  `json:"fecha_transaccion"`
 	}
 
+	// Se obtiene la data del archivo creado
+
 	data, _ := os.ReadFile("./transacciones.json")
 
+	// Se define variable [] de transacciones para transformar []byte data a formato transacciones struc
 	var t []transacciones
 
 	if err := json.Unmarshal(data, &t); err != nil {
 		fmt.Println("error aqui")
 		log.Fatal(err)
 	}
+
+	// Se crea el routuer y los end points
 
 	router := gin.Default()
 
@@ -44,5 +51,6 @@ func main() {
 		})
 	})
 
+	// Se crea
 	router.Run()
 }
