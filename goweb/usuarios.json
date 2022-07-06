@@ -1,0 +1,29 @@
+[
+    {
+        "id": 1,
+        "nombre": "Diego",
+        "apellido": "Palacios",
+        "email": "diferpaho@gmail.com",
+        "altura": 1.68,
+        "activo": true,
+        "fecha": "21/06/2022"
+    },
+    {
+        "id": 2,
+        "nombre": "Fabian",
+        "apellido": "Parrado",
+        "email": "fparrado@gmail.com",
+        "altura": 1.80,
+        "activo": true,
+        "fecha": "22/06/2022"
+    },
+    {
+        "id": 3,
+        "nombre": "Lina",
+        "apellido": "Naranjo",
+        "email": "lnaranjo@gmail.com",
+        "altura": 1.60,
+        "activo": true,
+        "fecha": "23/06/2022"
+    }
+]
