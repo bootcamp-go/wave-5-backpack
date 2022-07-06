@@ -10,6 +10,24 @@
     },
     {
         "id": 2,
+        "transaction_code": "YgbQH5LvbME4y3AbNXwuTBvaeGcSdf",
+        "currency": "CLP",
+        "amount": 120000.00,
+        "sender": "Jose Luis Riveron",
+        "reciever": "Luz Lucumi",
+        "transaction_date":"2022-07-06T15:30:10.477Z"
+    },
+    {
+        "id": 3,
+        "transaction_code": "YgbQH5LvbME4y3AbNXwuTBvaeGcSdf",
+        "currency": "CLP",
+        "amount": 120000.00,
+        "sender": "Jose Luis Riveron",
+        "reciever": "Luz Lucumi",
+        "transaction_date":"2022-07-06T15:30:10.477Z"
+    },
+    {
+        "id": 4,
         "transaction_code": "dmuVBLehDjVDE3rjXV4dxk29TaUCwE",
         "currency": "COL",
         "amount": 500000.00,
@@ -18,7 +36,7 @@
         "transaction_date":"2022-07-06T16:04:45.477Z"
     },
     {
-        "id": 3,
+        "id": 5,
         "transaction_code": "5LUXNFwrKzRTuVxpYZvwkP5VZvzm7A",
         "currency": "USD",
         "amount": 60.02,
@@ -27,7 +45,7 @@
         "transaction_date":"2022-07-06T16:05:25.477Z"
     },
     {
-        "id": 4,
+        "id": 6,
         "transaction_code": "YquBfjHXbAwMn7bVcGr2R6GXvj8YcX",
         "currency": "ARG",
         "amount": 23000.05,
