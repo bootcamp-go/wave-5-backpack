@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "codigo_transaccion": "123abc",
+    "moneda": "USD",
+    "monto": 500.0,
+    "emisor": "Joaquin",
+    "receptor": "Mercadopago",
+    "fecha_transaccion": "03-08-21"
+  },
+  {
+    "id": 2,
+    "codigo_transaccion": "abc123",
+    "moneda": "USD",
+    "monto": 502.0,
+    "emisor": "Pedro",
+    "receptor": "Mercadopago",
+    "fecha_transaccion": "03-08-21"
+  }
+]
