@@ -1,9 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-	"log"
-
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,15 +11,8 @@ func main() {
 		// ctx.JSON(200, gin.H{
 		// 	"message": "Hola Francisco",
 		// })
-		products := GetAll()
 
-		jsonData, err := json.Marshal(products)
-
-		if err != nil {
-			log.Fatal(err)
-		} else {
-			ctx.JSON(200, string(jsonData))
-		}
+		GetAll(ctx.Writer, ctx.Request)
 
 	})
 	router.Run()

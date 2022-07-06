@@ -1,5 +1,12 @@
 package main
 
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"net/http"
+)
+
 type product struct {
 	ID            int
 	Nombre        string
@@ -24,7 +31,7 @@ func newProduct(id int, nombre string, color string, precio float64, stock int, 
 	}
 }
 
-func GetAll() []product {
+func GetAll(w http.ResponseWriter, req *http.Request) {
 	var products []product
 
 	p1 := newProduct(1, "Televisor 50´", "Negro", 100000, 100, "AR45RD1", true, "20-02-22")
@@ -33,5 +40,12 @@ func GetAll() []product {
 
 	products = append(products, p1, p2, p3)
 
-	return products
+	jsonData, err := json.Marshal(products)
+
+	if err != nil {
+		log.Fatal(err)
+	} else {
+		fmt.Fprintf(w, string(jsonData))
+	}
+
 }
