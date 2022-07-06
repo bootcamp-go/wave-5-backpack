@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "name": "Juan",
+        "lastname": "Perez",
+        "email": "juanper@mail.com",
+        "age": 23,
+        "height": 1.65,
+        "active": true, 
+        "doCreation": "05/06/2020"
+    },
+    {
+        "id": 2,
+        "name": "Leandro",
+        "lastname": "Lopez",
+        "email": "lelo@mail.com",
+        "age": 32,
+        "height": 1.80,
+        "active": false, 
+        "doCreation": "12/11/2019"
+    },
+    {
+        "id": 3,
+        "name": "Ana",
+        "lastname": "Gonzales",
+        "email": "ani.go@mail.com",
+        "age": 43,
+        "height": 1.55,
+        "active": true, 
+        "doCreation": "25/04/2022"
+    },
+    {
+        "id": 4,
+        "name": "Sandra",
+        "lastname": "Quinteros",
+        "email": "santeros@mail.com",
+        "age": 18,
+        "height": 1.74,
+        "active": true, 
+        "doCreation": "30/01/2021"
+    }
+]
