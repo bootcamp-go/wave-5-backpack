@@ -1,3 +1,3 @@
-module github.com/bootcamp-go/hackaton-go-bases
+module github.com/anesquivel/hackathon
 
 go 1.18

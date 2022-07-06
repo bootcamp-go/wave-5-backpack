@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/bootcamp-go/hackaton-go-bases/internal/file"
-	"github.com/bootcamp-go/hackaton-go-bases/internal/service"
+	"github.com/anesquivel/hackathon/internal/file"
+	"github.com/anesquivel/hackathon/internal/service"
 )
 
 func main() {

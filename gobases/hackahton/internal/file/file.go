@@ -7,7 +7,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/bootcamp-go/hackaton-go-bases/internal/service"
+	"github.com/anesquivel/hackathon/internal/service"
 )
 
 type File struct {
