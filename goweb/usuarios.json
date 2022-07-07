@@ -1,0 +1,19 @@
+[{
+    "id": 1,
+    "nombre": "Yvonne",
+    "apellido": "Pintos",
+    "email": "yvopinto@gmail.com",
+    "edad": 4,
+    "altura": 234,
+    "activo": false,
+    "fecha_de_creacion": "234234/234234"
+}, {
+    "id": 2,
+    "nombre": "Matias",
+    "apellido": "Fante",
+    "email": "mate@mate.com",
+    "edad": 3,
+    "altura": 5235,
+    "activo": false,
+    "fecha_de_creacion": "12412412/124124"
+}]
