@@ -1,7 +1,10 @@
 package main
 
 import (
+	"errors"
+	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"log"
 )
 
@@ -44,11 +47,19 @@ func CreateUser() gin.HandlerFunc {
 			return
 		}
 		if err := c.ShouldBindJSON(&user); err != nil {
-			validateError(err)
-			c.JSON(400, gin.H{
-				"error": err.Error(),
-			})
-			return
+			var ve validator.ValidationErrors
+			if errors.As(err, &ve) {
+				result := ""
+				for i, field := range ve {
+					if i != len(ve)-1 {
+						result += fmt.Sprintf("El campo %s es requerido y ", field.Field())
+					} else {
+						result += fmt.Sprintf("El campo %s es requerido", field.Field())
+					}
+				}
+				c.JSON(404, result)
+				return
+			}
 		}
 		lastId++
 		user.Id = lastId
