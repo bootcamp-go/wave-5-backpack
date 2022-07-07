@@ -14,24 +14,24 @@ import (
 // Definición estructura de json
 
 type transacciones struct {
-	Id                 int     `json:"id"`
-	Codigo_transaccion string  `json:"codigo_transaccion"`
-	Moneda             string  `json:"moneda"`
-	Monto              float64 `json:"monto"`
-	Emisor             string  `json:"emisor"`
-	Receptor           string  `json:"receptor"`
-	Fecha_transaccion  string  `json:"fecha_transaccion"`
+	Id                 int     `json:"id" binding:"-"`
+	Codigo_transaccion string  `json:"codigo_transaccion" binding:"required"`
+	Moneda             string  `json:"moneda" binding:"required"`
+	Monto              float64 `json:"monto" binding:"required"`
+	Emisor             string  `json:"emisor" binding:"required"`
+	Receptor           string  `json:"receptor" binding:"required"`
+	Fecha_transaccion  string  `json:"fecha_transaccion" binding:"required"`
 }
 
 // Se define variable [] de transacciones para transformar []byte data a formato transacciones struct
 
 var t []transacciones
 var oneTransaction transacciones
+var lastID int
 
 // Se crea el handler GetAll
 
 func GetAll(ctx *gin.Context) {
-
 	ctx.JSON(200, gin.H{
 		"data": t,
 	})
@@ -97,6 +97,54 @@ func GetTransactionById(ctx *gin.Context) {
 
 }
 
+// Endpoint Post Clase II - TM
+
+func PostTransaccion() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		token := ctx.GetHeader("token")
+		if token != "12345" {
+			ctx.JSON(401, gin.H{"error": "no tiene permisos para realizar la petición solicitada ;)"})
+			return
+		}
+
+		var req transacciones
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			if req.Codigo_transaccion == "" {
+				ctx.JSON(404, gin.H{"error": "El campo código es requerido"})
+			}
+			if req.Moneda == "" {
+				ctx.JSON(404, gin.H{"error": "El campo moneda es requerido"})
+			}
+			if req.Monto == 0 {
+				ctx.JSON(404, gin.H{"error": "El campo monto es requerido"})
+			}
+			if req.Emisor == "" {
+				ctx.JSON(404, gin.H{"error": "El campo emisor es requerido"})
+			}
+			if req.Receptor == "" {
+				ctx.JSON(404, gin.H{"error": "El campo receptor es requerido"})
+			}
+			if req.Fecha_transaccion == "" {
+				ctx.JSON(404, gin.H{"error": "El campo fecha es requerido"})
+			}
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		idu := len(t) - 1
+		nuevoId := t[idu].Id + 1
+
+		req.Id = nuevoId
+
+		t = append(t, req)
+		ctx.JSON(200, gin.H{
+			"transactions": t,
+		})
+
+	}
+}
+
 func main() {
 
 	// Se obtiene la data del archivo creado
@@ -122,6 +170,7 @@ func main() {
 	router.GET("/transacciones", GetAll)
 	router.GET("/transaccionesfilter", GetByFilter)
 	router.GET("/transacciones/:id", GetTransactionById)
+	router.POST("/transacciones", PostTransaccion())
 
 	router.Run()
 }
