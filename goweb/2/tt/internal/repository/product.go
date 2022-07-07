@@ -13,7 +13,7 @@ func (r *repository) SelectAll() ([]domain.Product, error) {
 
 func (r *repository) Insert(name string, price float64) (domain.Product, error) {
 	newId := r.LastId()
-	newProduct := domain.Product{ID: newId, Name: name, Price: price}
+	newProduct := domain.NewProduct(newId, name, price)
 
 	products = append(products, newProduct)
 
