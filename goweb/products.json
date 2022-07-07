@@ -2,7 +2,7 @@
     {
         "id": 1,
         "nombre": "Televisor",
-        "color": "Negro",
+        "color": "Negro",   
         "precio": 1000,
         "stock": 20,
         "codigo": "A000",
@@ -12,7 +12,7 @@
     {
         "id": 2,
         "nombre": "Televisor",
-        "color": "Azul",
+        "color": "Azul",   
         "precio": 800,
         "stock": 10,
         "codigo": "A001",
@@ -22,7 +22,7 @@
     {
         "id": 3,
         "nombre": "Olla",
-        "color": "Plateado",
+        "color": "Plateado",   
         "precio": 100,
         "stock": 50,
         "codigo": "B000",
@@ -32,21 +32,11 @@
     {
         "id": 4,
         "nombre": "Platos",
-        "color": "Blanco",
+        "color": "Blanco",   
         "precio": 50,
         "stock": 100,
         "codigo": "B001",
         "publicado": true,
         "fecha_creacion": "28-01-2020"
-    },
-    {
-        "id": 5,
-        "nombre": "Nevera",
-        "color": "Verde",
-        "precio": 600,
-        "stock": 5,
-        "codigo": "D000",
-        "publicado": true,
-        "fecha_creacion": "07-07-2022"
     }
 ]
