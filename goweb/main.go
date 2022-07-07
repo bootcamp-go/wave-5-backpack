@@ -2,41 +2,47 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 type transaction struct {
-	Id        int
-	Code      string
-	Currency  string
-	Amount    float64
-	Issuer    string
-	Recipient string
-	Date      string
+	Id        int     `json:"-"`
+	Code      string  `json:"code" binding:"required"`
+	Currency  string  `json:"currency" binding:"required"`
+	Amount    float64 `json:"amount" binding:"required"`
+	Issuer    string  `json:"issuer" binding:"required"`
+	Recipient string  `json:"recipient" binding:"required"`
+	Date      string  `json:"date" binding:"required"`
+}
+
+var transactions []transaction
+
+func openFile() {
+	file, _ := os.ReadFile("transactions.json")
+	json.Unmarshal([]byte(file), &transactions)
 }
 
 func GetAll(ctx *gin.Context) {
-	file, _ := os.ReadFile("transactions.json")
-	var transactions, ans []transaction
-	json.Unmarshal([]byte(file), &transactions)
+	var ans []transaction
+
 	issuer := ctx.Query("issuer")
 	date := ctx.Query("date")
 
-	filter := make([]bool, len(transactions))
-	for i, _ := range filter {
-		filter[i] = true
-	}
-	for i, transaction := range transactions {
+	for _, transaction := range transactions {
+		filter := true
 		if issuer != "" && issuer != transaction.Issuer {
-			filter[i] = false
+			filter = false
 		}
 		if date != "" && date != transaction.Date {
-			filter[i] = false
+			filter = false
 		}
-		if filter[i] {
+		if filter {
 			ans = append(ans, transaction)
 		}
 	}
@@ -48,10 +54,6 @@ func GetAll(ctx *gin.Context) {
 }
 
 func GetOne(ctx *gin.Context) {
-	file, _ := os.ReadFile("transactions.json")
-	var transactions []transaction
-	json.Unmarshal([]byte(file), &transactions)
-
 	for _, transaction := range transactions {
 		if strconv.Itoa(transaction.Id) == ctx.Param("id") {
 			ctx.JSON(200, transaction)
@@ -61,9 +63,49 @@ func GetOne(ctx *gin.Context) {
 	ctx.JSON(404, "Id no encontrado")
 }
 
+func getLastId() int {
+	if len(transactions) == 0 {
+		return 0
+	} else {
+		return transactions[len(transactions)-1].Id
+	}
+}
+
+func validateFields(err *error) string {
+	errAns := ""
+	var ve validator.ValidationErrors
+	if errors.As(*err, &ve) {
+		for _, fe := range ve {
+			errAns += fmt.Sprintf("el campo %s es requerido ", fe.Field())
+		}
+	}
+	return errAns
+}
+
+func Create(ctx *gin.Context) {
+	if ctx.GetHeader("token") != "elpepe" {
+		ctx.JSON(401, gin.H{
+			"error": "token inválido",
+		})
+		return
+	}
+
+	var req transaction
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(400, gin.H{"Error: ": validateFields(&err)})
+		return
+	}
+	newId := getLastId() + 1
+	req.Id = newId
+	transactions = append(transactions, req)
+	ctx.JSON(200, req)
+}
+
 func main() {
+	openFile()
 	router := gin.Default()
 	router.GET("/transactions", GetAll)
 	router.GET("/transaction/:id", GetOne)
+	router.POST("/transaction", Create)
 	router.Run()
 }
