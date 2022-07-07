@@ -17,7 +17,7 @@ func (f *File) Read() ([]service.Ticket, error) {
 	file, err := os.Open(f.Path)
 
 	if err != nil {
-		log.Fatalf("failed opening file: %s", err)
+		log.Fatalf("error al abrir el archivo: %s", err)
 	}
 
 	scanner := bufio.NewScanner(file)
