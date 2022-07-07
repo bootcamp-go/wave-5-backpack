@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 
@@ -27,22 +26,7 @@ type Usuario struct {
 func main() {
 	router := gin.Default()
 
-	router.GET("/usuarios", func(c *gin.Context) {
-		var u Users
-		jsonData, _ := os.ReadFile("usuarios.json")
-
-		// fmt.Println(jsonData)
-
-		if err := json.Unmarshal([]byte(jsonData), &u); err != nil {
-			log.Fatal(err)
-		}
-
-		// fmt.Println(u)
-
-		c.JSON(200, gin.H{
-			"message": u.Usuarios,
-		})
-	})
+	router.GET("/usuarios", GetAll)
 
 	router.Run()
 }
@@ -51,15 +35,15 @@ func GetAll(c *gin.Context) {
 	var u Users
 	jsonData, _ := os.ReadFile("usuarios.json")
 
-	fmt.Println(jsonData)
+	// fmt.Println(jsonData)
 
 	if err := json.Unmarshal([]byte(jsonData), &u); err != nil {
 		log.Fatal(err)
 	}
 
-	fmt.Println(u)
+	// fmt.Println(u)
 
 	c.JSON(200, gin.H{
-		"message": u.Usuarios[0].Apellido,
+		"message": u.Usuarios,
 	})
 }
