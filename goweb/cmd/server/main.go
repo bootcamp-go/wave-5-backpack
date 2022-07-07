@@ -8,8 +8,9 @@ import (
 )
 
 func main() {
-	repository := products.NewRepository()
-	service := products.NewService(repository)
+	//repository := products.NewRepository()
+	repositoryJson := products.NewRepositoryJsonDB()
+	service := products.NewService(repositoryJson)
 	p := handler.NewProduct(service)
 
 	router := gin.Default()
