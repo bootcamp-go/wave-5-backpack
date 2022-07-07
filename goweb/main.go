@@ -11,17 +11,23 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
+
+type ErroresMsg struct {
+	Field   string `json:"field"`
+	Message string `json:"message"`
+}
 
 // Estructura de usuarios
 type Usuarios struct {
 	Id            int       `json:"id"`
-	Nombre        string    `json:"nombre"`
-	Apellido      string    `json:"apellido"`
-	Email         string    `json:"email"`
-	Edad          int       `json:"edad"`
-	Altura        float64   `json:"altura"`
-	Activo        bool      `json:"activo"`
+	Nombre        string    `json:"nombre" binding:"required"`
+	Apellido      string    `json:"apellido" binding:"required"`
+	Email         string    `json:"email" binding:"required,email"`
+	Edad          int       `json:"edad" binding:"required"`
+	Altura        float64   `json:"altura" binding:"required"`
+	Activo        bool      `json:"activo" binding:"required"`
 	FechaCreacion time.Time `json:"fecha_creacion"`
 }
 
@@ -252,6 +258,81 @@ func UserByID(c *gin.Context) {
 	}
 }
 
+func getErrorMsg(fe validator.FieldError) string {
+	switch fe.Tag() {
+	case "required":
+		return "El campo es requerido"
+	case "email":
+		return "El email no es válido"
+	}
+	return "Error desconocido"
+}
+
+func CreateUser() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		if auth(ctx.GetHeader("token")) {
+			var user Usuarios
+
+			// Se obtienen los usuarios, para obtener el último ID
+			userId := 0
+			users, errU := ObtenerUsuarios()
+			if errU != nil {
+				users = nil
+			} else {
+				// Buscamos el Id más grande
+				for _, u := range users {
+					if u.Id > userId {
+						userId = u.Id
+					}
+				}
+			}
+
+			if err := ctx.ShouldBindJSON(&user); err != nil {
+				var errores []ErroresMsg
+				for _, fieldError := range err.(validator.ValidationErrors) {
+					errores = append(errores, ErroresMsg{fieldError.Field(), getErrorMsg(fieldError)})
+				}
+				ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"errors": errores})
+				return
+			}
+
+			user.Id = userId + 1
+			user.FechaCreacion = time.Now()
+			users = append(users, user)
+			// Se guarda el usuario
+			if err := SaveUser(users); err != nil {
+				ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"errors": "error desconocido"})
+				return
+			}
+
+			ctx.JSON(http.StatusAccepted, &user)
+		} else {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"mensaje": "no tiene permisos para realizar la petición solicitada"})
+		}
+	}
+}
+
+func SaveUser(users []Usuarios) error {
+	// Se serializa el slice para ser guardado
+	file, errJson := json.MarshalIndent(users, "", "\t")
+
+	// Se verifica si se puede serializar el slice
+	if errJson != nil {
+		return errors.New("could not serialize the json")
+	}
+
+	// Se verifica que se haya guardado el archivo
+	if err := os.WriteFile("./usuarios.json", file, 0644); err != nil {
+		return errors.New("could not save file")
+	}
+
+	return nil
+}
+
+func auth(k string) bool {
+	return k == "449d451b-f411-4dc8-aefb-d8a33c723ffa"
+}
+
 func main() {
 	// Crea un router con gin
 	router := gin.Default()
@@ -261,15 +342,18 @@ func main() {
 		c.JSON(200, gin.H{"message": "Hola Arturo"})
 	})
 
-	// Devuelve los elementos de los usuarios.json
-	router.GET("/usuarios", GetAll)
-
-	// Router para buscar usuarios
-	router.GET("/searchUser", SearchUser)
-
-	// Router para buscar usuarios por ID
-	router.GET("/usuarios/:id", UserByID)
+	gr := router.Group("/usuarios")
+	{
+		// Router para devolver todos los usuarios
+		gr.GET("/", GetAll)
+		// Router para devolver un usuario por ID
+		gr.GET("/:id", UserByID)
+		// Router para buscar usuarios
+		gr.GET("/search", SearchUser)
+		// Router para guardar un usuario
+		gr.POST("/", CreateUser())
+	}
 
 	// Corremos nuestro servidor sobre el puerto 8080
-	router.Run()
+	router.Run(":8080")
 }
