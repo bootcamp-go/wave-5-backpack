@@ -4,7 +4,7 @@
     "cod_transaction": "abc1234",
     "moneda": "ARS",
     "monto": 1500.99,
-    "emisor": "BBVA",
+    "emisor": "GALICIA",
     "receptor": "Mercado Pago",
     "date_transaction": "2022-07-4"
   },

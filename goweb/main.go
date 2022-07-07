@@ -10,9 +10,12 @@ import (
 func main() {
 	router := gin.Default()
 
-	router.GET("/transactions", handler.GetAll)
-	router.GET("/transactions/search", handler.GetFilter)
-	router.GET("/transactions/:id", handler.GetByID)
+	rt := router.Group("/transactions")
+	{
+		rt.GET("", handler.GetAll)
+		rt.GET("/search", handler.GetFilter)
+		rt.GET("/:id", handler.GetByID)
+	}
 
 	if err := router.Run(":8080"); err != nil {
 		log.Println("error en el server")

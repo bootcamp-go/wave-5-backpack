@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -32,7 +33,7 @@ func GetByID(ctx *gin.Context) {
 		return
 	}
 
-	transactions, err := read("../../transactions.json")
+	transactions, err := read("./transactions.json")
   if err != nil {
     ctx.JSON(http.StatusInternalServerError, gin.H{
       "error": err.Error(),
@@ -56,18 +57,24 @@ func GetByID(ctx *gin.Context) {
 func GetFilter(ctx *gin.Context) {
   emisor := ctx.Query("emisor")
 
+	transactions, err := read("./transactions.json")
+  if err != nil {
+    ctx.JSON(http.StatusInternalServerError, gin.H{
+      "error": err.Error(),
+    })
+    return
+  }
+
   var filTransactions []models.Transaction
   for _ , t := range transactions {
     if t.Emisor == emisor {
+    	log.Println("encontre")
       filTransactions = append(filTransactions, t)
     }
   }
   
   ctx.JSON(http.StatusOK, filTransactions)
 }
-
-// Lectura del archivo con el que trabajamos
-var transactions []models.Transaction
 
 func read(path string) ([]models.Transaction, error){
 	var transactions []models.Transaction
