@@ -1,13 +1,13 @@
 [
     {
-        "id": 1, 
-        "nombre": "Camisa", 
-        "color": "Blanco", 
-        "precio": 300, 
-        "stock": 10, 
-        "codigo": "C232", 
-        "publicado": true, 
-        "fecha":"2022-06-21"
+        "id": 1,
+        "nombre": "Camisa",
+        "color": "Blanco",
+        "precio": 300,
+        "stock": 10,
+        "codigo": "C232",
+        "publicado": true,
+        "fecha": "2022-06-21"
     },
     {
         "id": 2,
@@ -38,5 +38,25 @@
         "codigo": "M541",
         "publicado": false,
         "fecha": "2022-07-01"
+    },
+    {
+        "id": 5,
+        "nombre": "falda",
+        "color": "Azul",
+        "precio": 500,
+        "stock": 20,
+        "codigo": "F232",
+        "publicado": true,
+        "fecha": "2022-09-21"
+    },
+    {
+        "id": 6,
+        "nombre": "Chaqueta",
+        "color": "Verde",
+        "precio": 900,
+        "stock": 7,
+        "codigo": "C732",
+        "publicado": true,
+        "fecha": "2022-09-07"
     }
 ]
