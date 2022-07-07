@@ -1,6 +1,6 @@
 [
     {
-        "id": "12345",
+        "id": 1,
         "code": "ABCDEF123",
         "moneda": "CLP",
         "monto": 15000,
@@ -9,7 +9,7 @@
         "fecha": "06-07-2022"
     },
     {
-        "id": "56783",
+        "id": 2,
         "code": "H678YTG",
         "moneda": "USD",
         "monto": 500,
@@ -18,7 +18,7 @@
         "fecha": "01-07-2022"
     },
     {
-        "id": "9464723",
+        "id": 3,
         "code": "Y23TFGH1",
         "moneda": "USD",
         "monto": 1000,
@@ -27,7 +27,7 @@
         "fecha": "29-06-2022"
     },
     {
-        "id": "98765",
+        "id": 4,
         "code": "UHJ76GBN43",
         "moneda": "CLP",
         "monto": 100000,

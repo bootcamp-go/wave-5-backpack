@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"os"
 	"strconv"
 
@@ -10,13 +11,35 @@ import (
 )
 
 type Transaction struct {
-	Id       string `json:"id"`
-	Code     string `json:"code"`
-	Moneda   string `json:"moneda"`
-	Monto    int    `json:"monto"`
-	Emisor   string `json:"emisor"`
-	Receptor string `json:"receptor"`
-	Fecha    string `json:"fecha"`
+	Id       int    `json:"id"`
+	Code     string `json:"code" binding:"required"`
+	Moneda   string `json:"moneda" binding:"required"`
+	Monto    int    `json:"monto" binding:"required"`
+	Emisor   string `json:"emisor" binding:"required"`
+	Receptor string `json:"receptor" binding:"required"`
+	Fecha    string `json:"fecha" binding:"required"`
+}
+
+func (t Transaction) getMissingField() string {
+	if t.Code == "" {
+		return "code"
+	}
+	if t.Moneda == "" {
+		return "moneda"
+	}
+	if t.Monto == 0 {
+		return "monto"
+	}
+	if t.Emisor == "" {
+		return "emisor"
+	}
+	if t.Receptor == "" {
+		return "receptor"
+	}
+	if t.Fecha == "" {
+		return "fecha"
+	}
+	return ""
 }
 
 func getAll() ([]Transaction, error) {
@@ -31,7 +54,7 @@ func getAll() ([]Transaction, error) {
 	return transactions, nil
 }
 
-func filterById(id string) (Transaction, error) {
+func filterById(id int) (Transaction, error) {
 	transactions, err := getAll()
 	if err != nil {
 		return Transaction{}, err
@@ -44,7 +67,7 @@ func filterById(id string) (Transaction, error) {
 	return Transaction{}, errors.New("No se encontro el registro")
 }
 
-func filterListById(transacciones []Transaction, id string) []Transaction {
+func filterListById(transacciones []Transaction, id int) []Transaction {
 	var transaccionesFiltradas []Transaction
 	for _, t := range transacciones {
 		if t.Id == id {
@@ -136,7 +159,8 @@ func filterByFieldsHandler(c *gin.Context) {
 	} else {
 		id := c.Query("id")
 		if id != "" {
-			transacciones = filterListById(transacciones, id)
+			i, _ := strconv.Atoi(id)
+			transacciones = filterListById(transacciones, i)
 		}
 		code := c.Query("code")
 		if code != "" {
@@ -171,7 +195,8 @@ func filterByFieldsHandler(c *gin.Context) {
 
 func filterByIdHandler(c *gin.Context) {
 	id := c.Param("id")
-	transaction, err := filterById(id)
+	i, _ := strconv.Atoi(id)
+	transaction, err := filterById(i)
 	if err != nil {
 		c.String(404, err.Error())
 	} else {
@@ -180,6 +205,28 @@ func filterByIdHandler(c *gin.Context) {
 		})
 	}
 }
+
+func insertHandler(c *gin.Context) {
+	token := c.GetHeader("token")
+	if token != TOKEN {
+		c.String(401, "no tiene permisos para realizar la peticion solicitada")
+		return
+	}
+	var req Transaction
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.String(400, fmt.Sprintf("el campo %s es requerido", req.getMissingField()))
+		return
+	}
+	lastID++
+	req.Id = lastID
+	transaccionesTemporales = append(transaccionesTemporales, req)
+	c.JSON(200, transaccionesTemporales)
+}
+
+const TOKEN = "12345"
+
+var transaccionesTemporales []Transaction
+var lastID int
 
 func main() {
 	router := gin.Default()
@@ -194,6 +241,7 @@ func main() {
 
 	transacciones := router.Group("/transaccion")
 	{
+		transacciones.POST("/", insertHandler)
 		transacciones.GET("/", filterByFieldsHandler)
 		transacciones.GET("/:id", filterByIdHandler)
 	}
