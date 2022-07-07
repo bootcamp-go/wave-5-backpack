@@ -218,10 +218,10 @@ func gettingDataFromFile() Usuarios {
 
 func crearEntidad(ctx *gin.Context) {
 	var nwRegistro UsuarioRequest
-	ctx.ShouldBindJSON(&nwRegistro)
+	errBind := ctx.ShouldBindJSON(&nwRegistro)
 	errors := validarDatos(nwRegistro)
-	fmt.Println("errorssss", errors)
-	if len(errors) > 0 {
+	//fmt.Println("errorssss", errors)
+	if len(errors) > 0 || errBind != nil {
 
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"errors": errors,
