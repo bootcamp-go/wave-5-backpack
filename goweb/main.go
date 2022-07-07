@@ -7,32 +7,13 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
-var productos = []product.Products{
-	{
-		Id:            "1",
-		Nombre:        "sandia",
-		Color:         "verde",
-		Precio:        20000,
-		Stock:         5,
-		Codigo:        "23fe2",
-		Publicado:     "true",
-		FechaCreacion: "23/10/2022",
-	},
-	{
-		Id:            "2",
-		Nombre:        "Manzana",
-		Color:         "Rojo",
-		Precio:        50000,
-		Stock:         12,
-		Codigo:        "22fe2",
-		Publicado:     "true",
-		FechaCreacion: "10/10/2022",
-	},
-}
+var productos []product.Products
+var lastID int
 
 func getAll(ctx *gin.Context) {
 	path := "./products.json"
@@ -51,28 +32,41 @@ func getAll(ctx *gin.Context) {
 }
 
 func getProductId(ctx *gin.Context) {
-
-	product := ctx.Param("Id")
-	var result string
+	idProduct, err := strconv.Atoi(ctx.Param("Id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"Error: ": err.Error(),
+		})
+		return
+	}
+	var arrayResult []product.Products
 	exist := false
 
 	for _, data := range productos {
-		if data.Id == product {
+		if data.Id == idProduct {
 			exist = true
-			result = "El producto consultado es: " + data.Nombre
+			arrayResult = append(arrayResult, data)
 		}
 	}
 
 	if exist {
-		ctx.String(200, result)
+		ctx.JSON(http.StatusAccepted, gin.H{
+			"Producto: ": arrayResult,
+		})
 	} else {
-		ctx.String(400, "No existe producto con esas caracteristicas")
+		ctx.String(400, "No existe un producto con ese id")
 	}
 
 }
 
 func getProductsPublish(ctx *gin.Context) {
-	filter := ctx.Query("publish")
+	filter, err := strconv.ParseBool(ctx.Query("publish"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"Error: ": err.Error(),
+		})
+		return
+	}
 	var arrayResult []product.Products
 
 	for _, data := range productos {
@@ -82,9 +76,38 @@ func getProductsPublish(ctx *gin.Context) {
 
 	}
 
-	ctx.JSON(http.StatusAccepted, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"responseData": arrayResult,
 	})
+}
+
+func createProduct() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("token")
+		if token != "123456" {
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"error": "token inválido",
+			})
+			return
+		}
+		var req product.Products
+
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"Error: ": err.Error(),
+			})
+			return
+		}
+
+		lastID++
+		req.Id = lastID
+		productos = append(productos, req)
+
+		ctx.JSON(http.StatusAccepted, gin.H{
+			"Productos: ": productos,
+		})
+	}
+
 }
 
 func main() {
@@ -102,6 +125,7 @@ func main() {
 		products.GET("/", getAll)
 		products.GET("/:Id", getProductId)
 		products.GET("/publish", getProductsPublish)
+		products.POST("/create", createProduct())
 	}
 
 	server.Run()
