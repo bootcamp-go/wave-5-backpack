@@ -1,7 +1,7 @@
 package main
 
 import (
-	"goweb/clase1_parte1/internal"
+	"goweb/productos/internal"
 
 	"github.com/gin-gonic/gin"
 )
