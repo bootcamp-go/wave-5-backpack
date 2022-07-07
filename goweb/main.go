@@ -17,6 +17,7 @@ func main() {
 		rt.GET("/:id", handler.GetByID)
 	}
 
+
 	if err := router.Run(":8080"); err != nil {
 		log.Println("error en el server")
 	}

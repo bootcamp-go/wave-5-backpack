@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -55,7 +54,6 @@ func GetByID(ctx *gin.Context) {
 }
 
 func GetFilter(ctx *gin.Context) {
-  emisor := ctx.Query("emisor")
 
 	transactions, err := read("./transactions.json")
   if err != nil {
@@ -65,10 +63,24 @@ func GetFilter(ctx *gin.Context) {
     return
   }
 
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"error" : err.Error(),
+		})
+	}
+
+	var (
+		cod = ctx.Query("cod")
+		moneda = ctx.Query("moneda")
+		monto, _ = strconv.ParseFloat(ctx.Query("monto"), 64)
+		emisor = ctx.Query("emisor")
+		receptor = ctx.Query("receptor")
+		fecha = ctx.Query("fecha")
+	)
+
   var filTransactions []models.Transaction
   for _ , t := range transactions {
-    if t.Emisor == emisor {
-    	log.Println("encontre")
+    if t.Cod == cod && t.Moneda == moneda && t.Monto == monto && t.Emisor == emisor && t.Receptor == receptor && t.Fecha == fecha {
       filTransactions = append(filTransactions, t)
     }
   }
