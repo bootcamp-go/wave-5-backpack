@@ -1,0 +1,45 @@
+[
+    {
+        "id": 1,
+        "nombre": "Pepa",
+        "apellido": "Frog",
+        "email": "pepa@mail.com",
+        "edad": 31,
+        "altura": 1.7,
+        "activo": true,
+        "fecha_creacion": "06/07/22"
+    },
+    {
+        "id": 2,
+        "nombre": "Pepe",
+        "apellido": "Frog",
+        "email": "pepe@mail.com",
+        "edad": 32,
+        "altura": 1.7,
+        "activo": true,
+        "fecha_creacion": "06/07/22"
+    },
+    {
+        "id": 3,
+        "nombre": "Pepita",
+        "apellido": "Frog",
+        "email": "pepita@mail.com",
+        "edad": 8,
+        "altura": 1.4,
+        "activo": true,
+        "fecha_creacion": "06/07/22"
+    },
+    {
+        "id": 4,
+        "nombre": "Pepito",
+        "apellido": "Frog",
+        "email": "pepito@mail.com",
+        "edad": 2,
+        "altura": 1.0,
+        "activo": true,
+        "fecha_creacion": "06/07/22"
+    }
+]
+
+
+
