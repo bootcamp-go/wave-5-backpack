@@ -1,7 +1,6 @@
-{
-    "productos":[
+[
         {
-            "id": 1,
+            "id": "1",
             "nombre": "tennis deportivos",
             "color": "rojo",
             "precio": 200000,
@@ -11,7 +10,7 @@
             "fecha_de_creacion": "06-07-2022"
         },
         {
-            "id": 2,
+            "id": "2",
             "nombre": "tennis deportivos",
             "color": "rojo",
             "precio": 200000,
@@ -21,7 +20,7 @@
             "fecha_de_creacion": "06-07-2022"
         },
         {
-            "id": 3,
+            "id": "3",
             "nombre": "tennis deportivos",
             "color": "rojo",
             "precio": 200000,
@@ -31,4 +30,3 @@
             "fecha_de_creacion": "06-07-2022"
         }
     ]
-}
