@@ -73,6 +73,7 @@ func SearchUser(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"message": "not found"})
 	} else {
 		var filtro []Usuarios
+		var temporal []Usuarios
 
 		// Se obtienen los query params
 		nombreParam := strings.ToUpper(c.Query("nombre"))
@@ -83,47 +84,125 @@ func SearchUser(c *gin.Context) {
 		activoParam, activoErr := strconv.ParseBool(c.Query("activo"))
 		fechaCreacionParam, fechaErr := time.Parse("2006-01-02", c.Query("fecha_creacion"))
 
-		// Buscamos al usuario por nombre, apellido y email
-		for _, u := range users {
-			if strings.EqualFold(nombreParam, strings.ToUpper(u.Nombre)) ||
-				strings.EqualFold(apellidoParam, strings.ToUpper(u.Apellido)) ||
-				strings.EqualFold(emailParam, strings.ToUpper(u.Email)) {
-				filtro = append(filtro, u)
+		// Buscamos por nombre
+		if nombreParam != "" {
+			for _, u := range users {
+				if strings.Contains(strings.ToUpper(u.Nombre), nombreParam) {
+					filtro = append(filtro, u)
+				}
+			}
+		}
+
+		// Buscamos por apellido
+		if apellidoParam != "" {
+			if len(filtro) > 0 {
+				temporal = nil
+				for _, u := range filtro {
+					if strings.Contains(strings.ToUpper(u.Apellido), apellidoParam) {
+						temporal = append(temporal, u)
+					}
+				}
+				filtro = temporal
+			} else {
+				for _, u := range users {
+					if strings.Contains(strings.ToUpper(u.Apellido), apellidoParam) {
+						filtro = append(filtro, u)
+					}
+				}
+			}
+		}
+
+		// Buscamos por Email
+		if apellidoParam != "" {
+			if len(filtro) > 0 {
+				temporal = nil
+				for _, u := range filtro {
+					if strings.Contains(strings.ToUpper(u.Email), emailParam) {
+						temporal = append(temporal, u)
+					}
+				}
+				filtro = temporal
+			} else {
+				for _, u := range users {
+					if strings.Contains(strings.ToUpper(u.Email), emailParam) {
+						filtro = append(filtro, u)
+					}
+				}
 			}
 		}
 
 		// Buscamos por edad
 		if edadErr == nil {
-			for i, u := range filtro {
-				if edadParam != u.Edad {
-					filtro = append(filtro[:i], filtro[i+1:]...)
+			if len(filtro) > 0 {
+				temporal = nil
+				for _, u := range filtro {
+					if edadParam == u.Edad {
+						temporal = append(temporal, u)
+					}
+				}
+				filtro = temporal
+			} else {
+				for _, u := range users {
+					if edadParam == u.Edad {
+						filtro = append(filtro, u)
+					}
 				}
 			}
 		}
 
 		// Buscamos por altura
 		if alturaErr == nil {
-			for i, u := range filtro {
-				if alturaParam != u.Altura {
-					filtro = append(filtro[:i], filtro[i+1:]...)
+			if len(filtro) > 0 {
+				temporal = nil
+				for _, u := range filtro {
+					if alturaParam == u.Altura {
+						temporal = append(temporal, u)
+					}
+				}
+				filtro = temporal
+			} else {
+				for _, u := range users {
+					if alturaParam == u.Altura {
+						filtro = append(filtro, u)
+					}
 				}
 			}
 		}
 
 		// Buscamos por activo
 		if activoErr == nil {
-			for i, u := range filtro {
-				if activoParam != u.Activo {
-					filtro = append(filtro[:i], filtro[i+1:]...)
+			if len(filtro) > 0 {
+				temporal = nil
+				for _, u := range filtro {
+					if activoParam == u.Activo {
+						temporal = append(temporal, u)
+					}
+				}
+				filtro = temporal
+			} else {
+				for _, u := range users {
+					if activoParam == u.Activo {
+						filtro = append(filtro, u)
+					}
 				}
 			}
 		}
 
 		// Buscamos por fecha
 		if fechaErr == nil {
-			for i, u := range filtro {
-				if fechaCreacionParam != u.FechaCreacion {
-					filtro = append(filtro[:i], filtro[i+1:]...)
+			if len(filtro) > 0 {
+				temporal = nil
+				for _, u := range filtro {
+					if fechaCreacionParam == u.FechaCreacion {
+						temporal = append(temporal, u)
+					}
+				}
+				filtro = temporal
+			} else {
+				for _, u := range users {
+					if fechaCreacionParam == u.FechaCreacion {
+						filtro = append(filtro, u)
+					}
 				}
 			}
 		}
