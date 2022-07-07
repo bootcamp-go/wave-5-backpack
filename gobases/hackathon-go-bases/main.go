@@ -87,8 +87,8 @@ func (f *File) ReadFile() ([]Ticket, error) {
 	// 	Price                           int
 	// }
 	for _, v := range file {
-		var position int // position on slice type ticket
-		var temp Ticket
+		var position int // position on slice type ticket, start with 0
+		var temp Ticket  // one position of slice
 		switch position {
 		case 0:
 			temp.Id += int(v)

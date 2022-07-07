@@ -1,0 +1,46 @@
+[
+    {
+    "id":0,
+    "codigo_de_transaccion":100,
+    "moneda":"COP",
+    "monto":0.0,
+    "emisor":"banco",
+    "receptor":"payooner",
+    "fecha_de_transaccion":"16/04/2022"
+},
+{
+    "id":1,
+    "codigo_de_transaccion":100,
+    "moneda":"COP",
+    "monto":0.0,
+    "emisor":"banco",
+    "receptor":"payooner",
+    "fecha_de_transaccion":"16/04/2022"
+},
+{
+    "id":2,
+    "codigo_de_transaccion":100,
+    "moneda":"COP",
+    "monto":0.0,
+    "emisor":"banco",
+    "receptor":"payooner",
+    "fecha_de_transaccion":"16/04/2022"
+},
+{
+    "id":3,
+    "codigo_de_transaccion":100,
+    "moneda":"COP",
+    "monto":0.0,
+    "emisor":"banco",
+    "receptor":"payooner",
+    "fecha_de_transaccion":"16/04/2022"
+},
+{
+    "id":4,
+    "codigo_de_transaccion":100,
+    "moneda":"COP",
+    "monto":0.0,
+    "emisor":"banco",
+    "receptor":"payooner",
+    "fecha_de_transaccion":"16/04/2022"
+}]
