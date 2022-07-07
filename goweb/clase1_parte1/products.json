@@ -11,7 +11,7 @@
     },
     {
         "id": 2,
-        "nombre": "Nevera",
+        "nombre": "Televisor",
         "color": "Azul",   
         "precio": 800,
         "stock": 10,
