@@ -7,8 +7,13 @@ import (
 	"net/url"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
+)
+
+const (
+	FIELD_EMPTY = "el campo %s no puede estar vacio"
 )
 
 type Product struct {
@@ -22,17 +27,32 @@ type Product struct {
 	Created_at string  `json:"created_at"`
 }
 
-func getProductList() ([]Product, error) {
+type ProductRequest struct {
+	Id         uint    `json:"id"`
+	Name       string  `json:"name"`
+	Color      string  `json:"color"`
+	Price      float64 `json:"price"`
+	Stock      uint64  `json:"stock"`
+	Code       string  `json:"code"`
+	Published  bool    `json:"published"`
+	Created_at string  `json:"created_at"`
+}
+
+var prList []Product
+var IdGeneral int
+
+func getProductList() {
 	data, err := os.ReadFile("products.json")
 	if err != nil {
-		return []Product{}, err
+		panic(err)
 	}
-	var prList []Product
-	err = json.Unmarshal(data, &prList)
+	var res []Product
+	err = json.Unmarshal(data, &res)
 	if err != nil {
-		return []Product{}, err
+		panic(err)
 	}
-	return prList, nil
+	IdGeneral = len(prList)
+	prList = res
 }
 
 func getProductById(productList []Product, identifier uint) (Product, error) {
@@ -112,17 +132,9 @@ func filterList(prList *[]Product, params url.Values) error {
 }
 
 func getAll(ctx *gin.Context) {
-	prList, err := getProductList()
-	if err != nil {
-		ctx.JSON(500, gin.H{
-			"message": err.Error(),
-		})
-		return
-	}
-
 	params := ctx.Request.URL.Query()
 	if len(params) > 0 {
-		err = filterList(&prList, params)
+		err := filterList(&prList, params)
 		if err != nil {
 			ctx.JSON(500, gin.H{
 				"message": err.Error(),
@@ -134,13 +146,6 @@ func getAll(ctx *gin.Context) {
 }
 
 func getById(ctx *gin.Context) {
-	prList, err := getProductList()
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"message": err.Error(),
-		})
-		return
-	}
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{
@@ -158,6 +163,66 @@ func getById(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, product)
 }
 
+func create(ctx *gin.Context) {
+	getProductList()
+	var nwRegistro ProductRequest
+	ctx.ShouldBindJSON(&nwRegistro)
+	errors := validate(nwRegistro)
+	if len(errors) > 0 {
+
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"errors": errors,
+		})
+		return
+	}
+	/*token*/
+	headerToken := ctx.GetHeader("token")
+	if headerToken != "123456" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error": "No tiene permisos para realizar la petición solicitada.",
+		})
+		return
+	}
+	IdGeneral++
+	nwUser := Product{
+		Id:         nwRegistro.Id,
+		Name:       nwRegistro.Name,
+		Color:      nwRegistro.Color,
+		Price:      nwRegistro.Price,
+		Stock:      nwRegistro.Stock,
+		Code:       nwRegistro.Code,
+		Published:  nwRegistro.Published,
+		Created_at: time.Now().Format("2022-12-25"),
+	}
+
+	prList = append(prList, nwUser)
+	ctx.JSON(http.StatusOK, nwUser)
+}
+
+func validate(user ProductRequest) []string {
+	var errors []string
+	if user.Name == "" {
+		errors = append(errors, fmt.Errorf(FIELD_EMPTY, "nombre").Error())
+	}
+
+	if user.Color == "" {
+		errors = append(errors, fmt.Errorf(FIELD_EMPTY, "apellido").Error())
+	}
+
+	if user.Price == 0 {
+		errors = append(errors, fmt.Errorf(FIELD_EMPTY, "email").Error())
+	}
+
+	if user.Stock == 0 {
+		errors = append(errors, fmt.Errorf(FIELD_EMPTY, "edad").Error())
+	}
+
+	if user.Code == "" {
+		errors = append(errors, fmt.Errorf(FIELD_EMPTY, "estatura").Error())
+	}
+	return errors
+}
+
 func main() {
 	router := gin.Default()
 	router.GET("/", func(ctx *gin.Context) {
@@ -172,5 +237,6 @@ func main() {
 
 	router.GET("/products", getAll)
 	router.GET("/products/:id", getById)
+	router.POST("/products", create)
 	router.Run()
 }
