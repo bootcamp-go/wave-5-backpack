@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1, 
+        "nombre": "Camisa", 
+        "color": "Blanco", 
+        "precio": 300, 
+        "stock": 10, 
+        "codigo": "C232", 
+        "publicado": true, 
+        "fecha":"2022-06-21"
+    },
+    {
+        "id": 2,
+        "nombre": "Camisa",
+        "color": "Negro",
+        "precio": 400,
+        "stock": 5,
+        "codigo": "P431",
+        "publicado": true,
+        "fecha": "2022-05-01"
+    },
+    {
+        "id": 3,
+        "nombre": "Zapatos",
+        "color": "Blanco",
+        "precio": 100,
+        "stock": 8,
+        "codigo": "Z983",
+        "publicado": true,
+        "fecha": "2022-06-08"
+    },
+    {
+        "id": 4,
+        "nombre": "Medias",
+        "color": "Rosado",
+        "precio": 20,
+        "stock": 15,
+        "codigo": "M541",
+        "publicado": false,
+        "fecha": "2022-07-01"
+    }
+]
