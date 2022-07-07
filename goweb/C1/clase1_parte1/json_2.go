@@ -8,7 +8,7 @@ import (
 
 func main() {
 	type product struct {
-		Name      string	`json:"name"`
+		Name      string `json:"name"`
 		Price     int
 		Published bool
 	}

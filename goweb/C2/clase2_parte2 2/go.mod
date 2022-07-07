@@ -1,4 +1,4 @@
-module clase2_parte1
+module clase2_parte2
 
 go 1.18
 
