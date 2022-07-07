@@ -5,13 +5,6 @@ import (
 	"goweb/internal/domain"
 )
 
-type Repository interface {
-	GetAll() ([]domain.Product, error)
-	Store(Id int, Nombre string, Color string, Precio float64, Stock int, Codigo string, Publicado bool, FechaCreacion string) (domain.Product, error)
-	GetById(id int) (domain.Product, error)
-	LastId() (int, error)
-}
-
 var lastId int
 var products []domain.Product
 
@@ -25,11 +18,20 @@ func (r *repository) GetAll() ([]domain.Product, error) {
 	return products, nil
 }
 
-func (r *repository) Store(Id int, Nombre string, Color string, Precio float64, Stock int, Codigo string, Publicado bool, FechaCreacion string) (domain.Product, error) {
-	producto := domain.Product{Id, Nombre, Color, Precio, Stock, Codigo, Publicado, FechaCreacion}
+func (r *repository) Store(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Product, error) {
+	producto := domain.Product{
+		Id:            id,
+		Nombre:        nombre,
+		Color:         color,
+		Precio:        precio,
+		Stock:         stock,
+		Codigo:        codigo,
+		Publicado:     publicado,
+		FechaCreacion: fechaCreacion,
+	}
 
 	products = append(products, producto)
-	lastId = Id
+	lastId = id
 
 	return producto, nil
 }
@@ -40,7 +42,7 @@ func (r *repository) GetById(id int) (domain.Product, error) {
 			return product, nil
 		}
 	}
-	return domain.Product{}, errors.New("No se encontró el producto")
+	return domain.Product{}, errors.New("no se encontró el producto")
 }
 
 func (r *repository) LastId() (int, error) {
