@@ -3,10 +3,10 @@
         "id": 1,
         "transaction_code": "YgbQH5LvbME4y3AbNXwuTBvaeGcSdf",
         "currency": "CLP",
-        "amount": 120000.00,
+        "amount": 60000.00,
         "sender": "Jose Luis Riveron",
         "reciever": "Luz Lucumi",
-        "transaction_date":"2022-07-06T15:30:10.477Z"
+        "transaction_date":"2022-07-07T15:30:10.477Z"
     },
     {
         "id": 2,
@@ -21,7 +21,7 @@
         "id": 3,
         "transaction_code": "YgbQH5LvbME4y3AbNXwuTBvaeGcSdf",
         "currency": "CLP",
-        "amount": 120000.00,
+        "amount": 80000.00,
         "sender": "Jose Luis Riveron",
         "reciever": "Luz Lucumi",
         "transaction_date":"2022-07-06T15:30:10.477Z"
@@ -29,7 +29,7 @@
     {
         "id": 4,
         "transaction_code": "dmuVBLehDjVDE3rjXV4dxk29TaUCwE",
-        "currency": "COL",
+        "currency": "CLP",
         "amount": 500000.00,
         "sender": "Cristian Ladino",
         "reciever": "Claudio Figueroa",
