@@ -13,8 +13,8 @@
         "codigo_transaccion": "123abcd",
         "moneda": "AR$",
         "monto": 1500.0,
-        "emisor": "Juan",
-        "receptor": "Mercadopago",
+        "emisor": "José",
+        "receptor": "Paypal",
         "fecha_transaccion": "06-07-22" 
     }
 ]
