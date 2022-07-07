@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
-	"log"
+	"net/url"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -32,212 +32,139 @@ func GetName(ctx *gin.Context) {
 }
 
 //EJERCICIO 3 M
-func GetAllUsers(ctx *gin.Context) {
-	var users []User
+func GetUserList() ([]User, error) {
 	jsonData, err := ioutil.ReadFile("users.json")
 	if err != nil {
-		log.Fatal(err)
+		return []User{}, err
 	}
+	var userList []User
+	err = json.Unmarshal(jsonData, &userList)
+	if err != nil {
+		return []User{}, err
+	}
+	return userList, nil
+}
 
-	if err := json.Unmarshal([]byte(jsonData), &users); err != nil {
-		log.Fatal(err)
+func GetAllUsers(ctx *gin.Context) {
+	users, err := GetUserList()
+	if err != nil {
+		ctx.JSON(500, gin.H{
+			"message": err.Error(),
+		})
+		return
 	}
 
 	ctx.JSON(200, gin.H{"message": &users})
 }
 
 // EJERCICIO 1 T
-func GetUserByName(ctx *gin.Context) {
-	var users []User
-	var usersFilter []User
-	jsonData, err := ioutil.ReadFile("users.json")
-	if err != nil {
-		log.Fatal(err)
-	}
+func FilterList(users *[]User, params url.Values) error {
+	res := []User{}
+	name := params.Get("name")
+	lastname := params.Get("lastname")
+	email := params.Get("email")
+	age := params.Get("age")
+	height := params.Get("height")
+	active := params.Get("active")
+	creationDate := params.Get("creation-date")
+	for _, user := range *users {
+		valid := true
+		if name != "" {
+			if user.Name != name {
+				valid = false
+			}
+		}
+		if lastname != "" && valid {
+			if user.LastName != lastname {
+				valid = false
+			}
+		}
+		if email != "" && valid {
+			if user.Email != email {
+				valid = false
+			}
+		}
+		if age != "" && valid {
+			compareage, err := strconv.Atoi(age)
+			if err != nil {
+				return err
+			}
+			if user.Age != compareage {
+				valid = false
+			}
+		}
+		if height != "" && valid {
+			compareage, err := strconv.ParseFloat(height, 64)
+			if err != nil {
+				return err
+			}
+			if user.Height != compareage {
+				valid = false
+			}
+		}
+		if active != "" && valid {
+			compareactive, err := strconv.ParseBool(active)
+			if err != nil {
+				return err
+			}
+			if user.Active != compareactive {
+				valid = false
+			}
+		}
+		if creationDate != "" && valid {
+			if user.CreationDate != creationDate {
+				valid = false
+			}
+		}
 
-	if err := json.Unmarshal([]byte(jsonData), &users); err != nil {
-		log.Fatal(err)
-	}
-
-	for _, user := range users {
-		if ctx.Param("name") == user.Name {
-			usersFilter = append(usersFilter, user)
+		if valid {
+			res = append(res, user)
 		}
 	}
-	if len(usersFilter) > 0 {
-		ctx.JSON(200, gin.H{"message": &usersFilter})
-	} else {
-		ctx.String(404, "Información del empleado ¡No existe!")
-	}
+	*users = res
+	return nil
 }
 
-func GetUserByLastName(ctx *gin.Context) {
-	var users []User
-	var usersFilter []User
-	jsonData, err := ioutil.ReadFile("users.json")
+func GetAll(ctx *gin.Context) {
+	users, err := GetUserList()
 	if err != nil {
-		log.Fatal(err)
+		ctx.JSON(500, gin.H{
+			"message": err.Error(),
+		})
+		return
 	}
 
-	if err := json.Unmarshal([]byte(jsonData), &users); err != nil {
-		log.Fatal(err)
-	}
-
-	for _, user := range users {
-		if ctx.Param("lastname") == user.LastName {
-			usersFilter = append(usersFilter, user)
+	params := ctx.Request.URL.Query()
+	if len(params) > 0 {
+		err = FilterList(&users, params)
+		if err != nil {
+			ctx.JSON(500, gin.H{
+				"message": err.Error(),
+			})
+			return
 		}
 	}
-	if len(usersFilter) > 0 {
-		ctx.JSON(200, gin.H{"message": &usersFilter})
-	} else {
-		ctx.String(404, "Información del empleado ¡No existe!")
-	}
-}
-
-func GetUserByEmail(ctx *gin.Context) {
-	var users []User
-	var usersFilter []User
-	jsonData, err := ioutil.ReadFile("users.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err := json.Unmarshal([]byte(jsonData), &users); err != nil {
-		log.Fatal(err)
-	}
-
-	for _, user := range users {
-		if ctx.Param("email") == user.Email {
-			usersFilter = append(usersFilter, user)
-		}
-	}
-	if len(usersFilter) > 0 {
-		ctx.JSON(200, gin.H{"message": &usersFilter})
-	} else {
-		ctx.String(404, "Información del empleado ¡No existe!")
-	}
-}
-
-func GetUserByAge(ctx *gin.Context) {
-	var users []User
-	var usersFilter []User
-	jsonData, err := ioutil.ReadFile("users.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err := json.Unmarshal([]byte(jsonData), &users); err != nil {
-		log.Fatal(err)
-	}
-
-	for _, user := range users {
-		AgeStr := strconv.Itoa(user.Age)
-		if ctx.Param("age") == AgeStr {
-			usersFilter = append(usersFilter, user)
-		}
-	}
-	if len(usersFilter) > 0 {
-		ctx.JSON(200, gin.H{"message": &usersFilter})
-	} else {
-		ctx.String(404, "Información del empleado ¡No existe!")
-	}
-}
-
-func GetUserByCreationDate(ctx *gin.Context) {
-	var users []User
-	var usersFilter []User
-	jsonData, err := ioutil.ReadFile("users.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err := json.Unmarshal([]byte(jsonData), &users); err != nil {
-		log.Fatal(err)
-	}
-
-	for _, user := range users {
-		if ctx.Param("creation-date") == user.CreationDate {
-			usersFilter = append(usersFilter, user)
-		}
-	}
-	if len(usersFilter) > 0 {
-		ctx.JSON(200, gin.H{"message": &usersFilter})
-	} else {
-		ctx.String(404, "Información del empleado ¡No existe!")
-	}
-}
-
-func GetUserByActive(ctx *gin.Context) {
-	var users []User
-	var usersFilter []User
-	jsonData, err := ioutil.ReadFile("users.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err := json.Unmarshal([]byte(jsonData), &users); err != nil {
-		log.Fatal(err)
-	}
-
-	for _, user := range users {
-		ActiveStr := strconv.FormatBool(user.Active)
-		if ctx.Param("active") == ActiveStr {
-			usersFilter = append(usersFilter, user)
-		}
-	}
-	if len(usersFilter) > 0 {
-		ctx.JSON(200, gin.H{"message": &usersFilter})
-	} else {
-		ctx.String(404, "Información del empleado ¡No existe!")
-	}
-}
-
-func GetUserByHeight(ctx *gin.Context) {
-	var users []User
-	var usersFilter []User
-	jsonData, err := ioutil.ReadFile("users.json")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err := json.Unmarshal([]byte(jsonData), &users); err != nil {
-		log.Fatal(err)
-	}
-
-	for _, user := range users {
-		HeightStr := strconv.FormatFloat(user.Height, 'f', 0, 64)
-		if ctx.Param("height") == HeightStr {
-			usersFilter = append(usersFilter, user)
-		}
-	}
-	if len(usersFilter) > 0 {
-		ctx.JSON(200, gin.H{"message": &usersFilter})
-	} else {
-		ctx.String(404, "Información del empleado ¡No existe!")
-	}
+	ctx.JSON(200, users)
 }
 
 // EJERCICIO 2 T
 func GetUserById(ctx *gin.Context) {
-	var users []User
-	var usersFilter []User
-	jsonData, err := ioutil.ReadFile("users.json")
+	var usersFilterById []User
+	users, err := GetUserList()
 	if err != nil {
-		log.Fatal(err)
-	}
-
-	if err := json.Unmarshal([]byte(jsonData), &users); err != nil {
-		log.Fatal(err)
+		ctx.JSON(500, gin.H{
+			"message": err.Error(),
+		})
+		return
 	}
 
 	for _, user := range users {
 		if ctx.Param("id") == user.Id {
-			usersFilter = append(usersFilter, user)
+			usersFilterById = append(usersFilterById, user)
 		}
 	}
-	if len(usersFilter) > 0 {
-		ctx.JSON(200, gin.H{"message": &usersFilter})
+	if len(usersFilterById) > 0 {
+		ctx.JSON(200, gin.H{"message": &usersFilterById})
 	} else {
 		ctx.String(404, "Información del empleado ¡No existe!")
 	}
@@ -250,29 +177,10 @@ func main() {
 
 	// EJERCICIO 1 T
 	//Cada vez que llamamos a GET y le pasamos una ruta, definimos un nuevo endpoint.
-	param := "active"
-	switch param {
-	case "id":
-		router.GET("/users/:id", GetUserById)
-	case "name":
-		router.GET("/users/:name", GetUserByName)
-	case "lastname":
-		router.GET("/users/:lastname", GetUserByLastName)
-	case "email":
-		router.GET("/users/:email", GetUserByEmail)
-	case "age":
-		router.GET("/users/:age", GetUserByAge)
-	case "height":
-		router.GET("/users/:height", GetUserByHeight)
-	case "active":
-		router.GET("/users/:active", GetUserByActive)
-	case "creation-date":
-		router.GET("/users/:creation-date", GetUserByCreationDate)
-	default:
-		router.GET("/users/:id", GetUserById)
-	}
 	router.GET("/", HomePage)
 	router.GET("/hello-world", GetName)
+	router.GET("users/filter", GetAll)
+	router.GET("/users/:id", GetUserById)
 
 	router.Run(":8080")
 
