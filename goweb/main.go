@@ -5,6 +5,9 @@ import (
 	"goweb/user"
 )
 
+var u = user.User{}
+var lastId int
+
 func main() {
 
 	router := gin.Default()
@@ -16,9 +19,10 @@ func main() {
 	})
 	usersGroup := router.Group("/users")
 	{
-		usersGroup.GET("/", user.GetUsersHandler)
-		usersGroup.GET("/:id", user.GetUsersByIdHandler)
-		// POST ----
+		//GETs ------//
+		usersGroup.GET("/", user.GetUsers)
+		usersGroup.GET("/:id", user.GetUsersById)
+		//POSTs ----//
 		usersGroup.POST("/", user.CreateUser)
 	}
 	router.Run()
