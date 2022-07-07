@@ -11,16 +11,17 @@ import (
 )
 
 type transacciones struct {
-	Id       int    `json: "id"`
-	Codigo   string `json: "codigo"`
-	Moneda   string `json: "moneda"`
-	Monto    int    `json: "monto`
-	Emisor   string `json: "emisor"`
-	Receptor string `json: "receptor"`
-	Fecha    string `json: "fecha"`
+	Id       int    `json:"id" binding:"-"`
+	Codigo   string `json:"codigo" binding:"required"`
+	Moneda   string `json:"moneda" binding:"required"`
+	Monto    int    `json:"monto" binding:"required"`
+	Emisor   string `json:"emisor" binding:"required"`
+	Receptor string `json:"receptor" binding:"required"`
+	Fecha    string `json:"fecha" binding:"required"`
 }
 
 var transactions []transacciones
+var lastID int = 9
 
 func getAll(c *gin.Context) {
 	c.JSON(200, gin.H{"data": transactions})
@@ -66,14 +67,62 @@ func getByQuery(c *gin.Context) {
 	}
 }
 
+func postTrans() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		token := c.GetHeader("token")
+		if token != "12345" {
+			c.JSON(401, gin.H{"error": "No tiene permisos para realizar la petición solicitada ;)"})
+			return
+		}
+		var req transacciones
+		if err := c.ShouldBindJSON(&req); err != nil {
+			if req.Codigo == "" {
+				c.JSON(404, gin.H{"error": "El campo código es requerido"})
+			}
+			if req.Moneda == "" {
+				c.JSON(404, gin.H{"error": "El campo moneda es requerido"})
+			}
+			if req.Monto == 0 {
+				c.JSON(404, gin.H{"error": "El campo monto es requerido"})
+			}
+			if req.Emisor == "" {
+				c.JSON(404, gin.H{"error": "El campo emisor es requerido"})
+			}
+			if req.Receptor == "" {
+				c.JSON(404, gin.H{"error": "El campo receptor es requerido"})
+			}
+			if req.Fecha == "" {
+				c.JSON(404, gin.H{"error": "El campo fecha es requerido"})
+			}
+			// c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			// fmt.Println(string(err.Error()))
+			return
+		}
+
+		maxId := 0
+
+		for i, value := range transactions {
+			if value.Id > maxId {
+				maxId = value.Id
+				fmt.Printf("Entro %d \n", i)
+			}
+		}
+
+		lastID = maxId + 1
+		req.Id = lastID
+		transactions = append(transactions, req)
+		c.JSON(http.StatusAccepted, transactions)
+	}
+}
+
 func main() {
 	data, err := os.ReadFile("./transacciones.json")
 	if err != nil {
-		fmt.Errorf("Se produjo un error al leer el archivo")
+		fmt.Errorf("Se produjo un error al leer el archivo\n")
 	}
 	err = json.Unmarshal(data, &transactions)
 	if err != nil {
-		fmt.Errorf("Se produjo un error al traducir a Go")
+		fmt.Errorf("Se produjo un error al traducir a Go\n")
 	}
 
 	router := gin.Default()
@@ -86,6 +135,8 @@ func main() {
 	router.GET("/transacciones", getAll)
 	router.GET("/transacciones/filtros", getByQuery)
 	router.GET("/transacciones/:id", getById)
+
+	router.POST("/transacciones", postTrans())
 
 	router.Run(":8080")
 }
