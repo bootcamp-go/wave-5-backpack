@@ -1,0 +1,33 @@
+[
+{
+	"id": 1,
+	"nombre": "Salvador",
+	"apellido": "Dali",
+	"email": "sdali@gmail.com",
+	"edad": 102,
+	"altura": 173,
+	"activo": false,
+	"fecha_de_creacion": "14/05/1949"
+},
+{
+	"id": 2,
+        "nombre": "Leonardo",
+        "apellido": "Da Vinci",   
+        "email": "leoDaVinci@gmail.com",
+        "edad": 532,
+        "altura": 160,
+        "activo": false,
+        "fecha_de_creacion": "14/05/1540"
+},
+
+{
+	"id": 3,
+        "nombre": "Leonardo",
+        "apellido": "Da Vinci",   
+        "email": "leoDaVinci@gmail.com",
+        "edad": 532,
+        "altura": 160,
+        "activo": false,
+        "fecha_de_creacion": "14/05/1540"
+}
+]
