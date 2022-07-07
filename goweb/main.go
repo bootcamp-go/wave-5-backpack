@@ -27,6 +27,7 @@ func main() {
 	router.GET("/products", GetAll)
 	router.GET("/products/", GetFilter)
 	router.GET("/products/:id", GetProduct)
+	router.POST("/newProduct", NewProduct())
 
 	router.Run()
 

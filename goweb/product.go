@@ -11,14 +11,14 @@ import (
 )
 
 type product struct {
-	ID            int
-	Nombre        string
-	Color         string
-	Precio        float64
-	Stock         int
-	Codigo        string
-	Publicado     bool
-	FechaCreacion string
+	ID            int     `json:"ID" binding:"-"`
+	Nombre        string  `json:"Nombre" binding:"required"`
+	Color         string  `json:"Color" binding:"required"`
+	Precio        float64 `json:"Precio" binding:"required"`
+	Stock         int     `json:"Stock" binding:"required"`
+	Codigo        string  `json:"Codigo" binding:"required"`
+	Publicado     bool    `json:"Publicado" binding:"required"`
+	FechaCreacion string  `json:"FechaCreacion" binding:"required"`
 }
 
 func newProduct(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool, fecha string) product {
@@ -77,5 +77,35 @@ func GetProduct(ctx *gin.Context) {
 			}
 		}
 		ctx.JSON(http.StatusNotFound, "Error 404")
+	}
+}
+
+func newID() int {
+	maxID := 0
+	for _, product := range products {
+		if product.ID > maxID {
+			maxID = product.ID
+		}
+	}
+
+	return (maxID + 1)
+}
+
+func NewProduct() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		if "123456" != ctx.GetHeader("token") {
+			ctx.JSON(401, "No tiene permisos para realizar la peticion solicitada")
+			return
+		}
+
+		var p product
+		if err := ctx.ShouldBindJSON(&p); err != nil {
+			return
+		}
+
+		p.ID = newID()
+		products = append(products, p)
+
+		ctx.JSON(http.StatusOK, products)
 	}
 }
