@@ -2,8 +2,11 @@ package handler
 
 import (
 	"ejer02-TT/internal/transactions"
+	"errors"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator"
 )
 
 type request struct {
@@ -54,10 +57,21 @@ func (t *Transaction) Store() gin.HandlerFunc {
 		}
 		var req request
 		if err := ctx.Bind(&req); err != nil {
-			ctx.JSON(404, gin.H{
-				"error": err.Error(),
-			})
-			return
+			var ve validator.ValidationErrors
+			if errors.As(err, &ve) {
+				result := ""
+				for i, field := range ve {
+					if i != len(ve)-1 {
+						result += fmt.Sprintf("El campo %s es requerido y ", field.Field())
+					} else {
+						result += fmt.Sprintf("El campo %s es requerido", field.Field())
+					}
+				}
+
+				ctx.JSON(404, result)
+				return
+
+			}
 		}
 		t, err := t.service.Store(req.TranCode, req.Currency, req.Amount, req.Transmitter, req.Reciever, req.TranDate)
 		if err != nil {
