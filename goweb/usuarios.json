@@ -1,0 +1,24 @@
+{
+    "usuarios": [
+        {
+            "id": 1,
+            "nombre": "Matias",
+            "apellido": "Vince",
+            "email": "matiasvince9@gmail.com",
+            "edad": 22,
+            "altura": 174,
+            "activo": true,
+            "fecha_creacion": "06-07-2022"
+        },
+        {
+            "id": 2,
+            "nombre": "Pablo",
+            "apellido": "Restano",
+            "email": "pablorestano@gmail.com",
+            "edad": 27,
+            "altura": 168,
+            "activo": true,
+            "fecha_creacion": "04-07-2022"
+        }
+    ]
+}
