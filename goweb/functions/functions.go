@@ -1,6 +1,7 @@
 package functions
 
 import (
+	"errors"
 	"math/rand"
 
 	"github.com/go-playground/validator/v10"
@@ -23,4 +24,11 @@ func ValidateErrors(campo string, v validator.FieldError) string {
 		return "Direccion de correo electronico invalida"
 	}
 	return "Error desconoodido..."
+}
+
+func ValidateToken(tokenAuth string) error {
+	if tokenAuth != "62c5b68a0cc23a33375c85f8" {
+		return errors.New("no tiene permisos para realizar la petición solicitada")
+	}
+	return nil
 }

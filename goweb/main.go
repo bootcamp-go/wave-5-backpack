@@ -68,6 +68,37 @@ func CreateUser(ctx *gin.Context) {
 	ctx.JSON(200, newUser)
 }
 
+func CreateUserWithAuth() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var newUser models.User
+
+		errAuth := functions.ValidateToken(ctx.GetHeader("token"))
+		if errAuth != nil {
+			ctx.JSON(401, gin.H{
+				"error": errAuth.Error(),
+			})
+			return
+		}
+
+		if err := ctx.ShouldBindJSON(&newUser); err != nil {
+			for _, fieldError := range err.(validator.ValidationErrors) {
+				ctx.JSON(400, functions.ValidateErrors(fieldError.Field(), fieldError))
+			}
+			return
+		}
+		newUser.Id = functions.IdRandom(10)
+
+		users = append(users, newUser)
+
+		file, _ := json.MarshalIndent(users, "", "\t")
+		fmt.Println(string(file))
+
+		_ = ioutil.WriteFile("./users.json", file, 0644)
+
+		ctx.JSON(200, newUser)
+	}
+}
+
 func main() {
 	//gin.SetMode(gin.ReleaseMode)
 
@@ -78,7 +109,7 @@ func main() {
 	{
 		user.GET("/", GetAll)
 		user.GET("/:id", GetUserById)
-		user.POST("/", CreateUser)
+		user.POST("/", CreateUserWithAuth())
 	}
 
 	//puerto 8080
