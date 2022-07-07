@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"goweb/user"
 )
 
 func main() {
@@ -15,8 +16,10 @@ func main() {
 	})
 	usersGroup := router.Group("/users")
 	{
-		usersGroup.GET("/", UsersHandler)
-		usersGroup.GET("/:id", GetUsersByIdHandler)
+		usersGroup.GET("/", user.GetUsersHandler)
+		usersGroup.GET("/:id", user.GetUsersByIdHandler)
+		// POST ----
+		usersGroup.POST("/", user.CreateUser)
 	}
 	router.Run()
 }

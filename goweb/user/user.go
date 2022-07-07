@@ -1,4 +1,4 @@
-package main
+package user
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-type users struct {
+type User struct {
 	Id           int     `json:"id"`
 	FirstName    string  `json:"firstName"`
 	LastName     string  `json:"lastName"`
@@ -25,9 +25,9 @@ func GetAll(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "hola")
 }
 
-func UsersHandler(c *gin.Context) {
+func GetUsersHandler(c *gin.Context) {
 	var data, _ = os.ReadFile("./users.JSON")
-	var u []users
+	var u []User
 
 	if err := json.Unmarshal(data, &u); err != nil {
 		fmt.Println("Error")
@@ -40,7 +40,7 @@ func UsersHandler(c *gin.Context) {
 }
 func GetUsersByIdHandler(c *gin.Context) {
 	var data, _ = os.ReadFile("./users.JSON")
-	var u []users
+	var u []User
 
 	if err := json.Unmarshal(data, &u); err != nil {
 		fmt.Println("Error")
