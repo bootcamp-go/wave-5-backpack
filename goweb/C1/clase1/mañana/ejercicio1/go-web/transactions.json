@@ -1,0 +1,18 @@
+[
+  {
+    "Id": 1,
+    "CodigoTransaccion": "abc123",
+    "Moneda": "peso",
+    "Monto": 100,
+    "Emisor": "Martín",
+    "Receptor": "Luisa"
+  },
+  {
+    "Id": 2,
+    "CodigoTransaccion": "abc134",
+    "Moneda": "dolar",
+    "Monto": 200,
+    "Emisor": "Marcos",
+    "Receptor": "Luisa"
+  }
+]
