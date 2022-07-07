@@ -2,8 +2,10 @@ package user
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"log"
 	"os"
 	"strconv"
@@ -50,19 +52,29 @@ func GetUsersById(c *gin.Context) {
 		}
 	}
 }
-
-func CreateUser(c *gin.Context) {
-	var userReq CreateUserRequest
-	var user = User{}
-	if validateToken(c) {
-		if err := c.ShouldBindJSON(&userReq); err != nil {
-			c.JSON(400, gin.H{
-				"error": err.Error(),
-			})
+func CreateUser(u User) gin.HandlerFunc {
+	var user CreateUserRequest
+	return func(c *gin.Context) {
+		if !validateToken(c) {
 			return
 		}
-		userReq.Id = 3
-		user.createUser(userReq)
-		c.JSON(200, userReq)
+		if err := c.ShouldBindJSON(&user); err != nil {
+			var ve validator.ValidationErrors
+			if errors.As(err, &ve) {
+				result := ""
+				for i, field := range ve {
+					if i != len(ve)-1 {
+						result += fmt.Sprintf("El campo %s es requerido y ", field.ActualTag())
+					} else {
+						result += fmt.Sprintf("El campo %s es requerido", field.ActualTag())
+					}
+				}
+				c.JSON(404, result)
+				return
+			}
+		}
+		//TODO: Llamar al servicio interno createUser
+		u.createUser(user)
+		c.JSON(200, user)
 	}
 }

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"log"
 )
 
 type User struct {
@@ -27,9 +26,7 @@ func main() {
 	router.POST("/users", CreateUser())
 	router.Run()
 }
-func validateError(er error) {
-	log.Println(er)
-}
+
 func validateToken(c *gin.Context) bool {
 	if token := c.GetHeader("token"); token != "123" {
 		c.JSON(401, gin.H{
@@ -52,9 +49,9 @@ func CreateUser() gin.HandlerFunc {
 				result := ""
 				for i, field := range ve {
 					if i != len(ve)-1 {
-						result += fmt.Sprintf("El campo %s es requerido y ", field.Field())
+						result += fmt.Sprintf("El campo %s es requerido y ", field.ActualTag())
 					} else {
-						result += fmt.Sprintf("El campo %s es requerido", field.Field())
+						result += fmt.Sprintf("El campo %s es requerido", field.ActualTag())
 					}
 				}
 				c.JSON(404, result)
@@ -64,6 +61,6 @@ func CreateUser() gin.HandlerFunc {
 		lastId++
 		user.Id = lastId
 		users = append(users, user)
-		c.JSON(200, users)
+		c.JSON(200, user)
 	}
 }

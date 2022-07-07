@@ -5,7 +5,8 @@ import (
 	"goweb/user"
 )
 
-var u = user.User{}
+var user1 *user.User
+var users []user.User
 var lastId int
 
 func main() {
@@ -23,7 +24,7 @@ func main() {
 		usersGroup.GET("/", user.GetUsers)
 		usersGroup.GET("/:id", user.GetUsersById)
 		//POSTs ----//
-		usersGroup.POST("/", user.CreateUser)
+		usersGroup.POST("/", user.CreateUser(*user1))
 	}
 	router.Run()
 }
