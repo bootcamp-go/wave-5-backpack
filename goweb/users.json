@@ -1,63 +1,62 @@
-{
-   "users":[
-        {
-            "Id": 1,
-            "Name": "Jorge",
-            "LastName": "Gonzalez",
-            "Email": "jorge@mail.com",
-            "Age": 30,
-            "Height": 2.02,
-            "Active": true,
-            "CreatedAt": "21/06/21"
 
-        },
+[
+    {
+        "Id": 1,
+        "Name": "Jorge",
+        "LastName": "Gonzalez",
+        "Email": "jorge@mail.com",
+        "Age": 30,
+        "Height": 2.02,
+        "Active": true,
+        "CreatedAt": "21/06/21"
 
-        {
-            "Id": 2,
-            "Name": "Romina",
-            "LastName": "Gutierrez",
-            "Email": "romi@mail.com",
-            "Age": 29,
-            "Height": 1.64,
-            "Active": false,
-            "CreatedAt": "03/10/20"
+    },
 
-        },
+    {
+        "Id": 2,
+        "Name": "Romina",
+        "LastName": "Gutierrez",
+        "Email": "romi@mail.com",
+        "Age": 29,
+        "Height": 1.64,
+        "Active": false,
+        "CreatedAt": "03/10/20"
 
-        {
-            "Id": 3,
-            "Name": "Lionel",
-            "LastName": "Messi",
-            "Email": "lio@mail.com",
-            "Age": 34,
-            "Height": 1.7,
-            "Active": true,
-            "CreatedAt": "24/06/05"
+    },
 
-        },
+    {
+        "Id": 3,
+        "Name": "Lionel",
+        "LastName": "Messi",
+        "Email": "lio@mail.com",
+        "Age": 34,
+        "Height": 1.7,
+        "Active": true,
+        "CreatedAt": "24/06/05"
 
-        {
-            "Id": 4,
-            "Name": "Gabriela",
-            "LastName": "Sabbatini",
-            "Email": "gabi@mail.com",
-            "Age": 40,
-            "Height": 1.74,
-            "Active": true,
-            "CreatedAt": "22/04/22"
+    },
 
-        },
+    {
+        "Id": 4,
+        "Name": "Gabriela",
+        "LastName": "Sabbatini",
+        "Email": "gabi@mail.com",
+        "Age": 40,
+        "Height": 1.74,
+        "Active": true,
+        "CreatedAt": "22/04/22"
 
-        {
-            "Id": 5,
-            "Name": "Emanuel",
-            "LastName": "Ginobili",
-            "Email": "manu@mail.com",
-            "Age": 41,
-            "Height": 1.98,
-            "Active": false,
-            "CreatedAt": "18/05/19"
+    },
 
-        }
-    ]   
-}
+    {
+        "Id": 5,
+        "Name": "Emanuel",
+        "LastName": "Ginobili",
+        "Email": "manu@mail.com",
+        "Age": 41,
+        "Height": 1.98,
+        "Active": false,
+        "CreatedAt": "18/05/19"
+
+    }
+]   

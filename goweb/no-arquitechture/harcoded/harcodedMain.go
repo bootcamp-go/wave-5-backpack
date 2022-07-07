@@ -1,12 +1,8 @@
 package main
 
 import (
+	"strconv"
 	"github.com/gin-gonic/gin"
-	"encoding/json"
-	//"log"
-	"os"
-	"fmt"
-	"io/ioutil"
 )
 
 type Usuario struct {
@@ -49,33 +45,23 @@ var miSlice = []Usuario{u1,u2}
 
 
 
-
+// trayendo el array harcodeado
 func GetAll1(c *gin.Context){
 	c.JSON(200, miSlice)
 }
 
-func GetAll2(c *gin.Context){
-	// Open our jsonFile
-	jsonFile, err := os.Open("users.json")
-	// if we os.Open returns an error then handle it
-	if err != nil {
-		fmt.Println(err)
+// Buscar por Id
+func GetUserById1(c *gin.Context){
+	
+	id,_ := strconv.Atoi(c.Param("id"))
+	
+	for _,usuario := range miSlice{
+		if usuario.Id == id {
+			c.JSON(200,usuario)
+			return
+		}
 	}
-	// defer the closing of our jsonFile so that we can parse it later on
-	defer jsonFile.Close()
-
-	// paso el JSON file a []bytes
-	byteValue, _ := ioutil.ReadAll(jsonFile)
-
-	// En vez de crear una var tipo struct, uso una interface vacía que se adapte a cualquier estructura
-	var result map[string]interface{}
-
-	// decodifico el archivo []byte al formato que tenía el JSON
-	json.Unmarshal([]byte(byteValue), &result)
-
-	// lo devuelvo
-	c.JSON(200, result["users"])
-
+	c.JSON(404, "No se encontró ningún usuario con ese Id")
 }
 
 
@@ -90,9 +76,8 @@ func main(){
 	})
 
 	router.GET("/users1", GetAll1)
-	router.GET("/users2", GetAll2)
+	router.GET("/users1/:id", GetUserById1) 
 
 	router.Run(":8080")
-
 }
 
