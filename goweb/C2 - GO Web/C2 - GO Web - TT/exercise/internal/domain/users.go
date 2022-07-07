@@ -12,3 +12,12 @@ type Usuarios struct {
 	Activo   bool      `json:"activo"`
 	Fecha    time.Time `json:"fecha"`
 }
+
+//Para pruebas con POST
+// {
+//     "nombre": "Martha",
+//     "apellido": "Hernandez",
+//     "email": "martha.hernandez",
+//     "edad": 60,
+//     "altura": 1.60
+// }

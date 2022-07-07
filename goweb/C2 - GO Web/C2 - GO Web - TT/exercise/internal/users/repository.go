@@ -1,8 +1,12 @@
-package products
+package users
 
 import (
-	"goweb/internal/domain"
+	"encoding/json"
+	"fmt"
+	"os"
 	"time"
+
+	"exercise/internal/domain"
 )
 
 type Repository interface {
@@ -17,8 +21,23 @@ func NewRepository() Repository {
 	return &repository{}
 }
 
-var us []domain.Usuarios
-var lastID int
+//Leo json de usuarios
+func usersJson() []domain.Usuarios {
+	//Leo el json y lo envío como retorno
+	jsonUsers, err := os.ReadFile("../users.json")
+	if err != nil {
+		fmt.Print(err)
+	}
+	var users []domain.Usuarios
+	err = json.Unmarshal(jsonUsers, &users)
+	if err != nil {
+		fmt.Print(err)
+	}
+	return users
+}
+
+var us = usersJson()
+var lastID = us[len(us)-1].Id
 
 func (r *repository) GetAll() ([]domain.Usuarios, error) {
 	return us, nil

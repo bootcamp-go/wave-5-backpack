@@ -1,7 +1,8 @@
 package main
 
 import (
-	"goweb/cmd/server/handler"
+	"exercise/internal/users"
+	"exercise/server/handler"
 
 	"github.com/gin-gonic/gin"
 )

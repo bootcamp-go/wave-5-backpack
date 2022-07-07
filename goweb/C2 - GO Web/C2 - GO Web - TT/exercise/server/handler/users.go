@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"exercise/internal/users"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -20,13 +21,13 @@ type Usuarios struct {
 	service users.Service
 }
 
-func NewUser(u users.Service) *User {
-	return &User{
+func NewUser(u users.Service) *Usuarios {
+	return &Usuarios{
 		service: u,
 	}
 }
 
-func (c *User) GetAll() gin.HandlerFunc {
+func (c *Usuarios) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
 		if token != "123456" {
@@ -46,7 +47,7 @@ func (c *User) GetAll() gin.HandlerFunc {
 	}
 }
 
-func (c *User) Store() gin.HandlerFunc {
+func (c *Usuarios) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
 		if token != "123456" {
