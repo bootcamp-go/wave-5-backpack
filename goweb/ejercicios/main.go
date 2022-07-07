@@ -27,9 +27,22 @@ func main() {
 func validateError(er error) {
 	log.Println(er)
 }
+func validateToken(c *gin.Context) bool {
+	if token := c.GetHeader("token"); token != "123" {
+		c.JSON(401, gin.H{
+			"error": "No tiene permisos para realizar la peticion solicitada",
+		})
+		return false
+	}
+	return true
+}
+
 func CreateUser() gin.HandlerFunc {
 	var user User
 	return func(c *gin.Context) {
+		if !validateToken(c) {
+			return
+		}
 		if err := c.ShouldBindJSON(&user); err != nil {
 			validateError(err)
 			c.JSON(400, gin.H{
