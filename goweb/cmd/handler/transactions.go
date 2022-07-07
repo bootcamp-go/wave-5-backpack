@@ -1,18 +1,17 @@
-package main
+package handler
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
+	"goweb/internal/domain"
+	"goweb/internal/transactions"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
 
-type transaction struct {
-	Id        int     `json:"-"`
+type request struct {
 	Code      string  `json:"code" binding:"required"`
 	Currency  string  `json:"currency" binding:"required"`
 	Amount    float64 `json:"amount" binding:"required"`
@@ -21,19 +20,21 @@ type transaction struct {
 	Date      string  `json:"date" binding:"required"`
 }
 
-var transactions []transaction
-
-func openFile() {
-	file, _ := os.ReadFile("transactions.json")
-	json.Unmarshal([]byte(file), &transactions)
+type Transaction struct {
+	service transactions.Service
 }
 
-func GetAll(ctx *gin.Context) {
-	var ans []transaction
+func NewTransaction(t transactions.Service) *Transaction {
+	return &Transaction{
+		service: t,
+	}
+}
 
+func (t *Transaction) GetAll(ctx *gin.Context) {
 	issuer := ctx.Query("issuer")
 	date := ctx.Query("date")
-
+	ans := []domain.Transaction{}
+	transactions, _ := t.service.GetAll()
 	for _, transaction := range transactions {
 		filter := true
 		if issuer != "" && issuer != transaction.Issuer {
@@ -53,24 +54,6 @@ func GetAll(ctx *gin.Context) {
 	ctx.JSON(200, ans)
 }
 
-func GetOne(ctx *gin.Context) {
-	for _, transaction := range transactions {
-		if strconv.Itoa(transaction.Id) == ctx.Param("id") {
-			ctx.JSON(200, transaction)
-			return
-		}
-	}
-	ctx.JSON(404, "Id no encontrado")
-}
-
-func getLastId() int {
-	if len(transactions) == 0 {
-		return 0
-	} else {
-		return transactions[len(transactions)-1].Id
-	}
-}
-
 func validateFields(err *error) string {
 	errAns := ""
 	var ve validator.ValidationErrors
@@ -82,7 +65,7 @@ func validateFields(err *error) string {
 	return errAns
 }
 
-func Create(ctx *gin.Context) {
+func (t *Transaction) Create(ctx *gin.Context) {
 	if ctx.GetHeader("token") != "elpepe" {
 		ctx.JSON(401, gin.H{
 			"error": "token inválido",
@@ -90,22 +73,26 @@ func Create(ctx *gin.Context) {
 		return
 	}
 
-	var req transaction
+	var req request
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(400, gin.H{"Error: ": validateFields(&err)})
 		return
 	}
-	newId := getLastId() + 1
-	req.Id = newId
-	transactions = append(transactions, req)
-	ctx.JSON(200, req)
+	transaction, err := t.service.Create(req.Code, req.Currency, req.Amount, req.Issuer, req.Recipient, req.Date)
+	if err != nil {
+		ctx.JSON(404, gin.H{"error": err.Error()})
+		return
+	}
+	ctx.JSON(200, transaction)
 }
 
-func main() {
-	openFile()
-	router := gin.Default()
-	router.GET("/transactions", GetAll)
-	router.GET("/transaction/:id", GetOne)
-	router.POST("/transaction", Create)
-	router.Run()
+func (t *Transaction) GetOne(ctx *gin.Context) {
+	transactions, _ := t.service.GetAll()
+	for _, transaction := range transactions {
+		if strconv.Itoa(transaction.Id) == ctx.Param("id") {
+			ctx.JSON(200, transaction)
+			return
+		}
+	}
+	ctx.JSON(404, "Id no encontrado")
 }
