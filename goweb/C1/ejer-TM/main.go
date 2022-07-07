@@ -14,17 +14,21 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 type Transacciones struct {
 	Id          int     `form:"id"`
-	TranCode    string  `form:"tranCode"`
-	Currency    string  `form:"currency"`
-	Ammount     float64 `form:"ammount"`
-	Transmitter string  `form:"transmitter"`
-	Reciever    string  `form:"reciever"`
-	TranDate    string  `form:"tranDate"`
+	TranCode    string  `json:"tranCode" binding:"required"`
+	Currency    string  `json:"currency" binding:"required"`
+	Ammount     float64 `json:"ammount" binding:"required"`
+	Transmitter string  `json:"transmitter" binding:"required"`
+	Reciever    string  `json:"reciever" binding:"required"`
+	TranDate    string  `json:"tranDate" binding:"required"`
 }
+
+var t []Transacciones
+var lastID int
 
 func Read() (*[]Transacciones, error) {
 	data, err := os.ReadFile("./transacciones.json")
@@ -32,7 +36,6 @@ func Read() (*[]Transacciones, error) {
 		return nil, errors.New("error al leer el archivo")
 	}
 
-	var t []Transacciones
 	if err := json.Unmarshal(data, &t); err != nil {
 		fmt.Println("error aqui")
 		log.Fatal(err)
@@ -98,6 +101,38 @@ func FiltrarTransactionsHandler(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, filter) // devovemos el array filtrado
 }
 
+func GenerateTransaction() gin.HandlerFunc {
+	var transac Transacciones
+	return func(c *gin.Context) {
+		token := c.GetHeader("token")
+		if token != "1234" {
+			c.JSON(401, gin.H{
+				"error": "No tiene permisos para realizar la peticion solicitada",
+			})
+			return
+		}
+		if err := c.ShouldBindJSON(&transac); err != nil {
+			var ve validator.ValidationErrors
+			if errors.As(err, &ve) {
+				result := ""
+				for i, field := range ve {
+					if i != len(ve)-1 {
+						result += fmt.Sprintf("El campo %s es requerido y ", field.Field())
+					} else {
+						result += fmt.Sprintf("El campo %s es requerido", field.Field())
+					}
+				}
+				c.JSON(404, result)
+				return
+			}
+		}
+		lastID++
+		transac.Id = lastID
+		t = append(t, transac)
+		c.JSON(200, t)
+	}
+}
+
 func main() {
 
 	// const name string = "Seba"
@@ -124,6 +159,11 @@ func main() {
 	router.GET("transacciones/:id", SearchByIdHandler)
 
 	router.GET("/filtrartransaction", FiltrarTransactionsHandler)
+
+	router.POST("transacciones", GenerateTransaction())
+
+	// tr := router.Group("/transacciones")
+	// tr.POST("/", GenerateTransaction())
 
 	router.Run()
 
