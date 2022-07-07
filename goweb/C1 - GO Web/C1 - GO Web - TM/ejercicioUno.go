@@ -9,19 +9,22 @@ import (
 
 func main() {
 	type usuarios struct {
-		Id                      int `json:"id" binding:"required"`
-		Nombre, Apellido, Email string
-		Edad                    int
-		Altura                  float64
-		Activo                  bool
-		Fecha                   time.Time
+		Id       int       `json:"id" binding:"required"`
+		Nombre   string    `json:"nombre"`
+		Apellido string    `json:"apellido"`
+		Email    string    `json:"email"`
+		Edad     int       `json:"edad"`
+		Altura   float64   `json:"altura"`
+		Activo   bool      `json:"activo"`
+		Fecha    time.Time `json:"fecha"`
 	}
 
+	//Guardando esta info en users.json
 	users := []usuarios{
 		{
 			Id:       1,
 			Nombre:   "Luz",
-			Apellido: "Lucumí",
+			Apellido: "Lucumi",
 			Email:    "luz.lucumi@hotmail.com",
 			Edad:     26,
 			Altura:   1.65,
@@ -31,7 +34,7 @@ func main() {
 		{
 			Id:       2,
 			Nombre:   "Luber",
-			Apellido: "Lucumí",
+			Apellido: "Lucumi",
 			Email:    "luber.lucumi@hotmail.com",
 			Edad:     61,
 			Altura:   1.82,
@@ -48,6 +51,16 @@ func main() {
 			Activo:   true,
 			Fecha:    time.Now(),
 		},
+		{
+			Id:       4,
+			Nombre:   "Luz",
+			Apellido: "Martinez",
+			Email:    "luz.martinez@hotmail.com",
+			Edad:     26,
+			Altura:   1.60,
+			Activo:   false,
+			Fecha:    time.Now(),
+		},
 	}
 
 	jsonData, errMarshal := json.Marshal(users)
@@ -56,5 +69,5 @@ func main() {
 	}
 
 	dataUsers := []byte(string(jsonData))
-	os.WriteFile("./users.json", dataUsers, 0644)
+	os.WriteFile("../../users.json", dataUsers, 0644)
 }

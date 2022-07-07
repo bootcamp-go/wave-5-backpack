@@ -1,18 +1,22 @@
 package main
 
 import (
+	"encoding/json"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
 )
 
 type usuarios struct {
-	Id                      int `json:"id" binding:"required"`
-	Nombre, Apellido, Email string
-	Edad                    int
-	Altura                  float64
-	Activo                  bool
-	Fecha                   time.Time
+	Id       int       `json:"id" binding:"required"`
+	Nombre   string    `json:"nombre"`
+	Apellido string    `json:"apellido"`
+	Email    string    `json:"email"`
+	Edad     int       `json:"edad"`
+	Altura   float64   `json:"altura"`
+	Activo   bool      `json:"activo"`
+	Fecha    time.Time `json:"fecha"`
 }
 
 func main() {
@@ -26,46 +30,22 @@ func main() {
 		})
 	})
 
-	routerDos := gin.Default()
-
-	routerDos.GET("/usuarios", getAll)
+	router.GET("/usuarios", getAll)
 	// Corriendo servidor sobre el puerto 8080
-	router.Run()
-	routerDos.Run(":8081")
+	router.Run(":8081")
 }
 
 func getAll(c *gin.Context) {
-	users := []usuarios{
-		{
-			Id:       1,
-			Nombre:   "Luz",
-			Apellido: "Lucumí",
-			Email:    "luz.lucumi@hotmail.com",
-			Edad:     26,
-			Altura:   1.65,
-			Activo:   true,
-			Fecha:    time.Now(),
-		},
-		{
-			Id:       2,
-			Nombre:   "Luber",
-			Apellido: "Lucumí",
-			Email:    "luber.lucumi@hotmail.com",
-			Edad:     61,
-			Altura:   1.82,
-			Activo:   true,
-			Fecha:    time.Now(),
-		},
-		{
-			Id:       3,
-			Nombre:   "Martha",
-			Apellido: "Hernández",
-			Email:    "martha@hotmail.com",
-			Edad:     60,
-			Altura:   1.60,
-			Activo:   true,
-			Fecha:    time.Now(),
-		},
+	//Leo el json y lo envío como retorno
+	//para mostrarlo en el path /usuarios
+	jsonUsers, err := os.ReadFile("./users.json")
+	if err != nil {
+		panic(err)
+	}
+	var users []usuarios
+	err = json.Unmarshal(jsonUsers, &users)
+	if err != nil {
+		panic(err)
 	}
 	c.JSON(200, gin.H{"usuarios": users})
 }
