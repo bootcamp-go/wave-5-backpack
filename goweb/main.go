@@ -5,30 +5,31 @@ import (
 	"fmt"
 	"goweb/product"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
 )
 
-var productos = map[string]product.Products{
-	"1": {
-		Id:            1,
+var productos = []product.Products{
+	{
+		Id:            "1",
 		Nombre:        "sandia",
 		Color:         "verde",
 		Precio:        20000,
 		Stock:         5,
 		Codigo:        "23fe2",
-		Publicado:     true,
+		Publicado:     "true",
 		FechaCreacion: "23/10/2022",
 	},
-	"2": {
-		Id:            2,
+	{
+		Id:            "2",
 		Nombre:        "Manzana",
 		Color:         "Rojo",
 		Precio:        50000,
 		Stock:         12,
 		Codigo:        "22fe2",
-		Publicado:     true,
+		Publicado:     "true",
 		FechaCreacion: "10/10/2022",
 	},
 }
@@ -49,15 +50,41 @@ func getAll(ctx *gin.Context) {
 	})
 }
 
-func getUserId(ctx *gin.Context) {
+func getProductId(ctx *gin.Context) {
 
-	producto, ok := productos[ctx.Param("Id")]
+	product := ctx.Param("Id")
+	var result string
+	exist := false
 
-	if ok {
-		ctx.String(200, "El producto es %s", producto.Nombre)
+	for _, data := range productos {
+		if data.Id == product {
+			exist = true
+			result = "El producto consultado es: " + data.Nombre
+		}
+	}
+
+	if exist {
+		ctx.String(200, result)
 	} else {
 		ctx.String(400, "No existe producto con esas caracteristicas")
 	}
+
+}
+
+func getProductsPublish(ctx *gin.Context) {
+	filter := ctx.Query("publish")
+	var arrayResult []product.Products
+
+	for _, data := range productos {
+		if data.Publicado == filter {
+			arrayResult = append(arrayResult, data)
+		}
+
+	}
+
+	ctx.JSON(http.StatusAccepted, gin.H{
+		"responseData": arrayResult,
+	})
 }
 
 func main() {
@@ -73,7 +100,8 @@ func main() {
 	products := server.Group("/products")
 	{
 		products.GET("/", getAll)
-		products.GET("/:Id", getUserId)
+		products.GET("/:Id", getProductId)
+		products.GET("/publish", getProductsPublish)
 	}
 
 	server.Run()
