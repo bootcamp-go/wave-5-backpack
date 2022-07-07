@@ -1,0 +1,72 @@
+[
+    {
+      "id": "62c5b8570b07ed14a5a228da",
+      "apellido": "Montgomery",
+      "activo": true,
+      "altura": 37,
+      "edad": 32,
+      "fecha_de_creacion": "2019-12-18T06:49:04 +03:00",
+      "nombre": "Evangeline",
+      "email": "evangelinemontgomery@gogol.com"
+    },
+    {
+      "id": "62c5b857680356ac4bec9297",
+      "apellido": "Mitchell",
+      "activo": true,
+      "altura": 27,
+      "edad": 29,
+      "fecha_de_creacion": "2017-01-05T12:45:15 +03:00",
+      "nombre": "Hubbard",
+      "email": "hubbardmitchell@gogol.com"
+    },
+    {
+      "id": "62c5b857543b6fd92a1e714e",
+      "apellido": "Hamilton",
+      "activo": true,
+      "altura": 32,
+      "edad": 26,
+      "fecha_de_creacion": "2020-06-09T02:58:35 +04:00",
+      "nombre": "Henson",
+      "email": "hensonhamilton@gogol.com"
+    },
+    {
+      "id": "62c5b857ee5d7d61df90d269",
+      "apellido": "Mcclure",
+      "activo": false,
+      "altura": 22,
+      "edad": 32,
+      "fecha_de_creacion": "2019-10-11T05:31:03 +03:00",
+      "nombre": "Willis",
+      "email": "willismcclure@gogol.com"
+    },
+    {
+      "id": "62c5b857d526eff67f35c8ae",
+      "apellido": "Stanton",
+      "activo": false,
+      "altura": 39,
+      "edad": 37,
+      "fecha_de_creacion": "2017-07-15T09:39:49 +04:00",
+      "nombre": "Branch",
+      "email": "branchstanton@gogol.com"
+    },
+    {
+      "id": "62c5b85739fbb2f7a99ca7c9",
+      "apellido": "Wilder",
+      "activo": true,
+      "altura": 30,
+      "edad": 33,
+      "fecha_de_creacion": "2017-04-22T03:48:26 +03:00",
+      "nombre": "Melton",
+      "email": "meltonwilder@gogol.com"
+    },
+    {
+      "id": "62c5b857a4cbf727eb171b87",
+      "apellido": "Casey",
+      "activo": false,
+      "altura": 21,
+      "edad": 34,
+      "fecha_de_creacion": "2021-04-26T03:41:18 +04:00",
+      "nombre": "Miller",
+      "email": "millercasey@gogol.com"
+    }
+  ]
