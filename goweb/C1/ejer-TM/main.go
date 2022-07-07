@@ -21,7 +21,7 @@ type Transacciones struct {
 	Id          int     `form:"id"`
 	TranCode    string  `json:"tranCode" binding:"required"`
 	Currency    string  `json:"currency" binding:"required"`
-	Ammount     float64 `json:"ammount" binding:"required"`
+	Amount      float64 `json:"amount" binding:"required"`
 	Transmitter string  `json:"transmitter" binding:"required"`
 	Reciever    string  `json:"reciever" binding:"required"`
 	TranDate    string  `json:"tranDate" binding:"required"`
@@ -160,7 +160,7 @@ func main() {
 
 	router.GET("/filtrartransaction", FiltrarTransactionsHandler)
 
-	router.POST("transacciones", GenerateTransaction())
+	router.POST("transactions", GenerateTransaction())
 
 	// tr := router.Group("/transacciones")
 	// tr.POST("/", GenerateTransaction())
