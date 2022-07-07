@@ -1,0 +1,10 @@
+{
+    "Id": 1,           
+	"Nombre": "sandia",        
+	"Color": "verde",        
+	"Precio": 20000,       
+	"Stock":   5,      
+	"Codigo":  "23fe2",      
+	"Publicado":  true,   
+	"FechaCreacion:": "23/10/2022"
+}
