@@ -7,7 +7,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/anesquivel/hackathon/internal/service"
+	"github.com/anesquivel/wave-5-backpack/tree/esquivel_andrea/gobases/hackathon/internal/service"
 )
 
 type File struct {

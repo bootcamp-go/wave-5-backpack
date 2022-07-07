@@ -1,0 +1,186 @@
+/*package main
+
+import (
+	"encoding/json"
+	"errors"
+	"fmt"
+	"log"
+	"net/http"
+	"reflect"
+	"strconv"
+	"strings"
+
+	"github.com/gin-gonic/gin"
+)
+
+type Usuario struct {
+	Id          int
+	Names       string  `json:nombre`
+	LastName    string  `json:apellido`
+	Age         int     `json:edad`
+	DateCreated string  `json:fechaCreacion`
+	Estatura    float64 `json:altura`
+	Email       string  `json:email`
+	IsActivo    bool    `json:activo`
+}
+
+type UserResult struct {
+	usuario  Usuario
+	posicion int
+}
+
+func getAll() ([]byte, error) {
+	u := Usuario{
+		Id:          1,
+		Names:       "Andrea",
+		LastName:    "Esquivel",
+		Email:       "ing.andreaesquivel@gmail.com",
+		Estatura:    1.56,
+		Age:         23,
+		IsActivo:    true,
+		DateCreated: "06/07/2022",
+	}
+
+	usuarios := []Usuario{}
+	usuarios = append(usuarios, u)
+	usuarios = append(usuarios, u)
+
+	jsonData, err := json.Marshal(usuarios)
+	if err != nil {
+		return nil, err
+	}
+
+	return jsonData, nil
+
+}
+
+func getAllUsers() []Usuario {
+	u := Usuario{
+		Id:          1,
+		Names:       "Andrea",
+		LastName:    "Esquivel",
+		Email:       "ing.andreaesquivel@gmail.com",
+		Estatura:    1.56,
+		Age:         23,
+		IsActivo:    true,
+		DateCreated: "06/07/2022",
+	}
+
+	u1 := Usuario{
+		Id:          2,
+		Names:       "Ashton",
+		LastName:    "Brooke",
+		Email:       "drumstinck@gmail.com",
+		Estatura:    1.76,
+		Age:         28,
+		IsActivo:    false,
+		DateCreated: "06/07/2022",
+	}
+
+	usuarios := []Usuario{}
+	usuarios = append(usuarios, u)
+	usuarios = append(usuarios, u1)
+
+	return usuarios
+
+}
+func main() {
+	router := gin.Default()
+
+	router.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Hola, Andy!",
+		})
+	})
+
+	router.GET("/usuarios", getAllUsuarios)
+	router.GET("/filtrar", getUsuariosByFilter)
+	router.GET("usuarios/:id", getUserById)
+	router.Run(":8000")
+}
+
+func getUsuariosByFilter(ctx *gin.Context) {
+	category := ctx.Query("categoria")
+	value := ctx.Query("valor")
+	usuarios := getAllUsers()
+
+	var usersFiltered []Usuario
+
+	for _, user := range usuarios {
+		v := reflect.ValueOf(user)
+		typeOfS := v.Type()
+
+		for i := 0; i < v.NumField(); i++ {
+			actualField := strings.ToUpper(fmt.Sprintf("%s", typeOfS.Field(i).Name))
+			actualValue := strings.ToUpper(fmt.Sprintf("%v", v.Field(i).Interface()))
+
+			if (actualField == strings.ToUpper(category)) && actualValue == strings.ToUpper(value) {
+				usersFiltered = append(usersFiltered, user)
+				fmt.Printf("Field: %s\tValue: %v\n", actualField, actualValue)
+			}
+		}
+
+	}
+
+	jsonData, _ := json.Marshal(usersFiltered)
+
+	ctx.JSON(http.StatusOK, string(jsonData))
+
+}
+func getAllUsuarios(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Hola, Andy!",
+	})
+
+	usuariosJSON, err := getAll()
+	if err != nil {
+		log.Fatal(err)
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"usuarios": string(usuariosJSON),
+	})
+}
+
+func getUserById(ctx *gin.Context) {
+	id, _ := strconv.Atoi(ctx.Param("id"))
+	fmt.Println("param id", id)
+	usuarios := getAllUsers()
+	var userGet UserResult
+	for pos, user := range usuarios {
+		if user.Id == id {
+			userGet.usuario = user
+			userGet.posicion = pos
+		}
+	}
+
+	if (UserResult{} == userGet) {
+
+		ctx.JSON(http.StatusNotFound, gin.H{
+
+			"Error": errors.New("No se encontró el usuario").Error(),
+		})
+	}
+
+	fmt.Println("entra en err2", userGet)
+
+	userJSON, err := json.Marshal(userGet.usuario)
+	posJSON, err := json.Marshal(userGet.posicion)
+
+	if err != nil {
+
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"Error": errors.New("Hubo un problema.").Error(),
+		})
+	}
+
+	fmt.Println("finaliza", string(userJSON))
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"usuario":  string(userJSON),
+		"posicion": string(posJSON),
+	})
+}
+
+
+
+*/
