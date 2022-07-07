@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"os"
 
-	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/internal/user"
+	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/internal/domain"
 )
 
 type DB struct {
-	Users  []user.User
+	Users  []domain.User
 	LastId int
 }
 
