@@ -20,28 +20,32 @@ type Usuarios struct {
 func main() {
 	router := gin.Default()
 
-	router.GET("/HolaNombre", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"mesage": "Hola Jose",
-		})
-	})
+	router.GET("/HolaNombre", HolaNombre)
 
-	router.GET("/GetAll", func(ctx *gin.Context) {
-		var u []Usuarios
-		j, _ := os.ReadFile("./usuarios.json")
-		if err := json.Unmarshal(j, &u); err != nil {
-			log.Println(string(j))
-			log.Fatal(err)
-		}
-		ctx.JSON(200, gin.H{
-			"usuario": u,
-		})
-	})
+	router.GET("/GetAll", GetAll)
 
 	router.GET("/getuser/:id", getOneUser)
 	router.GET("/filtrarusuarios", filterUsers)
 
 	router.Run()
+}
+
+func HolaNombre(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"mesage": "Hola Jose",
+	})
+}
+
+func GetAll(ctx *gin.Context) {
+	var u []Usuarios
+	j, _ := os.ReadFile("./usuarios.json")
+	if err := json.Unmarshal(j, &u); err != nil {
+		log.Println(string(j))
+		log.Fatal(err)
+	}
+	ctx.JSON(200, gin.H{
+		"usuario": u,
+	})
 }
 
 func getOneUser(ctex *gin.Context) {
