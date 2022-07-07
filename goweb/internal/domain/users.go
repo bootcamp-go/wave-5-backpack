@@ -1,7 +1,7 @@
-package models
+package domain
 
 type User struct {
-	Id            string  `json:"id"`
+	Id            int     `json:"id"`
 	Nombre        string  `json:"nombre" binding:"required"`
 	Apellido      string  `json:"apellido" binding:"required"`
 	Email         string  `json:"email" binding:"required,email"`
