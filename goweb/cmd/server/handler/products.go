@@ -12,7 +12,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-type Request struct {
+type RequestRequired struct {
 	Nombre        string  `json:"nombre" binding:"required"`
 	Color         string  `json:"color" binding:"required"`
 	Precio        float64 `json:"precio" binding:"required"`
@@ -20,6 +20,16 @@ type Request struct {
 	Codigo        string  `json:"codigo" binding:"required"`
 	Publicado     bool    `json:"publicado" binding:"required"`
 	FechaCreacion string  `json:"fechaCreacion" binding:"required"`
+}
+
+type Request struct {
+	Nombre        string  `json:"nombre"`
+	Color         string  `json:"color"`
+	Precio        float64 `json:"precio"`
+	Stock         int     `json:"stock"`
+	Codigo        string  `json:"codigo"`
+	Publicado     bool    `json:"publicado"`
+	FechaCreacion string  `json:"fechaCreacion"`
 }
 
 type Product struct {
@@ -78,12 +88,12 @@ func (p *Product) GetAll() gin.HandlerFunc {
 // Clase 1 Ejercicio 2 Parte 2
 func (p *Product) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		idInt, err := strconv.Atoi(ctx.Param("id"))
+		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
 			ctx.JSON(500, gin.H{"error": err.Error()})
 		}
 
-		producto, err := p.service.GetById(idInt)
+		producto, err := p.service.GetById(id)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
@@ -104,7 +114,7 @@ func validateToken(ctx *gin.Context) bool {
 // Clase 2 Ejercicio 1 Parte 1
 func (p *Product) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var req Request
+		var req RequestRequired
 
 		if !validateToken(ctx) {
 			return
@@ -138,6 +148,156 @@ func (p *Product) Store() gin.HandlerFunc {
 
 		if err != nil {
 			ctx.JSON(500, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, producto)
+	}
+}
+
+// Clase 3 Ejercicio 1 Parte 1
+func (p *Product) Update() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		if !validateToken(ctx) {
+			return
+		}
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		var req RequestRequired
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		if req.Nombre == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "El nombre es requerido"})
+			return
+		}
+
+		if req.Color == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "El color es requerido"})
+			return
+		}
+
+		if req.Precio == 0 {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "El precio es requerido"})
+			return
+		}
+
+		if req.Stock == 0 {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "El stock es requerido"})
+			return
+		}
+
+		if req.Codigo == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "El codigo es requerido"})
+			return
+		}
+
+		if req.Publicado == false {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "El publicado es requerido"})
+			return
+		}
+
+		if req.FechaCreacion == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "La fecha de creacion es requerida"})
+			return
+		}
+
+		producto, err := p.service.Update(
+			id,
+			req.Nombre,
+			req.Color,
+			req.Precio,
+			req.Stock,
+			req.Codigo,
+			req.Publicado,
+			req.FechaCreacion,
+		)
+
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, producto)
+	}
+}
+
+// Clase 3 Ejercicio 1 Parte 1
+func (p *Product) Delete() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		if !validateToken(ctx) {
+			return
+		}
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "id invalido"})
+			return
+		}
+
+		err = p.service.Delete(id)
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("El producto con id %d fue eliminado", id)})
+	}
+}
+
+// Clase 3 Ejercicio 1 Parte 1
+func (p *Product) UpdateNombreYPrecio() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		if !validateToken(ctx) {
+			return
+		}
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		var req Request
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		if req.Nombre == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "El nombre es requerido"})
+			return
+		}
+
+		if req.Precio == 0 {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "El precio es requerido"})
+			return
+		}
+
+		producto, err := p.service.UpdateNombre(
+			id,
+			req.Nombre,
+		)
+
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+
+		producto, err = p.service.UpdatePrecio(
+			id,
+			req.Precio,
+		)
+
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
 

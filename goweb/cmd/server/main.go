@@ -8,9 +8,9 @@ import (
 )
 
 func main() {
-	//repositoryMemoria := products.NewRepositoryMemoria()
-	repositoryJson := products.NewRepositoryJsonDB()
-	service := products.NewService(repositoryJson)
+	repository := products.NewRepositoryMemoria()
+	//repository := products.NewRepositoryJsonDB()
+	service := products.NewService(repository)
 	p := handler.NewProduct(service)
 
 	router := gin.Default()
@@ -28,6 +28,12 @@ func main() {
 		productos.GET("/:id", p.GetById())
 		// Clase 2 Ejercicio 1 Parte 1
 		productos.POST("/", p.Store())
+		// Clase 3 Ejercicio 1 Parte 1
+		productos.PUT("/:id", p.Update())
+		// Clase 3 Ejercicio 1 Parte 1
+		productos.DELETE("/:id", p.Delete())
+		// Clase 3 Ejercicio 1 Parte 1
+		productos.PATCH("/:id", p.UpdateNombreYPrecio())
 	}
 
 	router.Run(":8080")

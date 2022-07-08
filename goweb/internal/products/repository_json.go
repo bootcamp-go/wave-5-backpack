@@ -12,9 +12,9 @@ var PATH string = "../../resources/products.json"
 
 type repositoryJsonDB struct{}
 
-func NewRepositoryJsonDB() Repository {
-	return &repositoryJsonDB{}
-}
+//func NewRepositoryJsonDB() Repository {
+//	return &repositoryJsonDB{}
+//}
 
 func (r *repositoryJsonDB) GetAll() ([]domain.Product, error) {
 	data, err := os.ReadFile(PATH)
