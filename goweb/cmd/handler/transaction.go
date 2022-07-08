@@ -7,12 +7,27 @@ import (
 	"strconv"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/models"
+	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/transactions"
 	"github.com/gin-gonic/gin"
 )
 
-var transactions []models.Transaction
+type request struct {
+	Monto float64 `json:"monto" binding:"required"`
+  Cod string `json:"cod_transaction" binding:"required"`
+  Moneda string `json:"moneda" binding:"required"`
+  Emisor string `json:"emisor" binding:"required"`
+  Receptor string `json:"receptor" binding:"required"`
+}
 
-func CreateTransaction(ctx *gin.Context) {
+type Transaction struct {
+	service transactions.Service
+}
+
+func NewTransaction(s transactions.Service) *Transaction {
+	return &Transaction{service: s}
+}
+
+func (t *Transaction) CreateTransaction(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
 
 	if token != "1245" {
@@ -22,30 +37,25 @@ func CreateTransaction(ctx *gin.Context) {
 		return
 	}
 
-	var transaction models.Transaction
+	var req request
 
-	if err := ctx.ShouldBindJSON(&transaction); err != nil {
+	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error" : err.Error(),
 		})
 		return
 	}
 
-	// Obtenemos el ultimo ID y le aumentamos el valor para la nueva instancia
-	var lastID int
-	if len(transactions) != 0 {
-		lastID = transactions[len(transactions) - 1].ID 
+	transaction, err := t.service.Store(req.Monto, req.Cod, req.Moneda, req.Emisor, req.Receptor)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error" : err.Error()})
 	}
-
-	transaction.ID = lastID + 1
-
-	transactions = append(transactions, transaction)	
 
 	ctx.JSON(http.StatusCreated, transaction)
 }
 
-func GetAll(ctx *gin.Context) {	
-	transactions, err := read("./transactions.json")
+func (t *Transaction) GetAll(ctx *gin.Context) {
+	transactions, err := t.service.GetAll()
   if err != nil {
     ctx.JSON(http.StatusInternalServerError, gin.H{
       "error": err.Error(),
@@ -57,7 +67,7 @@ func GetAll(ctx *gin.Context) {
   ctx.JSON(http.StatusOK, transactions)
 }
 
-func GetByID(ctx *gin.Context) {
+func (t *Transaction) GetByID(ctx *gin.Context) {
 	id, err :=  strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -66,30 +76,18 @@ func GetByID(ctx *gin.Context) {
 		return
 	}
 
-	transactions, err := read("./transactions.json")
-  if err != nil {
-    ctx.JSON(http.StatusInternalServerError, gin.H{
-      "error": err.Error(),
-    })
-    return
-  }
+	transaction, err := t.service.GetByID(id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error" : err.Error()})
+		return
+	}
 
-	// Aca esta logica
-  for _ , transaction := range transactions {
-  	if transaction.ID == id {
-  		ctx.JSON(http.StatusOK, transaction)
-  		return
-  	}
-  }
-
-  ctx.JSON(http.StatusNotFound, gin.H{
-  	"message" : "transaction by ID not found",
-  })
+	ctx.JSON(http.StatusOK, transaction)
 }
 
-func GetFilter(ctx *gin.Context) {
+func (t *Transaction) GetFilter(ctx *gin.Context) {
 
-	transactions, err := read("./transactions.json")
+	transactions, err := read("../transactions.json")
   if err != nil {
     ctx.JSON(http.StatusInternalServerError, gin.H{
       "error": err.Error(),
@@ -118,7 +116,7 @@ func GetFilter(ctx *gin.Context) {
       filTransactions = append(filTransactions, t)
     }
   }
-  
+ 
   ctx.JSON(http.StatusOK, filTransactions)
 }
 
