@@ -30,7 +30,24 @@ func NewTransaction(t transactions.Service) *Transaction {
 	}
 }
 
+func validateFields(err *error) string {
+	errAns := ""
+	var ve validator.ValidationErrors
+	if errors.As(*err, &ve) {
+		for _, fe := range ve {
+			errAns += fmt.Sprintf("el campo %s es requerido ", fe.Field())
+		}
+	}
+	return errAns
+}
+
 func (t *Transaction) GetAll(ctx *gin.Context) {
+	if ctx.GetHeader("token") != "elpepe" {
+		ctx.JSON(401, gin.H{
+			"error": "token inválido",
+		})
+		return
+	}
 	issuer := ctx.Query("issuer")
 	date := ctx.Query("date")
 	ans := []domain.Transaction{}
@@ -52,17 +69,6 @@ func (t *Transaction) GetAll(ctx *gin.Context) {
 		return
 	}
 	ctx.JSON(200, ans)
-}
-
-func validateFields(err *error) string {
-	errAns := ""
-	var ve validator.ValidationErrors
-	if errors.As(*err, &ve) {
-		for _, fe := range ve {
-			errAns += fmt.Sprintf("el campo %s es requerido ", fe.Field())
-		}
-	}
-	return errAns
 }
 
 func (t *Transaction) Create(ctx *gin.Context) {
@@ -87,12 +93,100 @@ func (t *Transaction) Create(ctx *gin.Context) {
 }
 
 func (t *Transaction) GetOne(ctx *gin.Context) {
-	transactions, _ := t.service.GetAll()
-	for _, transaction := range transactions {
-		if strconv.Itoa(transaction.Id) == ctx.Param("id") {
-			ctx.JSON(200, transaction)
-			return
-		}
+	if ctx.GetHeader("token") != "elpepe" {
+		ctx.JSON(401, gin.H{
+			"error": "token inválido",
+		})
+		return
 	}
-	ctx.JSON(404, "Id no encontrado")
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(400, "error: id invalido")
+		return
+	}
+	transaction, err := t.service.GetOne(id)
+	if err != nil {
+		ctx.JSON(404, "Transaccion no existente")
+		return
+	}
+	ctx.JSON(200, transaction)
+}
+
+func (t *Transaction) Update(ctx *gin.Context) {
+	if ctx.GetHeader("token") != "elpepe" {
+		ctx.JSON(401, gin.H{
+			"error": "token inválido",
+		})
+		return
+	}
+
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(400, "error: id invalido")
+		return
+	}
+	var req request
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(400, gin.H{"Error: ": validateFields(&err)})
+		return
+	}
+	transaction, err := t.service.Update(id, req.Code, req.Currency, req.Amount, req.Issuer, req.Recipient, req.Date)
+	if err != nil {
+		ctx.JSON(404, gin.H{
+			"error:": err.Error(),
+		})
+		return
+	}
+	ctx.JSON(200, transaction)
+}
+
+func (t *Transaction) Delete(ctx *gin.Context) {
+	if ctx.GetHeader("token") != "elpepe" {
+		ctx.JSON(401, gin.H{
+			"error": "token inválido",
+		})
+		return
+	}
+
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(400, "error: id invalido")
+		return
+	}
+	err = t.service.Delete(id)
+	if err != nil {
+		ctx.JSON(404, err)
+		return
+	}
+	ctx.JSON(200, "Eliminado exitosamente")
+}
+
+func (t *Transaction) Update2(ctx *gin.Context) {
+	if ctx.GetHeader("token") != "elpepe" {
+		ctx.JSON(401, gin.H{
+			"error": "token inválido",
+		})
+		return
+	}
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(400, "error: id invalido")
+		return
+	}
+	var req request
+	ctx.ShouldBindJSON(&req)
+	if req.Code == "" {
+		ctx.JSON(400, "error: code requerido")
+		return
+	}
+	if req.Amount == 0 {
+		ctx.JSON(400, "error: amount requerido")
+		return
+	}
+	transaction, err := t.service.Update2(id, req.Code, req.Amount)
+	if err != nil {
+		ctx.JSON(404, gin.H{"error": err})
+		return
+	}
+	ctx.JSON(200, transaction)
 }

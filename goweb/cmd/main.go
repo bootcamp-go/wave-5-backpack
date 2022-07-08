@@ -14,7 +14,12 @@ func main() {
 
 	router := gin.Default()
 	router.GET("/transactions", t.GetAll)
-	router.GET("/transaction/:id", t.GetOne)
-	router.POST("/transaction", t.Create)
+
+	gt := router.Group("/transaction")
+	gt.POST("/", t.Create)
+	gt.GET("/:id", t.GetOne)
+	gt.PUT("/:id", t.Update)
+	gt.DELETE("/:id", t.Delete)
+	gt.PATCH("/:id", t.Update2)
 	router.Run()
 }
