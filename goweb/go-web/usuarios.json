@@ -1,0 +1,28 @@
+[{
+    "id": 0,
+    "name": "Nahu",
+    "surname": "Monserrat",
+    "email": "nahuel@gmail.com",
+    "age": 21,
+    "active": true,
+    "created": "24/11/2001"
+},
+{
+    "id": 1,
+    "name": "Lola",
+    "surname": "Mon",
+    "email": "lola@gmail.com",
+    "age": 20,
+    "active": false,
+    "created": "25/06/2001"
+},
+{
+    "id": 2,
+    "name": "Luis",
+    "surname": "Miguel",
+    "email": "luism@gmail.com",
+    "age": 50,
+    "active": true,
+    "created": "24/11/1993"
+}
+]
