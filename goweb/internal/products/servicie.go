@@ -7,6 +7,9 @@ import (
 type Service interface {
 	GetAll() ([]domain.Product, error)
 	Store(nombre string, color string, precio float64, stock int, codigo string, publicado bool, FechaCreacion string) (domain.Product, error)
+	UpdateAll(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool, FechaCreacion string) (domain.Product, error)
+	Delete(id int) error
+	Update(id int, nombre string, precio float64) (domain.Product, error)
 }
 
 type service struct {
@@ -40,4 +43,33 @@ func (s service) Store(nombre string, color string, precio float64, stock int, c
 	}
 
 	return newProduct, nil
+}
+
+func (s service) UpdateAll(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool, FechaCreacion string) (domain.Product, error) {
+	product, err := s.repository.UpdateAll(id, nombre, color, precio, stock, codigo, publicado, FechaCreacion)
+
+	if err != nil {
+		return product, err
+	}
+
+	return product, nil
+
+}
+
+func (s service) Delete(id int) error {
+	if err := s.repository.Delete(id); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s service) Update(id int, nombre string, precio float64) (domain.Product, error) {
+	product, err := s.repository.Update(id, nombre, precio)
+
+	if err != nil {
+		return product, err
+	}
+
+	return product, nil
 }
