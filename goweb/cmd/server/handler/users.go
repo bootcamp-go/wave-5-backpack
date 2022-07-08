@@ -4,12 +4,13 @@ import (
 	"goweb/internal/users"
 	"github.com/gin-gonic/gin"
 	"strconv"
+	"fmt"
 )
 
 type request struct {
 	Id int 				`json:"id"`
-	Name string			`json:"name" binding:"required"`
-	LastName string		`json:"lastname" binding:"required"`			
+	Name string			`json:"name"`
+	LastName string		`json:"lastname"`			
 	Email string		`json:"email"`
 	Age int				`json:"age"`
 	Height float32		`json:"height"`
@@ -107,13 +108,20 @@ func (c *User) UpdateTotal() gin.HandlerFunc {
 		// valido token
 		token := ctx.Request.Header.Get("token")
 		var errores []string
-		
+
 		if token != "123456" {
 			ctx.JSON(401, gin.H{
 				"error": "token inválido",
 			})
 			return
 		}
+
+		id,err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(400, gin.H{ "error":  "invalid ID"})
+ 			return
+		}
+
 		// validaciones
 		var req request
 		if err:= ctx.ShouldBindJSON(&req); err!=nil{
@@ -142,13 +150,88 @@ func (c *User) UpdateTotal() gin.HandlerFunc {
 			ctx.JSON(400, gin.H{"errores": errores})
 			return
 		}
-		id,_ := strconv.Atoi(ctx.Param("id"))
-		userToUpdate, err:=	 c.service.UpdateTotal(id, req.Name, req.LastName, req.Email, req.Age, req.Height, req.Active, req.CreatedAt)
+
+
+		userUpdated, err:=	 c.service.UpdateTotal(id, req.Name, req.LastName, req.Email, req.Age, req.Height, req.Active, req.CreatedAt)
 
 		if err !=nil {
 			ctx.JSON(404, gin.H{"error": err.Error()})
 			return
 		}
-		ctx.JSON(200, userToUpdate)
+		ctx.JSON(200, userUpdated)
+	}
+}
+
+func (c *User) UpdatePartial() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		// valido token
+		token := ctx.Request.Header.Get("token")
+		var errores []string
+
+		if token != "123456" {
+			ctx.JSON(401, gin.H{
+				"error": "token inválido",
+			})
+			return
+		}
+
+		id,err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(400, gin.H{ "error":  "invalid ID"})
+ 			return
+		}
+
+		// validaciones
+		var req request
+		if err:= ctx.ShouldBindJSON(&req); err!=nil{
+			ctx.JSON(40, gin.H{"error": err.Error()})
+			return
+		}
+		if req.LastName == ""{
+			errores = append(errores, "El apellido del usuario es requerido")
+		}
+		if req.Age == 0 {
+			errores = append(errores, "La edad del usuario es requerido")
+		}
+		if len(errores) > 0 {
+			ctx.JSON(400, gin.H{"errores": errores})
+			return
+		}
+
+		userUpdated, err:=	 c.service.UpdatePartial(id, req.LastName, req.Age)
+
+		if err !=nil {
+			ctx.JSON(404, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(200, userUpdated)
+	}
+}
+
+func (c *User) Delete() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		// valido token
+		token := ctx.Request.Header.Get("token")
+
+		if token != "123456" {
+			ctx.JSON(401, gin.H{
+				"error": "token inválido",
+			})
+			return
+		}
+		
+		id,err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(400, gin.H{ "error":  "invalid ID"})
+ 			return
+		}
+
+		err=c.service.Delete(id)
+		if err !=nil {
+			ctx.JSON(404, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(200, gin.H{ "data": fmt.Sprintf("El producto %d ha sido eliminado",
+		id) })
 	}
 }

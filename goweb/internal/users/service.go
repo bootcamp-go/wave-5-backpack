@@ -9,6 +9,8 @@ type Service interface{
 	GetUserById(id int) (domain.User, error)
 	StoreUser(name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error)
 	UpdateTotal(id int, name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error)
+	UpdatePartial(id int, lastname string, age int) (domain.User, error)
+	Delete(id int) error
 }
 
 type service struct {
@@ -59,5 +61,14 @@ func (s *service) StoreUser(name, lastname, email string, age int, height float3
 func (s *service) UpdateTotal(id int, name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error) {
 	return s.repository.UpdateTotal(id, name, lastname, email, age, height, active, createdat)
 }
+
+func (s *service) UpdatePartial(id int, lastname string, age int) (domain.User, error){
+	return s.repository.UpdatePartial(id, lastname, age)
+}
+
+func (s *service) Delete(id int) error {
+	return s.repository.Delete(id)
+}
+
 
 

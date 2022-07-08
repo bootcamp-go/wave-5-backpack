@@ -19,8 +19,8 @@ func main(){
 	userGroup.GET("/:id", u.GetUserById())
 	userGroup.POST("/", u.StoreUser())
 	userGroup.PUT("/:id", u.UpdateTotal())
-	//userGroup.PATCH(":/id", u.UpdatePartial())
-	//userGroup.DELETE(":/id", u.Delete())
+	userGroup.PATCH("/:id", u.UpdatePartial())
+	userGroup.DELETE("/:id", u.Delete())
 
 	router.Run(":8080")
 
