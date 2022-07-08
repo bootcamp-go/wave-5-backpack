@@ -5,6 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"strconv"
 	"fmt"
+	"os"
+	"net/http"
 )
 
 type request struct {
@@ -31,11 +33,9 @@ func NewUser(u users.Service) *User{
 func (c *User) GetAllUsers() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// valido token
-		token := ctx.Request.Header.Get("token")
-		if token != "123456" {
-			ctx.JSON(401, gin.H{
-				"error": "token inválido",
-			})
+		token := ctx.GetHeader("token")
+		if token != os.Getenv("TOKEN") {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 			return
 		}
 		u, err := c.service.GetAllUsers()
@@ -52,11 +52,9 @@ func (c *User) GetAllUsers() gin.HandlerFunc {
 func (c *User) GetUserById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// valido token
-		token := ctx.Request.Header.Get("token")
-		if token != "123456" {
-			ctx.JSON(401, gin.H{
-				"error": "token inválido",
-			})
+		token := ctx.GetHeader("token")
+		if token != os.Getenv("TOKEN") {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 			return
 		}
 		id,_ := strconv.Atoi(ctx.Param("id"))
@@ -75,11 +73,9 @@ func (c *User) StoreUser() gin.HandlerFunc {
 	return func(ctx *gin.Context){
 
 		// valido token
-		token := ctx.Request.Header.Get("token")
-		if token != "123456" {
-			ctx.JSON(401, gin.H{
-				"error": "token inválido",
-			})
+		token := ctx.GetHeader("token")
+		if token != os.Getenv("TOKEN") {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 			return
 		}
 
@@ -106,16 +102,14 @@ func (c *User) StoreUser() gin.HandlerFunc {
 func (c *User) UpdateTotal() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// valido token
-		token := ctx.Request.Header.Get("token")
-		var errores []string
-
-		if token != "123456" {
-			ctx.JSON(401, gin.H{
-				"error": "token inválido",
-			})
+		token := ctx.GetHeader("token")
+		if token != os.Getenv("TOKEN") {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 			return
 		}
-
+		
+		var errores []string
+		
 		id,err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
 			ctx.JSON(400, gin.H{ "error":  "invalid ID"})
@@ -165,15 +159,13 @@ func (c *User) UpdateTotal() gin.HandlerFunc {
 func (c *User) UpdatePartial() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// valido token
-		token := ctx.Request.Header.Get("token")
-		var errores []string
-
-		if token != "123456" {
-			ctx.JSON(401, gin.H{
-				"error": "token inválido",
-			})
+		token := ctx.GetHeader("token")
+		if token != os.Getenv("TOKEN") {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 			return
 		}
+
+		var errores []string
 
 		id,err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
@@ -211,12 +203,9 @@ func (c *User) UpdatePartial() gin.HandlerFunc {
 func (c *User) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// valido token
-		token := ctx.Request.Header.Get("token")
-
-		if token != "123456" {
-			ctx.JSON(401, gin.H{
-				"error": "token inválido",
-			})
+		token := ctx.GetHeader("token")
+		if token != os.Getenv("TOKEN") {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 			return
 		}
 		
