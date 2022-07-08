@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/users"
@@ -32,7 +33,7 @@ func NewUser(s users.Service) *User {
 func (u *User) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
-		if auth(token) {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token inválido",
 			})
@@ -54,7 +55,7 @@ func (u *User) GetAll() gin.HandlerFunc {
 func (u *User) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		if auth(token) {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token inválido"})
 			return
 		}
@@ -77,7 +78,7 @@ func (u *User) GetById() gin.HandlerFunc {
 func (u *User) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
-		if auth(token) {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token inválido",
 			})
@@ -106,7 +107,7 @@ func (u *User) Store() gin.HandlerFunc {
 func (u *User) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		if auth(token) {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token inválido",
 			})
@@ -163,7 +164,7 @@ func (u *User) Update() gin.HandlerFunc {
 func (u *User) UpdateApellidoEdad() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		if auth(token) {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token inválido"})
 			return
 		}
@@ -201,7 +202,7 @@ func (u *User) UpdateApellidoEdad() gin.HandlerFunc {
 func (u *User) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		if auth(token) {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token inválido"})
 			return
 		}
@@ -219,8 +220,4 @@ func (u *User) Delete() gin.HandlerFunc {
 
 		ctx.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("el usuario %d ha sido eliminado", id)})
 	}
-}
-
-func auth(token string) bool {
-	return token != "449d451b-f411-4dc8-aefb-d8a33c723ffa"
 }
