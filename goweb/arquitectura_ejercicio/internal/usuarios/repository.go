@@ -16,6 +16,9 @@ type Repository interface {
 	LastID() (int, error)
 	GetUsersFromFile() (domain.Usuarios, error)
 	SetFromFile() (bool, error)
+	Update(id, age int, names, lastname, email, dateCreated string, estatura float64, activo bool) (domain.Usuario, error)
+	UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error)
+	// Delete(id int) (bool, error)
 }
 
 type repository struct{}
@@ -77,8 +80,60 @@ func (r *repository) Store(id, age int, names, lastname, email, dateCreated stri
 		IsActivo:    true,
 	}
 	usersList = append(usersList, nwUsuario)
+	lastID++
 	return nwUsuario, nil
 }
+
+func (r *repository) Update(id, age int, names, lastname, email, dateCreated string, estatura float64, activo bool) (domain.Usuario, error) {
+
+	upUsuario := domain.Usuario{
+		Id:          id,
+		Names:       names,
+		LastName:    lastname,
+		Age:         age,
+		DateCreated: dateCreated,
+		Estatura:    estatura,
+		Email:       email,
+		IsActivo:    activo,
+	}
+
+	update := false
+
+	for i := range usersList {
+		if usersList[i].Id == id {
+			update = true
+			usersList[i] = upUsuario
+		}
+	}
+
+	if !update {
+		return domain.Usuario{}, errors.New("No se encontró el usuario a actualizar.")
+	}
+	return upUsuario, nil
+}
+
+func (r *repository) UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error) {
+
+	upUsuario := domain.Usuario{}
+
+	update := false
+
+	for i := range usersList {
+		if usersList[i].Id == id {
+			update = true
+
+			usersList[i].Age = age
+			usersList[i].LastName = lastname
+			upUsuario = usersList[i]
+		}
+	}
+
+	if !update {
+		return domain.Usuario{}, errors.New("No se encontró el usuario a actualizar.")
+	}
+	return upUsuario, nil
+}
+
 func (r *repository) LastID() (int, error) {
 	return lastID, nil
 }

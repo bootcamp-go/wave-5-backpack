@@ -18,5 +18,8 @@ func main() {
 	users := r.Group("/usuarios")
 	users.POST("/", u.Store())
 	users.GET("/", u.GetAll())
+	users.PUT("/:id", u.Update())
+	users.PATCH("/:id", u.PatchLastNameAge())
+
 	r.Run()
 }

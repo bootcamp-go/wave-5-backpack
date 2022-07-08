@@ -7,6 +7,8 @@ import (
 type Service interface {
 	GetAll() ([]domain.Usuario, error)
 	Store(age int, names, lastname, email string, estatura float64) (domain.Usuario, error)
+	Update(id, age int, names, lastname, email, dateCreated string, estatura float64, activo bool) (domain.Usuario, error)
+	UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error)
 }
 
 type service struct {
@@ -36,6 +38,14 @@ func (s *service) Store(age int, names, lastname, email string, estatura float64
 	}
 
 	return usuario, nil
+}
+
+func (s *service) Update(id, age int, names, lastname, email, dateCreated string, estatura float64, activo bool) (domain.Usuario, error) {
+	return s.repository.Update(id, age, names, lastname, email, dateCreated, estatura, activo)
+}
+
+func (s *service) UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error) {
+	return s.repository.UpdateLastNameAndAge(id, age, lastname)
 }
 
 func NewService(r Repository) Service {
