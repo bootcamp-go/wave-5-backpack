@@ -17,8 +17,6 @@ type Repository interface {
 	UpdateCurrencyAndAmount(id int, Currency string, Amount float64) (domain.Transaction, error)
 }
 
-var lastId int = 0
-
 type repository struct {
 	db store.Store
 }
