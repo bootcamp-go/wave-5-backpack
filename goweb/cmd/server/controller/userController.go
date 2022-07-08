@@ -1,4 +1,4 @@
-package user
+package controller
 
 import (
 	"encoding/json"
@@ -6,10 +6,20 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"goweb/internal/domain"
 	"log"
 	"os"
 	"strconv"
 )
+
+type CreateUserRequest struct {
+	Id        int     `json:"id"`
+	FirstName string  `json:"firstName"  binding:"required"`
+	LastName  string  `json:"lastName"  binding:"required"`
+	Email     string  `json:"email"  binding:"required"`
+	Age       int     `json:"age"  binding:"required"`
+	Height    float64 `json:"height"  binding:"required"`
+}
 
 func validateToken(c *gin.Context) bool {
 	if token := c.GetHeader("token"); token != "123" {
@@ -23,7 +33,7 @@ func validateToken(c *gin.Context) bool {
 
 func GetUsers(c *gin.Context) {
 	var data, _ = os.ReadFile("./users.JSON")
-	var u []User
+	var u []domain.User
 
 	if err := json.Unmarshal(data, &u); err != nil {
 		fmt.Println("Error")
@@ -37,7 +47,7 @@ func GetUsers(c *gin.Context) {
 
 func GetUsersById(c *gin.Context) {
 	var data, _ = os.ReadFile("./users.JSON")
-	var u []User
+	var u []domain.User
 
 	if err := json.Unmarshal(data, &u); err != nil {
 		fmt.Println("Error")
@@ -52,7 +62,7 @@ func GetUsersById(c *gin.Context) {
 		}
 	}
 }
-func CreateUser(u User) gin.HandlerFunc {
+func CreateUser(u domain.User) gin.HandlerFunc {
 	var user CreateUserRequest
 	return func(c *gin.Context) {
 		if !validateToken(c) {
@@ -74,7 +84,7 @@ func CreateUser(u User) gin.HandlerFunc {
 			}
 		}
 		//TODO: Llamar al servicio interno createUser
-		u.createUser(user)
+		u.CreateUser(user)
 		c.JSON(200, user)
 	}
 }

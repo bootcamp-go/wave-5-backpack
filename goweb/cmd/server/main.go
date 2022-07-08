@@ -2,11 +2,12 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"goweb/user"
+	"goweb/cmd/server/controller"
+	"goweb/internal/domain"
 )
 
-var user1 *user.User
-var users []user.User
+var user1 domain.User
+var users []domain.User
 var lastId int
 
 func main() {
@@ -21,10 +22,10 @@ func main() {
 	usersGroup := router.Group("/users")
 	{
 		//GETs ------//
-		usersGroup.GET("/", user.GetUsers)
-		usersGroup.GET("/:id", user.GetUsersById)
+		usersGroup.GET("/", controller.GetUsers)
+		usersGroup.GET("/:id", controller.GetUsersById)
 		//POSTs ----//
-		usersGroup.POST("/", user.CreateUser(*user1))
+		usersGroup.POST("/", controller.CreateUser(*user1))
 	}
 	router.Run()
 }

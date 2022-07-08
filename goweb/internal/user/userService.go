@@ -1,8 +1,11 @@
 package user
 
-import "time"
+import (
+	"arquitectura/cmd/server/controller"
+	"time"
+)
 
-func (user *User) createUser(u CreateUserRequest) {
+func (user domain.UserModel) CreateUser(u controller.CreateUserRequest) {
 	user.Id = u.Id
 	user.LastName = u.LastName
 	user.FirstName = u.FirstName

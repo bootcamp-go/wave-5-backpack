@@ -1,6 +1,6 @@
-package user
+package domain
 
-type User struct {
+type UserModel struct {
 	Id           int     `json:"id"`
 	FirstName    string  `json:"firstName"`
 	LastName     string  `json:"lastName"`
