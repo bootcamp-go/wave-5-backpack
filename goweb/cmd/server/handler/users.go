@@ -10,7 +10,7 @@ type request struct {
 	Id int 				`json:"id"`
 	Name string			`json:"name" binding:"required"`
 	LastName string		`json:"lastname" binding:"required"`			
-	Email string		`json:"email" binding:"required"`
+	Email string		`json:"email"`
 	Age int				`json:"age"`
 	Height float32		`json:"height"`
 	Active bool			`json:"active"`
@@ -99,5 +99,56 @@ func (c *User) StoreUser() gin.HandlerFunc {
 			return
 		}
 		ctx.JSON(200, newUser)
+	}
+}
+
+func (c *User) UpdateTotal() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		// valido token
+		token := ctx.Request.Header.Get("token")
+		var errores []string
+		
+		if token != "123456" {
+			ctx.JSON(401, gin.H{
+				"error": "token inválido",
+			})
+			return
+		}
+		// validaciones
+		var req request
+		if err:= ctx.ShouldBindJSON(&req); err!=nil{
+			ctx.JSON(40, gin.H{"error": err.Error()})
+			return
+		}
+		if req.Name == ""{
+			errores = append(errores, "El nombre del usuario es requerido")
+		}
+		if req.LastName == ""{
+			errores = append(errores, "El apellido del usuario es requerido")
+		}
+		if req.Email == ""{
+			errores = append(errores, "El email del usuario es requerido")
+		}
+		if req.Age == 0 {
+			errores = append(errores, "La edad del usuario es requerido")
+		}
+		if req.Height == 0 {
+			errores = append(errores, "La altura del usuario es requerido")
+		}
+		if req.CreatedAt == ""{
+			errores = append(errores, "La fecha de creacion del usuario es requerido")
+		}
+		if len(errores) > 0 {
+			ctx.JSON(400, gin.H{"errores": errores})
+			return
+		}
+		id,_ := strconv.Atoi(ctx.Param("id"))
+		userToUpdate, err:=	 c.service.UpdateTotal(id, req.Name, req.LastName, req.Email, req.Age, req.Height, req.Active, req.CreatedAt)
+
+		if err !=nil {
+			ctx.JSON(404, gin.H{"error": err.Error()})
+			return
+		}
+		ctx.JSON(200, userToUpdate)
 	}
 }

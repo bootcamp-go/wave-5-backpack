@@ -17,7 +17,10 @@ func main(){
 	userGroup := router.Group("/users")
 	userGroup.GET("/", u.GetAllUsers())
 	userGroup.GET("/:id", u.GetUserById())
-	userGroup.POST("/", u.StoreUser()) 
+	userGroup.POST("/", u.StoreUser())
+	userGroup.PUT("/:id", u.UpdateTotal())
+	//userGroup.PATCH(":/id", u.UpdatePartial())
+	//userGroup.DELETE(":/id", u.Delete())
 
 	router.Run(":8080")
 

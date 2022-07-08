@@ -1,6 +1,7 @@
 package users
 
 import (
+	"fmt"
 	"goweb/internal/domain"
 )
 
@@ -16,7 +17,8 @@ type Repository interface {
 	GetAllUsers() ([]domain.User, error)
 	GetUserById(id int) (domain.User, error)
 	StoreUser(id int, name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error)
-	LastID() (int,error) 
+	LastID() (int,error)
+	UpdateTotal(id int, name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error)
 }
 
 type repository struct{}
@@ -50,4 +52,21 @@ func (r *repository) StoreUser(id int, name, lastname, email string, age int, he
 	lastID= user.Id
 
 	return user, nil
+}
+
+func(r *repository) UpdateTotal(id int, name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error) {
+	userToUpdate := domain.User{Name: name, LastName: lastname, Email: email, Age: age, Height: height, Active: active, CreatedAt: createdat}
+	updated := false
+	for i:= range users {
+		if users[i].Id == id{
+			userToUpdate.Id = id
+			users[i] = userToUpdate
+			updated = true
+			break
+		}
+	}
+	if !updated{
+		return domain.User{}, fmt.Errorf("Usuario %d no encontrado", id)
+	}
+	return userToUpdate, nil
 }
