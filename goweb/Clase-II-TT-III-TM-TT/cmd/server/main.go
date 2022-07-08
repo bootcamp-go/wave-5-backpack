@@ -15,5 +15,8 @@ func main() {
 	router := gin.Default()
 	router.POST("/transactions", transactions.Store())
 	router.GET("/transactions", transactions.GetAll())
+	router.PUT("/transactions/:id", transactions.Update())
+	router.DELETE("/transactions/:id", transactions.Delete())
+	router.PATCH("/transactions/:id", transactions.UpdateCodeAmount())
 	router.Run()
 }
