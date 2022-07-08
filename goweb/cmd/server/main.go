@@ -19,7 +19,10 @@ func main() {
 	// router.GET("/usuarios/filtroCorreo", filterByEmail)
 	// router.GET("/usuarios/filtroEdad", filterByEdad)
 	us := router.Group("/usuarios")
+	us.PUT("/:id", u.Update())
 	us.POST("/", u.Guardar())
 	us.GET("/", u.GetAll())
+	us.DELETE("/:id", u.Delete())
+	us.PATCH("/:id", u.UpdateNameAndLastName())
 	router.Run()
 }

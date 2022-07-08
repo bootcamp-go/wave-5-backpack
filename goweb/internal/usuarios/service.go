@@ -12,6 +12,9 @@ import "github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
 type Service interface {
 	GetAll() ([]domain.Usuarios, error)
 	Guardar(nombre string, apellido string, email string, edad int, altura float64, actico bool, fecha string) (domain.Usuarios, error)
+	Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error)
+	Delete(id int) error
+	UpdateNameAndLastName(id int, name string, apellido string) (domain.Usuarios, error)
 }
 
 type service struct {
@@ -22,6 +25,19 @@ func NewService(r Repository) Service {
 	return &service{
 		repository: r,
 	}
+}
+
+func (s *service) UpdateNameAndLastName(id int, nombre, apellido string) (domain.Usuarios, error) {
+	return s.repository.UpdateNameAndLastName(id, nombre, apellido)
+}
+
+func (s *service) Delete(id int) error {
+	return s.repository.Delete(id)
+}
+
+func (s *service) Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error) {
+	usuario, error := s.repository.Update(id, nombre, apellido, email, edad, altura, activo, fecha)
+	return usuario, error
 }
 
 func (s *service) GetAll() ([]domain.Usuarios, error) {
