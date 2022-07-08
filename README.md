@@ -35,3 +35,4 @@ Luego se deberá trabajar con el flujo habitual, por cada clase puede hacer los 
     <pre><code> git commit -m "mensaje_explicativo"</pre></code>
     <pre><code> git push origin apellido_nombre</pre></code>
     echo "## Esta es la mochila de trejo_stefano" >> README.md
+    echo "## Esta es la mochila de trejo_stefano" >> README.md
