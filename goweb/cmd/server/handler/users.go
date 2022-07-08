@@ -19,6 +19,15 @@ type Request struct {
 	Activo        bool    `json:"activo" binding:"required"`
 	FechaCreacion string  `json:"fechaCreacion" binding:"required"`
 }
+type RequestPatch struct {
+	Nombre        string  `json:"nombre"`
+	Apellido      string  `json:"apellido" binding:"required"`
+	Email         string  `json:"email"`
+	Edad          int     `json:"edad" binding:"required"`
+	Altura        float64 `json:"altura"`
+	Activo        bool    `json:"activo"`
+	FechaCreacion string  `json:"fechaCreacion"`
+}
 
 type User struct {
 	service users.Service
@@ -167,5 +176,43 @@ func (u *User) Delete() gin.HandlerFunc {
 		}
 
 		ctx.JSON(http.StatusOK, fmt.Sprintf("El usuario con el ID %d se eliminó correctamente", id))
+	}
+}
+
+func (u *User) Patch() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		if !validateToken(ctx) {
+			return
+		}
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error: ": "Ingrese un ID valido"})
+			return
+		}
+
+		var req RequestPatch
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			return
+		}
+
+		if req.Apellido == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "El apellido es requerido"})
+			return
+		}
+
+		if req.Edad == 0 {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "La edad es requerida"})
+			return
+		}
+
+		user, err := u.service.Patch(int(id), req.Apellido, req.Edad)
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, user)
 	}
 }

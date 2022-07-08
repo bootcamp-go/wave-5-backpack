@@ -21,6 +21,7 @@ func main() {
 		users.POST("/", p.Store())
 		users.PUT("/:id", p.Update())
 		users.DELETE("/:id", p.Delete())
+		users.PATCH("/:id", p.Patch())
 	}
 
 	router.Run(":8080")

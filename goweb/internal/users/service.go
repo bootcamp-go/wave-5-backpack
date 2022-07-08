@@ -12,6 +12,7 @@ type Service interface {
 	GetById(id int) (domain.User, error)
 	Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error)
 	Delete(id int) error
+	Patch(id int, apellido string, edad int) (domain.User, error)
 }
 
 type service struct {
@@ -63,4 +64,8 @@ func (s *service) Update(id int, nombre, apellido, email string, edad int, altur
 
 func (s *service) Delete(id int) error {
 	return s.repository.Delete(id)
+}
+
+func (s *service) Patch(id int, apellido string, edad int) (domain.User, error) {
+	return s.repository.Patch(id, apellido, edad)
 }
