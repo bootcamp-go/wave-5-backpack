@@ -1,55 +1,80 @@
 package products
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"goweb/clase1_clase2/internal/domain"
-	"io/ioutil"
-	"os"
+	"goweb/clase1_clase2/pkg/store"
 	"reflect"
+)
+
+const (
+	ProductNotFound = "product %d not found"
+	FailReading     = "cant read database"
+	FailWriting     = "cant write database, error: %w"
 )
 
 type Repository interface {
 	GetAll(nombre, color string, precio, stock int, codigo string, publicado bool, fecha string) ([]domain.Product, error)
 	Store(nombre, color string, precio, stock int, codigo string, publicado bool, fecha string) (domain.Product, error)
 	Update(id int, nombre, color string, precio, stock int, codigo string, publicado bool, fecha string) (domain.Product, error)
-	Delete(id int) (domain.Product, error)
 	UpdateFields(id int, nombre string, precio int) (domain.Product, error)
-	ReadJson()
+	Delete(id int) (domain.Product, error)
 	GetById(id int) (domain.Product, error)
+	LastID() (int, error)
 }
 
 type repository struct {
+	db store.Store
 }
 
-var productos []domain.Product
-var lastID int
-
-func NewRepository() Repository {
-	return &repository{}
+func NewRepository(db store.Store) Repository {
+	return &repository{
+		db: db,
+	}
 }
 
 func (r *repository) GetAll(nombre, color string, precio, stock int, codigo string, publicado bool, fecha string) ([]domain.Product, error) {
+	var productos []domain.Product
+	if err := r.db.Read(&productos); err != nil {
+		return nil, fmt.Errorf(FailReading)
+	}
 	ps := filter(nombre, color, precio, stock, codigo, publicado, fecha, productos)
 	return ps, nil
 }
 
 func (r *repository) Store(nombre, color string, precio, stock int, codigo string, publicado bool, fecha string) (domain.Product, error) {
-	lastID++
-	p := domain.Product{Id: lastID, Nombre: nombre, Color: color, Precio: precio, Stock: stock, Codigo: codigo, Publicado: publicado, Fecha: fecha}
+	var productos []domain.Product
+	if err := r.db.Read(&productos); err != nil {
+		return domain.Product{}, fmt.Errorf(FailReading)
+	}
+	id, err := r.LastID()
+	if err != nil {
+		return domain.Product{}, errors.New("")
+	}
+	id++
+	p := domain.Product{Id: id, Nombre: nombre, Color: color, Precio: precio, Stock: stock, Codigo: codigo, Publicado: publicado, Fecha: fecha}
 	productos = append(productos, p)
-	writeFile()
+
+	if err := r.db.Write(productos); err != nil {
+		return domain.Product{}, fmt.Errorf(FailWriting, err)
+	}
 	return p, nil
 }
 
 func (r *repository) Update(id int, nombre, color string, precio, stock int, codigo string, publicado bool, fecha string) (domain.Product, error) {
+	var productos []domain.Product
+	if err := r.db.Read(&productos); err != nil {
+		return domain.Product{}, fmt.Errorf(FailReading)
+	}
 	p := domain.Product{Id: id, Nombre: nombre, Color: color, Precio: precio, Stock: stock, Codigo: codigo, Publicado: publicado, Fecha: fecha}
 	update := false
 	for idx, producto := range productos {
 		if id == producto.Id {
 			productos[idx] = p
-			writeFile()
+			if err := r.db.Write(productos); err != nil {
+				return domain.Product{}, fmt.Errorf(FailWriting, err)
+			}
 			update = true
 			break
 		}
@@ -61,6 +86,10 @@ func (r *repository) Update(id int, nombre, color string, precio, stock int, cod
 }
 
 func (r *repository) Delete(id int) (domain.Product, error) {
+	var productos []domain.Product
+	if err := r.db.Read(&productos); err != nil {
+		return domain.Product{}, fmt.Errorf(FailReading)
+	}
 	deleted := false
 	var p_deleted domain.Product
 	for idx, producto := range productos {
@@ -68,7 +97,9 @@ func (r *repository) Delete(id int) (domain.Product, error) {
 			deleted = true
 			p_deleted = producto
 			productos = append(productos[:idx], productos[idx+1:]...)
-			writeFile()
+			if err := r.db.Write(productos); err != nil {
+				return domain.Product{}, fmt.Errorf(FailWriting, err)
+			}
 		}
 	}
 	if !deleted {
@@ -78,6 +109,10 @@ func (r *repository) Delete(id int) (domain.Product, error) {
 }
 
 func (r *repository) UpdateFields(id int, nombre string, precio int) (domain.Product, error) {
+	var productos []domain.Product
+	if err := r.db.Read(&productos); err != nil {
+		return domain.Product{}, fmt.Errorf(FailReading)
+	}
 	update := false
 	var p domain.Product
 	for idx, producto := range productos {
@@ -86,7 +121,9 @@ func (r *repository) UpdateFields(id int, nombre string, precio int) (domain.Pro
 			productos[idx].Precio = precio
 			p = productos[idx]
 			update = true
-			writeFile()
+			if err := r.db.Write(productos); err != nil {
+				return domain.Product{}, fmt.Errorf(FailWriting, err)
+			}
 			break
 		}
 	}
@@ -97,6 +134,10 @@ func (r *repository) UpdateFields(id int, nombre string, precio int) (domain.Pro
 }
 
 func (r *repository) GetById(id int) (domain.Product, error) {
+	var productos []domain.Product
+	if err := r.db.Read(&productos); err != nil {
+		return domain.Product{}, fmt.Errorf(FailReading)
+	}
 	for _, p := range productos {
 		if id == p.Id {
 			return p, nil
@@ -105,7 +146,19 @@ func (r *repository) GetById(id int) (domain.Product, error) {
 	return domain.Product{}, errors.New("error: el id no es valido")
 }
 
-func (r *repository) ReadJson() {
+func (r *repository) LastID() (int, error) {
+	var productos []domain.Product
+	if err := r.db.Read(&productos); err != nil {
+		return 0, fmt.Errorf(FailReading)
+	}
+	if len(productos) == 0 {
+		return 0, nil
+	}
+	return productos[len(productos)-1].Id, nil
+}
+
+/* func (r *repository) ReadJson() {
+	var productos []domain.Product
 	jsonFile, err := os.Open("./internal/domain/products.json")
 	if err != nil {
 		fmt.Println(err)
@@ -117,6 +170,7 @@ func (r *repository) ReadJson() {
 }
 
 func writeFile() {
+	var productos []domain.Product
 	jsonFile, err := json.Marshal(productos)
 	if err != nil {
 		fmt.Println(err)
@@ -126,7 +180,7 @@ func writeFile() {
 	if err != nil {
 		fmt.Println(err)
 	}
-}
+} */
 
 func filter(nombre, color string, precio, stock int, codigo string, publicado bool, fecha string, ps []domain.Product) []domain.Product {
 	mapKeys := make(map[string]interface{})

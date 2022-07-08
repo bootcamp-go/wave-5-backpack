@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"goweb/clase1_clase2/internal/products"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -180,16 +181,6 @@ func (p *Product) UpdateFields() gin.HandlerFunc {
 	}
 }
 
-func validateToken(token string) error {
-	if token == "" {
-		return errors.New("no ingresó el token y es requerido")
-	}
-	if token != "123456" {
-		return errors.New("no tiene permisos para realizar la petición solicitada")
-	}
-	return nil
-}
-
 func (p *Product) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.Atoi(ctx.Param("id"))
@@ -210,6 +201,16 @@ func (p *Product) GetById() gin.HandlerFunc {
 		}
 		ctx.JSON(200, producto)
 	}
+}
+
+func validateToken(token string) error {
+	if token == "" {
+		return errors.New("no ingresó el token y es requerido")
+	}
+	if token != os.Getenv("TOKEN") {
+		return errors.New("no tiene permisos para realizar la petición solicitada")
+	}
+	return nil
 }
 
 func validateFields(req request) error {
