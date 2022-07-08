@@ -8,13 +8,12 @@ import (
 	"goweb/internal/domain"
 	"goweb/internal/transactions"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
-
-const SECRET_TOKEN = "1234567"
 
 type request struct {
 	Currency string  `json:"currency" binding:"required"`
@@ -148,7 +147,7 @@ func (t *Transaction) Delete() gin.HandlerFunc {
 func (t *Transaction) UpdateCurrencyAndAmount() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("Authorization")
-		if token != SECRET_TOKEN {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "Access Denied: Token Unauthorized",
 			})
@@ -209,7 +208,7 @@ func (t *Transaction) UpdateCurrencyAndAmount() gin.HandlerFunc {
 func (t *Transaction) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("Authorization")
-		if token != SECRET_TOKEN {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "Access Denied: Token Unauthorized",
 			})
@@ -270,7 +269,7 @@ func (t *Transaction) Update() gin.HandlerFunc {
 func (t *Transaction) CreateTransaction() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("Authorization")
-		if token != SECRET_TOKEN {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "Access Denied: Token Unauthorized",
 			})
