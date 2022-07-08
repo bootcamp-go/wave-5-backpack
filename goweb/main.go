@@ -22,9 +22,9 @@ type usuarios struct {
 }
 
 var users []usuarios = []usuarios{
+	{},
 	{Id: 1, Nombre: "ABC", Apellido: "ABC", Email: "a@a.com", Edad: 21, Altura: 1.82, Activo: true, FechaCreacion: "2022-02-20"},
 	{Id: 2, Nombre: "BCD", Apellido: "BCD", Email: "b@b.com", Edad: 30, Altura: 1.76, Activo: false, FechaCreacion: "2022-02-25"},
-	{},
 }
 
 func GetAll(ctx *gin.Context) {

@@ -9,11 +9,14 @@ import (
 func main() {
 	repo := users.NewRepository()
 	service := users.NewService(repo)
-	u := handler.NewUser(service)
+	userHandler := handler.NewUser(service)
 
-	r := gin.Default()
-	pr := r.Group("/users")
-	pr.POST("/", u.Store())
-	pr.GET("/", u.GetAll())
-	r.Run()
+	router := gin.Default()
+	usersGroup := router.Group("/users")
+	usersGroup.POST("/", userHandler.Store())
+	usersGroup.GET("/", userHandler.GetAll())
+	usersGroup.PUT("/:id", userHandler.Update())
+	usersGroup.PATCH("/:id", userHandler.UpdateLastNameAndAge())
+	usersGroup.DELETE("/:id", userHandler.Delete())
+	router.Run()
 }
