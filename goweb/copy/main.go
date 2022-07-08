@@ -3,7 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"goweb/clase1_parte1/internal"
+	"goweb/copy/internal"
 	"os"
 
 	"github.com/gin-gonic/gin"
