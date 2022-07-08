@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"goweb/internal/domain"
+	"goweb/pkg/store"
 	"strconv"
 )
 
-var lastId int
 var users []domain.User
 
 type Repository interface {
@@ -20,23 +20,43 @@ type Repository interface {
 	Patch(id int, apellido string, edad int) (domain.User, error)
 }
 
-type repository struct{}
+type repository struct {
+	db store.Store
+}
 
-func NewRepository() Repository {
-	return &repository{}
+func NewRepository(db store.Store) Repository {
+	return &repository{db: db}
 }
 
 func (r *repository) GetAll() ([]domain.User, error) {
 	return users, nil
 }
 
-func (r *repository) Store(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error) {
+//ANTERIOR
+/* func (r *repository) Store(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error) {
 	user := domain.User{Id: id, Nombre: nombre, Apellido: apellido, Email: email, Edad: edad, Altura: altura, Activo: activo, FechaCreacion: fechaCreacion}
 
 	users = append(users, user)
 	lastId = id
 
 	return user, nil
+} */
+
+func (r *repository) Store(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error) {
+	var user []domain.User
+	if err := r.db.Read(&user); err != nil {
+		return domain.User{}, fmt.Errorf("error al leer el archivo")
+	}
+
+	newUser := domain.User{Id: id, Nombre: nombre, Apellido: apellido, Email: email, Edad: edad, Altura: altura, Activo: activo, FechaCreacion: fechaCreacion}
+
+	user = append(user, newUser)
+
+	if err := r.db.Write(user); err != nil {
+		return domain.User{}, fmt.Errorf("error al escribir en el archivo, error: %w", err)
+	}
+
+	return newUser, nil
 }
 
 func (r *repository) GetById(id int) (domain.User, error) {
@@ -45,11 +65,20 @@ func (r *repository) GetById(id int) (domain.User, error) {
 			return user, nil
 		}
 	}
-	return domain.User{}, fmt.Errorf("No se encontró el usuario con el ID %d", id)
+	return domain.User{}, fmt.Errorf("no se encontró el usuario con el ID %d", id)
 }
 
 func (r *repository) LastId() (int, error) {
-	return lastId, nil
+	var user []domain.User
+	if err := r.db.Read(&user); err != nil {
+		return 0, fmt.Errorf("error al leer el archivo")
+	}
+	if len(user) == 0 {
+		return 0, nil
+	}
+
+	return user[len(user)-1].Id, nil
+
 }
 
 func (r *repository) Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error) {
@@ -63,7 +92,7 @@ func (r *repository) Update(id int, nombre, apellido, email string, edad int, al
 		}
 	}
 	if !update {
-		return domain.User{}, fmt.Errorf("No se encontró el usuario con el ID %d", id)
+		return domain.User{}, fmt.Errorf("no se encontró el usuario con el ID %d", id)
 	}
 
 	return user, nil
@@ -98,7 +127,7 @@ func (r *repository) Patch(id int, apellido string, edad int) (domain.User, erro
 		}
 	}
 	if !updated {
-		return domain.User{}, fmt.Errorf("No se encontró el usuario con el ID %d", id)
+		return domain.User{}, fmt.Errorf("no se encontró el usuario con el ID %d", id)
 	}
 
 	return user, nil

@@ -33,8 +33,8 @@ func (s *service) GetAll() ([]domain.User, error) {
 
 	return users, nil
 }
-
-func (s *service) Store(nombre string, apellido string, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error) {
+//ANTERIOR
+/* func (s *service) Store(nombre string, apellido string, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error) {
 	id, err := s.repository.LastId()
 	if err != nil {
 		return domain.User{}, errors.New("no se pudo cargar el último id de los usuarios")
@@ -43,6 +43,22 @@ func (s *service) Store(nombre string, apellido string, email string, edad int, 
 	id++
 
 	user, err := s.repository.Store(id, nombre, apellido, email, edad, altura, activo, fechaCreacion)
+	if err != nil {
+		return domain.User{}, errors.New("no se pudo guardar el usuario")
+	}
+
+	return user, nil
+} */
+
+func (s *service) Store(nombre string, apellido string, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error) {
+	lastID, err := s.repository.LastId()
+	if err != nil {
+		return domain.User{}, fmt.Errorf("no se pudo cargar el último id de los usuarios")
+	}
+
+	lastID++
+
+	user, err := s.repository.Store(lastID, nombre, apellido, email, edad, altura, activo, fechaCreacion)
 	if err != nil {
 		return domain.User{}, errors.New("no se pudo guardar el usuario")
 	}

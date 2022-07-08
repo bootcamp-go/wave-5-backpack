@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"goweb/internal/users"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -20,15 +21,15 @@ type Request struct {
 	FechaCreacion string  `json:"fechaCreacion" binding:"required"`
 }
 type RequestPatch struct {
-	Apellido      string  `json:"apellido" binding:"required"`
-	Edad          int     `json:"edad" binding:"required"`
+	Apellido string `json:"apellido" binding:"required"`
+	Edad     int    `json:"edad" binding:"required"`
 }
 
 type User struct {
 	service users.Service
 }
 
-func NewProduct(s users.Service) *User {
+func NewUser(s users.Service) *User {
 	return &User{service: s}
 }
 
@@ -71,7 +72,7 @@ func (u *User) GetById() gin.HandlerFunc {
 }
 
 func validateToken(ctx *gin.Context) bool {
-	if token := ctx.GetHeader("token"); token != "62c5b68a0cc23a33375c85f8" {
+	if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "NO tiene permisos para realizar la petición solicitada"})
 		return false
 	}
