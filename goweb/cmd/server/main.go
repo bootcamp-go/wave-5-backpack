@@ -14,8 +14,12 @@ func main() {
 	router := gin.Default()
 	pr := router.Group("/users")
 	{
-		pr.POST("/", u.Store())
 		pr.GET("/", u.GetAll())
+		pr.GET("/:id", u.GetById())
+		pr.POST("/", u.Store())
+		pr.PUT("/:id", u.Update())
+		pr.PATCH("/:id", u.UpdateApellidoEdad())
+		pr.DELETE("/:id", u.Delete())
 	}
 
 	router.Run(":8080")
