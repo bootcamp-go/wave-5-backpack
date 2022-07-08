@@ -33,6 +33,7 @@ func (h *Handler) Read() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"message": "id invalido",
 			})
+			return
 		}
 
 		product, err := h.s.Read(id)
@@ -126,6 +127,7 @@ func (h *Handler) Update() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"message": "id invalido",
 			})
+			return
 		}
 
 		type request struct {
@@ -177,6 +179,7 @@ func (h *Handler) UpdateNamePrice() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"message": "id invalido",
 			})
+			return
 		}
 
 		type request struct {
@@ -227,6 +230,7 @@ func (h *Handler) Delete() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"message": "id invalido",
 			})
+			return
 		}
 
 		err = h.s.Delete(id)
@@ -234,6 +238,7 @@ func (h *Handler) Delete() gin.HandlerFunc {
 			ctx.JSON(http.StatusInternalServerError, gin.H{
 				"message": err.Error(),
 			})
+			return
 		}
 
 		ctx.JSON(http.StatusOK, gin.H{

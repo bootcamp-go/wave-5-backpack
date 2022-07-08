@@ -31,7 +31,7 @@ func (s *service) Create(name string, price float64, quantity int) (domain.Produ
 		return domain.Product{}, err
 	}
 	for _, p := range products {
-		if p.Name == name && p.Price == price {
+		if p.Name == name && p.Price == price && p.Quantity == quantity {
 			return domain.Product{}, errors.New("el producto ingresado ya existe")
 		}
 	}
