@@ -16,6 +16,7 @@ type Repository interface {
   GetAll() ([]models.Transaction, error)
   GetByID(id int) (models.Transaction, error)
   Store(monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error)
+  Update(id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error)
   GetLastID() (int, error)
 }
 
@@ -58,6 +59,29 @@ func (r repository) Store(monto float64, cod, moneda, emisor, receptor string) (
   transactions = append(transactions, t)
 
   return t, nil
+}
+
+func (r repository) Update(id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
+	for i , tt := range transactions {
+		if tt.ID == id {
+			t := models.Transaction{
+				ID: id,
+				Monto: monto,
+				Cod: cod,
+				Moneda: moneda,
+				Emisor: emisor,
+				Receptor: receptor,
+				Fecha: tt.Fecha,
+			}
+
+			// Actualiza la memoria
+			transactions[i] = t
+
+			return t, nil
+		}
+	}
+
+	return models.Transaction{}, fmt.Errorf("error: no existe el ID: %v", id)
 }
 
 func (r repository) GetLastID() (int, error) {

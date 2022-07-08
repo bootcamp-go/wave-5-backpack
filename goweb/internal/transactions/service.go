@@ -7,6 +7,7 @@ import (
 type Service interface {
   GetAll() ([]models.Transaction, error)
   GetByID(id int) (models.Transaction, error)
+  Update(id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error)
   Store(monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error)
 }
 
@@ -36,4 +37,8 @@ func (s service) GetAll() ([]models.Transaction, error) {
 
 func (s service) Store(monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
   return s.repository.Store(monto, cod, moneda, emisor, receptor)
+}
+
+func (s service) Update(id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
+	return s.repository.Update(id, monto, cod, moneda, emisor, receptor)
 }

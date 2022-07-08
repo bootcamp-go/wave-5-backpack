@@ -19,6 +19,8 @@ func main() {
 		rt.GET("/search", handler.GetFilter)
 		rt.GET("/:id", handler.GetByID)
 
+		rt.PUT("/:id", handler.Update)
+
 		rt.POST("", handler.CreateTransaction)
 	}
 

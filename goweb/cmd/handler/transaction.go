@@ -54,6 +54,37 @@ func (t *Transaction) CreateTransaction(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, transaction)
 }
 
+func (t *Transaction) Update(ctx *gin.Context) {
+	token := ctx.GetHeader("token")
+
+	if token != "1245" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error" : "no tiene permisos para realizar la petición solicitada",
+		})
+		return
+	}
+
+	var req request
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error" : err.Error()})
+		return
+	}
+	
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error" : err.Error()})
+		return
+	}
+
+	transaction, err := t.service.Update(id ,req.Monto, req.Cod, req.Moneda, req.Emisor, req.Receptor)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error" : err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, transaction)
+}
+
 func (t *Transaction) GetAll(ctx *gin.Context) {
 	transactions, err := t.service.GetAll()
   if err != nil {
