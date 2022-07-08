@@ -71,7 +71,7 @@ func (r *repository) Update(id int, nombre, apellido, email string, edad int, al
 		return domain.Usuarios{}, fmt.Errorf(FailReading)
 	}
 
-	u := domain.Usuarios{Id: id, Nombre: nombre, Apellido: apellido, Email: email, Edad: edad, Altura: altura, Activo: activo, Fecha: fecha}
+	u := domain.Usuarios{Id: id, Nombre: nombre, Apellido: apellido, Email: email, Edad: edad, Altura: altura, Activo: true, Fecha: time.Now()}
 	updated := false
 	for i := range us {
 		if us[i].Id == id {
