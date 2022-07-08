@@ -10,6 +10,40 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var transactions []models.Transaction
+
+func CreateTransaction(ctx *gin.Context) {
+	token := ctx.GetHeader("token")
+
+	if token != "1245" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error" : "no tiene permisos para realizar la petición solicitada",
+		})
+		return
+	}
+
+	var transaction models.Transaction
+
+	if err := ctx.ShouldBindJSON(&transaction); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error" : err.Error(),
+		})
+		return
+	}
+
+	// Obtenemos el ultimo ID y le aumentamos el valor para la nueva instancia
+	var lastID int
+	if len(transactions) != 0 {
+		lastID = transactions[len(transactions) - 1].ID 
+	}
+
+	transaction.ID = lastID + 1
+
+	transactions = append(transactions, transaction)	
+
+	ctx.JSON(http.StatusCreated, transaction)
+}
+
 func GetAll(ctx *gin.Context) {	
 	transactions, err := read("./transactions.json")
   if err != nil {
