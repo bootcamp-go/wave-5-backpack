@@ -3,7 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"goweb/product"
+	"goweb/noStructure/product"
 	"log"
 	"net/http"
 	"os"
