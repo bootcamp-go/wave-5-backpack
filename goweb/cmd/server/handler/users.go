@@ -20,13 +20,8 @@ type Request struct {
 	FechaCreacion string  `json:"fechaCreacion" binding:"required"`
 }
 type RequestPatch struct {
-	Nombre        string  `json:"nombre"`
 	Apellido      string  `json:"apellido" binding:"required"`
-	Email         string  `json:"email"`
 	Edad          int     `json:"edad" binding:"required"`
-	Altura        float64 `json:"altura"`
-	Activo        bool    `json:"activo"`
-	FechaCreacion string  `json:"fechaCreacion"`
 }
 
 type User struct {
@@ -193,17 +188,9 @@ func (u *User) Patch() gin.HandlerFunc {
 
 		var req RequestPatch
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
-
-		if req.Apellido == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "El apellido es requerido"})
-			return
-		}
-
-		if req.Edad == 0 {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "La edad es requerida"})
+			for _, fieldError := range err.(validator.ValidationErrors) {
+				ctx.JSON(400, ValidateErrors(fieldError.Field(), fieldError))
+			}
 			return
 		}
 
