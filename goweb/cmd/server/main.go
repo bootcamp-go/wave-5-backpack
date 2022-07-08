@@ -1,14 +1,20 @@
 package main
 
 import (
+	"os"
+
 	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/cmd/server/handler"
 	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/cmd/server/middleware"
 	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/internal/users"
+	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/pkg/store"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	repo := users.NewRepository()
+	_ = godotenv.Load()
+	store := store.NewStore(os.Getenv("DB_FILENAME"))
+	repo := users.NewRepository(store)
 	service := users.NewService(repo)
 	u := handler.NewUser(service)
 

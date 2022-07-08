@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/internal/domain"
-	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/internal/file"
+	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/pkg/store"
 )
 
 type Repository interface {
@@ -17,23 +17,34 @@ type Repository interface {
 	LastID() (int, error)
 }
 
-type repository struct{}
+type repository struct {
+	db store.Store
+}
+
+func NewRepository(db store.Store) Repository {
+	return &repository{
+		db: db,
+	}
+}
 
 func (r *repository) LastID() (int, error) {
-	db, err := file.ReadJSONFile("users.json")
-	if err != nil {
+	var us []domain.User
+	if err := r.db.Read(&us); err != nil {
 		return 0, err
 	}
-	return db.LastId, nil
+	if len(us) > 0 {
+		return us[len(us)-1].Id, nil
+	}
+	return 0, nil
 }
 
 func (r *repository) GetById(Id int) (domain.User, error) {
-	db, err := file.ReadJSONFile("users.json")
-	if err != nil {
+	var us []domain.User
+	if err := r.db.Read(&us); err != nil {
 		return domain.User{}, err
 	}
 
-	for _, user := range db.Users {
+	for _, user := range us {
 		if Id == user.Id {
 			return user, nil
 		}
@@ -43,21 +54,20 @@ func (r *repository) GetById(Id int) (domain.User, error) {
 }
 
 func (r *repository) GetAll(filters map[string]interface{}) ([]domain.User, error) {
-	db, err := file.ReadJSONFile("users.json")
-
-	if err != nil {
+	var us []domain.User
+	if err := r.db.Read(&us); err != nil {
 		return nil, err
 	}
 
-	users, err := filterUsers(filters, db.Users)
+	users, err := filterUsers(filters, us)
 
 	return *users, err
 }
 
 func (r *repository) Store(Id, Age int, FirstName, LastName, Email, CreatedAt string, Height float64, Active bool) (domain.User, error) {
 
-	db, err := file.ReadJSONFile("users.json")
-	if err != nil {
+	var us []domain.User
+	if err := r.db.Read(&us); err != nil {
 		return domain.User{}, err
 	}
 
@@ -72,17 +82,16 @@ func (r *repository) Store(Id, Age int, FirstName, LastName, Email, CreatedAt st
 		Active:    Active,
 	}
 
-	db.Users = append(db.Users, user)
-	db.LastId++
+	us = append(us, user)
 
-	err = file.WriteJSONFile("users.json", db)
+	err := r.db.Write(us)
 
 	return user, err
 }
 
 func (r *repository) Update(Id, Age int, FirstName, LastName, Email, CreatedAt string, Height float64, Active bool) (domain.User, error) {
-	db, err := file.ReadJSONFile("users.json")
-	if err != nil {
+	var us []domain.User
+	if err := r.db.Read(&us); err != nil {
 		return domain.User{}, err
 	}
 
@@ -98,9 +107,9 @@ func (r *repository) Update(Id, Age int, FirstName, LastName, Email, CreatedAt s
 	}
 
 	updated := false
-	for i, user := range db.Users {
+	for i, user := range us {
 		if Id == user.Id {
-			db.Users[i] = u
+			us[i] = u
 			updated = true
 			break
 		}
@@ -110,27 +119,27 @@ func (r *repository) Update(Id, Age int, FirstName, LastName, Email, CreatedAt s
 		return domain.User{}, errors.New("usuario no encontrado")
 	}
 
-	err = file.WriteJSONFile("users.json", db)
+	err := r.db.Write(us)
 	return u, err
 }
 
 func (r *repository) UpdateAgeLastName(Id, Age int, LastName string) (domain.User, error) {
-	db, err := file.ReadJSONFile("users.json")
-	if err != nil {
+	var us []domain.User
+	if err := r.db.Read(&us); err != nil {
 		return domain.User{}, err
 	}
 	u := domain.User{}
 
 	updated := false
-	for i, user := range db.Users {
+	for i, user := range us {
 		if Id == user.Id {
 			if Age != 0 {
-				db.Users[i].Age = Age
+				us[i].Age = Age
 			}
 			if LastName != "" {
-				db.Users[i].LastName = LastName
+				us[i].LastName = LastName
 			}
-			u = db.Users[i]
+			u = us[i]
 			updated = true
 			break
 		}
@@ -140,20 +149,20 @@ func (r *repository) UpdateAgeLastName(Id, Age int, LastName string) (domain.Use
 		return u, errors.New("usuario no encontrado")
 	}
 
-	err = file.WriteJSONFile("users.json", db)
+	err := r.db.Write(us)
 	return u, err
 }
 
 func (r *repository) Delete(Id int) error {
-	db, err := file.ReadJSONFile("users.json")
-	if err != nil {
+	var us []domain.User
+	if err := r.db.Read(&us); err != nil {
 		return err
 	}
 
 	updated := false
-	for i, user := range db.Users {
+	for i, user := range us {
 		if Id == user.Id {
-			db.Users = append(db.Users[:i], db.Users[i+1:]...)
+			us = append(us[:i], us[i+1:]...)
 			updated = true
 			break
 		}
@@ -162,7 +171,7 @@ func (r *repository) Delete(Id int) error {
 		return errors.New("usuario no encontrado")
 	}
 
-	err = file.WriteJSONFile("users.json", db)
+	err := r.db.Write(us)
 	return err
 }
 
@@ -199,8 +208,4 @@ func filterUsers(filters map[string]interface{}, users []domain.User) (*[]domain
 	}
 
 	return &resultUsers, nil
-}
-
-func NewRepository() Repository {
-	return &repository{}
 }
