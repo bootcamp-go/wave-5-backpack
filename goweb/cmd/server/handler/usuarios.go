@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/usuarios"
@@ -41,7 +42,8 @@ func NewUsuario(u usuarios.Service) *Usuarios {
 func (c *Usuarios) UpdateNameAndLastName() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
-		if token != "12345678" {
+
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(401, gin.H{
 				"error": "no tiene permisos para realizar la peticion solicitada",
 			})
@@ -78,7 +80,8 @@ func (c *Usuarios) UpdateNameAndLastName() gin.HandlerFunc {
 func (c *Usuarios) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
-		if token != "12345678" {
+
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(401, gin.H{
 				"error": "no tiene permisos para realizar la peticion solicitada",
 			})
@@ -102,7 +105,8 @@ func (c *Usuarios) Delete() gin.HandlerFunc {
 func (c *Usuarios) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
-		if token != "12345678" {
+
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(401, gin.H{
 				"error": "no tiene permisos para realizar la peticion solicitada",
 			})
@@ -151,7 +155,8 @@ func (c *Usuarios) Update() gin.HandlerFunc {
 func (c *Usuarios) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
-		if token != "12345678" {
+
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(401, gin.H{
 				"error": "no tiene permisos para realizar la peticion solicitada",
 			})
@@ -173,7 +178,7 @@ func (c *Usuarios) GetAll() gin.HandlerFunc {
 func (c *Usuarios) Guardar() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		if token != "12345678" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(401, gin.H{
 				"error": "no tiene permisos para realizar la peticion solicitada",
 			})

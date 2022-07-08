@@ -7,7 +7,11 @@ OK Se deben implementar todos los métodos correspondientes a las operaciones a 
 */
 package usuarios
 
-import "github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
+import (
+	"fmt"
+
+	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
+)
 
 type Service interface {
 	GetAll() ([]domain.Usuarios, error)
@@ -48,9 +52,9 @@ func (s *service) GetAll() ([]domain.Usuarios, error) {
 	return us, nil
 }
 func (s *service) Guardar(nombre string, apellido string, email string, edad int, altura float64, actico bool, fecha string) (domain.Usuarios, error) {
-	lasNro, erro := s.repository.lastId()
+	lasNro, erro := s.repository.LastId()
 	if erro != nil {
-		return domain.Usuarios{}, erro
+		return domain.Usuarios{}, fmt.Errorf("error al obtener usuario con id: %w", erro)
 	}
 	lasNro++
 	usuario, error := s.repository.Guardar(lasNro, nombre, apellido, email, edad, altura, actico, fecha)

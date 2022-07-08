@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-playground/validator v9.31.0+incompatible
+	github.com/joho/godotenv v1.4.0
 )
 
 require (

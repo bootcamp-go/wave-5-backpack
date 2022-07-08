@@ -12,25 +12,34 @@ import (
 	"fmt"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
+	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/store"
+)
+
+const (
+	UsuarioNotFound = "producto %d not found"
+	FailReading     = "error al leer la bd"
+	FailWriting     = "error al escribir la bd"
 )
 
 var us []domain.Usuarios
-var lastID int
 
 type Repository interface {
 	GetAll() ([]domain.Usuarios, error)
 	Guardar(id int, nombre string, apellido string, email string, edad int, altura float64, actico bool, fecha string) (domain.Usuarios, error)
-	lastId() (int, error)
+	LastId() (int, error)
 	Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error)
 	Delete(id int) error
 	UpdateNameAndLastName(id int, name string, apellido string) (domain.Usuarios, error)
 }
 
 type repository struct {
+	db store.Store
 }
 
-func NewRepository() Repository {
-	return &repository{}
+func NewRepository(db store.Store) Repository {
+	return &repository{
+		db: db,
+	}
 }
 
 func (r *repository) UpdateNameAndLastName(id int, name string, last string) (domain.Usuarios, error) {
@@ -83,14 +92,34 @@ func (r *repository) Delete(id int) error {
 }
 
 func (r *repository) GetAll() ([]domain.Usuarios, error) {
+	var us []domain.Usuarios
+	if err := r.db.Read(&us); err != nil {
+		return nil, fmt.Errorf(FailReading)
+	}
 	return us, nil
 }
 func (r *repository) Guardar(id int, nombre string, apellido string, email string, edad int, altura float64, actico bool, fecha string) (domain.Usuarios, error) {
+	var us []domain.Usuarios
+
+	if err := r.db.Read(&us); err != nil {
+		return domain.Usuarios{}, fmt.Errorf(FailReading)
+	}
+
 	u := domain.Usuarios{Id: id, Nombre: nombre, Apellido: apellido, Email: email, Edad: edad, Altura: altura, Activo: actico, FechaCreacion: fecha}
 	us = append(us, u)
-	lastID = u.Id
+
+	if err := r.db.Write(us); err != nil {
+		return domain.Usuarios{}, fmt.Errorf(FailWriting)
+	}
 	return u, nil
 }
-func (r *repository) lastId() (int, error) {
-	return lastID, nil
+func (r *repository) LastId() (int, error) {
+	var us []domain.Usuarios
+	if err := r.db.Read(&us); err != nil {
+		return 0, fmt.Errorf(FailReading)
+	}
+	if len(us) == 0 {
+		return 0, nil
+	}
+	return us[len(us)-1].Id, nil
 }

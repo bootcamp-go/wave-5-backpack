@@ -1,13 +1,29 @@
 package main
 
 import (
+	"log"
+
 	"github.com/bootcamp-go/wave-5-backpack/goweb/cmd/server/handler"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/usuarios"
+	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/store"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	repo := usuarios.NewRepository()
+
+	error := godotenv.Load()
+	if error != nil {
+		log.Fatal("error al intentar cargar el .env")
+	}
+
+	db := store.NewStore("usuarios.json")
+	err1 := db.Validate()
+	if err1 != nil {
+		log.Fatal("error al intentar abrir el json")
+	}
+
+	repo := usuarios.NewRepository(db)
 	servi := usuarios.NewService(repo)
 	u := handler.NewUsuario(servi)
 
