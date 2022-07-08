@@ -85,8 +85,14 @@ func (r *repository) LastId() (int, error) {
 }
 
 func (r *repository) Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error) {
+	if err := r.db.Read(&users); err != nil {
+		return domain.User{}, fmt.Errorf("error al leer el archivo")
+	}
+
 	user := domain.User{Id: id, Nombre: nombre, Apellido: apellido, Email: email, Edad: edad, Altura: altura, Activo: activo, FechaCreacion: fechaCreacion}
+
 	update := false
+
 	for index, v := range users {
 		if v.Id == id {
 			user.Id = id
@@ -94,14 +100,23 @@ func (r *repository) Update(id int, nombre, apellido, email string, edad int, al
 			update = true
 		}
 	}
+
 	if !update {
 		return domain.User{}, fmt.Errorf("no se encontró el usuario con el ID %d", id)
+	}
+
+	if err := r.db.Write(users); err != nil {
+		return domain.User{}, fmt.Errorf("error al escribir en el archivo, error: %w", err)
 	}
 
 	return user, nil
 }
 
 func (r *repository) Delete(id int) error {
+	if err := r.db.Read(&users); err != nil {
+		return fmt.Errorf("error al leer el archivo")
+	}
+
 	userV := -1
 	for i, u := range users {
 		if u.Id == id {
@@ -115,11 +130,21 @@ func (r *repository) Delete(id int) error {
 	}
 
 	users = append(users[:userV], users[userV+1:]...)
+
+	if err := r.db.Write(users); err != nil {
+		return fmt.Errorf("error al escribir en el archivo, error: %w", err)
+	}
+
 	return nil
 }
 
 func (r *repository) Patch(id int, apellido string, edad int) (domain.User, error) {
 	var user domain.User
+
+	if err := r.db.Read(&users); err != nil {
+		return domain.User{}, fmt.Errorf("error al leer el archivo")
+	}
+
 	updated := false
 	for i, v := range users {
 		if v.Id == id {
@@ -131,6 +156,10 @@ func (r *repository) Patch(id int, apellido string, edad int) (domain.User, erro
 	}
 	if !updated {
 		return domain.User{}, fmt.Errorf("no se encontró el usuario con el ID %d", id)
+	}
+
+	if err := r.db.Write(users); err != nil {
+		return domain.User{}, fmt.Errorf("error al escribir en el archivo, error: %w", err)
 	}
 
 	return user, nil

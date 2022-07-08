@@ -33,6 +33,7 @@ func (s *service) GetAll() ([]domain.User, error) {
 
 	return users, nil
 }
+
 //ANTERIOR
 /* func (s *service) Store(nombre string, apellido string, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error) {
 	id, err := s.repository.LastId()
@@ -75,13 +76,27 @@ func (s *service) GetById(id int) (domain.User, error) {
 }
 
 func (s *service) Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error) {
-	return s.repository.Update(id, nombre, apellido, email, edad, altura, activo, fechaCreacion)
+	user, err := s.repository.Update(id, nombre, apellido, email, edad, altura, activo, fechaCreacion)
+	if err != nil {
+		return domain.User{}, fmt.Errorf("error al actualizar el usuario %d", id)
+	}
+
+	return user, nil
 }
 
 func (s *service) Delete(id int) error {
-	return s.repository.Delete(id)
+	if err := s.repository.Delete(id); err != nil {
+		return fmt.Errorf("error al eliminar el usuario %d", id)
+	}
+	return nil
 }
 
 func (s *service) Patch(id int, apellido string, edad int) (domain.User, error) {
-	return s.repository.Patch(id, apellido, edad)
+	user, err := s.repository.Patch(id, apellido, edad)
+
+	if err != nil {
+		return domain.User{}, fmt.Errorf("error al actualizar datos del usuario %d", id)
+	}
+
+	return user, nil
 }
