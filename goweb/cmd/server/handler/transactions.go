@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"goweb/internal/domain"
 	"goweb/internal/transactions"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -42,7 +43,7 @@ func validateFields(err *error) string {
 }
 
 func (t *Transaction) GetAll(ctx *gin.Context) {
-	if ctx.GetHeader("token") != "elpepe" {
+	if ctx.GetHeader("token") != os.Getenv("TOKEN") {
 		ctx.JSON(401, gin.H{
 			"error": "token inválido",
 		})
@@ -72,7 +73,7 @@ func (t *Transaction) GetAll(ctx *gin.Context) {
 }
 
 func (t *Transaction) Create(ctx *gin.Context) {
-	if ctx.GetHeader("token") != "elpepe" {
+	if ctx.GetHeader("token") != os.Getenv("TOKEN") {
 		ctx.JSON(401, gin.H{
 			"error": "token inválido",
 		})
@@ -93,7 +94,7 @@ func (t *Transaction) Create(ctx *gin.Context) {
 }
 
 func (t *Transaction) GetOne(ctx *gin.Context) {
-	if ctx.GetHeader("token") != "elpepe" {
+	if ctx.GetHeader("token") != os.Getenv("TOKEN") {
 		ctx.JSON(401, gin.H{
 			"error": "token inválido",
 		})
@@ -113,7 +114,7 @@ func (t *Transaction) GetOne(ctx *gin.Context) {
 }
 
 func (t *Transaction) Update(ctx *gin.Context) {
-	if ctx.GetHeader("token") != "elpepe" {
+	if ctx.GetHeader("token") != os.Getenv("TOKEN") {
 		ctx.JSON(401, gin.H{
 			"error": "token inválido",
 		})
@@ -153,9 +154,9 @@ func (t *Transaction) Delete(ctx *gin.Context) {
 		ctx.JSON(400, "error: id invalido")
 		return
 	}
-	err = t.service.Delete(id)
-	if err != nil {
-		ctx.JSON(404, err)
+
+	if err := t.service.Delete(id); err != nil {
+		ctx.JSON(404, gin.H{"error: ": err.Error()})
 		return
 	}
 	ctx.JSON(200, "Eliminado exitosamente")

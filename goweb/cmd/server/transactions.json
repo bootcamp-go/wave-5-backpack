@@ -5,7 +5,7 @@
         "currency": "COP",
         "amount": 300.5,
         "issuer": "kevin",
-        "recipient": "daniel",
+        "recipient": "jose",
         "date": "10 july 2022"
     },
     {
@@ -21,9 +21,18 @@
         "id": 17,
         "code": "1t7a",
         "currency": "COP",
-        "amount": 900.0,
+        "amount": 900,
         "issuer": "daniel",
         "recipient": "santiago",
         "date": "10 february 2022"
+    },
+    {
+        "id": 18,
+        "code": "507b",
+        "currency": "COP",
+        "amount": 1000000,
+        "issuer": "felipe",
+        "recipient": "santiago",
+        "date": "11 july 2022"
     }
 ]

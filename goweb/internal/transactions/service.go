@@ -1,6 +1,8 @@
 package transactions
 
-import "goweb/internal/domain"
+import (
+	"goweb/internal/domain"
+)
 
 type Service interface {
 	GetAll() ([]domain.Transaction, error)
@@ -57,7 +59,11 @@ func (s *service) Update(id int, code, currency string, amount float64, issuer, 
 }
 
 func (s *service) Delete(id int) error {
-	return s.repository.Delete(id)
+	err := s.repository.Delete(id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (s *service) Update2(id int, code string, amount float64) (domain.Transaction, error) {
