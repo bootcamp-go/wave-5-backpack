@@ -1,13 +1,18 @@
 package products
 
 import (
-	"encoding/json"
 	"errors"
+	"fmt"
 	"goweb/productos_capas/internal/domain"
-	"io/ioutil"
-	"os"
+	"goweb/productos_capas/pkg/store"
 	"reflect"
 	"strconv"
+)
+
+const (
+	ProductNotFound = "product %d not found"
+	FailReading     = "cant read database"
+	FailWriting     = "cant write database, error: %w"
 )
 
 type Repository interface {
@@ -15,56 +20,79 @@ type Repository interface {
 	Store(nombre, color string, precio, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Product, error)
 	GetByID(id int) (domain.Product, error)
 	LastID() (int, error)
-	ReadJSON()
 	Update(id int, nombre, color string, precio, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Product, error)
 	UpdateNamePrice(id int, nombre string, precio int) (domain.Product, error)
 	Delete(id int) (domain.Product, error)
 }
 
-type repository struct{}
-
-func NewRepository() Repository {
-	return &repository{}
+type repository struct {
+	db store.Store
 }
 
-var products []domain.Product
-var lastID int
+func NewRepository(db store.Store) Repository {
+	return &repository{
+		db: db,
+	}
+}
 
 func (r *repository) GetAll(nombre, color string, precio, stock int, codigo string, publicado bool, fechaCreacion string) ([]domain.Product, error) {
-	ps := filterProducts(nombre, color, precio, stock, codigo, publicado, fechaCreacion, products)
-	return ps, nil
+	var ps []domain.Product
+	if err := r.db.Read(&ps); err != nil {
+		return nil, fmt.Errorf(FailReading)
+	}
+	filtered_ps := filterProducts(nombre, color, precio, stock, codigo, publicado, fechaCreacion, ps)
+	return filtered_ps, nil
 }
 
 func (r *repository) Store(nombre, color string, precio, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Product, error) {
+	var ps []domain.Product
+	if err := r.db.Read(&ps); err != nil {
+		return domain.Product{}, fmt.Errorf(FailReading)
+	}
+
+	lastID, err := r.LastID()
+	if err != nil {
+		return domain.Product{}, fmt.Errorf("error obteniendo el ultimo id: %w", err)
+	}
 	lastID++
+
 	p := domain.Product{Id: lastID, Nombre: nombre, Color: color, Precio: precio, Stock: stock, Codigo: codigo, Publicado: publicado, FechaCreacion: fechaCreacion}
-	products = append(products, p)
-	writeJSON()
+	ps = append(ps, p)
+
+	if err := r.db.Write(ps); err != nil {
+		return domain.Product{}, fmt.Errorf(FailWriting, err)
+	}
+
 	return p, nil
 }
 
 func (r *repository) GetByID(id int) (domain.Product, error) {
-	var product domain.Product
-	for _, p := range products {
+	var ps []domain.Product
+	if err := r.db.Read(&ps); err != nil {
+		return domain.Product{}, fmt.Errorf(FailReading)
+	}
+
+	for _, p := range ps {
 		if p.Id == id {
-			product = p
-			break
+			return p, nil
 		}
 	}
 
-	if product.Id == 0 {
-		return domain.Product{}, errors.New("id no encontrado")
-	}
-	return product, nil
+	return domain.Product{}, errors.New("id no encontrado")
+
 }
 
 func (r *repository) Update(id int, nombre, color string, precio, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Product, error) {
+	var ps []domain.Product
+	if err := r.db.Read(&ps); err != nil {
+		return domain.Product{}, fmt.Errorf(FailReading)
+	}
+
 	product := domain.Product{Id: id, Nombre: nombre, Color: color, Precio: precio, Stock: stock, Codigo: codigo, Publicado: publicado, FechaCreacion: fechaCreacion}
 	var updated bool
-	for idx, p := range products {
+	for idx, p := range ps {
 		if p.Id == id {
-			products[idx] = product
-			writeJSON()
+			ps[idx] = product
 			updated = true
 		}
 	}
@@ -72,18 +100,27 @@ func (r *repository) Update(id int, nombre, color string, precio, stock int, cod
 	if !updated {
 		return domain.Product{}, errors.New("Producto con id " + strconv.Itoa(id) + " no encontrado")
 	}
+
+	if err := r.db.Write(ps); err != nil {
+		return domain.Product{}, fmt.Errorf(FailWriting, err)
+	}
+
 	return product, nil
 }
 
 func (r *repository) UpdateNamePrice(id int, nombre string, precio int) (domain.Product, error) {
+	var ps []domain.Product
+	if err := r.db.Read(&ps); err != nil {
+		return domain.Product{}, fmt.Errorf(FailReading)
+	}
+
 	var product domain.Product
 	var updated bool
-	for idx, p := range products {
+	for idx, p := range ps {
 		if p.Id == id {
-			products[idx].Nombre = nombre
-			products[idx].Precio = precio
-			product = products[idx]
-			writeJSON()
+			ps[idx].Nombre = nombre
+			ps[idx].Precio = precio
+			product = ps[idx]
 			updated = true
 		}
 	}
@@ -91,31 +128,54 @@ func (r *repository) UpdateNamePrice(id int, nombre string, precio int) (domain.
 	if !updated {
 		return domain.Product{}, errors.New("Producto con id " + strconv.Itoa(id) + " no encontrado")
 	}
+
+	if err := r.db.Write(ps); err != nil {
+		return domain.Product{}, fmt.Errorf(FailWriting, err)
+	}
+
 	return product, nil
 }
 
 func (r *repository) Delete(id int) (domain.Product, error) {
+	var ps []domain.Product
+	if err := r.db.Read(&ps); err != nil {
+		return domain.Product{}, fmt.Errorf(FailReading)
+	}
+
 	var product domain.Product
 	var deleted bool
-	for idx, p := range products {
+	for idx, p := range ps {
 		if p.Id == id {
 			product = p
-			products = append(products[:idx], products[idx+1:]...)
-			writeJSON()
+			ps = append(ps[:idx], ps[idx+1:]...)
 			deleted = true
 		}
 	}
+
 	if !deleted {
 		return domain.Product{}, errors.New("Producto con id" + strconv.Itoa(id) + "no encontrado")
 	}
+
+	if err := r.db.Write(ps); err != nil {
+		return domain.Product{}, fmt.Errorf(FailWriting, err)
+	}
+
 	return product, nil
 }
 
 func (r *repository) LastID() (int, error) {
-	return lastID, nil
+	var ps []domain.Product
+	if err := r.db.Read(&ps); err != nil {
+		return 0, fmt.Errorf(FailReading)
+	}
+	if len(ps) == 0 {
+		return 0, nil
+	}
+
+	return ps[len(ps)-1].Id, nil
 }
 
-// Obtiene la lista de productos del archivo products.json
+/* // Obtiene la lista de productos del archivo products.json
 func (r *repository) ReadJSON() {
 	jsonFile, err := os.Open("internal/domain/products.json")
 	if err != nil {
@@ -139,7 +199,7 @@ func writeJSON() error {
 		return err
 	}
 	return nil
-}
+} */
 
 // Filtra la lista de productos por los parámetros especificados
 func filterProducts(nombre, color string, precio, stock int, codigo string, publicado bool, fechaCreacion string, ps []domain.Product) []domain.Product {
