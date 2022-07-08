@@ -27,7 +27,7 @@
 	  "fecha de transaccion": "2015-02-13"
 	},
 	{
-	  "id": 5,
+	  "id": 4,
 	  "codigo de transaccion": "m3m2lknfk2",
 	  "moneda": "EUR",
 	  "monto": 1108.98,
@@ -36,7 +36,7 @@
 	  "fecha de transaccion": "2019-05-09"
 	},
 	{
-	  "id": 6,
+	  "id": 5,
 	  "codigo de transaccion": "lm2lklkm22",
 	  "moneda": "CHF",
 	  "monto": 538.62,
@@ -44,4 +44,4 @@
 	  "receptor": "Baxter",
 	  "fecha de transaccion": "04-07-2016"
 	}
-  ]
+]

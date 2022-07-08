@@ -1,4 +1,5 @@
-module github.com/bootcamp-go/wave-5-backpack/tree/fabela_israel/goweb
+//module github.com/bootcamp-go/wave-5-backpack/tree/fabela_israel/goweb
+module goweb
 
 go 1.18
 
