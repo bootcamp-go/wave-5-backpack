@@ -23,12 +23,12 @@ type Usuario struct {
 	service usuarios.Service
 }
 
-func NewUser(p usuarios.Service) *Usuario {
+func NewUser(user usuarios.Service) *Usuario {
 	return &Usuario{
-		service: p,
+		service: user,
 	}
 }
-func (p *Usuario) Update() gin.HandlerFunc {
+func (user *Usuario) Update() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
 		if token != "123456" {
@@ -71,17 +71,17 @@ func (p *Usuario) Update() gin.HandlerFunc {
 			c.JSON(400, gin.H{"error": stringErrores})
 			return
 		}
-		p, err := p.service.Update(int(id), req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, req.Activo)
+		u, err := user.service.Update(int(id), req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, req.Activo)
 		if err != nil {
 			c.JSON(404, gin.H{"error": err.Error()})
 			return
 		}
 
-		c.JSON(200, p)
+		c.JSON(200, u)
 	}
 }
 
-func (u *Usuario) UpdateSurnameAndAge() gin.HandlerFunc {
+func (user *Usuario) UpdateSurnameAndAge() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
 		if token != "123456" {
@@ -114,13 +114,13 @@ func (u *Usuario) UpdateSurnameAndAge() gin.HandlerFunc {
 			return
 		}
 
-		p, err := u.service.UpdateSurnameAndAge(int(id), req.Apellido, req.Edad)
+		u, err := user.service.UpdateSurnameAndAge(int(id), req.Apellido, req.Edad)
 		if err != nil {
 			c.JSON(404, gin.H{"error": err.Error()})
 			return
 		}
 
-		c.JSON(200, p)
+		c.JSON(200, u)
 	}
 }
 
@@ -181,15 +181,37 @@ func (c *Usuario) Store() gin.HandlerFunc {
 			})
 			return
 		}
-		fmt.Println("Handler req:")
-		fmt.Println(req)
+		stringErrores := ""
+		if req.Nombre == "" {
+			stringErrores = stringErrores + "El nombre del usuario es requerido\n"
+		}
+
+		if req.Apellido == "" {
+			stringErrores = stringErrores + "El apellido del usuario es requerido\n"
+		}
+
+		if req.Email == "" {
+			stringErrores = stringErrores + "El email del usuario es requerido\n"
+		}
+
+		if req.Edad == 0 {
+			stringErrores = stringErrores + "La edad es requerida\n"
+		}
+		if req.Altura == 0 {
+			stringErrores = stringErrores + "La altura es requerida\n"
+		}
+
+		if len(stringErrores) != 0 {
+			ctx.JSON(400, gin.H{"error": stringErrores})
+			return
+		}
+
 		user, err := c.service.Store(req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, req.Activo)
 		if err != nil {
 			ctx.JSON(404, gin.H{"error": err.Error()})
 			return
 		}
-		fmt.Println("Handler user:")
-		fmt.Println(user)
+
 		ctx.JSON(200, user)
 	}
 }
