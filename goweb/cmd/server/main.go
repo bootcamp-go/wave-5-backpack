@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	//repository := products.NewRepository()
+	//repositoryMemoria := products.NewRepositoryMemoria()
 	repositoryJson := products.NewRepositoryJsonDB()
 	service := products.NewService(repositoryJson)
 	p := handler.NewProduct(service)
