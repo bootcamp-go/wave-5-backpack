@@ -10,7 +10,6 @@ import (
 func main() {
 	gin.SetMode(gin.ReleaseMode)
 	repo := usuarios.NewRepository()
-	repo.SetFromFile()
 	service := usuarios.NewService(repo)
 	u := handler.NewUsuario(service)
 
@@ -20,6 +19,7 @@ func main() {
 	users.GET("/", u.GetAll())
 	users.PUT("/:id", u.Update())
 	users.PATCH("/:id", u.PatchLastNameAge())
+	users.DELETE("/:id", u.Delete())
 
 	r.Run()
 }

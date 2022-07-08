@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -123,5 +124,34 @@ func (c *Usuario) PatchLastNameAge() gin.HandlerFunc {
 			return
 		}
 		ctx.JSON(http.StatusOK, user)
+	}
+}
+
+func (c *Usuario) Delete() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.Request.Header.Get("token")
+		if token != "123456" {
+			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token inválido"})
+			return
+		}
+		idParam := ctx.Param("id")
+		id, err := strconv.Atoi(idParam)
+
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest,
+				gin.H{"error": "el ID no es válido."})
+			return
+		}
+		errDelete := c.service.Delete(id)
+		fmt.Println("---error ", errDelete)
+		if errDelete != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": errDelete.Error(),
+			})
+			return
+		}
+		ctx.JSON(http.StatusOK, gin.H{
+			"mssg": "Se eliminó correctame el usuario",
+		})
 	}
 }

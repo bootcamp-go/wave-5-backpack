@@ -9,6 +9,7 @@ type Service interface {
 	Store(age int, names, lastname, email string, estatura float64) (domain.Usuario, error)
 	Update(id, age int, names, lastname, email, dateCreated string, estatura float64, activo bool) (domain.Usuario, error)
 	UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error)
+	Delete(id int) error
 }
 
 type service struct {
@@ -47,7 +48,9 @@ func (s *service) Update(id, age int, names, lastname, email, dateCreated string
 func (s *service) UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error) {
 	return s.repository.UpdateLastNameAndAge(id, age, lastname)
 }
-
+func (s *service) Delete(id int) error {
+	return s.repository.Delete(id)
+}
 func NewService(r Repository) Service {
 	return &service{
 		repository: r,
