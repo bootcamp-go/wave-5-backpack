@@ -102,15 +102,15 @@ func FiltrarTransactionsHandler(ctx *gin.Context) {
 }
 
 func GenerateTransaction() gin.HandlerFunc {
-	var transac Transacciones
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
-		if token != "1234" {
+		if token != "12345" {
 			c.JSON(401, gin.H{
 				"error": "No tiene permisos para realizar la peticion solicitada",
 			})
 			return
 		}
+		var transac Transacciones
 		if err := c.ShouldBindJSON(&transac); err != nil {
 			var ve validator.ValidationErrors
 			if errors.As(err, &ve) {
@@ -122,9 +122,11 @@ func GenerateTransaction() gin.HandlerFunc {
 						result += fmt.Sprintf("El campo %s es requerido", field.Field())
 					}
 				}
-				c.JSON(404, result)
+				c.JSON(400, result)
+				log.Println("prueba 2")
 				return
 			}
+			log.Println("prueba")
 		}
 		lastID++
 		transac.Id = lastID

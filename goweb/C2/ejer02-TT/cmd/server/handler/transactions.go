@@ -4,9 +4,10 @@ import (
 	"ejer02-TT/internal/transactions"
 	"errors"
 	"fmt"
+	"log"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator"
+	"github.com/go-playground/validator/v10"
 )
 
 type request struct {
@@ -56,7 +57,7 @@ func (t *Transaction) Store() gin.HandlerFunc {
 			return
 		}
 		var req request
-		if err := ctx.Bind(&req); err != nil {
+		if err := ctx.ShouldBindJSON(&req); err != nil {
 			var ve validator.ValidationErrors
 			if errors.As(err, &ve) {
 				result := ""
@@ -67,11 +68,12 @@ func (t *Transaction) Store() gin.HandlerFunc {
 						result += fmt.Sprintf("El campo %s es requerido", field.Field())
 					}
 				}
-
-				ctx.JSON(404, result)
+				ctx.JSON(400, result)
+				log.Println("prueba 2")
 				return
-
 			}
+			log.Println("prueba 1")
+			return
 		}
 		t, err := t.service.Store(req.TranCode, req.Currency, req.Amount, req.Transmitter, req.Reciever, req.TranDate)
 		if err != nil {
