@@ -19,6 +19,9 @@ type Service interface {
 	GetAll() ([]domain.Transaction, error)
 	Store(Currency string, Amount float64, Sender string, Reciever string) (domain.Transaction, error)
 	GetById(Id int) (domain.Transaction, error)
+	Update(id int, Currency string, Amount float64, Sender string, Reciever string) (domain.Transaction, error)
+	UpdateCurrencyAndAmount(id int, Currency string, Amount float64) (domain.Transaction, error)
+	Delete(id int) error
 }
 
 type service struct {
@@ -71,6 +74,41 @@ func (s *service) Store(Currency string, Amount float64, Sender string, Reciever
 
 func (s *service) GetById(Id int) (domain.Transaction, error) {
 	transaction, err := s.repo.GetById(Id)
+	if err != nil {
+		return domain.Transaction{}, errors.New("error: transaction not found")
+	}
+	return transaction, nil
+}
+
+func (s *service) Update(id int, Currency string, Amount float64, Sender string, Reciever string) (domain.Transaction, error) {
+	if isAmountZeroOrNegative(Amount) {
+		return domain.Transaction{}, &NotAllowedAmountZeroOrNegative{}
+	}
+	transaction, err := s.repo.Update(
+		id,
+		Currency,
+		Amount,
+		Sender,
+		Reciever,
+	)
+	if err != nil {
+		return domain.Transaction{}, errors.New("error: cannot update transaction")
+	}
+	return transaction, nil
+}
+
+func (s *service) Delete(id int) error {
+	if err := s.repo.Delete(id); err != nil {
+		return fmt.Errorf("error: cannot be deleted id %d %w", id, err)
+	}
+	return nil
+}
+
+func (s *service) UpdateCurrencyAndAmount(id int, Currency string, Amount float64) (domain.Transaction, error) {
+	if isAmountZeroOrNegative(Amount) {
+		return domain.Transaction{}, &NotAllowedAmountZeroOrNegative{}
+	}
+	transaction, err := s.repo.UpdateCurrencyAndAmount(id, Currency, Amount)
 	if err != nil {
 		return domain.Transaction{}, errors.New("error: transaction not found")
 	}

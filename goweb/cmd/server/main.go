@@ -37,5 +37,8 @@ func main() {
 	transactionsRoute.GET("/search", transactions.Search())
 	transactionsRoute.GET("/:id", transactions.GetById())
 	transactionsRoute.POST("/", transactions.CreateTransaction())
+	transactionsRoute.PUT("/:id", transactions.Update())
+	transactionsRoute.PATCH("/:id", transactions.UpdateCurrencyAndAmount())
+	transactionsRoute.DELETE("/:id", transactions.Delete())
 	router.Run()
 }

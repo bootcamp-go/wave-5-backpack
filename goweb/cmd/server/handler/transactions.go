@@ -2,6 +2,7 @@ package handler
 
 import (
 	"errors"
+	"fmt"
 	"goweb/cmd/server/utils"
 	"goweb/cmd/server/utils/filters"
 	"goweb/internal/domain"
@@ -20,6 +21,11 @@ type request struct {
 	Amount   float64 `json:"amount" binding:"required"`
 	Sender   string  `json:"sender" binding:"required"`
 	Reciever string  `json:"reciever" binding:"required"`
+}
+
+type requestCurrenctAndAmount struct {
+	Currency string  `json:"currency" binding:"required"`
+	Amount   float64 `json:"amount" binding:"required"`
 }
 
 type Transaction struct {
@@ -96,6 +102,168 @@ func (t *Transaction) GetById() gin.HandlerFunc {
 		ctx.JSON(http.StatusOK, gin.H{
 			"data": transactionResult,
 		})
+	}
+}
+
+func (t *Transaction) Delete() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		idParam, exist := ctx.Params.Get("id")
+
+		if !exist {
+			ctx.JSON(400, gin.H{
+				"error": "set a valid id",
+			})
+			return
+		}
+
+		id, err := strconv.Atoi(idParam)
+
+		if err != nil {
+			ctx.JSON(400, gin.H{
+				"error": "set a valid id",
+			})
+			return
+		}
+
+		if err := t.ser.Delete(id); err != nil {
+			var notFound *transactions.NotFound
+			if errors.As(err, &notFound) {
+				ctx.JSON(http.StatusNotFound, gin.H{
+					"error": err.Error(),
+				})
+				return
+			}
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": "Internal Server Error",
+			})
+
+			return
+		}
+		ctx.JSON(http.StatusOK, gin.H{
+			"data": fmt.Sprintf("transaction with id %d was deleted successfully", id),
+		})
+	}
+}
+
+func (t *Transaction) UpdateCurrencyAndAmount() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("Authorization")
+		if token != SECRET_TOKEN {
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"error": "Access Denied: Token Unauthorized",
+			})
+			return
+		}
+		idParam, exist := ctx.Params.Get("id")
+
+		if !exist {
+			ctx.JSON(400, gin.H{
+				"error": "set a valid id",
+			})
+			return
+		}
+
+		id, err := strconv.Atoi(idParam)
+
+		if err != nil {
+			ctx.JSON(400, gin.H{
+				"error": "set a valid id",
+			})
+			return
+		}
+
+		transactionRequest := requestCurrenctAndAmount{}
+		if err := ctx.ShouldBindJSON(&transactionRequest); err != nil {
+			var ve validator.ValidationErrors
+			if errors.As(err, &ve) {
+				messagesErrors := utils.GenerateMessageValidationError(err.(validator.ValidationErrors))
+				ctx.JSON(400, gin.H{
+					"ValidationErrors": messagesErrors,
+				})
+			} else {
+				ctx.JSON(400, gin.H{
+					"error": err.Error(),
+				})
+			}
+			return
+		}
+
+		transaction, err := t.ser.UpdateCurrencyAndAmount(id, transactionRequest.Currency, transactionRequest.Amount)
+		if err != nil {
+			errAmountNotAllowed := transactions.NotAllowedAmountZeroOrNegative{}
+			if errors.Is(err, &errAmountNotAllowed) {
+				ctx.JSON(400, gin.H{
+					"error": "error: amount is zero or below to 0",
+				})
+				return
+			}
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		ctx.JSON(201, transaction)
+	}
+}
+
+func (t *Transaction) Update() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("Authorization")
+		if token != SECRET_TOKEN {
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"error": "Access Denied: Token Unauthorized",
+			})
+			return
+		}
+		idParam, exist := ctx.Params.Get("id")
+
+		if !exist {
+			ctx.JSON(400, gin.H{
+				"error": "set a valid id",
+			})
+			return
+		}
+
+		id, err := strconv.Atoi(idParam)
+
+		if err != nil {
+			ctx.JSON(400, gin.H{
+				"error": "set a valid id",
+			})
+			return
+		}
+
+		transactionRequest := request{}
+		if err := ctx.ShouldBindJSON(&transactionRequest); err != nil {
+			var ve validator.ValidationErrors
+			if errors.As(err, &ve) {
+				mesagesErrors := utils.GenerateMessageValidationError(err.(validator.ValidationErrors))
+				ctx.JSON(400, gin.H{
+					"ValidationErrors": mesagesErrors,
+				})
+			} else {
+				ctx.JSON(400, gin.H{
+					"error": err.Error(),
+				})
+			}
+			return
+		}
+
+		transaction, err := t.ser.Update(id, transactionRequest.Currency, transactionRequest.Amount, transactionRequest.Sender, transactionRequest.Reciever)
+		if err != nil {
+			errAmountNotAllowed := transactions.NotAllowedAmountZeroOrNegative{}
+			if errors.Is(err, &errAmountNotAllowed) {
+				ctx.JSON(400, gin.H{
+					"error": "error: amount is zero or below to 0",
+				})
+				return
+			}
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		ctx.JSON(201, transaction)
 	}
 }
 
