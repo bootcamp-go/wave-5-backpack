@@ -29,6 +29,9 @@ func NewRepository(db store.Store) Repository {
 }
 
 func (r *repository) GetAll() ([]domain.User, error) {
+	if err := r.db.Read(&users); err != nil {
+		return nil, fmt.Errorf("error al leer el archivo")
+	}
 	return users, nil
 }
 

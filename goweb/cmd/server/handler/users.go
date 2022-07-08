@@ -46,11 +46,11 @@ func (u *User) GetAll() gin.HandlerFunc {
 		}
 
 		if len(users) == 0 {
-			ctx.JSON(500, gin.H{"error": "No se hallaron resultados"})
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "No se hallaron resultados"})
 			return
 		}
 
-		ctx.JSON(200, users)
+		ctx.JSON(http.StatusOK, users)
 	}
 }
 
