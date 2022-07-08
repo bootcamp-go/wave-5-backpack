@@ -9,9 +9,11 @@ import (
 
 type Service interface {
 	GetById(Id int) (domain.User, error)
-	GetAll() ([]domain.User, error)
+	GetAll(filters map[string]interface{}) ([]domain.User, error)
 	Store(Age int, FirstName, LastName, Email string, Height float64, Active bool) (domain.User, error)
-	FilterUsers(filters map[string]interface{}, users []domain.User) (*[]domain.User, error)
+	Update(Id, Age int, FirstName, LastName, Email, CreatedAt string, Height float64, Active bool) (domain.User, error)
+	UpdateAgeLastName(Id, Age int, LastName string) (domain.User, error)
+	Delete(Id int) error
 }
 
 type service struct {
@@ -22,8 +24,8 @@ func (s *service) GetById(Id int) (domain.User, error) {
 	return s.repository.GetById(Id)
 }
 
-func (s *service) GetAll() ([]domain.User, error) {
-	return s.repository.GetAll()
+func (s *service) GetAll(filters map[string]interface{}) ([]domain.User, error) {
+	return s.repository.GetAll(filters)
 }
 
 func (s *service) Store(Age int, FirstName, LastName, Email string, Height float64, Active bool) (domain.User, error) {
@@ -41,39 +43,16 @@ func (s *service) Store(Age int, FirstName, LastName, Email string, Height float
 	return user, err
 }
 
-func (s *service) FilterUsers(filters map[string]interface{}, users []domain.User) (*[]domain.User, error) {
-	resultUsers := []domain.User{}
+func (s *service) Update(Id, Age int, FirstName, LastName, Email, CreatedAt string, Height float64, Active bool) (domain.User, error) {
+	return s.repository.Update(Id, Age, FirstName, LastName, Email, CreatedAt, Height, Active)
+}
 
-	for _, user := range users {
-		if Id, ok := filters["Id"]; ok && Id != user.Id {
-			continue
-		}
-		if Age, ok := filters["Age"]; ok && Age != user.Age {
-			continue
-		}
-		if FirstName, ok := filters["FirstName"]; ok && FirstName != user.FirstName {
-			continue
-		}
-		if LastName, ok := filters["LastName"]; ok && LastName != user.LastName {
-			continue
-		}
-		if Email, ok := filters["Email"]; ok && Email != user.Email {
-			continue
-		}
-		if CreatedAt, ok := filters["CreatedAt"]; ok && CreatedAt != user.CreatedAt {
-			continue
-		}
-		if Height, ok := filters["Height"]; ok && Height != user.Height {
-			continue
-		}
-		if Active, ok := filters["Active"]; ok && Active != user.Active {
-			continue
-		}
+func (s *service) UpdateAgeLastName(Id, Age int, LastName string) (domain.User, error) {
+	return s.repository.UpdateAgeLastName(Id, Age, LastName)
+}
 
-		resultUsers = append(resultUsers, user)
-	}
-
-	return &resultUsers, nil
+func (s *service) Delete(Id int) error {
+	return s.repository.Delete(Id)
 }
 
 func NewService(r Repository) Service {

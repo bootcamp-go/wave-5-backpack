@@ -16,8 +16,11 @@ func main() {
 	userRouter := router.Group("/users")
 	{
 		userRouter.GET("/", u.GetAll)
-		userRouter.POST("", middleware.Authorization, u.Store)
+		userRouter.POST("/", middleware.Authorization, u.Store)
 		userRouter.GET("/:Id", u.GetById)
+		userRouter.PUT("/:Id", middleware.Authorization, u.Update)
+		userRouter.PATCH("/:Id", middleware.Authorization, u.UpdateAgeLastName)
+		userRouter.DELETE("/:Id", middleware.Authorization, u.Delete)
 	}
 	router.Run()
 }

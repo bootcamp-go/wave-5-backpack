@@ -14,7 +14,20 @@ type request struct {
 	Age                        int     `binding:"required"`
 	FirstName, LastName, Email string  `binding:"required"`
 	Height                     float64 `binding:"required"`
-	Active                     bool    `binding:"required"`
+	Active                     *bool   `binding:"required"`
+}
+
+type putRequest struct {
+	Age                        int     `binding:"required"`
+	FirstName, LastName, Email string  `binding:"required"`
+	CreatedAt                  string  `binding:"required"`
+	Height                     float64 `binding:"required"`
+	Active                     *bool   `binding:"required"`
+}
+
+type pathRequest struct {
+	Age      int
+	LastName string
 }
 
 type User struct {
@@ -28,29 +41,21 @@ func NewUser(u users.Service) *User {
 }
 
 func (c *User) GetAll(ctx *gin.Context) {
-	users, err := c.service.GetAll()
-
-	if err != nil {
-		ctx.JSON(404, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
-
 	filters, err := querysMap(ctx)
 	if err != nil {
 		ctx.JSON(400, gin.H{"eror": err.Error()})
 		return
 	}
 
-	resultUsers, err := c.service.FilterUsers(filters, users)
+	users, err := c.service.GetAll(filters)
 
 	if err != nil {
 		ctx.JSON(500, gin.H{"error": "internal server error"})
+		fmt.Printf("Internal Error: %v", err.Error())
 		return
 	}
 
-	ctx.JSON(200, *resultUsers)
+	ctx.JSON(200, users)
 }
 
 func (c *User) GetById(ctx *gin.Context) {
@@ -100,7 +105,7 @@ func (c *User) Store(ctx *gin.Context) {
 		return
 	}
 
-	user, err := c.service.Store(req.Age, req.FirstName, req.LastName, req.Email, req.Height, req.Active)
+	user, err := c.service.Store(req.Age, req.FirstName, req.LastName, req.Email, req.Height, *req.Active)
 
 	if err != nil {
 		ctx.JSON(400, gin.H{
@@ -110,6 +115,97 @@ func (c *User) Store(ctx *gin.Context) {
 	}
 
 	ctx.JSON(201, user)
+}
+
+func (c *User) Update(ctx *gin.Context) {
+	Id, err := strconv.Atoi(ctx.Param("Id"))
+
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	var req putRequest
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		errs := err.(validator.ValidationErrors)
+		for _, valError := range errs {
+			if valError.Tag() == "required" {
+				ctx.JSON(400, gin.H{
+					"error": fmt.Sprintf("el campo '%s' es requerido", valError.Field()),
+				})
+				return
+			}
+		}
+		ctx.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	user, err := c.service.Update(Id, req.Age, req.FirstName, req.LastName, req.Email, req.CreatedAt, req.Height, *req.Active)
+
+	if err != nil {
+		ctx.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(200, user)
+}
+
+func (c *User) UpdateAgeLastName(ctx *gin.Context) {
+	Id, err := strconv.Atoi(ctx.Param("Id"))
+
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	var req pathRequest
+	if err := ctx.BindJSON(&req); err != nil {
+		ctx.JSON(400, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	if req.LastName == "" && req.Age == 0 {
+		ctx.JSON(400, gin.H{
+			"error": "Debe enviar por lo menos uno de los siguientes campos: 'LastName', 'Age'",
+		})
+		return
+	}
+	user, err := c.service.UpdateAgeLastName(Id, req.Age, req.LastName)
+
+	if err != nil {
+		ctx.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	ctx.JSON(200, user)
+}
+
+func (c *User) Delete(ctx *gin.Context) {
+	Id, err := strconv.Atoi(ctx.Param("Id"))
+
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	err = c.service.Delete(Id)
+
+	if err != nil {
+		ctx.JSON(404, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	ctx.Status(204)
 }
 
 func querysMap(ctx *gin.Context) (map[string]interface{}, error) {
