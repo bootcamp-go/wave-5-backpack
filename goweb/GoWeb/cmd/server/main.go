@@ -16,5 +16,8 @@ func main() {
 	tr := router.Group("/transacciones")
 	tr.POST("/", tran.Store())
 	tr.GET("/", tran.GetAll())
+	tr.PUT("/:id", tran.Update())
+	tr.DELETE("/:id", tran.Delete())
+	tr.PATCH("/:id", tran.UpdateCode())
 	router.Run()
 }
