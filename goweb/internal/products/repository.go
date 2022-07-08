@@ -1,12 +1,15 @@
 package products
 
 import (
-	"encoding/json"
 	"fmt"
 	"goweb/internal/domain"
-	"log"
-	"os"
+	"goweb/pkg/store"
 	"time"
+)
+
+const(
+	ERROR_WRITING = "cannot write file"
+	ERROR_READING = "cannot read the file"
 )
 
 type Repository interface {
@@ -20,7 +23,13 @@ type Repository interface {
 var ps []domain.Product
 var lastId int
 
-type repository struct{}
+type repository struct{
+	db store.Store
+}
+
+func NewRepository(db store.Store) Repository {
+	return &repository{db: db}
+}
 
 // ParcialUpdate implements Repository
 func (r *repository) ParcialUpdate(id int, name string, price float64) (domain.Product, error) {
@@ -57,17 +66,9 @@ func (r *repository) ParcialUpdate(id int, name string, price float64) (domain.P
 		return domain.Product{}, fmt.Errorf("producto %d no encontrado", id)
 	}
 
-	toJson, err := toJSON(ps)
 
-	if err != nil {
+	if err:= r.db.Write(ps); err != nil {
 		fmt.Println("Error:", err.Error())
-
-	}
-
-	err1 := os.WriteFile("/Users/gtorrealba/go-base-TT/wave-5-backpack/goweb/internal/productos.json", toJson, 0644)
-
-	if err1 != nil {
-		fmt.Println("Error:", err1.Error())
 
 	}
 
@@ -96,19 +97,12 @@ func (r *repository) Delete(id int) error {
 
 	ps = append(ps[:index], ps[index+1:]...)
 
-	toJson, err := toJSON(ps)
 
-	if err != nil {
+	if err := r.db.Write(ps); err != nil {
 		fmt.Println("Error:", err.Error())
 
 	}
 
-	err1 := os.WriteFile("/Users/gtorrealba/go-base-TT/wave-5-backpack/goweb/internal/productos.json", toJson, 0644)
-
-	if err1 != nil {
-		fmt.Println("Error:", err1.Error())
-
-	}
 	return nil
 }
 
@@ -129,82 +123,45 @@ func (r *repository) Update(id int, name string, color string, price float64, st
 			update = true
 		}
 	}
-
-	toJson, err := toJSON(ps)
-
-	if err != nil {
-		fmt.Println("Error:", err.Error())
-
-	}
-
-	err1 := os.WriteFile("/Users/gtorrealba/go-base-TT/wave-5-backpack/goweb/internal/productos.json", toJson, 0644)
-
-	if err1 != nil {
-		fmt.Println("Error:", err1.Error())
-
-	}
-
 	if !update {
 		return domain.Product{}, fmt.Errorf("producto %d no encontrado", id)
 	}
 
-	return p, nil
-}
-
-func (*repository) Create(name string, color string, price float64, stock int, code string, publisher bool) (domain.Product, error) {
-
-	var t time.Time = time.Now()
-	created := t.Format("2006-01-02 15:04:05")
-
-	pst, err := NewRepository().GetAll()
-	if err != nil {
-		fmt.Println("Error:", err)
-	}
-	lastId = pst[len(pst)-1].Id + 1
-	p := domain.Product{Id: lastId, Name: name, Color: color, Price: price, Stock: stock, Code: code, Publisher: publisher, CreatedAt: created}
-
-	ps = append(ps, p)
-
-	toJson, err := toJSON(ps)
-
-	if err != nil {
+	if err:= r.db.Write(ps); err != nil {
 		fmt.Println("Error:", err.Error())
 
 	}
 
-	err1 := os.WriteFile("/Users/gtorrealba/go-base-TT/wave-5-backpack/goweb/internal/productos.json", toJson, 0644)
+	return p, nil
+}
 
-	if err1 != nil {
-		fmt.Println("Error:", err1.Error())
+//Created Product
+func (r *repository) Create(name string, color string, price float64, stock int, code string, publisher bool) (domain.Product, error) {
 
+	var t time.Time = time.Now()
+	created := t.Format("2006-01-02 15:04:05")
+
+	err := r.db.Read(&ps)
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+	lastId = ps[len(ps)-1].Id + 1
+	p := domain.Product{Id: lastId, Name: name, Color: color, Price: price, Stock: stock, Code: code, Publisher: publisher, CreatedAt: created}
+
+	ps = append(ps, p)
+
+	if err1 := r.db.Write(ps); err1 != nil {
+		return domain.Product{}, fmt.Errorf(ERROR_WRITING)
 	}
 
 	return p, nil
 }
 
-func toJSON(p []domain.Product) ([]byte, error) {
-	jsonData, err := json.Marshal(p)
-	if err != nil {
-		return nil, err
-	}
-
-	return jsonData, nil
-}
-
-func NewRepository() Repository {
-	return &repository{}
-}
-
+//Get All Products
 func (r *repository) GetAll() ([]domain.Product, error) {
-	file, err := os.ReadFile("/Users/gtorrealba/go-base-TT/wave-5-backpack/goweb/internal/productos.json")
-
+	err := r.db.Read(&ps)
 	if err != nil {
-		fmt.Println("Error abriendo el archivo productos.json")
+		return []domain.Product{}, fmt.Errorf(ERROR_READING)
 	}
-
-	if err1 := json.Unmarshal([]byte(file), &ps); err1 != nil {
-		log.Fatal(err1)
-	}
-
 	return ps, nil
 }

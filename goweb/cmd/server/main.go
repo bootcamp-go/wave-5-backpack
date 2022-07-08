@@ -5,11 +5,13 @@ import (
 	"fmt"
 	"goweb/cmd/server/handler"
 	"goweb/internal/products"
+	"goweb/pkg/store"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 
@@ -187,8 +189,12 @@ func filterProducts(ctx *gin.Context)  {
 
 
 func main() {
+	if err := godotenv.Load(); err != nil{
+		fmt.Println("error:", err)
+	}
 
-	repo := products.NewRepository()
+	db := store.NewStore("./productos.json")
+	repo := products.NewRepository(db)
 	serv := products.NewService(repo)
 	productHandler := handler.NewProduct(serv)
 

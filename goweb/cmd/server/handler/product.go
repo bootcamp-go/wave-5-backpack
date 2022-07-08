@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"goweb/internal/products"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -28,7 +29,7 @@ func NewProduct(s products.Service) *Product {
 func (p *Product) GetAll() gin.HandlerFunc  {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			c.JSON(401, gin.H{"error": "Token inválido"})
 			return
 		}
@@ -45,7 +46,7 @@ func (p *Product) GetAll() gin.HandlerFunc  {
 func (p *Product) Create() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			c.JSON(401, gin.H{"error": "Token inválido"})
 			return
 		}
@@ -165,7 +166,7 @@ func (p *Product) Update() gin.HandlerFunc {
 func (p *Product) ParcialUpdate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			c.JSON(401, gin.H{"error": "Token inválido"})
 			return
 		}
@@ -183,6 +184,15 @@ func (p *Product) ParcialUpdate() gin.HandlerFunc {
 			return
 		}
 
+		if req.Name == "" && req.Price == 0 {
+			c.JSON(400, gin.H{"error": "Se debe enviar al menos 1 dato nombre o precio"})
+			return
+		}
+		if req.Price < 0 {
+			c.JSON(400, gin.H{"error": "El precio no puede ser negativo"})
+			return
+		}
+
 		p, err2 := p.service.ParcialUpdate(int(id), req.Name, req.Price)
 		if err2 != nil {
 			c.JSON(404, gin.H{"error": err.Error()})
@@ -196,7 +206,7 @@ func (p *Product) ParcialUpdate() gin.HandlerFunc {
 func (p *Product) Delete() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			c.JSON(401, gin.H{"error": "Token inválido"})
 			return
 		}

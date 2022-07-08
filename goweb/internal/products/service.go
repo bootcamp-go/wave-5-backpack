@@ -14,6 +14,12 @@ type service struct {
 	repository Repository
 }
 
+func NewService(r Repository) Service {
+	return &service{
+		repository: r,
+	}
+}
+
 // ParcialUpdate implements Service
 func (s *service) ParcialUpdate(id int, name string, price float64) (domain.Product, error) {
 	return s.repository.ParcialUpdate(id, name, price)
@@ -34,12 +40,8 @@ func (s *service) Create(name string, color string, price float64, stock int, co
 	return s.repository.Create(name, color, price, stock, code, publisher)
 }
 
-func NewService(r Repository) Service {
-	return &service{
-		repository: r,
-	}
-}
 
+// GetAll implements Service
 func (s *service) GetAll() ([]domain.Product, error) {
 	ps, err := s.repository.GetAll()
 	if err != nil {
