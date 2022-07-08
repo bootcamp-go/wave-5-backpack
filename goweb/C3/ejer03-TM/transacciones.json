@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "tranCode": "1",
+    "currency": "AR$",
+    "amount": 0,
+    "transmitter": "Juan",
+    "reciever": "Pedro",
+    "tranDate": "07-22-2022"
+  },
+  {
+    "id": 2,
+    "tranCode": "10",
+    "currency": "3444",
+    "amount": 1,
+    "transmitter": "31",
+    "reciever": "4",
+    "tranDate": "10000000"
+  }
+]
