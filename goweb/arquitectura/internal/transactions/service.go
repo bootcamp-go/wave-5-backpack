@@ -8,7 +8,8 @@ type Service interface {
 	GetAll() ([]domain.Transaction, error)
 	Store(tranCode, currency string, amount float64, transmitter, receiver, tranDate string) (domain.Transaction, error)
 	Update(id int, tranCode, currency string, amount float64, transmitter, receiver, tranDate string) (domain.Transaction, error)
-	UpdateFields(id int, tranCode string, amount float64) (domain.Transaction, error)
+	UpdateTranCode(id int, tranCode string) (domain.Transaction, error)
+	UpdateAmount(id int, amount float64) (domain.Transaction, error)
 	Delete(id int) error
 }
 
@@ -50,24 +51,12 @@ func (s *service) Update(id int, tranCode, currency string, amount float64, tran
 	return s.repository.Update(id, tranCode, currency, amount, transmitter, receiver, tranDate)
 }
 
-func (s *service) UpdateFields(id int, tranCode string, amount float64) (domain.Transaction, error) {
-	var tran domain.Transaction
-	if tranCode != "" {
-		t, err := s.repository.UpdateTranCode(id, tranCode)
-		if err != nil {
-			return t, err
-		}
-		tran = t
-	}
-	if amount != 0 {
-		t, err := s.repository.UpdateAmount(id, amount)
-		if err != nil {
-			return t, nil
-		}
-		tran = t
-	}
+func (s *service) UpdateTranCode(id int, tranCode string) (domain.Transaction, error) {
+	return s.repository.UpdateTranCode(id, tranCode)
+}
 
-	return tran, nil
+func (s *service) UpdateAmount(id int, amount float64) (domain.Transaction, error) {
+	return s.repository.UpdateAmount(id, amount)
 }
 
 func (s *service) Delete(id int) error {

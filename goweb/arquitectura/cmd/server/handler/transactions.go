@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"arquitectura/internal/domain"
 	"arquitectura/internal/transactions"
 	"errors"
 	"fmt"
@@ -157,13 +158,24 @@ func (t *Transaction) UpdateFields() gin.HandlerFunc {
 			return
 		}
 
-		t, err := t.service.UpdateFields(int(id), req.TranCode, req.Amount)
-		if err != nil {
-			c.JSON(404, gin.H{"error": err.Error()})
-			return
+		var tr domain.Transaction
+		if req.TranCode != "" {
+			t, err := t.service.UpdateTranCode(int(id), req.TranCode)
+			if err != nil {
+				c.JSON(404, gin.H{"error": err.Error()})
+				return
+			}
+			tr = t
 		}
-
-		c.JSON(200, t)
+		if req.Amount > 0 {
+			t, err := t.service.UpdateAmount(int(id), req.Amount)
+			if err != nil {
+				c.JSON(404, gin.H{"error": err.Error()})
+				return
+			}
+			tr = t
+		}
+		c.JSON(200, tr)
 	}
 }
 
