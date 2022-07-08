@@ -2,7 +2,14 @@ package transactions
 
 import (
 	"arquitectura/internal/domain"
+	"arquitectura/pkg/store"
 	"fmt"
+)
+
+const (
+	FailReading         = "can`t read database"
+	FailWriting         = "can`t write database, error: %w"
+	TransactionNotFound = "transaction with id %d douesn`t exists en database"
 )
 
 type Repository interface {
@@ -15,21 +22,43 @@ type Repository interface {
 	LastID() (int, error)
 }
 
-type repository struct{}
+type repository struct {
+	db store.Store
+}
 
-func NewRepository() Repository {
-	return &repository{}
+func NewRepository(db store.Store) Repository {
+	return &repository{
+		db: db,
+	}
 }
 
 func (r *repository) GetAll() ([]domain.Transaction, error) {
+	var lista []domain.Transaction
+	if err := r.db.Read(&lista); err != nil {
+		return nil, fmt.Errorf(FailReading)
+	}
 	return lista, nil
 }
 
 func (r *repository) LastID() (int, error) {
-	return lastID, nil
+	var lista []domain.Transaction
+	if err := r.db.Read(&lista); err != nil {
+		return 0, fmt.Errorf(FailReading)
+	}
+	if len(lista) == 0 {
+		return 0, nil
+	}
+	return lista[len(lista)-1].Id, nil
 }
 
 func (r *repository) Store(id int, tranCode, currency string, amount float64, transmitter, receiver, tranDate string) (domain.Transaction, error) {
+
+	var lista []domain.Transaction
+
+	if err := r.db.Read(&lista); err != nil {
+		return domain.Transaction{}, fmt.Errorf(FailReading)
+	}
+
 	t := domain.Transaction{
 		Id:          id,
 		TranCode:    tranCode,
@@ -39,13 +68,21 @@ func (r *repository) Store(id int, tranCode, currency string, amount float64, tr
 		Reciever:    receiver,
 		TranDate:    tranCode,
 	}
-
 	lista = append(lista, t)
-	lastID = t.Id
+
+	if err := r.db.Write(lista); err != nil {
+		return domain.Transaction{}, fmt.Errorf(FailWriting, err)
+	}
 	return t, nil
 }
 
 func (r *repository) Update(id int, tranCode, currency string, amount float64, transmitter, receiver, tranDate string) (domain.Transaction, error) {
+	var lista []domain.Transaction
+
+	if err := r.db.Read(&lista); err != nil {
+		return domain.Transaction{}, fmt.Errorf(FailReading)
+	}
+
 	t := domain.Transaction{
 		Id:          id,
 		TranCode:    tranCode,
@@ -65,13 +102,23 @@ func (r *repository) Update(id int, tranCode, currency string, amount float64, t
 	}
 
 	if !updated {
-		return domain.Transaction{}, fmt.Errorf("la transaccion con id %d no existe", id)
+		return domain.Transaction{}, fmt.Errorf(TransactionNotFound, id)
+	}
+
+	if err := r.db.Write(lista); err != nil {
+		return domain.Transaction{}, fmt.Errorf(FailWriting, err)
 	}
 
 	return t, nil
 }
 
 func (r *repository) UpdateTranCode(id int, tranCode string) (domain.Transaction, error) {
+	var lista []domain.Transaction
+
+	if err := r.db.Read(&lista); err != nil {
+		return domain.Transaction{}, fmt.Errorf(FailReading)
+	}
+
 	updated := false
 	var t domain.Transaction
 	for i := range lista {
@@ -83,13 +130,23 @@ func (r *repository) UpdateTranCode(id int, tranCode string) (domain.Transaction
 	}
 
 	if !updated {
-		return domain.Transaction{}, fmt.Errorf("la transaccion con id %d no existe", id)
+		return domain.Transaction{}, fmt.Errorf(TransactionNotFound, id)
+	}
+
+	if err := r.db.Write(lista); err != nil {
+		return domain.Transaction{}, fmt.Errorf(FailWriting, err)
 	}
 
 	return t, nil
 }
 
 func (r *repository) UpdateAmount(id int, amount float64) (domain.Transaction, error) {
+	var lista []domain.Transaction
+
+	if err := r.db.Read(&lista); err != nil {
+		return domain.Transaction{}, fmt.Errorf(FailReading)
+	}
+
 	updated := false
 	var t domain.Transaction
 	for i := range lista {
@@ -104,10 +161,20 @@ func (r *repository) UpdateAmount(id int, amount float64) (domain.Transaction, e
 		return domain.Transaction{}, fmt.Errorf("la transaccion con id %d no existe", id)
 	}
 
+	if err := r.db.Write(lista); err != nil {
+		return domain.Transaction{}, fmt.Errorf(FailWriting, err)
+	}
+
 	return t, nil
 }
 
 func (r *repository) Delete(id int) error {
+	var lista []domain.Transaction
+
+	if err := r.db.Read(&lista); err != nil {
+		return fmt.Errorf(FailReading)
+	}
+
 	deleted := false
 	var index int
 	for i := range lista {
@@ -118,13 +185,14 @@ func (r *repository) Delete(id int) error {
 	}
 
 	if !deleted {
-		return fmt.Errorf("la transaccion con id %d no existe", id)
+		return fmt.Errorf(TransactionNotFound, id)
 	}
 
 	lista = append(lista[:index], lista[index+1:]...)
+
+	if err := r.db.Write(lista); err != nil {
+		return fmt.Errorf(FailWriting, err)
+	}
+
 	return nil
 }
-
-// variables globales
-var lista []domain.Transaction
-var lastID int

@@ -3,12 +3,23 @@ package main
 import (
 	"arquitectura/cmd/server/handler"
 	"arquitectura/internal/transactions"
+	"arquitectura/pkg/store"
+	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	repository := transactions.NewRepository()
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("error al intentar cargar archivo .env")
+	}
+	db := store.NewStore("transactions.json")
+	if err := db.Ping(); err != nil {
+		log.Fatal("error al cargar archivo")
+	}
+	repository := transactions.NewRepository(db)
 	service := transactions.NewService(repository)
 	transactions := handler.NewTransaction(service)
 

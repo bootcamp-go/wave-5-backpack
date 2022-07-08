@@ -5,6 +5,7 @@ import (
 	"arquitectura/internal/transactions"
 	"errors"
 	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -64,7 +65,7 @@ func NewTransaction(s transactions.Service) *Transaction {
 func (t *Transaction) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
-		if token != "12345" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(401, gin.H{
 				"error": "token inválido",
 			})
@@ -84,7 +85,7 @@ func (t *Transaction) GetAll() gin.HandlerFunc {
 func (t *Transaction) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
-		if token != "12345" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(401, gin.H{"error": "token inválido"})
 			return
 		}
@@ -107,7 +108,7 @@ func (t *Transaction) Store() gin.HandlerFunc {
 func (t *Transaction) Update() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
-		if token != "12345" {
+		if token != os.Getenv("TOKEN") {
 			c.JSON(401, gin.H{"error": "Token inválido"})
 			return
 		}
@@ -137,7 +138,7 @@ func (t *Transaction) Update() gin.HandlerFunc {
 func (t *Transaction) UpdateFields() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
-		if token != "12345" {
+		if token != os.Getenv("TOKEN") {
 			c.JSON(401, gin.H{"error": "Token inválido"})
 			return
 		}
@@ -182,7 +183,7 @@ func (t *Transaction) UpdateFields() gin.HandlerFunc {
 func (t *Transaction) Delete() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
-		if token != "12345" {
+		if token != os.Getenv("TOKEN") {
 			c.JSON(401, gin.H{"error": "Token inválido"})
 			return
 		}
