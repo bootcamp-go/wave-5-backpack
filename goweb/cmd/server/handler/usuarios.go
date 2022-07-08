@@ -13,6 +13,16 @@ import (
 type request struct {
 	Nombre        string  `json:"nombre" binding:"required"`
 	Apellido      string  `json:"apellido" binding:"required"`
+	Email         string  `json:"email" binding:"required"`
+	Edad          int     `json:"edad" binding:"required"`
+	Altura        float64 `json:"altura" binding:"required"`
+	Activo        bool    `json:"activo" binding:"required"`
+	FechaCreacion string  `json:"fecha_de_creacion" binding:"required"`
+}
+
+type reqPatch struct {
+	Nombre        string  `json:"nombre" binding:"required"`
+	Apellido      string  `json:"apellido" binding:"required"`
 	Email         string  `json:"email" `
 	Edad          int     `json:"edad" `
 	Altura        float64 `json:"altura" `
@@ -44,7 +54,7 @@ func (c *Usuarios) UpdateNameAndLastName() gin.HandlerFunc {
 			})
 			return
 		}
-		var req request
+		var req reqPatch
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(400, gin.H{"eror": err.Error()})
 			return
