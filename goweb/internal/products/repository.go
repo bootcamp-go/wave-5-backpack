@@ -24,9 +24,9 @@ func NewRepository() Repository {
 
 func (r repository) GetAll() ([]domain.Product, error) {
 
-	if err := Read(); err != nil {
-		return nil, err
-	}
+	// if err := Read(); err != nil {
+	// 	return nil, err
+	// }
 
 	return products, nil
 }

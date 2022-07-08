@@ -13,7 +13,7 @@ func main() {
 
 	router := gin.Default()
 
-	group := router.Group("/products")
+	group := router.Group("products")
 
 	group.GET("/", product.GetAll())
 	//router.GET("/products/", GetFilter)
