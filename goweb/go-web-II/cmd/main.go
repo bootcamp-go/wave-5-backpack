@@ -15,6 +15,8 @@ func main(){
 	rUser := router.Group("users")
 	rUser.GET("/", handler.GetAll())
 	rUser.POST("/", handler.Store())
+	rUser.PUT("/:id", handler.Update())
+	rUser.DELETE("/id", handler.Delete())
 	router.Run()
 	
 }

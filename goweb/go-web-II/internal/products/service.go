@@ -12,6 +12,7 @@ type Service interface {
 	GetAll() ([]*domain.User, error)
 	Store(age int, name, surname, email, created string, active bool) (*domain.User, error)
 	Update(id, age int, name, surname, email, created string, active bool )(*domain.User, error)
+	Delete(id int) error
 }
 
 type service struct {
@@ -22,6 +23,10 @@ func NewService(r Repository) Service {
 	return &service{
 		repository: r,
 	}
+}
+
+func (s *service) Delete(id int) error {
+	return s.repository.Delete(id)
 }
 
 func (s *service) Update(id, age int, name, surname, email, created string, active bool )(*domain.User, error){

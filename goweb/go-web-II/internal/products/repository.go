@@ -22,6 +22,7 @@ type Repository interface {
 	LastId() (int, error)
 	Store(id, age int, name, surname, email, created string, active bool) (*domain.User, error)
 	Update(id, age int, name, surname, email, created string, active bool )(*domain.User, error)
+	Delete(id int) error 
 }
 type repository struct {}
 
@@ -33,6 +34,24 @@ var lastId int
 func NewRepository() Repository {
 	return &repository{}
 }
+
+
+func (r *repository)Delete(id int) error {
+	deleted := false
+	var index int 
+	for i := range users {
+		if users[i].Id == id {
+			index = i
+			deleted = true
+		}
+	}
+	if !deleted {
+		return fmt.Errorf("producto %d no encotrado", id)
+	}
+	users = append(users[:index], users[index+1:]...)  /*agarra users desde el principio hasta el indice del user encontrado y lo "recorta" y lo sigue desde el indice + 1*/
+	return nil
+}
+
 
 func (r *repository)Update(id, age int, name, surname, email, created string, active bool )(*domain.User, error){
 	u := &domain.User{Name: name, Surname: surname, Email: email, Created: created, Age: age, Active: active}
