@@ -57,6 +57,7 @@ func main() {
 
 	fmt.Println("Ingrese el numero del mes")
 	var mes int
+
 	fmt.Scanln(&mes)
 	switch mes {
 	case 1:

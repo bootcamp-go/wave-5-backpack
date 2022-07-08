@@ -1,0 +1,12 @@
+
+    {
+    "id": 1,
+    "nombre": "Celular",
+    "color": "Rojo",
+    "precio": 500.00,
+    "stock": 5,
+    "codigo": "R4T5ERFD2",
+    "publicado": true,
+    "fecha_creacion": "6/07/2022"
+    }
+
