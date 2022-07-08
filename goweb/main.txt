@@ -1,0 +1,233 @@
+/*
+Crea dentro de la carpeta go-web un archivo llamado main.go
+Crea un servidor web con Gin que te responda un JSON que tenga una clave “message” y diga Hola seguido por tu nombre.
+Pegale al endpoint para corroborar que la respuesta sea la correcta.
+
+
+package main
+
+import "github.com/gin-gonic/gin"
+
+func main() {
+
+	router := gin.Default()
+
+	// Captura la solicitud GET “/hello-world”
+	router.GET("/saludar", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "Hello Naim!",
+		})
+	})
+	router.Run()
+}
+
+*/
+
+/*
+Ya habiendo creado y probado nuestra API que nos saluda, generamos una ruta que devuelve un listado de la temática elegida.
+Dentro del “main.go”, crea una estructura según la temática con los campos correspondientes.
+Genera un endpoint cuya ruta sea /temática (en plural). Ejemplo: “/productos”
+Genera un handler para el endpoint llamado “GetAll”.
+Crea una slice de la estructura, luego devuelvela a través de nuestro endpoint.
+
+package main
+
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
+
+//import "net/http"
+//import "log"
+//import "encoding/json"
+
+type product struct {
+	Id        int
+	Name      string
+	Color     string
+	Price     int
+	Stock     int
+	Code      string
+	Published bool
+	Date      string
+}
+
+func main() {
+	p := product{
+		Id:        1,
+		Name:      "MacBook Pro",
+		Color:     "Gris",
+		Price:     1500,
+		Stock:     24,
+		Code:      "aw23a",
+		Published: true,
+		Date:      "06/07/2022",
+	}
+
+	var slic []product
+	slic = append(slic, p)
+
+	router := gin.Default()
+	router.GET("/GetAll", func(c *gin.Context) {
+		c.JSON(200, slic)
+	})
+
+	router.GET("/productos", func(c *gin.Context) {
+		c.String(http.StatusOK, "ACA SE LISTARAN LOS PRODUCTOS!")
+	})
+
+	router.Run()
+
+}
+*/
+/*
+Según la temática elegida, necesitamos agregarles filtros a nuestro endpoint, el mismo se tiene que poder filtrar por todos los campos.
+Dentro del handler del endpoint, recibí del contexto los valores a filtrar.
+Luego genera la lógica de filtrado de nuestro array.
+Devolver por el endpoint el array filtrado.
+
+*/
+
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"os"
+	"strconv"
+)
+
+var products []product
+
+type product struct {
+	Id        int    `json:"id"`
+	Name      string `json:"name"`
+	Color     string `json:"color"`
+	Price     int    `json:"price"`
+	Stock     int    `json:"stock"`
+	Code      string `json:"code"`
+	Published bool   `json:"published"`
+	Date      string `json:"date"`
+}
+
+func getAll(c *gin.Context) {
+	c.JSON(200, gin.H{"data": products})
+}
+
+func getById(c *gin.Context) {
+	id, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
+		})
+		return
+	}
+	for _, prod := range products {
+		if prod.Id == id {
+			c.JSON(http.StatusAccepted, prod)
+		}
+	}
+	c.JSON(404, gin.H{"error": "ID no existente"})
+}
+
+func getByQuery(c *gin.Context) {
+	monto, _ := strconv.Atoi(c.Query("price"))
+	stk, _ := strconv.Atoi(c.Query("stock"))
+
+	for _, t := range products {
+		if t.Name == c.Query("name") {
+			c.JSON(http.StatusAccepted, t)
+		}
+		if t.Color == c.Query("color") {
+			c.JSON(http.StatusAccepted, t)
+		}
+		if t.Price == monto {
+			c.JSON(http.StatusAccepted, t)
+		}
+		if t.Stock == stk {
+			c.JSON(http.StatusAccepted, t)
+		}
+		if t.Code == c.Query("code") {
+			c.JSON(http.StatusAccepted, t)
+		}
+		if t.Date == c.Query("date") {
+			c.JSON(http.StatusAccepted, t)
+		}
+	}
+}
+
+func postTrans() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		token := c.GetHeader("token")
+		if token != "12345" {
+			c.JSON(401, gin.H{"error": "No tiene permisos para realizar la petición solicitada ;)"})
+			return
+		}
+		var req product
+		if err := c.ShouldBindJSON(&req); err != nil {
+			if req.Name == "" {
+				c.JSON(404, gin.H{"error": "El campo Name es requerido"})
+			}
+			if req.Color == "" {
+				c.JSON(404, gin.H{"error": "El campo Color es requerido"})
+			}
+			if req.Price == 0 {
+				c.JSON(404, gin.H{"error": "El campo price es requerido"})
+			}
+			if req.Stock == 0 {
+				c.JSON(404, gin.H{"error": "El campo stock es requerido"})
+			}
+			if req.Code == "" {
+				c.JSON(404, gin.H{"error": "El campo code es requerido"})
+			}
+			if req.Date == "" {
+				c.JSON(404, gin.H{"error": "El campo date es requerido"})
+			}
+			// c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			// fmt.Println(string(err.Error()))
+			return
+		}
+
+		maxId := 0
+
+		for i, value := range products {
+			if value.Id > maxId {
+				maxId = value.Id
+				fmt.Printf("Entro %d \n", i)
+			}
+		}
+
+		lastID := maxId + 1
+		req.Id = lastID
+		products = append(products, req)
+		c.JSON(http.StatusAccepted, products)
+	}
+}
+
+func main() {
+	data, err := os.ReadFile("./Productos.json")
+	if err != nil {
+		fmt.Errorf("Se produjo un error al leer el archivo\n")
+	}
+	err = json.Unmarshal(data, &products)
+	if err != nil {
+		fmt.Errorf("Se produjo un error al traducir a Go\n")
+	}
+
+	router := gin.Default()
+
+	router.GET("/nombre", func(c *gin.Context) {
+		name := c.Query("name")
+		c.String(200, "Mi nombre es "+name)
+	})
+
+	router.GET("/productos", getAll)
+	router.GET("/productos/filtros", getByQuery)
+	router.GET("/productos/:id", getById)
+
+	router.POST("/productos", postTrans())
+
+	router.Run(":8080")
+}

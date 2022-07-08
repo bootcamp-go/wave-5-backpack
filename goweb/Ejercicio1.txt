@@ -1,0 +1,54 @@
+/*
+Según la temática elegida, genera un JSON que cumpla con las siguientes claves según la temática.
+Los productos varían por id, nombre, color, precio, stock, código (alfanumérico), publicado (si-no), fecha de creación.
+Los usuarios varían por id, nombre, apellido, email, edad, altura, activo (si-no), fecha de creación.
+Las transacciones: id, código de transacción (alfanumérico), moneda, monto, emisor (string), receptor (string), fecha de transacción.
+Dentro de la carpeta go-web crea un archivo temática.json, el nombre tiene que ser el tema elegido, ej: products.json.
+Dentro del mismo escribí un JSON que permita tener un array de productos, usuarios o transacciones con todas sus variantes.
+*/
+
+package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"os"
+)
+
+type product struct {
+	Id        int
+	Name      string
+	Color     string
+	Price     int
+	Stock     int
+	Code      string
+	Published bool
+	Date      string
+}
+
+func main() {
+	p := product{
+		Id:        1,
+		Name:      "MacBook Pro",
+		Color:     "Gris",
+		Price:     1500,
+		Stock:     24,
+		Code:      "aw23a",
+		Published: true,
+		Date:      "06/07/2022",
+	}
+
+	jsonData, err := json.Marshal(p)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	err1 := os.WriteFile("./Productos.json", jsonData, 0644)
+	if err1 != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Println(string(jsonData))
+
+}
