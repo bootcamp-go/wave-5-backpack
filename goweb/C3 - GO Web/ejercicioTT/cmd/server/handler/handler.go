@@ -33,6 +33,9 @@ func NewUser(s users.Service) *Usuarios {
 func (u *Usuarios) Update() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
+		//Ejercicio 1
+		//Agregando variable de entorno y
+		//accediendo a su valor
 		if token != os.Getenv("TOKEN") {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 			return
@@ -88,6 +91,9 @@ func (u *Usuarios) Update() gin.HandlerFunc {
 func (u *Usuarios) UpdateLastAge() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
+		//Ejercicio 1
+		//Agregando variable de entorno y
+		//accediendo a su valor
 		if token != os.Getenv("TOKEN") {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 			return
@@ -128,6 +134,9 @@ func (u *Usuarios) UpdateLastAge() gin.HandlerFunc {
 func (u *Usuarios) Delete() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
+		//Ejercicio 1
+		//Agregando variable de entorno y
+		//accediendo a su valor
 		if token != os.Getenv("TOKEN") {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 			return
@@ -152,6 +161,9 @@ func (u *Usuarios) Delete() gin.HandlerFunc {
 func (u *Usuarios) GetAll() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
+		//Ejercicio 1
+		//Agregando variable de entorno y
+		//accediendo a su valor
 		if token != os.Getenv("TOKEN") {
 			c.JSON(401, gin.H{"error": "Token inválido"})
 			return
@@ -169,6 +181,9 @@ func (u *Usuarios) GetAll() gin.HandlerFunc {
 func (u *Usuarios) Store() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
+		//Ejercicio 1
+		//Agregando variable de entorno y
+		//accediendo a su valor
 		if token != os.Getenv("TOKEN") {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 			return

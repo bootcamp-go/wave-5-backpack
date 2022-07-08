@@ -9,13 +9,10 @@ import (
 type Service interface {
 	GetAll() ([]domain.Usuarios, error)
 	Store(nombre string, apellido string, email string, edad int, altura float64, activo bool, fecha time.Time) (domain.Usuarios, error)
-	//Ejercicio 1
 	//PUT de todos los campos
 	Update(id int, nombre string, apellido string, email string, edad int, altura float64, activo bool, fecha time.Time) (domain.Usuarios, error)
-	//Ejercicio 2
 	//DELETE de un usuario de acuerdo a su id
 	Delete(id int) error
-	//Ejercicio 3
 	//PATCH de los campos apellido y edad
 	UpdateLastAge(id int, apellido string, edad int) (domain.Usuarios, error)
 }

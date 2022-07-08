@@ -11,6 +11,9 @@ import (
 )
 
 func main() {
+	//Ejercicio 1
+	//Tomando los valores del .env como valores
+	//de entorno
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("error al intentar cargar archivo .env")

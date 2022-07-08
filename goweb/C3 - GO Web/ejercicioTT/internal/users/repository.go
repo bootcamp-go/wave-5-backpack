@@ -17,13 +17,10 @@ type Repository interface {
 	GetAll() ([]domain.Usuarios, error)
 	Store(id int, nombre string, apellido string, email string, edad int, altura float64, activo bool, fecha time.Time) (domain.Usuarios, error)
 	LastID() (int, error)
-	//Ejercicio 1
 	//PUT de todos los campos
 	Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha time.Time) (domain.Usuarios, error)
-	//Ejercicio 2
 	//DELETE de un usuario de acuerdo a su id
 	Delete(id int) error
-	//Ejercicio 3
 	//PATCH de los campos apellido y edad
 	UpdateLastAge(id int, apellido string, edad int) (domain.Usuarios, error)
 }
@@ -56,6 +53,8 @@ func (r *repository) Store(id int, nombre, apellido, email string, edad int, alt
 	u := domain.Usuarios{Id: id, Nombre: nombre, Apellido: apellido, Email: email, Edad: edad, Altura: altura, Activo: activo, Fecha: fecha}
 	us = append(us, u)
 
+	//Ejercicio 2
+	//Guardando info en archivo
 	if err := r.db.Write(us); err != nil {
 		return domain.Usuarios{}, fmt.Errorf(FailWriting, err)
 	}
@@ -66,6 +65,8 @@ func (r *repository) Store(id int, nombre, apellido, email string, edad int, alt
 func (r *repository) Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha time.Time) (domain.Usuarios, error) {
 	var us []domain.Usuarios
 
+	//Ejercicio 3
+	//Leyendo información del archivo generado
 	if err := r.db.Read(&us); err != nil {
 		return domain.Usuarios{}, fmt.Errorf(FailReading)
 	}
