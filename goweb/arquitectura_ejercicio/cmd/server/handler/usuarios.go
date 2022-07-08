@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/anesquivel/wave-5-backpack/goweb/arquitectura_ejercicio/internal/domain"
@@ -35,7 +36,7 @@ func NewUsuario(u usuarios.Service) *Usuario {
 func (u *Usuario) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "El token es inválido",
 			})
@@ -55,7 +56,7 @@ func (u *Usuario) GetAll() gin.HandlerFunc {
 func (c *Usuario) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token inválido"})
 			return
 		}
@@ -78,7 +79,7 @@ func (c *Usuario) Store() gin.HandlerFunc {
 func (c *Usuario) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token inválido"})
 			return
 		}
@@ -104,7 +105,7 @@ func (c *Usuario) Update() gin.HandlerFunc {
 func (c *Usuario) PatchLastNameAge() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token inválido"})
 			return
 		}
@@ -130,7 +131,7 @@ func (c *Usuario) PatchLastNameAge() gin.HandlerFunc {
 func (c *Usuario) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token inválido"})
 			return
 		}
