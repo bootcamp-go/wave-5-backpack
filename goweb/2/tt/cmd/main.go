@@ -18,7 +18,7 @@ func main() {
 
 	products := router.Group("/products")
 	{
-		products.GET("", ph.GetAll)
+		products.GET("", ph.GetAll())
 		products.POST("", ph.Post())
 	}
 

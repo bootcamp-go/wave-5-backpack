@@ -23,23 +23,25 @@ func NewHandler(s service.Service) *Handler {
 	return &Handler{s: s}
 }
 
-func (h *Handler) GetAll(ctx *gin.Context) {
-	if ctx.GetHeader("token") != "123" {
-		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"message": "No tiene permisos para realizar la peticion solicitada",
-		})
-		return
-	}
+func (h *Handler) GetAll() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		if ctx.GetHeader("token") != "123" {
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"message": "No tiene permisos para realizar la peticion solicitada",
+			})
+			return
+		}
 
-	products, err := h.s.ListAll()
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"message": err.Error(),
-		})
-		return
-	}
+		products, err := h.s.ListAll()
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, gin.H{
+				"message": err.Error(),
+			})
+			return
+		}
 
-	ctx.JSON(http.StatusOK, products)
+		ctx.JSON(http.StatusOK, products)
+	}
 }
 
 func (h *Handler) Post() gin.HandlerFunc {
