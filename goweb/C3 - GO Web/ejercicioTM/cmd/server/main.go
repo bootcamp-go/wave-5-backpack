@@ -17,7 +17,7 @@ func main() {
 	us.GET("/", user.GetAll())
 	us.POST("/", user.Store())
 	us.PUT("/:id", user.Update())
-	us.PATCH("/:id", user.UpdateName())
+	us.PATCH("/:id", user.UpdateLastAge())
 	us.DELETE("/:id", user.Delete())
 
 	r.Run()

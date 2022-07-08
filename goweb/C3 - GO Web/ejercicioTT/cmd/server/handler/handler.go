@@ -1,11 +1,13 @@
 package handler
 
 import (
-	"ejercicioTM/internal/users"
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
+
+	users "ejercicioTT/internal/users"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,7 +33,7 @@ func NewUser(s users.Service) *Usuarios {
 func (u *Usuarios) Update() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 			return
 		}
@@ -86,7 +88,7 @@ func (u *Usuarios) Update() gin.HandlerFunc {
 func (u *Usuarios) UpdateLastAge() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 			return
 		}
@@ -126,7 +128,7 @@ func (u *Usuarios) UpdateLastAge() gin.HandlerFunc {
 func (u *Usuarios) Delete() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 			return
 		}
@@ -150,7 +152,7 @@ func (u *Usuarios) Delete() gin.HandlerFunc {
 func (u *Usuarios) GetAll() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			c.JSON(401, gin.H{"error": "Token inválido"})
 			return
 		}
@@ -167,12 +169,17 @@ func (u *Usuarios) GetAll() gin.HandlerFunc {
 func (u *Usuarios) Store() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
 			return
 		}
 
 		var req request
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(400, gin.H{"error": err.Error()})
+			return
+		}
+
 		if req.Nombre == "" {
 			c.JSON(400, gin.H{"error": "El nombre del usuario es requerido"})
 			return
