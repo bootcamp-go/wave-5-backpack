@@ -6,8 +6,8 @@ import (
 
 type Service interface {
 	GetAll() ([]domain.Product, error)
-	Store(nombre string, color string, precio float64, stock int, codigo string, publicado bool, FechaCreacion string) (domain.Product, error)
-	UpdateAll(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool, FechaCreacion string) (domain.Product, error)
+	Store(nombre string, color string, precio float64, stock int, codigo string, publicado bool) (domain.Product, error)
+	UpdateAll(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool) (domain.Product, error)
 	Delete(id int) error
 	Update(id int, nombre string, precio float64) (domain.Product, error)
 }
@@ -31,13 +31,13 @@ func (s service) GetAll() ([]domain.Product, error) {
 	return products, nil
 }
 
-func (s service) Store(nombre string, color string, precio float64, stock int, codigo string, publicado bool, FechaCreacion string) (domain.Product, error) {
+func (s service) Store(nombre string, color string, precio float64, stock int, codigo string, publicado bool) (domain.Product, error) {
 	newID, err := s.repository.LastID()
 	if err != nil {
 		return domain.Product{}, err
 	}
 
-	newProduct, err := s.repository.Store(newID, nombre, color, precio, stock, codigo, publicado, FechaCreacion)
+	newProduct, err := s.repository.Store(newID, nombre, color, precio, stock, codigo, publicado)
 	if err != nil {
 		return domain.Product{}, err
 	}
@@ -45,8 +45,8 @@ func (s service) Store(nombre string, color string, precio float64, stock int, c
 	return newProduct, nil
 }
 
-func (s service) UpdateAll(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool, FechaCreacion string) (domain.Product, error) {
-	product, err := s.repository.UpdateAll(id, nombre, color, precio, stock, codigo, publicado, FechaCreacion)
+func (s service) UpdateAll(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool) (domain.Product, error) {
+	product, err := s.repository.UpdateAll(id, nombre, color, precio, stock, codigo, publicado)
 
 	if err != nil {
 		return product, err
