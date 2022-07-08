@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"goweb/clase1_clase2/internal/products"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -72,12 +73,110 @@ func (p *Product) Store() gin.HandlerFunc {
 			return
 		}
 
+		if err := validateFields(req); err != nil {
+			ctx.JSON(401, gin.H{"error: ": err.Error()})
+			return
+		}
+
 		pr, err := p.service.Store(req.Nombre, req.Color, req.Precio, req.Stock, req.Codigo, req.Publicado, req.Fecha)
 		if err != nil {
 			ctx.JSON(404, gin.H{"error": err.Error()})
 			return
 		}
 		ctx.JSON(200, pr)
+	}
+}
+
+func (p *Product) Update() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req request
+		token := ctx.GetHeader("token")
+
+		if err := validateToken(token); err != nil {
+			ctx.JSON(400, gin.H{"error: ": err.Error()})
+			return
+		}
+
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(400, gin.H{"error: ": err.Error()})
+			return
+		}
+
+		if err := validateFields(req); err != nil {
+			ctx.JSON(401, gin.H{"error: ": err.Error()})
+			return
+		}
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(400, gin.H{"error: ": err.Error()})
+			return
+		}
+		ps, err := p.service.Update(id, req.Nombre, req.Color, req.Precio, req.Stock, req.Codigo, req.Publicado, req.Fecha)
+		if err != nil {
+			ctx.JSON(404, gin.H{"error: ": err.Error()})
+			return
+		}
+		ctx.JSON(200, ps)
+	}
+}
+
+func (p *Product) Delete() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		token := ctx.GetHeader("token")
+
+		if err := validateToken(token); err != nil {
+			ctx.JSON(400, gin.H{"error: ": err.Error()})
+			return
+		}
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(400, gin.H{"error: ": err.Error()})
+			return
+		}
+
+		ps, err := p.service.Delete(id)
+		if err != nil {
+			ctx.JSON(404, gin.H{"error: ": err.Error()})
+			return
+		}
+		ctx.JSON(200, ps)
+	}
+}
+
+func (p *Product) UpdateFields() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req request
+		token := ctx.GetHeader("token")
+		if err := validateToken(token); err != nil {
+			ctx.JSON(400, gin.H{"error: ": err.Error()})
+		}
+
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(400, gin.H{"error: ": err.Error()})
+		}
+
+		if req.Nombre == "" {
+			ctx.JSON(401, gin.H{"error: ": "el campo nombre es requerido"})
+		}
+
+		if req.Precio == 0 {
+			ctx.JSON(401, gin.H{"error: ": "el campo precio debe ser mayor de 0"})
+		}
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(400, gin.H{"error: ": err.Error()})
+			return
+		}
+
+		ps, err := p.service.UpdateFields(id, req.Nombre, req.Precio)
+		if err != nil {
+			ctx.JSON(400, gin.H{"error: ": err.Error()})
+		}
+		ctx.JSON(200, ps)
 	}
 }
 
@@ -93,8 +192,10 @@ func validateToken(token string) error {
 
 func (p *Product) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		id := ctx.Param("id")
-
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(400, gin.H{"error: ": err.Error()})
+		}
 		token := ctx.GetHeader("token")
 
 		if err := validateToken(token); err != nil {
@@ -109,4 +210,26 @@ func (p *Product) GetById() gin.HandlerFunc {
 		}
 		ctx.JSON(200, producto)
 	}
+}
+
+func validateFields(req request) error {
+	if req.Nombre == "" {
+		return errors.New("el campo nombre es requerido")
+	}
+	if req.Color == "" {
+		return errors.New("el campo color es requerido")
+	}
+	if req.Precio == 0 {
+		return errors.New("el campo precio debe ser mayor de 0")
+	}
+	if req.Stock == 0 {
+		return errors.New("el campo stock debe ser mayor de 0")
+	}
+	if req.Codigo == "" {
+		return errors.New("el campo codigo es requerido")
+	}
+	if req.Fecha == "" {
+		return errors.New("el campo fecha es requerido")
+	}
+	return nil
 }
