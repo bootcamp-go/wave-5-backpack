@@ -10,16 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Transaccion struct {
-	Id                 int
-	Codigo_transaccion string  `json:"codigo_transaccion" binding:"required"`
-	Moneda             string  `json:"moneda"`
-	Monto              float64 `json:"monto`
-	Emisor             string  `json:"emisor"`
-	Receptor           string  `json:"receptor"`
-	Fecha_transaccion  string  `json:"fecha_transaccion"`
-}
-
 var id int = 3
 
 func data() []Transaccion {
