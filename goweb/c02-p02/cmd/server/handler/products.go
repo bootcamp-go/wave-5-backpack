@@ -1,8 +1,7 @@
 package handler
 
 import (
-	"github.com/abelardolugo/go-web/internal/products"
-
+	"github.com/bootcamp-go/wave-5-backpack/tree/lugo_abelardo/internal/products"
 	"github.com/gin-gonic/gin"
 )
 

@@ -1,6 +1,6 @@
 package products
 
-import "github.com/abelardolugo/go-web/internal/domain"
+import "github.com/bootcamp-go/wave-5-backpack/tree/lugo_abelardo/internal/domain"
 
 type Service interface {
 	GetAll() ([]domain.Product, error)

@@ -1,16 +1,15 @@
 package main
 
 import (
-	"github.com/abelardolugo/go-web/cmd/server/handler"
-	"github.com/abelardolugo/go-web/internal/products"
-
+	"github.com/bootcamp-go/wave-5-backpack/tree/lugo_abelardo/cmd/server/handler"
+	"github.com/bootcamp-go/wave-5-backpack/tree/lugo_abelardo/internal/products"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 	repo := products.NewRepository()
 	service := products.NewService(repo)
-	p := handler.NewProduct(service)
+	p := handler.NewProduct((service))
 
 	r := gin.Default()
 	pr := r.Group("/products")
