@@ -7,6 +7,7 @@ import (
 type Service interface{
 	GetAllUsers() ([]domain.User, error)
 	GetUserById(id int) (domain.User, error)
+	StoreUser(name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error)
 }
 
 type service struct {
@@ -35,6 +36,24 @@ func (s *service) GetUserById(id int) (domain.User, error) {
 	}
 
 	return user, nil
+}
+
+func (s *service) StoreUser(name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error){
+	//lo primero que hago es generar un ID
+	lastID, err := s.repository.LastID()
+	if err!= nil{
+		return domain.User{}, err
+	}
+
+	lastID++
+
+	newUser, err := s.repository.StoreUser(lastID, name, lastname, email, age, height, active, createdat)
+	if err!= nil{
+		return domain.User{}, err
+	}
+
+	return newUser, nil
+
 }
 
 
