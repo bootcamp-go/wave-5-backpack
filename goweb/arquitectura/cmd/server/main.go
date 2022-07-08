@@ -13,7 +13,11 @@ func main() {
 	transactions := handler.NewTransaction(service)
 
 	router := gin.Default()
-	router.POST("/transactions", transactions.Store())
-	router.GET("/transactions", transactions.GetAll())
+	tr := router.Group("/transactions")
+	tr.POST("/", transactions.Store())
+	tr.GET("/", transactions.GetAll())
+	tr.PUT("/:id", transactions.Update())
+	tr.DELETE("/:id", transactions.Delete())
+	tr.PATCH("/:id", transactions.UpdateFields())
 	router.Run()
 }

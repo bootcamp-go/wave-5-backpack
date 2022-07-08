@@ -7,6 +7,9 @@ import (
 type Service interface {
 	GetAll() ([]domain.Transaction, error)
 	Store(tranCode, currency string, amount float64, transmitter, receiver, tranDate string) (domain.Transaction, error)
+	Update(id int, tranCode, currency string, amount float64, transmitter, receiver, tranDate string) (domain.Transaction, error)
+	UpdateFields(id int, tranCode string, amount float64) (domain.Transaction, error)
+	Delete(id int) error
 }
 
 type service struct {
@@ -41,4 +44,32 @@ func (s *service) Store(tranCode, currency string, amount float64, transmitter, 
 	}
 
 	return transaction, nil
+}
+
+func (s *service) Update(id int, tranCode, currency string, amount float64, transmitter, receiver, tranDate string) (domain.Transaction, error) {
+	return s.repository.Update(id, tranCode, currency, amount, transmitter, receiver, tranDate)
+}
+
+func (s *service) UpdateFields(id int, tranCode string, amount float64) (domain.Transaction, error) {
+	var tran domain.Transaction
+	if tranCode != "" {
+		t, err := s.repository.UpdateTranCode(id, tranCode)
+		if err != nil {
+			return t, err
+		}
+		tran = t
+	}
+	if amount != 0 {
+		t, err := s.repository.UpdateAmount(id, amount)
+		if err != nil {
+			return t, nil
+		}
+		tran = t
+	}
+
+	return tran, nil
+}
+
+func (s *service) Delete(id int) error {
+	return s.repository.Delete(id)
 }
