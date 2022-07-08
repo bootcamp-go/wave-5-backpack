@@ -19,6 +19,8 @@ func main() {
 		users.GET("/", p.GetAll())
 		users.GET("/:id", p.GetById())
 		users.POST("/", p.Store())
+		users.PUT("/:id", p.Update())
+		users.DELETE("/:id", p.Delete())
 	}
 
 	router.Run(":8080")

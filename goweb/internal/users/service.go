@@ -10,6 +10,8 @@ type Service interface {
 	GetAll() ([]domain.User, error)
 	Store(Nombre string, Apellido string, Email string, Edad int, Altura float64, Activo bool, FechaCreacion string) (domain.User, error)
 	GetById(id int) (domain.User, error)
+	Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error)
+	Delete(id int) error
 }
 
 type service struct {
@@ -53,4 +55,12 @@ func (s *service) GetById(id int) (domain.User, error) {
 		return domain.User{}, fmt.Errorf("no se pudo encontrar el usuario con el id: %d", id)
 	}
 	return user, nil
+}
+
+func (s *service) Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error) {
+	return s.repository.Update(id, nombre, apellido, email, edad, altura, activo, fechaCreacion)
+}
+
+func (s *service) Delete(id int) error {
+	return s.repository.Delete(id)
 }

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"goweb/internal/users"
 	"net/http"
 	"strconv"
@@ -31,7 +32,6 @@ func NewProduct(s users.Service) *User {
 // Funciones de clases anteriores
 // ==================================
 
-
 func (u *User) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		users, err := u.service.GetAll()
@@ -39,7 +39,6 @@ func (u *User) GetAll() gin.HandlerFunc {
 			ctx.JSON(500, gin.H{"error": err.Error()})
 			return
 		}
-
 
 		if len(users) == 0 {
 			ctx.JSON(500, gin.H{"error": "No se hallaron resultados"})
@@ -67,7 +66,6 @@ func (u *User) GetById() gin.HandlerFunc {
 	}
 }
 
-
 func validateToken(ctx *gin.Context) bool {
 	if token := ctx.GetHeader("token"); token != "62c5b68a0cc23a33375c85f8" {
 		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "NO tiene permisos para realizar la petición solicitada"})
@@ -86,8 +84,7 @@ func ValidateErrors(campo string, v validator.FieldError) string {
 	return "Error desconoodido..."
 }
 
-
-func (p *User) Store() gin.HandlerFunc {
+func (u *User) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req Request
 
@@ -102,7 +99,7 @@ func (p *User) Store() gin.HandlerFunc {
 			return
 		}
 
-		user, err := p.service.Store(
+		user, err := u.service.Store(
 			req.Nombre,
 			req.Apellido,
 			req.Email,
@@ -118,5 +115,57 @@ func (p *User) Store() gin.HandlerFunc {
 		}
 
 		ctx.JSON(http.StatusOK, user)
+	}
+}
+
+func (u *User) Update() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		if !validateToken(ctx) {
+			return
+		}
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error: ": "Ingrese un ID valido"})
+			return
+		}
+
+		var req Request
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			for _, fieldError := range err.(validator.ValidationErrors) {
+				ctx.JSON(400, ValidateErrors(fieldError.Field(), fieldError))
+			}
+			return
+		}
+
+		user, err := u.service.Update(int(id), req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, req.Activo, req.FechaCreacion)
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, user)
+	}
+}
+
+func (u *User) Delete() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		if !validateToken(ctx) {
+			return
+		}
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, gin.H{"error: ": "Ingrese un ID valido"})
+			return
+		}
+
+		err = u.service.Delete(int(id))
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{"error: ": err.Error()})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, fmt.Sprintf("El usuario con el ID %d se eliminó correctamente", id))
 	}
 }
