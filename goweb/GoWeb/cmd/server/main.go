@@ -3,12 +3,26 @@ package main
 import (
 	"GoWeb/cmd/server/handler"
 	"GoWeb/internals/transactions"
+	"GoWeb/pkg/store"
+	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	repo := transactions.NewRepository()
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("error al intentar cargar el archivo .env")
+	}
+
+	db := store.NewStore("transactions.json")
+	if err := db.Ping(); err != nil {
+		log.Fatal("error al intentar cargar el archivo")
+	}
+
+	repo := transactions.NewRepository(db)
 	service := transactions.NewService(repo)
 	tran := handler.NewTransaction(service)
 

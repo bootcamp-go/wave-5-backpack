@@ -4,6 +4,7 @@ import (
 	"GoWeb/internals/transactions"
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -28,8 +29,8 @@ func NewTransaction(t transactions.Service) *Transaction {
 
 func (tt *Transaction) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-		if token != "123456" {
+		token := ctx.GetHeader("token")
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(401, gin.H{
 				"error": "Token invalido",
 			})
@@ -48,8 +49,8 @@ func (tt *Transaction) GetAll() gin.HandlerFunc {
 
 func (tt *Transaction) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-		if token != "123456" {
+		token := ctx.GetHeader("token")
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(401, gin.H{
 				"error": "token invalido",
 			})
@@ -76,7 +77,7 @@ func (tt *Transaction) Store() gin.HandlerFunc {
 func (tt *Transaction) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(401, gin.H{
 				"error": "token no valido",
 			})
@@ -134,7 +135,7 @@ func (tt *Transaction) Update() gin.HandlerFunc {
 func (tt *Transaction) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(401, gin.H{
 				"error": "toke invalido",
 			})
@@ -163,7 +164,7 @@ func (tt *Transaction) Delete() gin.HandlerFunc {
 func (tt *Transaction) UpdateCode() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(401, gin.H{
 				"error": "token no valido",
 			})
