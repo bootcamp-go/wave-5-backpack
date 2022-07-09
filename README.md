@@ -20,7 +20,7 @@ Los pasos para empezar a utilizar la mochila son los siguientes:
 2. Cambiar al directorio del repositorio.
     <pre><code>cd wave-5-backpack</pre></code>
 3. Crear una rama con la nombre apellido_nombre.
-   
+
     *este comando crea un rama y cambia a esa*
     <pre><code>git checkout -b apellido_nombre</pre></code>
     *agregamos una linea al README para que git considere cambios*
@@ -34,3 +34,4 @@ Luego se deberá trabajar con el flujo habitual, por cada clase puede hacer los 
     <pre><code> git add .</pre></code>
     <pre><code> git commit -m "mensaje_explicativo"</pre></code>
     <pre><code> git push origin apellido_nombre</pre></code>
+## Esta es la mochila de herrera_nicolas
