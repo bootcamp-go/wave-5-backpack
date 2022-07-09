@@ -20,6 +20,7 @@ func main() {
 		rt.GET("/:id", handler.GetByID)
 
 		rt.PUT("/:id", handler.Update)
+		rt.PATCH("/:id", handler.UpdateMontoCod)
 
 		rt.POST("", handler.CreateTransaction)
 

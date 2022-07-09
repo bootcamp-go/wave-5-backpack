@@ -19,6 +19,11 @@ type request struct {
   Receptor string `json:"receptor" binding:"required"`
 }
 
+type requestPatch struct {
+	Monto float64 `json:"monto"`
+  Cod string `json:"cod_transaction"`
+}
+
 type Transaction struct {
 	service transactions.Service
 }
@@ -79,6 +84,38 @@ func (t Transaction) Update(ctx *gin.Context) {
 	transaction, err := t.service.Update(id ,req.Monto, req.Cod, req.Moneda, req.Emisor, req.Receptor)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"error" : err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, transaction)
+}
+
+func (t Transaction) UpdateMontoCod(ctx *gin.Context) {
+	token := ctx.GetHeader("token")
+
+	if token != "1245" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error" : "no tiene permisos para realizar la petición solicitada",
+		})
+		return
+	}
+
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error" : err.Error()})
+		return
+	}
+
+	var req requestPatch
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error" : err.Error()})
+		return
+	}
+
+	transaction, err := t.service.UpdateMontoCod(id, req.Monto, req.Cod)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error" : err.Error()})
 		return
 	}
 
