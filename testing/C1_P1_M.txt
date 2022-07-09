@@ -1,0 +1,23 @@
+
+1.¿Cuáles son las diferencias entre White Box y Black Box?
+BlackBox: Es cuando no conocemos el código fuente, diseño, ni implementación, se prueba la funcionalidad del código evaluando su comportamiento.
+WhiteBox: Se conoce el diseño, código e implementación del código, se evalúa la estructura, flujo y seguiridad del código.
+Lo implementamos en unit testing e integration testing
+
+
+2.Qué es un test funcional?
+Prueba el comportamiento (entradas y salidas) de nuestro software ante cada caso y comprueba que estás sean las esperadas.
+Previamente debe haberse cumplido con las pruebas unitarias
+
+
+3.¿Qué es un Test de Integración?
+Son aquellos donde vamos a probar el comportamiento de diferentes capas de nuestra aplicación, una vez que haya pasado los test unitarios cada capa o parte.
+Se evalúa que el diseño, desempeño y comportamiento.
+
+
+4.Indicar las dimensiones de calidad prioritarias en MELI.
+ - Funcionalidad
+ - Mantenibilidad
+ - Fiabilidad
+ - Performance
+ - Seguridad

@@ -1,0 +1,2 @@
+SHOW TABLES;
+SELECT * FROM movies;

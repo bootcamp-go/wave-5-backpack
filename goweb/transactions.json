@@ -1,0 +1,31 @@
+[{
+  "id": 1,
+  "transaction_code": "ALK56034L",
+  "type_of_currency": "MXN",
+  "amount": 1500,
+  "transmitter": "BBVA",
+  "receiver": "Santander",
+  "date": "01/07/2022",
+  "completed": true
+},
+  {
+    "id": 2,
+    "transaction_code": "ALK325LK7",
+    "type_of_currency": "COP",
+    "amount": 3500,
+    "transmitter": "BanRegio",
+    "receiver": "BBVA",
+    "date": "04/07/2022",
+    "completed": false
+  },
+  {
+    "id": 3,
+    "transaction_code": "ALK587HF3",
+    "type_of_currency": "MXN",
+    "amount": 8500,
+    "transmitter": "Banamex",
+    "receiver": "BanBajio",
+    "date": "06/07/2022",
+    "completed": true
+  }
+]
