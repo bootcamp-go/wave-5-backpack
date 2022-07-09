@@ -25,7 +25,6 @@ func main() {
 
 	r := gin.Default()
 	pr := r.Group("/products")
-	//pr.POST("/", p.Store())
 	pr.GET("/", p.GetAll())
 	pr.GET("/:id", p.GetById())
 	pr.GET("/filter", p.FilterList())
