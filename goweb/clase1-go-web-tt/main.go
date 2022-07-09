@@ -1,3 +1,18 @@
+/*---------------------------------------------------------------------------------*
+
+     Assignment:	Practica #1
+         Author:	Israel Fabela
+	   Language:	go1.18.3 darwin/arm64
+		  Topic:	Go Web
+
+	Description:
+		‣	Exercise 1 - Let's filter our endpoint
+		‣	Exercise 2 - Get one endpoint
+
+	© Mercado Libre - IT Bootcamp 2022
+
+----------------------------------------------------------------------------------*/
+
 package main
 
 import (

@@ -6,8 +6,9 @@
 		  Topic:	Go Web
 
 	Description:
-		‣	Exercise 1 - Generate internal package
-		‣	Exercise 2 - Generate server package
+		‣	Exercise 1 - ENV Configuration
+		‣	Exercise 2 - Save information
+		‣	Exercise 3 - Read information
 
 	© Mercado Libre - IT Bootcamp 2022
 
@@ -16,14 +17,28 @@
 package main
 
 import (
-	"goweb/clase2-go-web-tt/cmd/handler"
-	"goweb/clase2-go-web-tt/internal/transactions"
+	"goweb/clase3-go-web-tt/cmd/handler"
+	"goweb/clase3-go-web-tt/internal/transactions"
+	"goweb/clase3-go-web-tt/pkg/bank"
+	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	repo := transactions.NewRepository()
+
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("error al intentar cargar archivo .env")
+	}
+
+	db := bank.NewBank("transacciones.json")
+	if err := db.Ping(); err != nil {
+		log.Fatal("error al intentar cargar archivo")
+	}
+
+	repo := transactions.NewRepository(db)
 	service := transactions.NewService(repo)
 	t := handler.NewTransaction(service)
 
@@ -38,9 +53,12 @@ func main() {
 
 	pr := r.Group("/transactions")
 	{
-		pr.POST("/", t.Ecommerce())
 		pr.GET("/", t.GetAll())
 		pr.GET("/:id", t.GetOne())
+		pr.PUT("/:id", t.Update())
+		pr.POST("/", t.Ecommerce())
+		pr.PATCH("/:id", t.UpdateOne())
+		pr.DELETE("/:id", t.Delete())
 	}
 
 	r.Run()
