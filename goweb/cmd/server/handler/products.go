@@ -5,13 +5,14 @@ import (
 	"goweb/internal/domain"
 	"goweb/internal/products"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
 
 type request struct {
-	Id            int     `json:"id"`
+	Id            int     `json:"-"`
 	Nombre        string  `json:"nombre"`
 	Color         string  `json:"color"`
 	Precio        float64 `json:"precio"`
@@ -34,7 +35,7 @@ func InitProduct(p products.Service) *Product {
 func (c *Product) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token inválido",
 			})
@@ -54,7 +55,7 @@ func (c *Product) GetAll() gin.HandlerFunc {
 func (c *Product) CreateProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token inválido",
 			})
@@ -65,6 +66,43 @@ func (c *Product) CreateProduct() gin.HandlerFunc {
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"Error: ": err.Error(),
+			})
+			return
+		}
+
+		if req.Nombre == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": "El nombre del producto es requerido",
+			})
+			return
+		}
+		if req.Color == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": "El color del producto es requerido",
+			})
+			return
+		}
+		if req.Precio == 0 {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": "El precio del producto es requerido",
+			})
+			return
+		}
+		if req.Stock == 0 {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": "El stock del producto es requerido",
+			})
+			return
+		}
+		if req.Codigo == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": "El código del producto es requerido",
+			})
+			return
+		}
+		if req.FechaCreacion == "" {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"error": "La fecha de creación del producto es requerida",
 			})
 			return
 		}
@@ -86,7 +124,7 @@ func (c *Product) CreateProduct() gin.HandlerFunc {
 func (c *Product) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token inválido",
 			})
@@ -159,7 +197,7 @@ func (c *Product) Update() gin.HandlerFunc {
 func (c *Product) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token inválido",
 			})
@@ -189,7 +227,7 @@ func (c *Product) Delete() gin.HandlerFunc {
 func (c *Product) UpdateOne() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token inválido",
 			})

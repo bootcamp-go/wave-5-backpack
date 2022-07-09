@@ -1,6 +1,9 @@
 package products
 
-import "goweb/internal/domain"
+import (
+	"fmt"
+	"goweb/internal/domain"
+)
 
 type Service interface {
 	GetAll() ([]domain.Products, error)
@@ -33,14 +36,12 @@ func (s *service) GetAll() ([]domain.Products, error) {
 func (s *service) CreateProduct(id int, nombre, color string, precio float64, stock int, código string, publicado bool, fecha_de_creación string) (domain.Products, error) {
 	lastID, err := s.repository.LastID()
 	if err != nil {
-		return domain.Products{}, err
+		return domain.Products{}, fmt.Errorf("Error obteniendo el último Id: %w", err)
 	}
-
 	lastID++
-
-	producto, err := s.repository.CreateProduct(id, nombre, color, precio, stock, código, publicado, fecha_de_creación)
+	producto, err := s.repository.CreateProduct(lastID, nombre, color, precio, stock, código, publicado, fecha_de_creación)
 	if err != nil {
-		return domain.Products{}, err
+		return domain.Products{}, fmt.Errorf("Error creando un producto: %w", err)
 	}
 
 	return producto, nil

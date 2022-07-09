@@ -3,10 +3,10 @@ package products
 import (
 	"fmt"
 	"goweb/internal/domain"
+	"goweb/pkg/store"
 )
 
 var ps []domain.Products
-var lastID int
 
 type Repository interface {
 	GetAll() ([]domain.Products, error)
@@ -17,21 +17,46 @@ type Repository interface {
 	UpdateOne(id int, nombre string, precio float64) (domain.Products, error)
 }
 
-type repository struct{}
+const (
+	ProductNotFound = "Producto %d no encontrado"
+	FailReading     = "No se pudo leer el archivo"
+	FailWriting     = "No se pudo escribir el archivo, error: %w"
+)
 
-func InitRepository() Repository {
-	return &repository{}
+type repository struct {
+	db store.Store
+}
+
+func InitRepository(db store.Store) Repository {
+	return &repository{
+		db: db,
+	}
 }
 
 func (r *repository) GetAll() ([]domain.Products, error) {
-	return ps, nil
+	var ps2 []domain.Products
+	if err := r.db.Read(&ps2); err != nil {
+		return nil, fmt.Errorf(FailReading)
+	}
+	return ps2, nil
 }
 
 func (r *repository) LastID() (int, error) {
-	return lastID, nil
+	var ps2 []domain.Products
+	if err := r.db.Read(&ps2); err != nil {
+		return 0, fmt.Errorf(FailReading)
+	}
+	if len(ps2) == 0 {
+		return 0, nil
+	}
+	return ps2[len(ps2)-1].Id, nil
 }
 
 func (r *repository) CreateProduct(id int, nombre, color string, precio float64, stock int, código string, publicado bool, fecha_de_creación string) (domain.Products, error) {
+	var ps2 []domain.Products
+	if err := r.db.Read(&ps2); err != nil {
+		return domain.Products{}, fmt.Errorf(FailReading)
+	}
 	p := domain.Products{
 		Id:            id,
 		Nombre:        nombre,
@@ -42,8 +67,11 @@ func (r *repository) CreateProduct(id int, nombre, color string, precio float64,
 		Publicado:     publicado,
 		FechaCreacion: fecha_de_creación,
 	}
-	ps = append(ps, p)
-	lastID = p.Id
+	ps2 = append(ps2, p)
+	if err := r.db.Write(ps2); err != nil {
+		return domain.Products{}, fmt.Errorf(FailWriting, err)
+	}
+
 	return p, nil
 }
 

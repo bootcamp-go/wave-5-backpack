@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "nombre": "aguacate",
+        "color": "verde",
+        "precio": 30000,
+        "stock": 5,
+        "código": "23fe2",
+        "publicado": true,
+        "fecha_de_creación": "23/10/2022"
+    },
+    {
+        "id": 2,
+        "nombre": "Banana",
+        "color": "Amarillo",
+        "precio": 60000,
+        "stock": 13,
+        "código": "d7fe2",
+        "publicado": true,
+        "fecha_de_creación": "30/11/2022"
+    },
+    {
+        "id": 3,
+        "nombre": "cosito",
+        "color": "verde",
+        "precio": 30000,
+        "stock": 5,
+        "código": "23fe2",
+        "publicado": true,
+        "fecha_de_creación": "23/10/2022"
+    }
+]
