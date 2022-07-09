@@ -27,7 +27,7 @@ func NewTransaction(s transactions.Service) *Transaction {
 	return &Transaction{service: s}
 }
 
-func (t *Transaction) CreateTransaction(ctx *gin.Context) {
+func (t Transaction) CreateTransaction(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
 
 	if token != "1245" {
@@ -54,7 +54,7 @@ func (t *Transaction) CreateTransaction(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, transaction)
 }
 
-func (t *Transaction) Update(ctx *gin.Context) {
+func (t Transaction) Update(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
 
 	if token != "1245" {
@@ -85,7 +85,16 @@ func (t *Transaction) Update(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, transaction)
 }
 
-func (t *Transaction) GetAll(ctx *gin.Context) {
+func (t Transaction) GetAll(ctx *gin.Context) {
+	token := ctx.GetHeader("token")
+
+	if token != "1245" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error" : "no tiene permisos para realizar la petición solicitada",
+		})
+		return
+	}
+
 	transactions, err := t.service.GetAll()
   if err != nil {
     ctx.JSON(http.StatusInternalServerError, gin.H{
@@ -98,7 +107,16 @@ func (t *Transaction) GetAll(ctx *gin.Context) {
   ctx.JSON(http.StatusOK, transactions)
 }
 
-func (t *Transaction) GetByID(ctx *gin.Context) {
+func (t Transaction) GetByID(ctx *gin.Context) {
+	token := ctx.GetHeader("token")
+
+	if token != "1245" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error" : "no tiene permisos para realizar la petición solicitada",
+		})
+		return
+	}
+
 	id, err :=  strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -116,7 +134,15 @@ func (t *Transaction) GetByID(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, transaction)
 }
 
-func (t *Transaction) GetFilter(ctx *gin.Context) {
+func (t Transaction) GetFilter(ctx *gin.Context) {
+	token := ctx.GetHeader("token")
+
+	if token != "1245" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error" : "no tiene permisos para realizar la petición solicitada",
+		})
+		return
+	}
 
 	transactions, err := read("../transactions.json")
   if err != nil {
@@ -162,4 +188,27 @@ func read(path string) ([]models.Transaction, error){
 	json.Unmarshal(data, &transactions)
 
 	return transactions, nil
+}
+
+func (t Transaction) Delete(ctx *gin.Context) {
+	token := ctx.GetHeader("token")
+
+	if token != "1245" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error" : "no tiene permisos para realizar la petición solicitada"})
+		return
+	}
+
+	id, err :=  strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error" : err.Error()})
+		return
+	}
+
+	deleted, err := t.service.Delete(id)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{"error" : err.Error()})
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{"id" : deleted})
 }

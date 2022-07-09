@@ -13,11 +13,12 @@ var transactions []models.Transaction
 var lastID int
 
 type Repository interface {
-  GetAll() ([]models.Transaction, error)
-  GetByID(id int) (models.Transaction, error)
   Store(monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error)
   Update(id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error)
+  GetAll() ([]models.Transaction, error)
+  GetByID(id int) (models.Transaction, error)
   GetLastID() (int, error)
+  Delete(id int) (int, error)
 }
 
 func NewRepository() Repository {
@@ -25,24 +26,6 @@ func NewRepository() Repository {
 }
 
 type repository struct {}
-
-func (r repository) GetAll() ([]models.Transaction, error) {
-	if len(transactions) == 0 {
-		return nil, errors.New("no hay registros")
-	}
-
-  return transactions, nil
-}
-
-func (r repository) GetByID(id int) (models.Transaction, error) {
-	for _ , t := range transactions {
-		if t.ID == id {
-			return t, nil
-		}
-	}
-
-	return models.Transaction{}, fmt.Errorf("trasaction con ID: %v no encontrado", id)
-}
 
 func (r repository) Store(monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
 	lastID += 1
@@ -84,10 +67,44 @@ func (r repository) Update(id int, monto float64, cod, moneda, emisor, receptor 
 	return models.Transaction{}, fmt.Errorf("error: no existe el ID: %v", id)
 }
 
+func (r repository) GetAll() ([]models.Transaction, error) {
+	if len(transactions) == 0 {
+		return nil, errors.New("no hay registros")
+	}
+
+  return transactions, nil
+}
+
+func (r repository) GetByID(id int) (models.Transaction, error) {
+	for _ , t := range transactions {
+		if t.ID == id {
+			return t, nil
+		}
+	}
+
+	return models.Transaction{}, fmt.Errorf("trasaction con ID: %v no encontrado", id)
+}
+
 func (r repository) GetLastID() (int, error) {
   if len(transactions) == 0 {
   	return 0, errors.New("no hay registros")
   }
 
   return lastID, nil
+}
+
+func (r repository) Delete(id int) (int, error) {
+	for i , t := range transactions {
+		if t.ID == id {
+			if i == len(transactions) - 1 {
+				transactions = transactions[:i]
+				return id, nil
+			}
+
+			transactions = append(transactions[:i], transactions[i+1:]...)
+			return id, nil
+		}
+	}
+
+	return 0, fmt.Errorf("error: ID %v no existe", id)
 }

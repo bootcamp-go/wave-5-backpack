@@ -22,6 +22,8 @@ func main() {
 		rt.PUT("/:id", handler.Update)
 
 		rt.POST("", handler.CreateTransaction)
+
+		rt.DELETE("/:id", handler.Delete)
 	}
 
 	router.Run()
