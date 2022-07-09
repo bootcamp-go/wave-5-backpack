@@ -1,0 +1,62 @@
+[
+{
+"id": 1,
+"firstName": "Rocket",
+"lastName": "Moon",
+"email": "roko@dogmail.com",
+"age": 15,
+"height": 1.7,
+"activo": true,
+"createdAt": "07/07/22"
+},
+{
+"id": 2,
+"firstName": "Rocket",
+"lastName": "Moon",
+"email": "roko@dogmail.com",
+"age": 15,
+"height": 1.7,
+"activo": true,
+"createdAt": "07/07/22"
+},
+{
+"id": 3,
+"firstName": "Rocket",
+"lastName": "Moon",
+"email": "roko@dogmail.com",
+"age": 15,
+"height": 1.7,
+"activo": true,
+"createdAt": "07/07/22"
+},
+{
+"id": 4,
+"firstName": "Rocket",
+"lastName": "Moon",
+"email": "roko@dogmail.com",
+"age": 15,
+"height": 1.7,
+"activo": true,
+"createdAt": "07/07/22"
+},
+{
+"id": 5,
+"firstName": "Rocket",
+"lastName": "Moon",
+"email": "roko@dogmail.com",
+"age": 15,
+"height": 1.7,
+"activo": true,
+"createdAt": "07/07/22"
+},
+{
+"id": 6,
+"firstName": "Rocket",
+"lastName": "Moon",
+"email": "roko@dogmail.com",
+"age": 15,
+"height": 1.7,
+"activo": true,
+"createdAt": "07/07/22"
+}
+]
