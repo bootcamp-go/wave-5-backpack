@@ -35,15 +35,12 @@ func NewTransaction(s transactions.Service) *Transaction {
 func (t Transaction) CreateTransaction(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
 
-	if token != "1245" {
-		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"error" : "no tiene permisos para realizar la petición solicitada",
-		})
+	if token != os.Getenv("TOKEN") {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error" : "token inválido"})
 		return
 	}
 
 	var req request
-
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"error" : err.Error(),
@@ -62,21 +59,19 @@ func (t Transaction) CreateTransaction(ctx *gin.Context) {
 func (t Transaction) Update(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
 
-	if token != "1245" {
-		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"error" : "no tiene permisos para realizar la petición solicitada",
-		})
+	if token != os.Getenv("TOKEN") {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error" : "token inválido"})
+		return
+	}
+
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error" : err.Error()})
 		return
 	}
 
 	var req request
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error" : err.Error()})
-		return
-	}
-	
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error" : err.Error()})
 		return
 	}
@@ -93,10 +88,8 @@ func (t Transaction) Update(ctx *gin.Context) {
 func (t Transaction) UpdateMontoCod(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
 
-	if token != "1245" {
-		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"error" : "no tiene permisos para realizar la petición solicitada",
-		})
+	if token != os.Getenv("TOKEN") {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error" : "token inválido"})
 		return
 	}
 
@@ -125,10 +118,8 @@ func (t Transaction) UpdateMontoCod(ctx *gin.Context) {
 func (t Transaction) GetAll(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
 
-	if token != "1245" {
-		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"error" : "no tiene permisos para realizar la petición solicitada",
-		})
+	if token != os.Getenv("TOKEN") {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error" : "token inválido"})
 		return
 	}
 
@@ -147,10 +138,8 @@ func (t Transaction) GetAll(ctx *gin.Context) {
 func (t Transaction) GetByID(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
 
-	if token != "1245" {
-		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"error" : "no tiene permisos para realizar la petición solicitada",
-		})
+	if token != os.Getenv("TOKEN") {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error" : "token inválido"})
 		return
 	}
 
@@ -174,10 +163,8 @@ func (t Transaction) GetByID(ctx *gin.Context) {
 func (t Transaction) GetFilter(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
 
-	if token != "1245" {
-		ctx.JSON(http.StatusUnauthorized, gin.H{
-			"error" : "no tiene permisos para realizar la petición solicitada",
-		})
+	if token != os.Getenv("TOKEN") {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error" : "token inválido"})
 		return
 	}
 
@@ -230,8 +217,8 @@ func read(path string) ([]models.Transaction, error){
 func (t Transaction) Delete(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
 
-	if token != "1245" {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error" : "no tiene permisos para realizar la petición solicitada"})
+	if token != os.Getenv("TOKEN") {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error" : "token inválido"})
 		return
 	}
 

@@ -1,30 +1,39 @@
 package main
 
 import (
+	"log"
+	
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/cmd/handler"
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/transactions"
-	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("error al intentar leer el archivo .env")
+	}
+
 	repo := transactions.NewRepository()
 	service := transactions.NewService(repo)
-	handler := handler.NewTransaction(service)
+	t := handler.NewTransaction(service)
 
 	router := gin.Default()
 
 	rt := router.Group("/transactions")
 	{
-		rt.GET("", handler.GetAll)
-		rt.GET("/search", handler.GetFilter)
-		rt.GET("/:id", handler.GetByID)
+		rt.GET("", t.GetAll)
+		rt.GET("/search", t.GetFilter)
+		rt.GET("/:id", t.GetByID)
 
-		rt.PUT("/:id", handler.Update)
-		rt.PATCH("/:id", handler.UpdateMontoCod)
+		rt.PUT("/:id", t.Update)
+		rt.PATCH("/:id", t.UpdateMontoCod)
 
-		rt.POST("", handler.CreateTransaction)
+		rt.POST("", t.CreateTransaction)
 
-		rt.DELETE("/:id", handler.Delete)
+		rt.DELETE("/:id", t.Delete)
 	}
 
 	router.Run()
