@@ -49,7 +49,7 @@ func (b *bookings) Create(t Ticket) (Ticket, error) {
 	return t, nil
 }
 
-// Leer Ticket
+/// Leer Ticket
 func (b *bookings) Read(id int) (Ticket, error) {
 	for _, value := range b.Tickets {
 		if value.Id == id {
