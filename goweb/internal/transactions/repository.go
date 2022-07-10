@@ -140,22 +140,39 @@ func (r repository) GetByID(id int) (models.Transaction, error) {
 }
 
 func (r repository) GetLastID() (int, error) {
-  if len(transactions) == 0 {
-  	return 0, errors.New("no hay registros")
-  }
+	var tr []models.Transaction	
+	if err := r.storage.Read(&tr); err != nil {
+		return 0, err
+	}
 
-  return lastID, nil
+	if len(tr) == 0 {
+		return 0, errors.New("error: no hay transactiones")
+	}
+
+	id := tr[len(tr)-1].ID
+
+  return id, nil
 }
 
 func (r repository) Delete(id int) (int, error) {
-	for i , t := range transactions {
+	var tr []models.Transaction
+	if err := r.storage.Read(&tr); err != nil {
+		return 0, err
+	}
+
+	for i , t := range tr{
 		if t.ID == id {
-			if i == len(transactions) - 1 {
-				transactions = transactions[:i]
+			if i == len(tr) - 1 {
+
+				tr = tr[:i]
+				r.storage.Write(tr)
+
 				return id, nil
 			}
 
-			transactions = append(transactions[:i], transactions[i+1:]...)
+			tr = append(tr[:i], tr[i+1:]...)
+			r.storage.Write(tr)
+
 			return id, nil
 		}
 	}
