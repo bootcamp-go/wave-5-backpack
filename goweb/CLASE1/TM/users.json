@@ -1,0 +1,34 @@
+[
+   {
+       "id": 1,
+       "nombre": "Luz", 
+       "apellido": "Jimenez", 
+       "email": "luz@gmail.com",
+       "edad": 24,
+       "altura": 1.55,
+       "activo": true,
+       "fecha_creacion": "06/07/2022"
+   },
+   {
+      "id": 2,
+      "nombre": "Elena", 
+      "apellido": "Urrego", 
+      "email": "elena@gmail.com",
+      "edad": 28,
+      "altura": 1.63,
+      "activo": false,
+      "fecha_creacion": "06/07/2022"
+   },
+   {
+      "id": 3,
+      "nombre": "Juan", 
+      "apellido": "Betancur", 
+      "email": "juan@gmail.com",
+      "edad": 26,
+      "altura": 1.81,
+      "activo": true,
+      "fecha_creacion": "06/07/2022"
+   }
+
+]
+   
