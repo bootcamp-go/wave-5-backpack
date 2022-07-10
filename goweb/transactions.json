@@ -19,11 +19,20 @@
 },
 {
 "id": 4,
+"monto": 20.55,
+"cod_transaction": "solocodigo",
+"moneda": "ARS",
+"emisor": "PayPal",
+"receptor": "HSBC",
+"date_transaction": "2022-07-10 20:02:04.664481 -0300 -03"
+},
+{
+"id": 5,
 "monto": 1550.55,
 "cod_transaction": "abc1234abc",
 "moneda": "ARS",
 "emisor": "PayPal",
 "receptor": "BBVA",
-"date_transaction": "2022-07-10 20:02:04.664481 -0300 -03"
+"date_transaction": "2022-07-10 20:10:53.765686 -0300 -03"
 }
 ]

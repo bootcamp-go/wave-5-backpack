@@ -61,7 +61,12 @@ func (r repository) Store(monto float64, cod, moneda, emisor, receptor string) (
 }
 
 func (r repository) Update(id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
-	for i , tt := range transactions {
+  var tr []models.Transaction
+	if err := r.storage.Read(&tr); err != nil {
+		return models.Transaction{}, fmt.Errorf("error: al leer el archivo %v", err)
+	}
+
+	for i , tt := range tr{
 		if tt.ID == id {
 			t := models.Transaction{
 				ID: id,
@@ -74,7 +79,11 @@ func (r repository) Update(id int, monto float64, cod, moneda, emisor, receptor 
 			}
 
 			// Actualiza la memoria
-			transactions[i] = t
+			tr[i] = t
+
+			if err := r.storage.Write(tr); err != nil {
+				return models.Transaction{}, fmt.Errorf("error: al escribir el archivo %v\n", err)
+			}
 
 			return t, nil
 		}
@@ -84,7 +93,12 @@ func (r repository) Update(id int, monto float64, cod, moneda, emisor, receptor 
 }
 
 func (r repository) UpdateMontoCod(id int, monto float64, cod string) (models.Transaction, error) {
-	for i, tt := range transactions {
+  var tr []models.Transaction
+	if err := r.storage.Read(&tr); err != nil {
+		return models.Transaction{}, fmt.Errorf("error: al leer el archivo %v", err)
+	}
+
+	for i, tt := range tr{
 		if tt.ID == id {
 			t := models.Transaction{
 				ID: tt.ID,
@@ -107,7 +121,11 @@ func (r repository) UpdateMontoCod(id int, monto float64, cod string) (models.Tr
 			}
 
 			// Actualiza la memoria
-			transactions[i] = t
+			tr[i] = t
+
+			if err := r.storage.Write(tr); err != nil {
+				return models.Transaction{}, fmt.Errorf("error: al escribir el  archivo %v\n", err)
+			}
 
 			return t, nil
 		}

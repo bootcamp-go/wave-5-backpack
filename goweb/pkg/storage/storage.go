@@ -7,6 +7,7 @@ import (
 )
 
 // Read recibe una interfaz vacia, este será el puntero donde guardaremos la data leida
+// Write recibe la data a escribir en el archivo .json
 type Storage interface {
   Read(p interface{}) error
   Write(data interface{}) error
@@ -20,13 +21,13 @@ type storage struct {
   filePath string
 }
 
-func (s storage) Read(data interface{}) error {
+func (s storage) Read(p interface{}) error {
   file, err := os.ReadFile(s.filePath)
   if err != nil {
     return fmt.Errorf("error: al leer el archivo %v\n", err)
   }
 
-  return json.Unmarshal(file, &data)
+  return json.Unmarshal(file, &p)
 }
 
 func (s storage) Write(data interface{}) error {
