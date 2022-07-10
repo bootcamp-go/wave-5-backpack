@@ -3,7 +3,6 @@ package transactions
 import (
 	"errors"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/models"
@@ -118,18 +117,24 @@ func (r repository) UpdateMontoCod(id int, monto float64, cod string) (models.Tr
 }
 
 func (r repository) GetAll() ([]models.Transaction, error) {
-	if len(transactions) == 0 {
+	var tr []models.Transaction
+	if err := r.storage.Read(&tr); err != nil {
+		return nil, err
+	}
+
+	if len(tr) == 0 {
 		return nil, errors.New("no hay registros")
 	}
 
-  return transactions, nil
+  return tr, nil
 }
 
 func (r repository) GetByID(id int) (models.Transaction, error) {
 	var tr []models.Transaction
-	r.storage.Read(&tr)
+	if err := r.storage.Read(&tr); err != nil {
+		return models.Transaction{}, err
+	}
 
-	log.Println(tr)
 	for _ , t := range tr {
 		if t.ID == id {
 			return t, nil
