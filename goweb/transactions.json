@@ -1,29 +1,29 @@
 [
-  {
-    "id": 1,
-    "cod_transaction": "abc1234",
-    "moneda": "ARS",
-    "monto": 1500.99,
-    "emisor": "GALICIA",
-    "receptor": "Mercado Pago",
-    "date_transaction": "2022-07-4"
-  },
-  {
-    "id": 2,
-    "cod_transaction": "abc1235",
-    "moneda": "ARS",
-    "monto": 1250.30,
-    "emisor": "BBVA",
-    "receptor": "Mercado Pago",
-    "date_transaction": "2022-07-5"
-  },
-  {
-    "id": 3,
-    "cod_transaction": "abc1236",
-    "moneda": "ARS",
-    "monto": 1250.30,
-    "emisor": "BBVA",
-    "receptor": "Mercado Pago",
-    "date_transaction": "2022-07-6"
-  }
+{
+"id": 1,
+"monto": 1550.55,
+"cod_transaction": "abc1234abc",
+"moneda": "ARS",
+"emisor": "PayPal",
+"receptor": "BBVA",
+"date_transaction": "2022-07-10 19:04:02.855951 -0300 -03"
+},
+{
+"id": 2,
+"monto": 1550.55,
+"cod_transaction": "abc1234abc",
+"moneda": "ARS",
+"emisor": "PayPal",
+"receptor": "BBVA",
+"date_transaction": "2022-07-10 19:30:51.074066 -0300 -03"
+},
+{
+"id": 3,
+"monto": 1550.55,
+"cod_transaction": "abc1234abc",
+"moneda": "ARS",
+"emisor": "PayPal",
+"receptor": "BBVA",
+"date_transaction": "2022-07-10 19:31:01.740559 -0300 -03"
+}
 ]

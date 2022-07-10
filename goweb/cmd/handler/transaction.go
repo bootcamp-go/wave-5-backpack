@@ -42,15 +42,14 @@ func (t Transaction) CreateTransaction(ctx *gin.Context) {
 
 	var req request
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error" : err.Error(),
-		})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error" : err.Error(),})
 		return
 	}
 
 	transaction, err := t.service.Store(req.Monto, req.Cod, req.Moneda, req.Emisor, req.Receptor)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error" : err.Error()})
+		return
 	}
 
 	ctx.JSON(http.StatusCreated, transaction)
@@ -145,9 +144,7 @@ func (t Transaction) GetByID(ctx *gin.Context) {
 
 	id, err :=  strconv.Atoi(ctx.Param("id"))
 	if err != nil {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"error" : err.Error(),
-		})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error" : err.Error(),})
 		return
 	}
 
@@ -170,16 +167,13 @@ func (t Transaction) GetFilter(ctx *gin.Context) {
 
 	transactions, err := read("../transactions.json")
   if err != nil {
-    ctx.JSON(http.StatusInternalServerError, gin.H{
-      "error": err.Error(),
-    })
+    ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error(),})
     return
   }
 
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"error" : err.Error(),
-		})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error" : err.Error()})
+		return
 	}
 
 	var (

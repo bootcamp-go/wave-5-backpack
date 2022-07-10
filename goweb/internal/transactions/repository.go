@@ -3,9 +3,11 @@ package transactions
 import (
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/models"
+	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/pkg/storage"
 )
 
 // Simula DB
@@ -22,16 +24,23 @@ type Repository interface {
   Delete(id int) (int, error)
 }
 
-func NewRepository() Repository {
-  return &repository{}
+func NewRepository(storage storage.Storage) Repository {
+  return &repository{storage}
 }
 
-type repository struct {}
+type repository struct {
+	storage storage.Storage
+}
 
 func (r repository) Store(monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
-	lastID += 1
+  var tr []models.Transaction
+	if err := r.storage.Read(&tr); err != nil {
+		return models.Transaction{}, fmt.Errorf("error: al leer el archivo %v", err)
+	}
+
+	newID := (tr[len(tr)-1].ID) + 1
   t := models.Transaction{
-    ID: lastID,
+    ID: newID,
     Monto: monto,
     Cod: cod,
     Moneda: moneda,
@@ -40,7 +49,14 @@ func (r repository) Store(monto float64, cod, moneda, emisor, receptor string) (
     Fecha: time.Now().Local().String(),
   }
 
-  transactions = append(transactions, t)
+	// Actualiza memoria
+	tr = append(tr, t)
+
+	// Escribe archivo
+  err := r.storage.Write(tr)
+  if err != nil {
+  	return models.Transaction{}, fmt.Errorf("error: al escribir el archivo %v", err)
+  }
 
   return t, nil
 }
@@ -110,7 +126,11 @@ func (r repository) GetAll() ([]models.Transaction, error) {
 }
 
 func (r repository) GetByID(id int) (models.Transaction, error) {
-	for _ , t := range transactions {
+	var tr []models.Transaction
+	r.storage.Read(&tr)
+
+	log.Println(tr)
+	for _ , t := range tr {
 		if t.ID == id {
 			return t, nil
 		}
