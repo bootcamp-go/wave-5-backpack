@@ -3,8 +3,17 @@ package main
 import (
 	"fmt"
 	"goweb/cmd/server/handler"
+	"goweb/docs"
 	"goweb/internal/transactions"
 	"goweb/pkg/store"
+	"goweb/pkg/web"
+	"log"
+	"net/http"
+	"os"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
 	"reflect"
 	"strings"
 
@@ -26,6 +35,32 @@ func setupValidation() {
 	}
 }
 
+func AuthMiddleware() gin.HandlerFunc {
+	token := os.Getenv("TOKEN")
+	if token == "" {
+		log.Fatal("Token not found: Please set enviroment variable TOKEN")
+	}
+	return func(ctx *gin.Context) {
+		tokenRequest := ctx.GetHeader("Authorization")
+		if token != tokenRequest {
+			ctx.AbortWithStatusJSON(web.NewResponse(http.StatusUnauthorized, nil, "Access Denied: Token Unauthorized"))
+			return
+		}
+		ctx.Next()
+	}
+
+}
+
+// @title MELI Bootcamp API
+// @version 1.0
+// @description This API Handle MELI Transactions.
+// @termsOfService https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
+
+// @contact.name API Support
+// @contact.url https://developers.mercadolibre.com.ar/support
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 	if err := godotenv.Load(); err != nil {
 		fmt.Println(err.Error())
@@ -42,9 +77,12 @@ func main() {
 	transactions := handler.NewTransaction(service)
 	setupValidation()
 
-	router := gin.Default()
+	docs.SwaggerInfo.Host = os.Getenv("HOST")
 
+	router := gin.Default()
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	transactionsRoute := router.Group("/transactions")
+	transactionsRoute.Use(AuthMiddleware())
 	transactionsRoute.GET("/", transactions.GetAll())
 	transactionsRoute.GET("/search", transactions.Search())
 	transactionsRoute.GET("/:id", transactions.GetById())

@@ -9,7 +9,6 @@ import (
 	"goweb/internal/transactions"
 	"goweb/pkg/web"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -23,7 +22,7 @@ type request struct {
 	Reciever string  `json:"reciever" binding:"required"`
 }
 
-type requestCurrenctAndAmount struct {
+type requestCurrencyAndAmount struct {
 	Currency string  `json:"currency" binding:"required"`
 	Amount   float64 `json:"amount" binding:"required"`
 }
@@ -52,11 +51,6 @@ func getAtoiId(ctx *gin.Context) (int, error) {
 	return id, nil
 }
 
-func verifyToken(ctx *gin.Context) bool {
-	token := ctx.GetHeader("Authorization")
-	return token == os.Getenv("TOKEN")
-}
-
 func generateFieldErrorMessage(err error) string {
 	var ve validator.ValidationErrors
 	if errors.As(err, &ve) {
@@ -79,13 +73,29 @@ func generateServiceErrorWeb(err error) (int, web.Response) {
 		web.NewResponse(http.StatusBadRequest, nil, "error: amount is zero or below to 0")
 	}
 	return web.NewResponse(http.StatusInternalServerError, nil, err.Error())
+
 }
 
+// SearchTransactions godoc
+// @Summary Search Transactions
+// @Tags Transactions
+// @Description Search Transactions
+// @Produce  json
+// @Param Authorization header string true "token"
+// @Param sender query string false "sender"
+// @Param reciever query string false "reciever"
+// @Param currency query string false "currency"
+// @Param amount query float64 false "amount"
+// @Param minAmount query float64 false "minAmount"
+// @Param maxAmount query float64 false "maxAmount"
+// @Param date query time.time false "date"
+// @Success 200 {object} web.Response
+// @Router /transactions/query [get]
 func (t *Transaction) Search() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		transactions, err := t.ser.GetAll()
 		if err != nil {
-			ctx.JSON(web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
+			ctx.JSON(generateServiceErrorWeb(err))
 			return
 		}
 
@@ -108,6 +118,14 @@ func (t *Transaction) Search() gin.HandlerFunc {
 	}
 }
 
+// ListTransactions godoc
+// @Summary List transactions
+// @Tags Transactions
+// @Description get all transactions
+// @Produce  json
+// @Param Authorization header string true "token"
+// @Success 200 {object} web.Response
+// @Router /transactions [get]
 func (t *Transaction) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		transactions, err := t.ser.GetAll()
@@ -119,6 +137,15 @@ func (t *Transaction) GetAll() gin.HandlerFunc {
 	}
 }
 
+// GetByTransactionId godoc
+// @Summary Get a transaction by Id
+// @Tags Transactions
+// @Description Get a transaction by Id
+// @Produce  json
+// @Param Authorization header string true "token"
+// @Param id path int true "Transaction ID"
+// @Success 200 {object} web.Response
+// @Router /transactions/{id} [get]
 func (t *Transaction) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -136,12 +163,21 @@ func (t *Transaction) GetById() gin.HandlerFunc {
 	}
 }
 
+// DeleteTransaction godoc
+// @Summary Delete a transaction by id
+// @Tags Transactions
+// @Description Delete a transaction by id
+// @Produce  json
+// @Param Authorization header string true "token"
+// @Param id path int true "Transaction ID"
+// @Success 202 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Success 500 {object} web.Response
+// @Router /transactions/{id} [delete]
 func (t *Transaction) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if !verifyToken(ctx) {
-			ctx.JSON(web.NewResponse(http.StatusUnauthorized, nil, "Access Denied: Token Unauthorized"))
-			return
-		}
 		id, err := getAtoiId(ctx)
 		if err != nil {
 			ctx.JSON(web.NewResponse(http.StatusBadRequest, nil, err.Error()))
@@ -155,20 +191,29 @@ func (t *Transaction) Delete() gin.HandlerFunc {
 	}
 }
 
+// UpdateCurrencyAndAmount godoc
+// @Summary Update Currency and Amount by Transaction Id
+// @Tags Transactions
+// @Description Update Currency and Amount by Transaction Id
+// @Produce  json
+// @Param Authorization header string true "token"
+// @Param id path int true "Transaction ID"
+// @Param product body requestCurrencyAndAmount true "Fields Transaction to Update"
+// @Success 202 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Success 500 {object} web.Response
+// @Router /transactions/{id} [PATCH]
 func (t *Transaction) UpdateCurrencyAndAmount() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if !verifyToken(ctx) {
-			ctx.JSON(web.NewResponse(http.StatusUnauthorized, nil, "Access Denied: Token Unauthorized"))
-			return
-		}
-
 		id, err := getAtoiId(ctx)
 		if err != nil {
 			ctx.JSON(web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
 
-		transactionRequest := requestCurrenctAndAmount{}
+		transactionRequest := requestCurrencyAndAmount{}
 		if err := ctx.ShouldBindJSON(&transactionRequest); err != nil {
 			ctx.JSON(web.NewResponse(http.StatusBadRequest, nil, generateFieldErrorMessage(err)))
 			return
@@ -183,12 +228,22 @@ func (t *Transaction) UpdateCurrencyAndAmount() gin.HandlerFunc {
 	}
 }
 
+// UpdateTransaction godoc
+// @Summary Update Transaction by Id
+// @Tags Transactions
+// @Description Update Transaction by Id
+// @Produce  json
+// @Param Authorization header string true "token"
+// @Param id path int true "Transaction ID"
+// @Param product body request true "Transaction to update"
+// @Success 202 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Success 500 {object} web.Response
+// @Router /transactions/{id} [PUT]
 func (t *Transaction) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if !verifyToken(ctx) {
-			ctx.JSON(web.NewResponse(http.StatusUnauthorized, nil, "Access Denied: Token Unauthorized"))
-			return
-		}
 
 		id, err := getAtoiId(ctx)
 		if err != nil {
@@ -211,12 +266,22 @@ func (t *Transaction) Update() gin.HandlerFunc {
 	}
 }
 
+// StoreTransactions godoc
+// @Summary Store transactions
+// @Tags Transactions
+// @Description store transactions
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param product body request true "Transaction to store"
+// @Success 201 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Success 500 {object} web.Response
+// @Router /transactions [post]
 func (t *Transaction) CreateTransaction() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if !verifyToken(ctx) {
-			ctx.JSON(web.NewResponse(http.StatusUnauthorized, nil, "Access Denied: Token Unauthorized"))
-			return
-		}
 
 		transactionRequest := request{}
 		if err := ctx.ShouldBindJSON(&transactionRequest); err != nil {
