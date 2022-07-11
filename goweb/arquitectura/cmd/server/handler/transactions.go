@@ -3,7 +3,7 @@ package handler
 import (
 	"arquitectura/internal/domain"
 	"arquitectura/internal/transactions"
-	"errors"
+	"arquitectura/pkg/web"
 	"fmt"
 	"os"
 	"strconv"
@@ -29,27 +29,39 @@ type request struct {
 	TranDate    string  `json:"tranDate" binding:"required"`
 }
 
-func (r request) getMissingField() error {
+func (r request) getMissingField() string {
+	var errorFields []string
 	if r.TranCode == "" {
-		return errors.New("el campo tranCode es requerido")
+		errorFields = append(errorFields, "tranCode")
 	}
 	if r.Currency == "" {
-		return errors.New("el campo currency es requerido")
+		errorFields = append(errorFields, "currency")
 	}
 	if r.Amount == 0 {
-		return errors.New("el campo amount es requerido")
+		errorFields = append(errorFields, "amount")
 	}
 	if r.Transmitter == "" {
-		return errors.New("el campo transmitter es requerido")
+		errorFields = append(errorFields, "transmitter")
 	}
 	if r.Reciever == "" {
-		return errors.New("el campo receiver es requerido")
+		errorFields = append(errorFields, "receiver")
 	}
 	if r.TranDate == "" {
-		return errors.New("el campo tranDate es requerido")
+		errorFields = append(errorFields, "tranDate")
 	}
 
-	return nil
+	if len(errorFields) != 0 {
+		var fields string
+		for i, f := range errorFields {
+			fields += f
+			if i != len(errorFields)-1 {
+				fields += ","
+			}
+		}
+		return fields
+	}
+
+	return ""
 }
 
 type Transaction struct {
@@ -62,100 +74,94 @@ func NewTransaction(s transactions.Service) *Transaction {
 	}
 }
 
+func isValidToken(ctx *gin.Context) bool {
+	token := ctx.Request.Header.Get("token")
+	if token != os.Getenv("TOKEN") {
+		ctx.JSON(401, web.NewResponse(401, nil, "token inválido"))
+		return false
+	}
+	return true
+}
+
 func (t *Transaction) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(401, gin.H{
-				"error": "token inválido",
-			})
+		if e := isValidToken(ctx); !e {
 			return
 		}
 		t, err := t.service.GetAll()
 		if err != nil {
-			ctx.JSON(404, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, t)
+		ctx.JSON(200, web.NewResponse(200, t, ""))
 	}
 }
 
 func (t *Transaction) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(401, gin.H{"error": "token inválido"})
+		if e := isValidToken(ctx); !e {
 			return
 		}
 		var req request
 		if err := ctx.Bind(&req); err != nil {
-			ctx.JSON(404, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
 		t, err := t.service.Store(req.TranCode, req.Currency, req.Amount, req.Transmitter, req.Reciever, req.TranDate)
 		if err != nil {
-			ctx.JSON(404, gin.H{"error": err.Error()})
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, t)
+		ctx.JSON(200, web.NewResponse(200, t, ""))
 	}
 }
 
 func (t *Transaction) Update() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token := c.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			c.JSON(401, gin.H{"error": "Token inválido"})
+		if e := isValidToken(c); !e {
 			return
 		}
 
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
-			c.JSON(404, gin.H{"error": "Id inválido"})
+			c.JSON(404, web.NewResponse(404, nil, "Id inválido"))
 			return
 		}
 
 		var req request
 		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(404, gin.H{"error": req.getMissingField().Error()})
+			c.JSON(404, web.NewResponse(404, nil, "missing the following fields : "+req.getMissingField()))
 			return
 		}
 
 		t, err := t.service.Update(int(id), req.TranCode, req.Currency, req.Amount, req.Transmitter, req.Reciever, req.TranDate)
 		if err != nil {
-			c.JSON(404, gin.H{"error": err.Error()})
+			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-
-		c.JSON(200, t)
+		c.JSON(200, web.NewResponse(200, t, ""))
 	}
 }
 
 func (t *Transaction) UpdateFields() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token := c.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			c.JSON(401, gin.H{"error": "Token inválido"})
+		if e := isValidToken(c); !e {
 			return
 		}
 
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
-			c.JSON(404, gin.H{"error": "Id inválido"})
+			c.JSON(400, web.NewResponse(400, nil, "Id inválido"))
 			return
 		}
 
 		var req simplerequest
 		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(404, gin.H{"error": err.Error()})
+			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
 		if !req.validate() {
-			c.JSON(404, gin.H{"error": "los campos tranCode y amount no son validos"})
+			c.JSON(404, web.NewResponse(404, nil, "los campos tranCode y amount no son validos"))
 			return
 		}
 
@@ -163,7 +169,7 @@ func (t *Transaction) UpdateFields() gin.HandlerFunc {
 		if req.TranCode != "" {
 			t, err := t.service.UpdateTranCode(int(id), req.TranCode)
 			if err != nil {
-				c.JSON(404, gin.H{"error": err.Error()})
+				c.JSON(404, web.NewResponse(404, nil, err.Error()))
 				return
 			}
 			tr = t
@@ -171,35 +177,32 @@ func (t *Transaction) UpdateFields() gin.HandlerFunc {
 		if req.Amount > 0 {
 			t, err := t.service.UpdateAmount(int(id), req.Amount)
 			if err != nil {
-				c.JSON(404, gin.H{"error": err.Error()})
+				c.JSON(404, web.NewResponse(404, nil, err.Error()))
 				return
 			}
 			tr = t
 		}
-		c.JSON(200, tr)
+		c.JSON(200, web.NewResponse(200, tr, ""))
 	}
 }
 
 func (t *Transaction) Delete() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token := c.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			c.JSON(401, gin.H{"error": "Token inválido"})
+		if e := isValidToken(c); !e {
 			return
 		}
 
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
-			c.JSON(400, gin.H{"error": "Id inválido"})
+			c.JSON(400, web.NewResponse(400, nil, "Id inválido"))
 			return
 		}
 
 		err = t.service.Delete(int(id))
 		if err != nil {
-			c.JSON(404, gin.H{"error": err.Error()})
+			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-
-		c.JSON(200, gin.H{"data": fmt.Sprintf("la transaccion con id %d ha sido eliminada", id)})
+		c.JSON(200, web.NewResponse(200, fmt.Sprintf("la transaccion con id %d ha sido eliminada", id), ""))
 	}
 }
