@@ -1,0 +1,34 @@
+definitions:
+  web.Response:
+    properties:
+      code:
+        type: string
+      data: {}
+      error:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /transaction:
+    get:
+      consumes:
+      - application/json
+      description: get transactions
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: List transactions
+      tags:
+      - Transactions
+swagger: "2.0"

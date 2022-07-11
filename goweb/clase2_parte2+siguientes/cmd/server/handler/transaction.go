@@ -6,6 +6,8 @@ import (
 	"strconv"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/olivera_sebastian/goweb/clase2_parte2+siguientes/internal/transactions"
+	"github.com/bootcamp-go/wave-5-backpack/tree/olivera_sebastian/goweb/clase2_parte2+siguientes/pkg/web"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -25,26 +27,35 @@ func NewTransaction(s transactions.Service) *Transaction {
 	return &Transaction{service: s}
 }
 
+// ListTransactions godoc
+// @Summary List transactions
+// @Tags Transactions
+// @Description get transactions
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Success 200 {object} web.NewResponse
+// @Router /transactions [get]
 func (t *Transaction) GetAll() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.Request.Header.Get("token")
 		if token != os.Getenv("TOKEN") {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "token inválido"}) //401
+			c.JSON(http.StatusUnauthorized, web.NewResponse(401, nil, "Token inválido")) //401
 			return
 		}
 
 		transactions, err := t.service.GetAll()
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()}) // 500
+			c.JSON(http.StatusInternalServerError, web.NewResponse(500, nil, err.Error())) // 500
 			return
 		}
 
 		if len(transactions) <= 0 {
-			c.JSON(http.StatusOK, gin.H{"message": "No se encontraron transacciones."}) // 500
+			c.JSON(http.StatusOK, web.NewResponse(500, nil, "No se encontraron transacciones")) // 500
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"transactions": transactions})
+		c.JSON(http.StatusOK, web.NewResponse(200, transactions, ""))
 	}
 }
 
