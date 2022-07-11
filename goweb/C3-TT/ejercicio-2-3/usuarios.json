@@ -1,0 +1,32 @@
+[
+ {
+  "id": 1,
+  "nombre": "Matias",
+  "apellido": "Vince",
+  "email": "matiasvince@gmail.com",
+  "edad": 22,
+  "altura": 174,
+  "activo": true,
+  "fecha_creacion": "06-07-2022"
+ },
+ {
+  "id": 2,
+  "nombre": "Matias",
+  "apellido": "Vince",
+  "email": "matiasvince@gmail.com",
+  "edad": 22,
+  "altura": 174,
+  "activo": true,
+  "fecha_creacion": "06-07-2022"
+ },
+ {
+  "id": 3,
+  "nombre": "Matias",
+  "apellido": "Vince",
+  "email": "matiasvince@gmail.com",
+  "edad": 22,
+  "altura": 174,
+  "activo": true,
+  "fecha_creacion": "06-07-2022"
+ }
+]
