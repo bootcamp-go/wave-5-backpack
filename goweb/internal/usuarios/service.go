@@ -19,6 +19,7 @@ type Service interface {
 	Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error)
 	Delete(id int) error
 	UpdateNameAndLastName(id int, name string, apellido string) (domain.Usuarios, error)
+	GetById(id int) (domain.Usuarios, error)
 }
 
 type service struct {
@@ -48,6 +49,14 @@ func (s *service) GetAll() ([]domain.Usuarios, error) {
 	us, err := s.repository.GetAll()
 	if err != nil {
 		return nil, err
+	}
+	return us, nil
+}
+
+func (s *service) GetById(id int) (domain.Usuarios, error) {
+	us, err := s.repository.GetById(id)
+	if err != nil {
+		return domain.Usuarios{}, err
 	}
 	return us, nil
 }

@@ -161,6 +161,27 @@ func (c *Usuarios) GetAll() gin.HandlerFunc {
 		ctx.JSON(200, web.NewResponse(200, u, ""))
 	}
 }
+func (c *Usuarios) GetById() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.Request.Header.Get("token")
+
+		if token != os.Getenv("TOKEN") {
+			ctx.JSON(404, web.NewResponse(401, nil, "no tiene permisos para realizar la peticion solicitada"))
+			return
+		}
+		id, error := strconv.Atoi(ctx.Param("id"))
+		if error != nil {
+			ctx.JSON(401, web.NewResponse(401, nil, "el id es invalido"))
+			return
+		}
+		u, erro := c.service.GetById(id)
+		if erro != nil {
+			ctx.JSON(404, web.NewResponse(404, nil, "el id ingresado es inexistente"))
+			return
+		}
+		ctx.JSON(200, web.NewResponse(200, u, ""))
+	}
+}
 
 func (c *Usuarios) Guardar() gin.HandlerFunc {
 	return func(ctx *gin.Context) {

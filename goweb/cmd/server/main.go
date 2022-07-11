@@ -28,7 +28,7 @@ func main() {
 	u := handler.NewUsuario(servi)
 
 	router := gin.Default()
-	// router.GET("usuarios/:id", GetById)
+
 	// router.GET("/usuarios", GetAll)
 	// router.GET("/usuarios/filtroNombre", FilterByName)
 	// router.GET("/usuarios/filtroApellido", FilterByLastName)
@@ -36,9 +36,10 @@ func main() {
 	// router.GET("/usuarios/filtroEdad", filterByEdad)
 	us := router.Group("/usuarios")
 	us.PUT("/:id", u.Update())
+	us.GET("/:id", u.GetById())
 	us.POST("/", u.Guardar())
 	us.GET("/", u.GetAll())
 	us.DELETE("/:id", u.Delete())
 	us.PATCH("/:id", u.UpdateNameAndLastName())
-	router.Run(":7000")
+	router.Run(":6000")
 }
