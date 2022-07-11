@@ -1,62 +1,72 @@
-
 [
     {
-        "Id": 1,
-        "Name": "Jorge",
-        "LastName": "Gonzalez",
-        "Email": "jorge@mail.com",
-        "Age": 30,
-        "Height": 2.02,
-        "Active": true,
-        "CreatedAt": "21/06/21"
-
+        "id": 1,
+        "name": "Jorge",
+        "lastname": "Gonzalez",
+        "email": "jorge@mail.com",
+        "age": 30,
+        "height": 2.02,
+        "active": true,
+        "createdat": "21/06/21"
     },
-
     {
-        "Id": 2,
-        "Name": "Romina",
-        "LastName": "Gutierrez",
-        "Email": "romi@mail.com",
-        "Age": 29,
-        "Height": 1.64,
-        "Active": false,
-        "CreatedAt": "03/10/20"
-
+        "id": 3,
+        "name": "Lionel",
+        "lastname": "Messi",
+        "email": "lio@mail.com",
+        "age": 34,
+        "height": 1.7,
+        "active": true,
+        "createdat": "24/06/05"
     },
-
     {
-        "Id": 3,
-        "Name": "Lionel",
-        "LastName": "Messi",
-        "Email": "lio@mail.com",
-        "Age": 34,
-        "Height": 1.7,
-        "Active": true,
-        "CreatedAt": "24/06/05"
-
+        "id": 4,
+        "name": "Gabriela",
+        "lastname": "Sabbatini",
+        "email": "gabi@mail.com",
+        "age": 40,
+        "height": 1.74,
+        "active": true,
+        "createdat": "22/04/22"
     },
-
     {
-        "Id": 4,
-        "Name": "Gabriela",
-        "LastName": "Sabbatini",
-        "Email": "gabi@mail.com",
-        "Age": 40,
-        "Height": 1.74,
-        "Active": true,
-        "CreatedAt": "22/04/22"
-
+        "id": 5,
+        "name": "Emanuel",
+        "lastname": "Ginobili",
+        "email": "manu@mail.com",
+        "age": 41,
+        "height": 1.98,
+        "active": false,
+        "createdat": "18/05/19"
     },
-
     {
-        "Id": 5,
-        "Name": "Emanuel",
-        "LastName": "Ginobili",
-        "Email": "manu@mail.com",
-        "Age": 41,
-        "Height": 1.98,
-        "Active": false,
-        "CreatedAt": "18/05/19"
-
+        "id": 6,
+        "name": "Claudio",
+        "lastname": "Bieler",
+        "email": "taca@bieler.com",
+        "age": 38,
+        "height": 1.75,
+        "active": true,
+        "createdat": "11/07/2022"
+    },
+    {
+        "id": 7,
+        "name": "Emanuel",
+        "lastname": "Martinez",
+        "email": "dibu@martinez.com",
+        "age": 28,
+        "height": 1.87,
+        "active": true,
+        "createdat": "24/06/1987"
+    },
+    {
+        "id": 8,
+        "name": "Pepe",
+        "lastname": "Messi",
+        "email": "pepe@messi.com",
+        "age": 33,
+        "height": 1.7,
+        "active": true,
+        "createdat": "24/06/1987"
     }
-]   
+]
