@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -40,12 +41,11 @@ func NewUsuario(u usuarios.Service) *Usuarios {
 
 func (c *Usuarios) UpdateNameAndLastName() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-
-		if token != os.Getenv("TOKEN") {
+		if err := validateToken(ctx); err != nil {
 			ctx.JSON(404, web.NewResponse(401, nil, "no tiene permisos para realizar la peticion solicitada"))
 			return
 		}
+
 		id, error := strconv.Atoi(ctx.Param("id"))
 		if error != nil {
 			ctx.JSON(401, web.NewResponse(401, nil, "el id ingresado es invalido"))
@@ -60,6 +60,7 @@ func (c *Usuarios) UpdateNameAndLastName() gin.HandlerFunc {
 			}
 			if req.Apellido == "" {
 				ctx.JSON(400, web.NewResponse(400, nil, "El apellido es un campo requerido"))
+				return
 			}
 		}
 		user, error := c.service.UpdateNameAndLastName(id, req.Nombre, req.Apellido)
@@ -73,9 +74,7 @@ func (c *Usuarios) UpdateNameAndLastName() gin.HandlerFunc {
 
 func (c *Usuarios) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-
-		if token != os.Getenv("TOKEN") {
+		if err := validateToken(ctx); err != nil {
 			ctx.JSON(404, web.NewResponse(401, nil, "no tiene permisos para realizar la peticion solicitada"))
 			return
 		}
@@ -94,9 +93,7 @@ func (c *Usuarios) Delete() gin.HandlerFunc {
 
 func (c *Usuarios) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-
-		if token != os.Getenv("TOKEN") {
+		if err := validateToken(ctx); err != nil {
 			ctx.JSON(404, web.NewResponse(401, nil, "no tiene permisos para realizar la peticion solicitada"))
 			return
 		}
@@ -146,9 +143,7 @@ func (c *Usuarios) Update() gin.HandlerFunc {
 
 func (c *Usuarios) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-
-		if token != os.Getenv("TOKEN") {
+		if err := validateToken(ctx); err != nil {
 			ctx.JSON(404, web.NewResponse(401, nil, "no tiene permisos para realizar la peticion solicitada"))
 			return
 		}
@@ -163,9 +158,7 @@ func (c *Usuarios) GetAll() gin.HandlerFunc {
 }
 func (c *Usuarios) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-
-		if token != os.Getenv("TOKEN") {
+		if err := validateToken(ctx); err != nil {
 			ctx.JSON(404, web.NewResponse(401, nil, "no tiene permisos para realizar la peticion solicitada"))
 			return
 		}
@@ -185,9 +178,8 @@ func (c *Usuarios) GetById() gin.HandlerFunc {
 
 func (c *Usuarios) Guardar() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(404, web.NewResponse(400, nil, "no tiene permisos para realizar la peticion solicitada"))
+		if err := validateToken(ctx); err != nil {
+			ctx.JSON(404, web.NewResponse(401, nil, "no tiene permisos para realizar la peticion solicitada"))
 			return
 		}
 
@@ -230,4 +222,13 @@ func (c *Usuarios) Guardar() gin.HandlerFunc {
 		ctx.JSON(200, web.NewResponse(200, user, ""))
 
 	}
+}
+
+func validateToken(ctx *gin.Context) error {
+	token := ctx.Request.Header.Get("token")
+
+	if token != os.Getenv("TOKEN") {
+		return errors.New("token invalido")
+	}
+	return nil
 }
