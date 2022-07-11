@@ -5,7 +5,6 @@ import (
 	"arquitectura/internal/transactions"
 	"arquitectura/pkg/web"
 	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -74,20 +73,18 @@ func NewTransaction(s transactions.Service) *Transaction {
 	}
 }
 
-func isValidToken(ctx *gin.Context) bool {
-	token := ctx.Request.Header.Get("token")
-	if token != os.Getenv("TOKEN") {
-		ctx.JSON(401, web.NewResponse(401, nil, "token inválido"))
-		return false
-	}
-	return true
-}
-
+// @ListTransactions godoc
+// @Summary Lista Transacciones
+// @Tags Transacciones
+// @Description Este método lista todas las transacciones existentes en nuestros registros
+// @Produce json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /transactions [get]
 func (t *Transaction) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if e := isValidToken(ctx); !e {
-			return
-		}
 		t, err := t.service.GetAll()
 		if err != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
@@ -97,11 +94,20 @@ func (t *Transaction) GetAll() gin.HandlerFunc {
 	}
 }
 
+// @StoreTransaction godoc
+// @Summary Guarda Transacción
+// @Tags Transacciones
+// @Description Este método guarda una nueva transacción en nuestros registros
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param transaction body request true "transaction to store"
+// @Success 200 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /transactions [post]
 func (t *Transaction) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if e := isValidToken(ctx); !e {
-			return
-		}
 		var req request
 		if err := ctx.Bind(&req); err != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
@@ -116,12 +122,21 @@ func (t *Transaction) Store() gin.HandlerFunc {
 	}
 }
 
+// @UpdateTransaction godoc
+// @Summary Actualiza Transacción
+// @Tags Transacciones
+// @Description Este método actualiza una transacción con nuevos datos
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "id of transaction to update"
+// @Param transaction body request true "transaction data to update"
+// @Success 200 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /transactions/{id} [put]
 func (t *Transaction) Update() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if e := isValidToken(c); !e {
-			return
-		}
-
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
 			c.JSON(404, web.NewResponse(404, nil, "Id inválido"))
@@ -143,12 +158,22 @@ func (t *Transaction) Update() gin.HandlerFunc {
 	}
 }
 
+// @UpdateTransactionFields godoc
+// @Summary Actualiza código y/o monto de transacción
+// @Tags Transacciones
+// @Description Este método actualiza una transacción con nuevos datos (tranCode y amount)
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "id of transaction to update"
+// @Param transaction body simplerequest true "transaction data to update"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /transactions/{id} [patch]
 func (t *Transaction) UpdateFields() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if e := isValidToken(c); !e {
-			return
-		}
-
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
 			c.JSON(400, web.NewResponse(400, nil, "Id inválido"))
@@ -186,12 +211,20 @@ func (t *Transaction) UpdateFields() gin.HandlerFunc {
 	}
 }
 
+// @DeleteTransaction godoc
+// @Summary Elimina transacción de los registros
+// @Tags Transacciones
+// @Description Este método elimina una transacción
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "id of transaction to delete"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /transactions/{id} [delete]
 func (t *Transaction) Delete() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if e := isValidToken(c); !e {
-			return
-		}
-
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
 			c.JSON(400, web.NewResponse(400, nil, "Id inválido"))
