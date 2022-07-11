@@ -21,8 +21,6 @@ const (
 	FailWriting     = "error al escribir la bd"
 )
 
-var us []domain.Usuarios
-
 type Repository interface {
 	GetAll() ([]domain.Usuarios, error)
 	Guardar(id int, nombre string, apellido string, email string, edad int, altura float64, actico bool, fecha string) (domain.Usuarios, error)
@@ -43,20 +41,24 @@ func NewRepository(db store.Store) Repository {
 }
 
 func (r *repository) UpdateNameAndLastName(id int, name string, last string) (domain.Usuarios, error) {
-	var u domain.Usuarios
-	updated := false
-	for i := range us {
+
+	var us []domain.Usuarios
+
+	if err := r.db.Read(&us); err != nil {
+		return domain.Usuarios{}, fmt.Errorf(FailReading)
+	}
+	for i := 0; i < len(us); i++ {
 		if us[i].Id == id {
 			us[i].Nombre = name
 			us[i].Apellido = last
-			updated = true
-			u = us[i]
+
+			if err := r.db.Write(us); err != nil {
+				return domain.Usuarios{}, fmt.Errorf(FailWriting)
+			}
+			return us[i], nil
 		}
 	}
-	if !updated {
-		return domain.Usuarios{}, fmt.Errorf("producto con id %d no encontrado", id)
-	}
-	return u, nil
+	return domain.Usuarios{}, nil
 }
 
 func (r *repository) Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error) {

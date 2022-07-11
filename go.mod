@@ -30,6 +30,6 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
 
-require github.com/go-playground/validator v9.31.0+incompatible
+//require github.com/go-playground/validator v9.31.0+incompatible
 
-require gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
+//require gopkg.in/go-playground/assert.v1 v1.2.1 // indirect

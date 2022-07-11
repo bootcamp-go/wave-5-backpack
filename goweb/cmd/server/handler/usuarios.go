@@ -53,17 +53,15 @@ func (c *Usuarios) UpdateNameAndLastName() gin.HandlerFunc {
 		}
 		var req reqPatch
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
-			return
-		}
-		if req.Nombre == "" {
-			ctx.JSON(404, web.NewResponse(400, nil, "El nombre es un campo requerido"))
-			return
-		}
-		if req.Apellido == "" {
-			ctx.JSON(400, web.NewResponse(400, nil, "El apellido es un campo requerido"))
-		}
 
+			if req.Nombre == "" {
+				ctx.JSON(404, web.NewResponse(400, nil, "El nombre es un campo requerido"))
+				return
+			}
+			if req.Apellido == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "El apellido es un campo requerido"))
+			}
+		}
 		user, error := c.service.UpdateNameAndLastName(id, req.Nombre, req.Apellido)
 		if error != nil {
 			ctx.JSON(404, web.NewResponse(400, nil, error.Error()))
@@ -109,32 +107,31 @@ func (c *Usuarios) Update() gin.HandlerFunc {
 		}
 		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
-			return
-		}
-		if req.Nombre == "" {
-			ctx.JSON(400, web.NewResponse(400, nil, "El nombre es un campo requerido"))
-			return
-		}
-		if req.Apellido == "" {
-			ctx.JSON(400, web.NewResponse(400, nil, "El apellido es un campo requerido"))
-			return
-		}
-		if req.Email == "" {
-			ctx.JSON(400, web.NewResponse(400, nil, "El email es un campo requerido"))
-			return
-		}
-		if req.Edad < 0 {
-			ctx.JSON(400, web.NewResponse(400, nil, "La edad es un campo requerido"))
-			return
-		}
-		if req.Altura < 0.0 {
-			ctx.JSON(400, web.NewResponse(400, nil, "La altura es un campo requerido"))
-			return
-		}
-		if req.FechaCreacion == "" {
-			ctx.JSON(400, web.NewResponse(400, nil, "La fecha es un campo requerido"))
-			return
+
+			if req.Nombre == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "El nombre es un campo requerido"))
+				return
+			}
+			if req.Apellido == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "El apellido es un campo requerido"))
+				return
+			}
+			if req.Email == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "El email es un campo requerido"))
+				return
+			}
+			if req.Edad < 0 {
+				ctx.JSON(400, web.NewResponse(400, nil, "La edad es un campo requerido"))
+				return
+			}
+			if req.Altura < 0.0 {
+				ctx.JSON(400, web.NewResponse(400, nil, "La altura es un campo requerido"))
+				return
+			}
+			if req.FechaCreacion == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "La fecha es un campo requerido"))
+				return
+			}
 		}
 
 		user, err := c.service.Update(id, req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, req.Activo, req.FechaCreacion)
