@@ -73,6 +73,7 @@ func (r *repository) Update(id int, nombre, apellido, email string, edad int, al
 		return domain.Usuarios{}, fmt.Errorf("el producto con id %d no fue encontrado", id)
 	}
 	return u, nil
+
 }
 
 func (r *repository) Delete(id int) error {

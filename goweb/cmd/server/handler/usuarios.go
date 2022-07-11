@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -9,7 +8,6 @@ import (
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/usuarios"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/web"
 	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator"
 )
 
 type request struct {
@@ -177,18 +175,33 @@ func (c *Usuarios) Guardar() gin.HandlerFunc {
 
 		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			var ve validator.ValidationErrors
-			if errors.As(err, &ve) {
-				result := ""
-				for i, field := range ve {
-					if i != len(ve)-1 {
-						result += fmt.Sprintf("el campo %s es requerido y ", field.Tag())
-					} else {
-						result += fmt.Sprintf("el campo %s es requerido", field.Tag())
-					}
-				}
-				ctx.JSON(404, result)
-				ctx.JSON(404, web.NewResponse(404, nil, result))
+			if req.Nombre == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "el nombre del usuario es requerido"))
+				return
+			}
+
+			if req.Apellido == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "el apellido del usuario es requerido"))
+				return
+			}
+			if req.Email == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "el email del usuario es requerido"))
+				return
+			}
+
+			if req.Edad < 1 {
+				ctx.JSON(400, web.NewResponse(400, nil, "la edad del usuario debe ser mayor a 0"))
+				return
+			}
+
+			if req.Altura <= 0 {
+				ctx.JSON(400, web.NewResponse(400, nil, "la altura del usuario es requerida"))
+				return
+			}
+
+			if req.FechaCreacion == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "la fecha de creacion del usuario es requerida"))
+				return
 			}
 		}
 		user, err := c.service.Guardar(req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, req.Activo, req.FechaCreacion)
@@ -199,5 +212,4 @@ func (c *Usuarios) Guardar() gin.HandlerFunc {
 		ctx.JSON(200, web.NewResponse(200, user, ""))
 
 	}
-
 }

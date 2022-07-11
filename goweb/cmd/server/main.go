@@ -40,5 +40,5 @@ func main() {
 	us.GET("/", u.GetAll())
 	us.DELETE("/:id", u.Delete())
 	us.PATCH("/:id", u.UpdateNameAndLastName())
-	router.Run(":8000")
+	router.Run(":7000")
 }
