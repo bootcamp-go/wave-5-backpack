@@ -116,6 +116,7 @@ func (r *repository) Delete(id int) error {
 	for i, trans := range transactions {
 		if trans.Id == id {
 			transactions = append(transactions[:i], transactions[i+1:]...)
+			deleted = true
 			break
 		}
 	}

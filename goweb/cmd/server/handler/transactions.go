@@ -7,6 +7,7 @@ import (
 	"goweb/cmd/server/utils/filters"
 	"goweb/internal/domain"
 	"goweb/internal/transactions"
+	"goweb/pkg/web"
 	"net/http"
 	"os"
 	"strconv"
@@ -35,13 +36,56 @@ func NewTransaction(ser transactions.Service) Transaction {
 	return Transaction{ser}
 }
 
+func getAtoiId(ctx *gin.Context) (int, error) {
+	idParam, exist := ctx.Params.Get("id")
+	badIdMessage := "send a valid id"
+	if !exist {
+		return 0, errors.New(badIdMessage)
+	}
+
+	id, err := strconv.Atoi(idParam)
+
+	if err != nil {
+		ctx.JSON(web.NewResponse(http.StatusBadRequest, nil, "send a valid id"))
+		return 0, errors.New(badIdMessage)
+	}
+	return id, nil
+}
+
+func verifyToken(ctx *gin.Context) bool {
+	token := ctx.GetHeader("Authorization")
+	return token == os.Getenv("TOKEN")
+}
+
+func generateFieldErrorMessage(err error) string {
+	var ve validator.ValidationErrors
+	if errors.As(err, &ve) {
+		messageErrors := utils.GenerateMessageValidationError(err.(validator.ValidationErrors))
+		messageString := ""
+		for i, err := range messageErrors {
+			if i == 0 {
+				messageString += err
+			}
+			messageString += "\n" + err
+		}
+		err = errors.New(messageString)
+	}
+	return err.Error()
+}
+
+func generateServiceErrorWeb(err error) (int, web.Response) {
+	errAmountNotAllowed := transactions.NotAllowedAmountZeroOrNegative{}
+	if errors.Is(err, &errAmountNotAllowed) {
+		web.NewResponse(http.StatusBadRequest, nil, "error: amount is zero or below to 0")
+	}
+	return web.NewResponse(http.StatusInternalServerError, nil, err.Error())
+}
+
 func (t *Transaction) Search() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		transactions, err := t.ser.GetAll()
 		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
 			return
 		}
 
@@ -60,9 +104,7 @@ func (t *Transaction) Search() gin.HandlerFunc {
 			}
 		}
 
-		ctx.JSON(200, gin.H{
-			"data": filteredTransactions,
-		})
+		ctx.JSON(web.NewResponse(http.StatusOK, filteredTransactions, ""))
 	}
 }
 
@@ -70,14 +112,10 @@ func (t *Transaction) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		transactions, err := t.ser.GetAll()
 		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, gin.H{
-			"data": transactions,
-		})
+		ctx.JSON(web.NewResponse(http.StatusOK, transactions, ""))
 	}
 }
 
@@ -86,224 +124,110 @@ func (t *Transaction) GetById() gin.HandlerFunc {
 
 		searchId, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-				"err": "param id must be integer",
-			})
+			ctx.JSON(web.NewResponse(http.StatusBadRequest, nil, "param id must be integer"))
 			return
 		}
 		transactionResult, err := t.ser.GetById(searchId)
 		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusNotFound, gin.H{
-				"err": "transaction not found",
-			})
+			ctx.JSON(web.NewResponse(http.StatusNotFound, nil, "transaction not found"))
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{
-			"data": transactionResult,
-		})
+		ctx.JSON(web.NewResponse(http.StatusOK, transactionResult, ""))
 	}
 }
 
 func (t *Transaction) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		idParam, exist := ctx.Params.Get("id")
-
-		if !exist {
-			ctx.JSON(400, gin.H{
-				"error": "set a valid id",
-			})
+		if !verifyToken(ctx) {
+			ctx.JSON(web.NewResponse(http.StatusUnauthorized, nil, "Access Denied: Token Unauthorized"))
 			return
 		}
-
-		id, err := strconv.Atoi(idParam)
-
+		id, err := getAtoiId(ctx)
 		if err != nil {
-			ctx.JSON(400, gin.H{
-				"error": "set a valid id",
-			})
+			ctx.JSON(web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
-
 		if err := t.ser.Delete(id); err != nil {
-			var notFound *transactions.NotFound
-			if errors.As(err, &notFound) {
-				ctx.JSON(http.StatusNotFound, gin.H{
-					"error": err.Error(),
-				})
-				return
-			}
-			ctx.JSON(http.StatusInternalServerError, gin.H{
-				"error": "Internal Server Error",
-			})
-
+			ctx.JSON(generateServiceErrorWeb(err))
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{
-			"data": fmt.Sprintf("transaction with id %d was deleted successfully", id),
-		})
+		ctx.JSON(web.NewResponse(http.StatusAccepted, fmt.Sprintf("transaction with id %d was deleted successfully", id), ""))
 	}
 }
 
 func (t *Transaction) UpdateCurrencyAndAmount() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("Authorization")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "Access Denied: Token Unauthorized",
-			})
-			return
-		}
-		idParam, exist := ctx.Params.Get("id")
-
-		if !exist {
-			ctx.JSON(400, gin.H{
-				"error": "set a valid id",
-			})
+		if !verifyToken(ctx) {
+			ctx.JSON(web.NewResponse(http.StatusUnauthorized, nil, "Access Denied: Token Unauthorized"))
 			return
 		}
 
-		id, err := strconv.Atoi(idParam)
-
+		id, err := getAtoiId(ctx)
 		if err != nil {
-			ctx.JSON(400, gin.H{
-				"error": "set a valid id",
-			})
+			ctx.JSON(web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
 
 		transactionRequest := requestCurrenctAndAmount{}
 		if err := ctx.ShouldBindJSON(&transactionRequest); err != nil {
-			var ve validator.ValidationErrors
-			if errors.As(err, &ve) {
-				messagesErrors := utils.GenerateMessageValidationError(err.(validator.ValidationErrors))
-				ctx.JSON(400, gin.H{
-					"ValidationErrors": messagesErrors,
-				})
-			} else {
-				ctx.JSON(400, gin.H{
-					"error": err.Error(),
-				})
-			}
+			ctx.JSON(web.NewResponse(http.StatusBadRequest, nil, generateFieldErrorMessage(err)))
 			return
 		}
 
 		transaction, err := t.ser.UpdateCurrencyAndAmount(id, transactionRequest.Currency, transactionRequest.Amount)
 		if err != nil {
-			errAmountNotAllowed := transactions.NotAllowedAmountZeroOrNegative{}
-			if errors.Is(err, &errAmountNotAllowed) {
-				ctx.JSON(400, gin.H{
-					"error": "error: amount is zero or below to 0",
-				})
-				return
-			}
-			ctx.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(generateServiceErrorWeb(err))
 			return
 		}
-		ctx.JSON(201, transaction)
+		ctx.JSON(web.NewResponse(http.StatusOK, transaction, ""))
 	}
 }
 
 func (t *Transaction) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("Authorization")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "Access Denied: Token Unauthorized",
-			})
-			return
-		}
-		idParam, exist := ctx.Params.Get("id")
-
-		if !exist {
-			ctx.JSON(400, gin.H{
-				"error": "set a valid id",
-			})
+		if !verifyToken(ctx) {
+			ctx.JSON(web.NewResponse(http.StatusUnauthorized, nil, "Access Denied: Token Unauthorized"))
 			return
 		}
 
-		id, err := strconv.Atoi(idParam)
-
+		id, err := getAtoiId(ctx)
 		if err != nil {
-			ctx.JSON(400, gin.H{
-				"error": "set a valid id",
-			})
+			ctx.JSON(web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
 
 		transactionRequest := request{}
 		if err := ctx.ShouldBindJSON(&transactionRequest); err != nil {
-			var ve validator.ValidationErrors
-			if errors.As(err, &ve) {
-				mesagesErrors := utils.GenerateMessageValidationError(err.(validator.ValidationErrors))
-				ctx.JSON(400, gin.H{
-					"ValidationErrors": mesagesErrors,
-				})
-			} else {
-				ctx.JSON(400, gin.H{
-					"error": err.Error(),
-				})
-			}
+			ctx.JSON(web.NewResponse(http.StatusBadRequest, nil, generateFieldErrorMessage(err)))
 			return
 		}
 
 		transaction, err := t.ser.Update(id, transactionRequest.Currency, transactionRequest.Amount, transactionRequest.Sender, transactionRequest.Reciever)
 		if err != nil {
-			errAmountNotAllowed := transactions.NotAllowedAmountZeroOrNegative{}
-			if errors.Is(err, &errAmountNotAllowed) {
-				ctx.JSON(400, gin.H{
-					"error": "error: amount is zero or below to 0",
-				})
-				return
-			}
-			ctx.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(generateServiceErrorWeb(err))
 			return
 		}
-		ctx.JSON(201, transaction)
+		ctx.JSON(web.NewResponse(http.StatusOK, transaction, ""))
 	}
 }
 
 func (t *Transaction) CreateTransaction() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("Authorization")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "Access Denied: Token Unauthorized",
-			})
+		if !verifyToken(ctx) {
+			ctx.JSON(web.NewResponse(http.StatusUnauthorized, nil, "Access Denied: Token Unauthorized"))
 			return
 		}
+
 		transactionRequest := request{}
 		if err := ctx.ShouldBindJSON(&transactionRequest); err != nil {
-			var ve validator.ValidationErrors
-			if errors.As(err, &ve) {
-				mesagesErrors := utils.GenerateMessageValidationError(err.(validator.ValidationErrors))
-				ctx.JSON(400, gin.H{
-					"ValidationErrors": mesagesErrors,
-				})
-			} else {
-				ctx.JSON(400, gin.H{
-					"error": err.Error(),
-				})
-			}
+			ctx.JSON(web.NewResponse(http.StatusBadRequest, nil, generateFieldErrorMessage(err)))
 			return
 		}
 		transaction, err := t.ser.Store(transactionRequest.Currency, transactionRequest.Amount, transactionRequest.Sender, transactionRequest.Reciever)
 		if err != nil {
-			errAmountNotAllowed := transactions.NotAllowedAmountZeroOrNegative{}
-			if errors.Is(err, &errAmountNotAllowed) {
-				ctx.JSON(400, gin.H{
-					"error": "error: amount is zero or below to 0",
-				})
-				return
-			}
-			ctx.JSON(http.StatusInternalServerError, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(generateServiceErrorWeb(err))
 			return
 		}
-		ctx.JSON(201, transaction)
+		ctx.JSON(web.NewResponse(http.StatusCreated, transaction, ""))
 	}
 }
