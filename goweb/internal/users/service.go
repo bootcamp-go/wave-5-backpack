@@ -2,6 +2,7 @@ package users
 
 import (
 	"errors"
+	"os"
 
 	"github.com/bootcamp-go/wave-5-backpack/internal/domain"
 )
@@ -64,7 +65,7 @@ func (s *service) ValidateReq(req request) []string {
 } */
 
 func (s *service) ValidateToken(token string) error {
-	if token != "lalala" {
+	if token != os.Getenv("TOKEN") {
 		err := errors.New("ERROR: Invalid token")
 		return err
 	}
