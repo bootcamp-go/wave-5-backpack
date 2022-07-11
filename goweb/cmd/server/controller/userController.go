@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"goweb/internal/domain"
 	"log"
 	"os"
 	"strconv"
@@ -33,7 +32,7 @@ func validateToken(c *gin.Context) bool {
 
 func GetUsers(c *gin.Context) {
 	var data, _ = os.ReadFile("./users.JSON")
-	var u []domain.User
+	var u []CreateUserRequest
 
 	if err := json.Unmarshal(data, &u); err != nil {
 		fmt.Println("Error")
@@ -47,7 +46,7 @@ func GetUsers(c *gin.Context) {
 
 func GetUsersById(c *gin.Context) {
 	var data, _ = os.ReadFile("./users.JSON")
-	var u []domain.User
+	var u []CreateUserRequest
 
 	if err := json.Unmarshal(data, &u); err != nil {
 		fmt.Println("Error")
@@ -62,7 +61,7 @@ func GetUsersById(c *gin.Context) {
 		}
 	}
 }
-func CreateUser(u domain.User) gin.HandlerFunc {
+func CreateUser() gin.HandlerFunc {
 	var user CreateUserRequest
 	return func(c *gin.Context) {
 		if !validateToken(c) {
@@ -84,7 +83,7 @@ func CreateUser(u domain.User) gin.HandlerFunc {
 			}
 		}
 		//TODO: Llamar al servicio interno createUser
-		u.CreateUser(user)
+		//u.CreateUser(user)
 		c.JSON(200, user)
 	}
 }

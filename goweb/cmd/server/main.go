@@ -3,12 +3,13 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"goweb/cmd/server/controller"
-	"goweb/internal/domain"
+	"goweb/internal/user"
 )
 
-var user1 domain.User
-var users []domain.User
-var lastId int
+var user1 *user.UserModel
+
+//var users []user.UserModel
+//var lastId int
 
 func main() {
 
@@ -16,7 +17,7 @@ func main() {
 
 	router.GET("/index", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"message": "Hola Pablo",
+			"message": "hola Pablo",
 		})
 	})
 	usersGroup := router.Group("/users")
@@ -25,7 +26,10 @@ func main() {
 		usersGroup.GET("/", controller.GetUsers)
 		usersGroup.GET("/:id", controller.GetUsersById)
 		//POSTs ----//
-		usersGroup.POST("/", controller.CreateUser(*user1))
+		usersGroup.POST("/", controller.CreateUser())
 	}
-	router.Run()
+	err := router.Run()
+	if err != nil {
+		return
+	}
 }

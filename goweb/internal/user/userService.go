@@ -1,11 +1,11 @@
 package user
 
 import (
-	"arquitectura/cmd/server/controller"
+	"goweb/cmd/server/controller"
 	"time"
 )
 
-func (user domain.UserModel) CreateUser(u controller.CreateUserRequest) {
+func (user UserModel) CreateUser(u controller.CreateUserRequest) {
 	user.Id = u.Id
 	user.LastName = u.LastName
 	user.FirstName = u.FirstName
@@ -14,5 +14,4 @@ func (user domain.UserModel) CreateUser(u controller.CreateUserRequest) {
 	user.Height = u.Height
 	user.CreationDate = time.Now().Format("2006-01-02")
 	user.Active = true
-
 }
