@@ -11,9 +11,9 @@ var products []domain.Product
 
 type repositoryMemoria struct{}
 
-func NewRepositoryMemoria() Repository {
-	return &repositoryMemoria{}
-}
+//func NewRepositoryMemoria() Repository {
+//	return &repositoryMemoria{}
+//}
 
 func (r *repositoryMemoria) GetAll() ([]domain.Product, error) {
 	return products, nil
