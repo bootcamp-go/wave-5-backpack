@@ -1,0 +1,102 @@
+[
+    {
+        "id": 1,
+        "nombre": "Audifono Razer",
+        "color": "Negro-Verde",
+        "precio": 154990,
+        "stock": 15,
+        "codigo": "SKU000001",
+        "publicado": true,
+        "fechaCreacion": "01-01-2022"
+    },
+    {
+        "id": 2,
+        "nombre": "Audifono Corsair",
+        "color": "Negro-Amarillo",
+        "precio": 124990,
+        "stock": 13,
+        "codigo": "SKU000002",
+        "publicado": true,
+        "fechaCreacion": "02-01-2022"
+    },
+    {
+        "id": 3,
+        "nombre": "Audifono Logitech",
+        "color": "Negro-Azul",
+        "precio": 99990,
+        "stock": 13,
+        "codigo": "SKU000003",
+        "publicado": true,
+        "fechaCreacion": "03-01-2022"
+    },
+    {
+        "id": 4,
+        "nombre": "Audifono Turtle Beach",
+        "color": "Negro-Azul",
+        "precio": 77990,
+        "stock": 12,
+        "codigo": "SKU000004",
+        "publicado": true,
+        "fechaCreacion": "04-01-2022"
+    },
+    {
+        "id": 5,
+        "nombre": "Audifono Cougar",
+        "color": "Negro-Naranjo",
+        "precio": 74990,
+        "stock": 10,
+        "codigo": "SKU000005",
+        "publicado": true,
+        "fechaCreacion": "05-01-2022"
+    },
+    {
+        "id": 6,
+        "nombre": "Audifono Redragon",
+        "color": "Negro-Rojo",
+        "precio": 65990,
+        "stock": 21,
+        "codigo": "SKU000006",
+        "publicado": true,
+        "fechaCreacion": "06-01-2022"
+    },
+    {
+        "id": 7,
+        "nombre": "Audifono HyperX",
+        "color": "Negro-Rojo",
+        "precio": 125990,
+        "stock": 12,
+        "codigo": "SKU000007",
+        "publicado": true,
+        "fechaCreacion": "07-01-2022"
+    },
+    {
+        "id": 8,
+        "nombre": "Audifono Seinheiser",
+        "color": "Negro-Rojo",
+        "precio": 189990,
+        "stock": 5,
+        "codigo": "SKU000008",
+        "publicado": true,
+        "fechaCreacion": "08-01-2022"
+    },
+    {
+        "id": 9,
+        "nombre": "Audifono Genius",
+        "color": "Negro",
+        "precio": 45990,
+        "stock": 25,
+        "codigo": "SKU000009",
+        "publicado": true,
+        "fechaCreacion": "09-01-2022"
+    },
+    {
+        "id": 10,
+        "nombre": "Audifono SteelSeries",
+        "color": "Negro-Balnco",
+        "precio": 154990,
+        "stock": 15,
+        "codigo": "SKU000010",
+        "publicado": true,
+        "fechaCreacion": "10-01-2022"
+    }
+]
