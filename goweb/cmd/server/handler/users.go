@@ -30,11 +30,20 @@ func NewUsers(u users.Service) *User {
 	}
 }
 
+// ListUsers godoc
+// @Summary List users
+// @Tags Users
+// @Description get users
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Router /users [get]
 func (u *User) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
 		if token != "123456" {
-			ctx.JSON(401, web.NewResponse(401, nil, "token inválido"))
+			ctx.JSON(401, web.NewResponse(401, nil, "token incorrecto"))
 			return
 		}
 		u, err := u.service.GetAll()
@@ -46,11 +55,21 @@ func (u *User) GetAll() gin.HandlerFunc {
 	}
 }
 
+// NewUser godoc
+// @Summary New user
+// @Tags Users
+// @Description new user
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param user body request true "User to new user"
+// @Success 200 {object} web.Response
+// @Router /users [post]
 func (u *User) NewUser() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
 		if token != "123456" {
-			ctx.JSON(401, web.NewResponse(401, nil, "token inválido"))
+			ctx.JSON(401, web.NewResponse(401, nil, "token incorrecto"))
 			return
 		}
 		var req request
@@ -71,16 +90,26 @@ func (u *User) NewUser() gin.HandlerFunc {
 	}
 }
 
+// Update godoc
+// @Summary Update user
+// @Tags Users
+// @Description update user
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param user body request true "User to update user"
+// @Success 200 {object} web.Response
+// @Router /users [put]
 func (u *User) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
 		if token != "123456" {
-			ctx.JSON(401, web.NewResponse(401, nil, "token inválido"))
+			ctx.JSON(401, web.NewResponse(401, nil, "token incorrecto"))
 			return
 		}
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(400, web.NewResponse(400, nil, "Id Invalido"))
+			ctx.JSON(400, web.NewResponse(400, nil, "Id incorrecto"))
 			return
 		}
 		var req request
@@ -105,18 +134,27 @@ func (u *User) Update() gin.HandlerFunc {
 	}
 }
 
+// Update Name godoc
+// @Summary UpdateName user
+// @Tags Users
+// @Description update name user
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Router /users [patch]
 func (u *User) UpdateName() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
 
 		if token != os.Getenv("TOKEN") {
-			ctx.JSON(401, web.NewResponse(401, nil, "token inválido"))
+			ctx.JSON(401, web.NewResponse(401, nil, "token incorrecto"))
 			return
 		}
 
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(400, web.NewResponse(400, nil, "Id inválido"))
+			ctx.JSON(400, web.NewResponse(400, nil, "Id incorrecto"))
 			return
 		}
 
@@ -141,17 +179,26 @@ func (u *User) UpdateName() gin.HandlerFunc {
 	}
 }
 
+// Delete godoc
+// @Summary Delete user
+// @Tags Users
+// @Description delete user
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Router /users [delete]
 func (u *User) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
 		if token != "123456" {
-			ctx.JSON(401, web.NewResponse(401, nil, "token inválido"))
+			ctx.JSON(401, web.NewResponse(401, nil, "token incorrecto"))
 			return
 		}
 
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(400, web.NewResponse(400, nil, "Id inválido"))
+			ctx.JSON(400, web.NewResponse(400, nil, "Id incorrecto"))
 			return
 		}
 		err = u.service.Delete(int(id))
@@ -165,6 +212,13 @@ func (u *User) Delete() gin.HandlerFunc {
 
 }
 
+// Validators godoc
+// @Summary valdiators
+// @Tags valdiators
+// @Description Check the required fields
+// @Accept  json
+// @Produce  json
+// @Param user body request true "Check the required fields"
 func validators(req request) string {
 	var requiredFiles string
 	if req.Name == "" {
