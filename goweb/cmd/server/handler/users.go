@@ -64,9 +64,10 @@ func (u *User) GetById() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "invalid id"))
 			return
 		}
+
 		user, errUser := u.service.GetById(int(id))
 		if errUser != nil {
-			ctx.JSON(http.StatusInternalServerError, web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
+			ctx.JSON(http.StatusInternalServerError, web.NewResponse(http.StatusInternalServerError, nil, errUser.Error()))
 			return
 		}
 

@@ -2,7 +2,6 @@ package users
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 	"time"
@@ -46,8 +45,16 @@ func (r *repository) GetAll() ([]domain.ModelUser, error) {
 		return nil, fmt.Errorf(errorLectura, err)
 	}
 
+	// Obtenemos los usuarios que no están borrados
+	var filtro []domain.ModelUser
+	for i := range users {
+		if !users[i].Borrado {
+			filtro = append(filtro, users[i])
+		}
+	}
+
 	// Devolvemos todos los usuarios del JSON
-	return users, nil
+	return filtro, nil
 }
 
 // Función para devolver una entidad por id
@@ -63,7 +70,7 @@ func (r *repository) GetById(id int) (domain.ModelUser, error) {
 	// Buscamos el usuario por id
 	found := false
 	for i := range users {
-		if users[i].Id == id && !found {
+		if users[i].Id == id && !users[i].Borrado && !found {
 			user = users[i]
 			found = true
 		}
@@ -98,6 +105,7 @@ func (r *repository) Store(nombre string, apellido string, email string, edad in
 	// Se genera el id consecutivo y la fecha de creación
 	user.Id = lastId + 1
 	user.FechaCreacion = time.Now()
+	user.Borrado = false
 
 	// Se adiciona el usuario al slice de usuarios
 	users = append(users, user)
@@ -122,7 +130,7 @@ func (r *repository) Update(id int, nombre string, apellido string, email string
 	user := domain.ModelUser{Nombre: nombre, Apellido: apellido, Email: email, Edad: edad, Altura: altura, Activo: activo}
 	found := false
 	for i := range users {
-		if users[i].Id == id && !found {
+		if users[i].Id == id && !users[i].Borrado && !found {
 			user.Id = id
 			user.FechaCreacion = users[i].FechaCreacion
 			users[i] = user
@@ -155,7 +163,7 @@ func (r *repository) UpdateApellidoEdad(id int, apellido string, edad int) (doma
 	var user domain.ModelUser
 	found := false
 	for i := range users {
-		if users[i].Id == id && !found {
+		if users[i].Id == id && !users[i].Borrado && !found {
 			users[i].Apellido = apellido
 			users[i].Edad = edad
 			user = users[i]
@@ -186,10 +194,9 @@ func (r *repository) Delete(id int) error {
 	}
 
 	found := false
-	var index int
 	for i := range users {
-		if users[i].Id == id && !found {
-			index = i
+		if users[i].Id == id && !users[i].Borrado && !found {
+			users[i].Borrado = true
 			found = true
 		}
 	}
@@ -198,9 +205,6 @@ func (r *repository) Delete(id int) error {
 	if !found {
 		return fmt.Errorf("usuario %d no econtrado", id)
 	}
-
-	// Se quita del slice el usuario
-	users = append(users[:index], users[index+1:]...)
 
 	// Se guarda la información y se verifica que no haya ocurrido un error
 	if err := r.db.Write(&users); err != nil {
@@ -223,7 +227,7 @@ func (r *repository) SearchUser(nombreQuery string, apellidoQuery string, emailQ
 	// Buscamos por nombre
 	if nombreQuery != "" {
 		for _, u := range users {
-			if strings.Contains(strings.ToUpper(u.Nombre), strings.ToUpper(nombreQuery)) {
+			if strings.Contains(strings.ToUpper(u.Nombre), strings.ToUpper(nombreQuery)) && !u.Borrado {
 				filtro = append(filtro, u)
 			}
 		}
@@ -234,14 +238,14 @@ func (r *repository) SearchUser(nombreQuery string, apellidoQuery string, emailQ
 		if len(filtro) > 0 {
 			temporal = nil
 			for _, u := range filtro {
-				if strings.Contains(strings.ToUpper(u.Apellido), strings.ToUpper(apellidoQuery)) {
+				if strings.Contains(strings.ToUpper(u.Apellido), strings.ToUpper(apellidoQuery)) && !u.Borrado {
 					temporal = append(temporal, u)
 				}
 			}
 			filtro = temporal
 		} else {
 			for _, u := range users {
-				if strings.Contains(strings.ToUpper(u.Apellido), strings.ToUpper(apellidoQuery)) {
+				if strings.Contains(strings.ToUpper(u.Apellido), strings.ToUpper(apellidoQuery)) && !u.Borrado {
 					filtro = append(filtro, u)
 				}
 			}
@@ -253,14 +257,14 @@ func (r *repository) SearchUser(nombreQuery string, apellidoQuery string, emailQ
 		if len(filtro) > 0 {
 			temporal = nil
 			for _, u := range filtro {
-				if strings.Contains(strings.ToUpper(u.Email), strings.ToUpper(emailQuery)) {
+				if strings.Contains(strings.ToUpper(u.Email), strings.ToUpper(emailQuery)) && !u.Borrado {
 					temporal = append(temporal, u)
 				}
 			}
 			filtro = temporal
 		} else {
 			for _, u := range users {
-				if strings.Contains(strings.ToUpper(u.Email), strings.ToUpper(emailQuery)) {
+				if strings.Contains(strings.ToUpper(u.Email), strings.ToUpper(emailQuery)) && !u.Borrado {
 					filtro = append(filtro, u)
 				}
 			}
@@ -274,14 +278,14 @@ func (r *repository) SearchUser(nombreQuery string, apellidoQuery string, emailQ
 			if len(filtro) > 0 {
 				temporal = nil
 				for _, u := range filtro {
-					if edadInt == u.Edad {
+					if edadInt == u.Edad && !u.Borrado {
 						temporal = append(temporal, u)
 					}
 				}
 				filtro = temporal
 			} else {
 				for _, u := range users {
-					if edadInt == u.Edad {
+					if edadInt == u.Edad && !u.Borrado {
 						filtro = append(filtro, u)
 					}
 				}
@@ -296,14 +300,14 @@ func (r *repository) SearchUser(nombreQuery string, apellidoQuery string, emailQ
 			if len(filtro) > 0 {
 				temporal = nil
 				for _, u := range filtro {
-					if alturaFloat64 == u.Altura {
+					if alturaFloat64 == u.Altura && !u.Borrado {
 						temporal = append(temporal, u)
 					}
 				}
 				filtro = temporal
 			} else {
 				for _, u := range users {
-					if alturaFloat64 == u.Altura {
+					if alturaFloat64 == u.Altura && !u.Borrado {
 						filtro = append(filtro, u)
 					}
 				}
@@ -318,14 +322,14 @@ func (r *repository) SearchUser(nombreQuery string, apellidoQuery string, emailQ
 			if len(filtro) > 0 {
 				temporal = nil
 				for _, u := range filtro {
-					if activoBool == u.Activo {
+					if activoBool == u.Activo && !u.Borrado {
 						temporal = append(temporal, u)
 					}
 				}
 				filtro = temporal
 			} else {
 				for _, u := range users {
-					if activoBool == u.Activo {
+					if activoBool == u.Activo && !u.Borrado {
 						filtro = append(filtro, u)
 					}
 				}
@@ -340,15 +344,14 @@ func (r *repository) SearchUser(nombreQuery string, apellidoQuery string, emailQ
 			if len(filtro) > 0 {
 				temporal = nil
 				for _, u := range filtro {
-					if fechaCreacionDate.Format("2006-01-02") == u.FechaCreacion.Format("2006-01-02") {
+					if fechaCreacionDate.Format("2006-01-02") == u.FechaCreacion.Format("2006-01-02") && !u.Borrado {
 						temporal = append(temporal, u)
 					}
 				}
 				filtro = temporal
 			} else {
 				for _, u := range users {
-					log.Println("fechaCreacionQuery: ", fechaCreacionDate, ", FechaCreacion: ", u.FechaCreacion)
-					if fechaCreacionDate.Format("2006-01-02") == u.FechaCreacion.Format("2006-01-02") {
+					if fechaCreacionDate.Format("2006-01-02") == u.FechaCreacion.Format("2006-01-02") && !u.Borrado {
 						filtro = append(filtro, u)
 					}
 				}

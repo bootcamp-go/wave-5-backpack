@@ -12,4 +12,5 @@ type ModelUser struct {
 	Altura        float64   `json:"altura"`
 	Activo        bool      `json:"activo"`
 	FechaCreacion time.Time `json:"fecha_creacion"`
+	Borrado       bool      `json:"borrado"`
 }

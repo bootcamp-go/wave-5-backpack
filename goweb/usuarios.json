@@ -1,82 +1,90 @@
 [
-   {
-      "id":1,
-      "nombre":"Alan",
-      "apellido":"Trejo",
-      "email":"alan.trejo@latinmain.com",
-      "edad":34,
-      "altura":165.0,
-      "activo":true,
-      "fecha_creacion":"2022-06-16T12:00:00.00-05:00"
-   },
-   {
-      "id":2,
-      "nombre":"Ingrid",
-      "apellido":"Loyola",
-      "email":"ingrid.loyola@hotmail.com",
-      "edad":28,
-      "altura":170.0,
-      "activo":true,
-      "fecha_creacion":"2022-06-17T12:00:00.00-05:00"
-   },
-   {
-      "id":3,
-      "nombre":"Pedro",
-      "apellido":"Hernandez",
-      "email":"pedro.hernandez@outlook.com",
-      "edad":26,
-      "altura":159.0,
-      "activo":true,
-      "fecha_creacion":"2022-06-18T12:00:00.00-05:00"
-   },
-   {
-      "id":4,
-      "nombre":"Irving",
-      "apellido":"Castillo",
-      "email":"irving.castillo@starmedia.com",
-      "edad":31,
-      "altura":172.0,
-      "activo":true,
-      "fecha_creacion":"2022-06-19T12:00:00.00-05:00"
-   },
-   {
-      "id":5,
-      "nombre":"Guadalupe",
-      "apellido":"Contreras",
-      "email":"guadalupe.contreras@gmail.com",
-      "edad":29,
-      "altura":182.0,
-      "activo":true,
-      "fecha_creacion":"2022-06-20T12:00:00.00-05:00"
-   },
-   {
-      "id":6,
-      "nombre":"Arleth",
-      "apellido":"Alvarez",
-      "email":"arleth.alvarez@hotmail.com",
-      "edad":25,
-      "altura":179.0,
-      "activo":true,
-      "fecha_creacion":"2022-06-21T12:00:00.00-05:00"
-   },
-   {
-      "id":7,
-      "nombre":"Arturo",
-      "apellido":"Carmona",
-      "email":"arturo.carmona@gmail.com",
-      "edad":33,
-      "altura":156.0,
-      "activo":true,
-      "fecha_creacion":"2022-06-22T12:00:00.00-05:00"
-   },
-   {
-      "id":8,
-      "nombre":"Jose",
-      "apellido":"Ramirez",
-      "email":"jose.ramirez@yahoo.com",
-      "edad":27,
-      "altura":161.0,
-      "activo":true,
-      "fecha_creacion":"2022-06-23T12:00:00.00-05:00"
-   }
+ {
+  "id": 1,
+  "nombre": "Alan",
+  "apellido": "Trejo",
+  "email": "alan.trejo@latinmain.com",
+  "edad": 34,
+  "altura": 165,
+  "activo": true,
+  "fecha_creacion": "2022-06-16T12:00:00-05:00",
+  "borrado": true
+ },
+ {
+  "id": 2,
+  "nombre": "Ingrid",
+  "apellido": "Loyola",
+  "email": "ingrid.loyola@hotmail.com",
+  "edad": 28,
+  "altura": 170,
+  "activo": true,
+  "fecha_creacion": "2022-06-17T12:00:00-05:00",
+  "borrado": false
+ },
+ {
+  "id": 3,
+  "nombre": "Pedro",
+  "apellido": "Hernandez",
+  "email": "pedro.hernandez@outlook.com",
+  "edad": 26,
+  "altura": 159,
+  "activo": true,
+  "fecha_creacion": "2022-06-18T12:00:00-05:00",
+  "borrado": false
+ },
+ {
+  "id": 4,
+  "nombre": "Irving",
+  "apellido": "Castillo",
+  "email": "irving.castillo@starmedia.com",
+  "edad": 31,
+  "altura": 172,
+  "activo": true,
+  "fecha_creacion": "2022-06-19T12:00:00-05:00",
+  "borrado": false
+ },
+ {
+  "id": 5,
+  "nombre": "Guadalupe",
+  "apellido": "Contreras",
+  "email": "guadalupe.contreras@gmail.com",
+  "edad": 29,
+  "altura": 182,
+  "activo": true,
+  "fecha_creacion": "2022-06-20T12:00:00-05:00",
+  "borrado": false
+ },
+ {
+  "id": 6,
+  "nombre": "Arleth",
+  "apellido": "Alvarez",
+  "email": "arleth.alvarez@hotmail.com",
+  "edad": 25,
+  "altura": 179,
+  "activo": true,
+  "fecha_creacion": "2022-06-21T12:00:00-05:00",
+  "borrado": false
+ },
+ {
+  "id": 7,
+  "nombre": "Arturo",
+  "apellido": "Carmona",
+  "email": "arturo.carmona@gmail.com",
+  "edad": 33,
+  "altura": 156,
+  "activo": true,
+  "fecha_creacion": "2022-06-22T12:00:00-05:00",
+  "borrado": false
+ },
+ {
+  "id": 8,
+  "nombre": "Jose",
+  "apellido": "Ramirez",
+  "email": "jose.ramirez@yahoo.com",
+  "edad": 27,
+  "altura": 161,
+  "activo": true,
+  "fecha_creacion": "2022-06-23T12:00:00-05:00",
+  "borrado": false
+ }
 ]
