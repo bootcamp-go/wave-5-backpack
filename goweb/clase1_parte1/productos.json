@@ -1,0 +1,32 @@
+[
+ {
+  "id": 1,
+  "nombre": "Papaya",
+  "color": "Verde",
+  "precio": 1500,
+  "stock": 21,
+  "codigo": "1s1",
+  "publicado": true,
+  "fecha_creacion": "06/06/2022"
+ },
+ {
+  "id": 2,
+  "nombre": "Aguacate",
+  "color": "Verde",
+  "precio": 2500,
+  "stock": 11,
+  "codigo": "1a1",
+  "publicado": true,
+  "fecha_creacion": "06/06/2022"
+ },
+ {
+  "id": 3,
+  "nombre": "Melon",
+  "color": "Verde",
+  "precio": 1200,
+  "stock": 9,
+  "codigo": "1m1",
+  "publicado": true,
+  "fecha_creacion": "06/06/2022"
+ }
+]
