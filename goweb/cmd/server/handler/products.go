@@ -6,11 +6,16 @@ import (
 	"goweb/internal/domain"
 	"goweb/internal/products"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
+
+// --------------------------------------------
+// --------------- Estructuras ----------------
+// --------------------------------------------
 
 type RequestRequired struct {
 	Nombre        string  `json:"nombre" binding:"required"`
@@ -40,16 +45,20 @@ func NewProduct(s products.Service) *Product {
 	return &Product{service: s}
 }
 
-// ==================================
-// Funciones de clases anteriores
-// ==================================
+// --------------------------------------------
+// ------------------- CRUD -------------------
+// --------------------------------------------
 
 // Clase 1 Ejercicio 1 Parte 1
 func (p *Product) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		if !validateToken(ctx) {
+			return
+		}
+
 		products, err := p.service.GetAll()
 		if err != nil {
-			ctx.JSON(500, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
 
@@ -73,24 +82,28 @@ func (p *Product) GetAll() gin.HandlerFunc {
 			}
 
 			filtrados = append(filtrados, product)
-
 		}
 
 		if len(filtrados) == 0 {
-			ctx.JSON(500, gin.H{"error": "No se hallaron resultados"})
+			ctx.JSON(http.StatusNotFound, gin.H{"error": "No se hallaron resultados"})
 			return
 		}
 
-		ctx.JSON(200, filtrados)
+		ctx.JSON(http.StatusOK, filtrados)
 	}
 }
 
 // Clase 1 Ejercicio 2 Parte 2
 func (p *Product) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		if !validateToken(ctx) {
+			return
+		}
+
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
-			ctx.JSON(500, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Id inválido"})
+			return
 		}
 
 		producto, err := p.service.GetById(id)
@@ -98,28 +111,19 @@ func (p *Product) GetById() gin.HandlerFunc {
 			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
+
 		ctx.JSON(http.StatusOK, producto)
 	}
 }
 
 // Clase 2 Ejercicio 1 Parte 1
-func validateToken(ctx *gin.Context) bool {
-	if token := ctx.GetHeader("token"); token != "123" {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token invalido"})
-		return false
-	}
-	return true
-}
-
-// Clase 2 Ejercicio 1 Parte 1
 func (p *Product) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var req RequestRequired
-
 		if !validateToken(ctx) {
 			return
 		}
 
+		var req RequestRequired
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			var ve validator.ValidationErrors
 			if errors.As(err, &ve) {
@@ -131,7 +135,7 @@ func (p *Product) Store() gin.HandlerFunc {
 						result += fmt.Sprintf("El campo %s es requerido", field.Field())
 					}
 				}
-				ctx.JSON(404, result)
+				ctx.JSON(http.StatusBadRequest, result)
 				return
 			}
 		}
@@ -147,7 +151,7 @@ func (p *Product) Store() gin.HandlerFunc {
 		)
 
 		if err != nil {
-			ctx.JSON(500, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
 
@@ -164,7 +168,7 @@ func (p *Product) Update() gin.HandlerFunc {
 
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Id inválido"})
 			return
 		}
 
@@ -199,7 +203,7 @@ func (p *Product) Update() gin.HandlerFunc {
 			return
 		}
 
-		if req.Publicado == false {
+		if !req.Publicado {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "El publicado es requerido"})
 			return
 		}
@@ -238,7 +242,7 @@ func (p *Product) Delete() gin.HandlerFunc {
 
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": "id invalido"})
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Id inválido"})
 			return
 		}
 
@@ -261,7 +265,7 @@ func (p *Product) UpdateNombreYPrecio() gin.HandlerFunc {
 
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Id inválido"})
 			return
 		}
 
@@ -303,4 +307,17 @@ func (p *Product) UpdateNombreYPrecio() gin.HandlerFunc {
 
 		ctx.JSON(http.StatusOK, producto)
 	}
+}
+
+// --------------------------------------------
+// ------------- Otras funciones --------------
+// --------------------------------------------
+
+// Clase 2 Ejercicio 1 Parte 1
+func validateToken(ctx *gin.Context) bool {
+	if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
+		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "token invalido"})
+		return false
+	}
+	return true
 }
