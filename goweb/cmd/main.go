@@ -32,7 +32,6 @@ func main() {
 	rt := router.Group("/transactions")
 	{
 		rt.GET("", t.GetAll)
-		rt.GET("/search", t.GetFilter)
 		rt.GET("/:id", t.GetByID)
 
 		rt.PUT("/:id", t.Update)
