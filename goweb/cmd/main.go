@@ -2,13 +2,25 @@ package main
 
 import (
 	"goweb/cmd/handler"
+	"goweb/docs"
 	"goweb/internals/transactions"
 	"goweb/pkg/store"
+	"goweb/pkg/web"
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
+
+//@title MELI Bootcamp API Test
+//@version 1.0
+//@description This API is an excercise
+
+//@contact.name API Support
+//@contact.url https://www.twitter.com/imakheri
 
 func main() {
 	err := godotenv.Load()
@@ -27,25 +39,36 @@ func main() {
 
 	router := gin.Default()
 
+	docs.SwaggerInfo.Host = os.Getenv("HOST")
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	transacciones := router.Group("transacciones")
 	transacciones.GET("/", h.GetAll())
 	transacciones.GET("/filtros", h.GetByQuery())
 	transacciones.GET("/:id", h.GetByID())
-	transacciones.POST("/", h.Store())
-	transacciones.PUT("/", h.Update())
-	transacciones.DELETE("/", h.Delete())
+	transacciones.POST("/", TokenAuthMiddleware(), h.Store())
+	transacciones.PUT("/", TokenAuthMiddleware(), h.Update())
+	transacciones.DELETE("/", TokenAuthMiddleware(), h.Delete())
 
 	router.Run(":8080")
 }
 
-//Ejercicio 2
-//Crea dentro de la carpeta go-web un archivo llamado main.go
-//Crea un servidor web con Gin que te responda un JSON que tenga una clave “message” y diga Hola seguido por tu nombre.
-//Pegale al endpoint para corroborar que la respuesta sea la correcta.
+func TokenAuthMiddleware() gin.HandlerFunc {
+	requiredToken := os.Getenv("TOKEN")
 
-//Ejercicio 3
-//Ya habiendo creado y probado nuestra API que nos saluda, generamos una ruta que devuelve un listado de la temática elegida.
-//Dentro del “main.go”, crea una estructura según la temática con los campos correspondientes.
-//Genera un endpoint cuya ruta sea /temática (en plural). Ejemplo: “/productos”
-//Genera un handler para el endpoint llamado “GetAll”.
-//Crea una slice de la estructura, luego devuelvela a través de nuestro endpoint.
+	if requiredToken == "" {
+		log.Fatal("No se encontró el token en la variable de entorno")
+	}
+	return func(c *gin.Context) {
+		token := c.GetHeader("token")
+		if token == "" {
+			c.AbortWithStatusJSON(401, web.NewResponse(401, nil, "Falta token en la cabecera"))
+			return
+		}
+		if token != requiredToken {
+			c.AbortWithStatusJSON(401, web.NewResponse(401, nil, "El token es incorrecto"))
+			return
+		}
+		c.Next()
+	}
+}

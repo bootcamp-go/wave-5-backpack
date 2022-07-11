@@ -1,0 +1,102 @@
+info:
+  contact:
+    name: API Support
+    url: https://www.twitter.com/imakheri
+  description: This API is an excercise
+  title: MELI Bootcamp API Test
+  version: "1.0"
+paths:
+  /transacciones:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a Transacction
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Delete a Transacction
+      tags:
+      - Transaction
+    get:
+      consumes:
+      - application/json
+      description: Get All Transactions
+      produces:
+      - application/json
+      responses: {}
+      summary: List of Transactions
+      tags:
+      - Transactions
+    post:
+      consumes:
+      - application/json
+      description: Post a Transacction
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Post a Transacction
+      tags:
+      - Transaction
+    put:
+      consumes:
+      - application/json
+      description: Update a Transacction
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Update a Transacction
+      tags:
+      - Transaction
+  /transacciones/ID:
+    get:
+      consumes:
+      - application/json
+      description: Get Transaction by ID
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Get Transaction by ID
+      tags:
+      - Transaction
+  /transacciones/filtros:
+    get:
+      consumes:
+      - application/json
+      description: Get Transactions By Query
+      parameters:
+      - description: query
+        in: header
+        name: query
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: List of Transactions By Query
+      tags:
+      - Transactions
+swagger: "2.0"
