@@ -53,40 +53,29 @@ func (r *repository) FilterList(id int, name, color string, price float64, stock
 	if err := r.db.Read(&ps); err != nil {
 		return nil, errors.New("Fallo la lectura de la BD")
 	}
-	fmt.Println(ps)
-	fmt.Println(name)
 	if id > 0 {
 		ps = filterListById(ps, id)
 		fmt.Println(ps)
 	}
 	if name != "" {
 		ps = filterListByName(ps, name)
-		fmt.Println("name", ps)
 	}
 	if color != "" {
 		ps = filterListByColor(ps, color)
-		fmt.Println("color", ps)
 	}
 	if price > 0 {
 		ps = filterListByPrice(ps, price)
-		fmt.Println("price", ps)
 	}
 	if stock >= 0 {
 		ps = filterListByStock(ps, stock)
-		fmt.Println("stock", ps)
 	}
 	if codigo != "" {
 		ps = filterListByCode(ps, codigo)
-		fmt.Println("codigo", ps)
 	}
 	ps = filterListByPublish(ps, publicado)
-	fmt.Println("publicado", ps)
 	if fecha != "" {
 		ps = filterListByDate(ps, fecha)
-		fmt.Println("fecha", ps)
 	}
-	fmt.Println("paso 3")
-	fmt.Println(ps)
 	return ps, nil
 }
 
@@ -95,7 +84,6 @@ func filterListById(productos []domain.Product, id int) (filtroProductos []domai
 	for _, p := range productos {
 		fmt.Println(p)
 		if p.Id == id {
-			fmt.Println("igual")
 			filtroProductos = append(filtroProductos, p)
 		}
 	}
