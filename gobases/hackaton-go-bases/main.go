@@ -51,6 +51,7 @@ func main() {
 	//UPDATE
 	dataUpdate, err := service.Bookings.Update(service.NewBookings(dataRead), 2002, tickets[0])
 	dataWriteUpdate := ""
+
 	// stringformat = append(stringformat, values)
 	dataWriteUpdate += string(fmt.Sprint(dataUpdate.Id, ",", dataUpdate.Names, ",", dataUpdate.Email, ",", dataUpdate.Destination, ",", dataUpdate.Date, ",", dataUpdate.Price, "\n"))
 	if err != nil {
