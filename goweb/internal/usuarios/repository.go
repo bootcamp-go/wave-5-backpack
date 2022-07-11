@@ -66,21 +66,20 @@ func (r *repository) Update(id int, nombre, apellido, email string, edad int, al
 		return domain.Usuarios{}, fmt.Errorf(FailReading)
 	}
 
-	for i := range us {
-		user := &us[i]
-		if user.Id == id {
-			user.Nombre = nombre
-			user.Apellido = apellido
-			user.Email = email
-			user.FechaCreacion = fecha
-			user.Activo = activo
-			user.Edad = edad
-			user.Altura = altura
+	for i := 0; i < len(us); i++ {
+		if us[i].Id == id {
+			us[i].Nombre = nombre
+			us[i].Apellido = apellido
+			us[i].Email = email
+			us[i].FechaCreacion = fecha
+			us[i].Activo = activo
+			us[i].Edad = edad
+			us[i].Altura = altura
 
 			if err := r.db.Write(us); err != nil {
 				return domain.Usuarios{}, fmt.Errorf(FailWriting)
 			}
-			return *user, nil
+			return us[i], nil
 		}
 	}
 	return domain.Usuarios{}, fmt.Errorf(UsuarioNotFound, id)
