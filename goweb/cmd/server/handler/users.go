@@ -32,6 +32,16 @@ func NewUser(u users.Service) *User{
 	}
 }
 
+// GetAllUsers List
+// @Summary List of all platform users
+// @Tags Users
+// @Description get all platform users that exist on the platform
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Router /users [get]
 func (c *User) GetAllUsers() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// valido token
@@ -49,6 +59,17 @@ func (c *User) GetAllUsers() gin.HandlerFunc {
 	}
 }
 
+// GetUserById
+// @Summary Get one user by Id
+// @Tags Users
+// @Description Get one user by Id
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param id path int true "id"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Router /users/{id} [get]
 func (c *User) GetUserById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// valido token
@@ -67,6 +88,18 @@ func (c *User) GetUserById() gin.HandlerFunc {
 	}
 }
 
+
+// StoreUsers
+// @Summary Store new users in the database
+// @Tags Users
+// @Description store users
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param user body request true "User to store"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Router /users [post]
 func (c *User) StoreUser() gin.HandlerFunc {
 	return func(ctx *gin.Context){
 
@@ -99,6 +132,18 @@ func (c *User) StoreUser() gin.HandlerFunc {
 	}
 }
 
+// UpdateUser
+// @Summary Edit all the fields of an User by Id
+// @Tags Users
+// @Description You can change any user's information but it is necessary to complete all the fields
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param id path int true "id"
+// @Param user body request true "User to update"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Router /users/{id} [put]
 func (c *User) UpdateTotal() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// valido token
@@ -138,6 +183,18 @@ func (c *User) UpdateTotal() gin.HandlerFunc {
 	}
 }
 
+// UpdateUser
+// @Summary Edit user's age or lastname
+// @Tags Users
+// @Description You can change user's age or lastname
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param id path int true "id"
+// @Param user body request true "User to update"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Router /users/{id} [patch]
 func (c *User) UpdatePartial() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// valido token
@@ -183,6 +240,18 @@ func (c *User) UpdatePartial() gin.HandlerFunc {
 	}
 }
 
+
+// DeleteUser
+// @Summary Delete any User by Id
+// @Tags Users
+// @Description You can delete any user in the database
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param id path int true "id"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Router /users/{id} [delete]
 func (c *User) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// valido token
