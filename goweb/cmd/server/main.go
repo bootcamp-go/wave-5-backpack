@@ -2,6 +2,7 @@ package main
 
 import (
 	"goweb/cmd/server/handler"
+	"goweb/docs"
 	"goweb/internal/products"
 	"goweb/pkg/store"
 	"log"
@@ -9,8 +10,21 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+// @title MELI Bootcamp API
+// @version 1.0
+// @description This API Handle MELI Products.
+// @termsOfService https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
+
+// @contact.name API Support
+// @contact.url https://developers.mercadolibre.com.ar/support
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 	// Cargar las variables de entorno
 	err := godotenv.Load("../../.env")
@@ -18,6 +32,7 @@ func main() {
 		log.Fatal("error al intentar cargar archivo .env")
 	}
 
+	// Cargar la base de datos
 	db := store.NewStore(os.Getenv("DB_PATH"))
 	if err := db.Ping(); err != nil {
 		log.Fatal("error al conectar con la base de datos")
@@ -30,19 +45,18 @@ func main() {
 	p := handler.NewProduct(service)
 
 	router := gin.Default()
-	productos := router.Group("/productos")
+
+	// Cargar la API de documentación
+	docs.SwaggerInfo.Host = os.Getenv("HOST")
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	productos := router.Group("/products")
 	{
-		// Clase 1 Ejercicio 2 Parte 1
 		productos.GET("/", p.GetAll())
-		// Clase 1 Ejercicio 2 Parte 2
 		productos.GET("/:id", p.GetById())
-		// Clase 2 Ejercicio 1 Parte 1
 		productos.POST("/", p.Store())
-		// Clase 3 Ejercicio 1 Parte 1
 		productos.PUT("/:id", p.Update())
-		// Clase 3 Ejercicio 1 Parte 1
 		productos.DELETE("/:id", p.Delete())
-		// Clase 3 Ejercicio 1 Parte 1
 		productos.PATCH("/:id", p.UpdateNombreYPrecio())
 	}
 
@@ -51,5 +65,5 @@ func main() {
 		ctx.JSON(200, gin.H{"message": "Hola " + "Juan Pablo Ortiz"})
 	})
 
-	router.Run(":8080")
+	router.Run(os.Getenv("PORT"))
 }

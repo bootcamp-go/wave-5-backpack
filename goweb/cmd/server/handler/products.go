@@ -18,7 +18,7 @@ import (
 // --------------- Estructuras ----------------
 // --------------------------------------------
 
-type RequestRequired struct {
+type requestRequired struct {
 	Nombre        string  `json:"nombre" binding:"required"`
 	Color         string  `json:"color" binding:"required"`
 	Precio        float64 `json:"precio" binding:"required"`
@@ -28,7 +28,7 @@ type RequestRequired struct {
 	FechaCreacion string  `json:"fechaCreacion" binding:"required"`
 }
 
-type Request struct {
+type request struct {
 	Nombre        string  `json:"nombre"`
 	Color         string  `json:"color"`
 	Precio        float64 `json:"precio"`
@@ -50,7 +50,15 @@ func NewProduct(s products.Service) *Product {
 // ------------------- CRUD -------------------
 // --------------------------------------------
 
-// Clase 1 Ejercicio 1 Parte 1
+// ListProducts godoc - Clase 1 Ejercicio 1 Parte 1
+// @Summary List products
+// @Tags Products
+// @Description get all products
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Router /products [get]
 func (p *Product) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if !validateToken(ctx) {
@@ -103,7 +111,16 @@ func (p *Product) GetAll() gin.HandlerFunc {
 	}
 }
 
-// Clase 1 Ejercicio 2 Parte 2
+// GetProductById godoc - Clase 1 Ejercicio 2 Parte 2
+// @Summary Get product by id
+// @Tags Products
+// @Description get product by id
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "Product id"
+// @Success 200 {object} web.Response
+// @Router /products/{id} [get]
 func (p *Product) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if !validateToken(ctx) {
@@ -135,14 +152,23 @@ func (p *Product) GetById() gin.HandlerFunc {
 	}
 }
 
-// Clase 2 Ejercicio 1 Parte 1
+// StoreProduct godoc - Clase 2 Ejercicio 1 Parte 1
+// @Summary Store product
+// @Tags Products
+// @Description store product
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param product body requestRequired true "Product to store"
+// @Success 200 {object} web.Response
+// @Router /products [post]
 func (p *Product) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if !validateToken(ctx) {
 			return
 		}
 
-		var req RequestRequired
+		var req requestRequired
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			var ve validator.ValidationErrors
 			if errors.As(err, &ve) {
@@ -187,7 +213,17 @@ func (p *Product) Store() gin.HandlerFunc {
 	}
 }
 
-// Clase 3 Ejercicio 1 Parte 1
+// UpdateProduct godoc - Clase 3 Ejercicio 1 Parte 1
+// @Summary Update product
+// @Tags Products
+// @Description update product
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "Product id"
+// @Param product body request true "Product to update"
+// @Success 200 {object} web.Response
+// @Router /products/{id} [put]
 func (p *Product) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if !validateToken(ctx) {
@@ -203,7 +239,7 @@ func (p *Product) Update() gin.HandlerFunc {
 			return
 		}
 
-		var req RequestRequired
+		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(
 				http.StatusBadRequest,
@@ -294,7 +330,16 @@ func (p *Product) Update() gin.HandlerFunc {
 	}
 }
 
-// Clase 3 Ejercicio 1 Parte 1
+// DeleteProduct godoc - Clase 3 Ejercicio 1 Parte 1
+// @Summary Delete product
+// @Tags Products
+// @Description delete product
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path string true "Product id"
+// @Success 200 {object} web.Response
+// @Router /products/{id} [delete]
 func (p *Product) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if !validateToken(ctx) {
@@ -326,7 +371,18 @@ func (p *Product) Delete() gin.HandlerFunc {
 	}
 }
 
-// Clase 3 Ejercicio 1 Parte 1
+// UpdateName&Price godoc - Clase 3 Ejercicio 1 Parte 1
+// @Summary Update name and price
+// @Tags Products
+// @Description update name and price
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path string true "Product id"
+// @Param nombre body string true "Product name"
+// @Param precio body float64 true "Product price"
+// @Success 200 {object} web.Response
+// @Router /products/{id} [patch]
 func (p *Product) UpdateNombreYPrecio() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if !validateToken(ctx) {
@@ -342,7 +398,7 @@ func (p *Product) UpdateNombreYPrecio() gin.HandlerFunc {
 			return
 		}
 
-		var req Request
+		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(
 				http.StatusBadRequest,

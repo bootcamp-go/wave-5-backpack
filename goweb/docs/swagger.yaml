@@ -1,0 +1,230 @@
+definitions:
+  handler.request:
+    properties:
+      codigo:
+        type: string
+      color:
+        type: string
+      fechaCreacion:
+        type: string
+      nombre:
+        type: string
+      precio:
+        type: number
+      publicado:
+        type: boolean
+      stock:
+        type: integer
+    type: object
+  handler.requestRequired:
+    properties:
+      codigo:
+        type: string
+      color:
+        type: string
+      fechaCreacion:
+        type: string
+      nombre:
+        type: string
+      precio:
+        type: number
+      publicado:
+        type: boolean
+      stock:
+        type: integer
+    required:
+    - codigo
+    - color
+    - fechaCreacion
+    - nombre
+    - precio
+    - publicado
+    - stock
+    type: object
+  web.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      error:
+        type: string
+    type: object
+info:
+  contact:
+    name: API Support
+    url: https://developers.mercadolibre.com.ar/support
+  description: This API Handle MELI Products.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
+  title: MELI Bootcamp API
+  version: "1.0"
+paths:
+  /products:
+    get:
+      consumes:
+      - application/json
+      description: get all products
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: List products
+      tags:
+      - Products
+    post:
+      consumes:
+      - application/json
+      description: store product
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Product to store
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/handler.requestRequired'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Store product
+      tags:
+      - Products
+  /products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete product
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Product id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Delete product
+      tags:
+      - Products
+    get:
+      consumes:
+      - application/json
+      description: get product by id
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Product id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Get product by id
+      tags:
+      - Products
+    patch:
+      consumes:
+      - application/json
+      description: update name and price
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Product id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Product name
+        in: body
+        name: nombre
+        required: true
+        schema:
+          type: string
+      - description: Product price
+        in: body
+        name: precio
+        required: true
+        schema:
+          type: number
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Update name and price
+      tags:
+      - Products
+    put:
+      consumes:
+      - application/json
+      description: update product
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Product id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Product to update
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/handler.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Update product
+      tags:
+      - Products
+swagger: "2.0"
