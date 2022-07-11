@@ -6,12 +6,19 @@ import (
 	"goweb/cmd/server/handler"
 	"goweb/internal/products"
 	"goweb/pkg/store"
+	"goweb/pkg/web"
 	"log"
 	"net/http"
 	"os"
 
+	"goweb/docs"
+
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	//"github.com/swaggo/gin-swagger/example/basic/docs"
+	"github.com/swaggo/files"
 )
 
 
@@ -187,7 +194,16 @@ func filterProducts(ctx *gin.Context)  {
 
 }
 
+// @title MELI Bootcamp API
+// @version 1.0
+// @description This API Handle MELI Products.
+// @termsOfService https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
 
+// @contact.name API Support
+// @contact.url https://developers.mercadolibre.com.ar/support
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 	if err := godotenv.Load(); err != nil{
 		fmt.Println("error:", err)
@@ -198,11 +214,17 @@ func main() {
 	serv := products.NewService(repo)
 	productHandler := handler.NewProduct(serv)
 
+	docs.SwaggerInfo.Host =os.Getenv("HOST")
+
+
+
 	// Crea un router con gin
 	router := gin.Default()
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	pr := router.Group("/productos")
 
 	//  “/productos”
+	pr.Use(TokenAuthMiddleware())
 	pr.GET("/", productHandler.GetAll())
 	pr.GET("/filtrar", filterProducts)
 	pr.POST("/", productHandler.Create())
@@ -213,3 +235,29 @@ func main() {
 	router.Run()// Corremos nuestro servidor sobre el puerto 8080
 
 }
+
+func TokenAuthMiddleware() gin.HandlerFunc {
+	requiredToken := os.Getenv("TOKEN")
+ 
+	if requiredToken == "" {
+		log.Fatal("no se encontró el token en variable de entorno")
+	}
+ 
+	return func(c *gin.Context) {
+		token := c.GetHeader("token")
+ 
+		if token == "" {
+			c.AbortWithStatusJSON(401, web.NewResponse(401, nil, "falta token en cabecera"))
+			return
+		}
+ 
+		if token != requiredToken {
+			c.AbortWithStatusJSON(401, web.NewResponse(401, nil, "token incorrecto"))
+			return
+		}
+ 
+		c.Next()
+	}
+ 
+ }
+ 

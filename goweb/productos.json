@@ -158,15 +158,5 @@
   "code": "ZFO123",
   "publisher": false,
   "created_at": "2022-07-08 12:42:35"
- },
- {
-  "id": 17,
-  "name": "product17",
-  "color": "blanco/verde",
-  "price": 1700,
-  "stock": 18,
-  "code": "BRO123",
-  "publisher": false,
-  "created_at": "2022-07-08 17:04:38"
  }
 ]
