@@ -70,7 +70,7 @@ func (c *Usuarios) UpdateNameAndLastName() gin.HandlerFunc {
 		if error != nil {
 			ctx.JSON(404, web.NewResponse(400, nil, error.Error()))
 		}
-		ctx.JSON(200, user)
+		ctx.JSON(200, web.NewResponse(200, user, ""))
 
 	}
 }
