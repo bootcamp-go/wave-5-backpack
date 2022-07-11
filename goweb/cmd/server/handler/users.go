@@ -75,10 +75,7 @@ func (u *User) Store() gin.HandlerFunc {
 			return
 		}
 
-		if err := ctx.ShouldBindJSON(&req); err != nil {
-			for _, fieldError := range err.(validator.ValidationErrors) {
-				ctx.JSON(400, web.NewResponse(401, nil, ValidateErrors(fieldError.Field(), fieldError)))
-			}
+		if !validateFields(ctx, &req) {
 			return
 		}
 
@@ -114,10 +111,7 @@ func (u *User) Update() gin.HandlerFunc {
 		}
 
 		var req Request
-		if err := ctx.ShouldBindJSON(&req); err != nil {
-			for _, fieldError := range err.(validator.ValidationErrors) {
-				ctx.JSON(400, web.NewResponse(401, nil, ValidateErrors(fieldError.Field(), fieldError)))
-			}
+		if !validateFields(ctx, &req) {
 			return
 		}
 
@@ -166,10 +160,7 @@ func (u *User) Patch() gin.HandlerFunc {
 		}
 
 		var req RequestPatch
-		if err := ctx.ShouldBindJSON(&req); err != nil {
-			for _, fieldError := range err.(validator.ValidationErrors) {
-				ctx.JSON(400, ValidateErrors(fieldError.Field(), fieldError))
-			}
+		if !validatePatch(ctx, &req) {
 			return
 		}
 
@@ -204,4 +195,24 @@ func ValidateErrors(campo string, v validator.FieldError) string {
 		return "Direccion de correo electronico invalida"
 	}
 	return "Error desconocido..."
+}
+
+func validatePatch(ctx *gin.Context, req *RequestPatch) bool {
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		for _, fieldError := range err.(validator.ValidationErrors) {
+			ctx.JSON(400, web.NewResponse(400, nil, ValidateErrors(fieldError.Field(), fieldError)))
+		}
+		return false
+	}
+	return true
+}
+
+func validateFields(ctx *gin.Context, req *Request) bool {
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		for _, fieldError := range err.(validator.ValidationErrors) {
+			ctx.JSON(400, web.NewResponse(400, nil, ValidateErrors(fieldError.Field(), fieldError)))
+		}
+		return false
+	}
+	return true
 }
