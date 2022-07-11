@@ -2,7 +2,14 @@ package transactions
 
 import (
 	"arquitectura/internal/domain"
+	"arquitectura/pkg/store"
 	"fmt"
+)
+
+const (
+	ProductNotFound = "product %d not found"
+	FailReading     = "cant read database"
+	FailWriting     = "cant write database, error: %w"
 )
 
 type Repository interface {
@@ -14,21 +21,48 @@ type Repository interface {
 	UpdateCodeAmount(id int, tranCode string, amount float64) (domain.Transaction, error)
 }
 
-type repository struct{}
+type repository struct {
+	db store.Store
+}
 
-func NewRepository() Repository {
-	return &repository{}
+func NewRepository(db store.Store) Repository {
+
+	return &repository{
+		db: db,
+	}
 }
 
 func (r *repository) GetAll() ([]domain.Transaction, error) {
+	var lista []domain.Transaction
+
+	if err := r.db.Read(&lista); err != nil {
+		return nil, fmt.Errorf(FailReading)
+	}
+
 	return lista, nil
 }
 
 func (r *repository) LastID() (int, error) {
+
+	var lista []domain.Transaction
+	if err := r.db.Read(&lista); err != nil {
+		return 0, fmt.Errorf(FailReading)
+	}
+
+	if len(lista) == 0 {
+		return 0, nil
+	}
+
+	var lastID int
+	lastID = lista[len(lista)-1].Id
+
 	return lastID, nil
 }
 
 func (r *repository) Store(id int, tranCode, currency string, amount float64, transmitter, receiver, tranDate string) (domain.Transaction, error) {
+
+	var lista []domain.Transaction
+
 	t := domain.Transaction{
 		Id:          id,
 		TranCode:    tranCode,
@@ -39,14 +73,32 @@ func (r *repository) Store(id int, tranCode, currency string, amount float64, tr
 		TranDate:    tranCode,
 	}
 
+	if err := r.db.Read(&lista); err != nil {
+		return domain.Transaction{}, fmt.Errorf(FailReading)
+	}
 	lista = append(lista, t)
-	lastID = t.Id
+
+	if err := r.db.Write(lista); err != nil {
+		return domain.Transaction{}, fmt.Errorf(FailWriting, err)
+	}
+
 	return t, nil
+
+	// Solución guardando en memorio local
+
+	// lista = append(lista, t)
+	// lastID = t.Id
+	// return t, nil
+
 }
 
 // Función Update(PUT)
 
 func (r *repository) Update(id int, tranCode, currency string, amount float64, transmitter, receiver, tranDate string) (domain.Transaction, error) {
+	var lista []domain.Transaction
+	if err := r.db.Read(&lista); err != nil {
+		return domain.Transaction{}, fmt.Errorf(FailReading)
+	}
 
 	t := domain.Transaction{
 		TranCode:    tranCode,
@@ -67,13 +119,21 @@ func (r *repository) Update(id int, tranCode, currency string, amount float64, t
 	}
 
 	if !update {
-		return domain.Transaction{}, fmt.Errorf("Producto %d no encontrado", id)
+		return domain.Transaction{}, fmt.Errorf(ProductNotFound, id)
+	}
+
+	if err := r.db.Write(lista); err != nil {
+		return domain.Transaction{}, fmt.Errorf(FailWriting, err)
 	}
 
 	return t, nil
 }
 
 func (r *repository) Delete(id int) error {
+	var lista []domain.Transaction
+	if err := r.db.Read(&lista); err != nil {
+		return fmt.Errorf(FailReading)
+	}
 
 	deleted := false
 	var index int
@@ -90,10 +150,15 @@ func (r *repository) Delete(id int) error {
 
 	lista = append(lista[:index], lista[index+1:]...)
 
+	if err := r.db.Write(lista); err != nil {
+		return fmt.Errorf(FailWriting, err)
+	}
+
 	return nil
 }
 
 func (r *repository) UpdateCodeAmount(id int, tranCode string, amount float64) (domain.Transaction, error) {
+	var lista []domain.Transaction
 
 	var t domain.Transaction
 	update := false
@@ -113,7 +178,3 @@ func (r *repository) UpdateCodeAmount(id int, tranCode string, amount float64) (
 	return t, nil
 
 }
-
-// variables globales
-var lista []domain.Transaction
-var lastID int

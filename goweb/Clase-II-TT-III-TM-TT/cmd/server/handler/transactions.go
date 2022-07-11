@@ -3,6 +3,7 @@ package handler
 import (
 	"arquitectura/internal/transactions"
 	"fmt"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -34,7 +35,7 @@ func NewTransaction(s transactions.Service) *Transaction {
 
 func (t *Transaction) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
+		token := os.Getenv("TOKEN")
 		if token != "12345" {
 			ctx.JSON(401, gin.H{
 				"error": "token inválido",
