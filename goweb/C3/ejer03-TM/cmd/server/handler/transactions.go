@@ -5,7 +5,6 @@ import (
 	"ejer02-TT/pkg/web"
 	"errors"
 	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -31,13 +30,18 @@ func NewTransaction(s transactions.Service) *Transaction {
 	}
 }
 
+//ListTransactions godoc
+//@Sumary List transactions
+//@Tags Transactions
+//@Description get transactions
+//@Accept json
+//@Transactions json
+//@Param token header string true "token"
+//@Success 200 {object} web.Response
+//@Router /transactions [get]
 func (t *Transaction) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(400, web.NewResponse(400, nil, "Error en el token"))
-			return
-		}
+
 		t, err := t.service.GetAll()
 		if err != nil {
 			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
@@ -50,13 +54,19 @@ func (t *Transaction) GetAll() gin.HandlerFunc {
 	}
 }
 
+//StoreTransactions godoc
+//@Sumary Store transactions
+//@Tags Transactions
+//@Description store transactions
+//@Accept json
+//@Transactions json
+//@Param token header string true "token"
+//@Param transaction body request true "Transaction to store"
+//@Success 200 {object} web.Response
+//@Router /transactions [post]
 func (t *Transaction) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(401, web.NewResponse(401, nil, "Error en el token"))
-			return
-		}
+
 		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			var ve validator.ValidationErrors
@@ -84,13 +94,18 @@ func (t *Transaction) Store() gin.HandlerFunc {
 
 }
 
+//DeleteTransactions godoc
+//@Sumary Delete transactions
+//@Tags Transactions
+//@Description delete transactions
+//@Accept json
+//@Transactions json
+//@Param token header string true "token"
+//@Param transaction body request true "Transaction deleted"
+//@Success 200 {object} web.Response
+//@Router /transactions/{id} [delete]
 func (t *Transaction) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(401, web.NewResponse(401, nil, "Error en el token"))
-			return
-		}
 
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
@@ -109,13 +124,18 @@ func (t *Transaction) Delete() gin.HandlerFunc {
 
 }
 
+//UpdateTransactions godoc
+//@Sumary Update transactions
+//@Tags Transactions
+//@Description update transactions
+//@Accept json
+//@Transactions json
+//@Param token header string true "token"
+//@Param transaction body request true "Transaction updated"
+//@Success 200 {object} web.Response
+//@Router /transactions/{id} [PUT]
 func (t *Transaction) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(401, web.NewResponse(401, nil, "Error en el token"))
-			return
-		}
 
 		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -144,13 +164,18 @@ func (t *Transaction) Update() gin.HandlerFunc {
 	}
 }
 
+//UpdateCodeAnAmountTransactions godoc
+//@Sumary Update transactions
+//@Tags Transactions
+//@Description update code and amount transactions
+//@Accept json
+//@Transactions json
+//@Param token header string true "token"
+//@Param transaction body request true "Transaction updated"
+//@Success 200 {object} web.Response
+//@Router /transactions/{id} [PATCH]
 func (t *Transaction) UpdateCodeAndAmount() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(401, web.NewResponse(401, nil, "Error en el token"))
-			return
-		}
 
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
