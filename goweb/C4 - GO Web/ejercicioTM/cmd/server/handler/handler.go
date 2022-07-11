@@ -52,6 +52,7 @@ func (u *Usuarios) Update() gin.HandlerFunc {
 		//Nombre Apellido Email Edad Altura
 		if validate := validar(req); validate != "" {
 			c.JSON(400, web.NewResponse(400, nil, validate))
+			return
 		}
 
 		u, err := u.service.Update(int(id), req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, req.Activo, req.Fecha)
@@ -161,6 +162,7 @@ func (u *Usuarios) Store() gin.HandlerFunc {
 		//Nombre Apellido Email Edad Altura
 		if validate := validar(req); validate != "" {
 			c.JSON(400, web.NewResponse(400, nil, validate))
+			return
 		}
 
 		u, err := u.service.Store(req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, req.Activo, req.Fecha)
