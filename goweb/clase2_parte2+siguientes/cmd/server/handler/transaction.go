@@ -35,7 +35,7 @@ func (t *Transaction) GetAll() gin.HandlerFunc {
 
 		transactions, err := t.service.GetAll()
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "token inválido"}) // 500
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()}) // 500
 			return
 		}
 

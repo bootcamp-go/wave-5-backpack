@@ -31,12 +31,13 @@ type repository struct {
 	db store.Store
 }
 
-func NewRepository() Repository {
-	return &repository{}
+func NewRepository(db store.Store) Repository {
+	return &repository{db: db}
 }
 
 func (r *repository) GetAll() ([]Transaction, error) {
 	var ts []Transaction
+	fmt.Print(ts)
 	if err := r.db.Read(&ts); err != nil {
 		return nil, err
 	}
