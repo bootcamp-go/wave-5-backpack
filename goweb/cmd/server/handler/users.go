@@ -59,6 +59,18 @@ func (u *User) GetAll() gin.HandlerFunc {
 	}
 }
 
+// GetUser godoc
+// @Summary List User for ID
+// @Tags Users
+// @Description Find user by ID
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param id    path   int    true "id"
+// @Success 200 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Failure 500 {object} web.Response
+// @Router /users/{id} [get]
 func (u *User) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		idInt, err := strconv.Atoi(ctx.Param("id"))
@@ -117,6 +129,19 @@ func (u *User) Store() gin.HandlerFunc {
 	}
 }
 
+// UpdateUser godoc
+// @Summary Update user
+// @Tags Users
+// @Description update users
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id    path   int    true "id"
+// @Param product body Request true "User to update"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /users/{id} [put]
 func (u *User) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		/* if !validateToken(ctx) {
@@ -144,6 +169,18 @@ func (u *User) Update() gin.HandlerFunc {
 	}
 }
 
+// DeleteUser godoc
+// @Summary Delete a user
+// @Tags Users
+// @Description Delete by user ID
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param id    path   int    true "id"
+// @Success 200 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Router /users/{id} [delete]
 func (u *User) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		/* if !validateToken(ctx) {
@@ -165,6 +202,8 @@ func (u *User) Delete() gin.HandlerFunc {
 		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, fmt.Sprintf("El usuario con el ID %d se eliminó correctamente", id), ""))
 	}
 }
+
+
 
 func (u *User) Patch() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
