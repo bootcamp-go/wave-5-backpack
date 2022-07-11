@@ -35,15 +35,6 @@ func (r *repository) GetAll() ([]domain.User, error) {
 	return users, nil
 }
 
-//ANTERIOR
-/* func (r *repository) Store(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error) {
-	user := domain.User{Id: id, Nombre: nombre, Apellido: apellido, Email: email, Edad: edad, Altura: altura, Activo: activo, FechaCreacion: fechaCreacion}
-
-	users = append(users, user)
-	lastId = id
-
-	return user, nil
-} */
 
 func (r *repository) Store(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error) {
 	var user []domain.User

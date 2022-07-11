@@ -2,7 +2,7 @@
 	{
 		"id": 1,
 		"nombre": "Daniela",
-		"apellido": "Poveda",
+		"apellido": "Bedoya",
 		"email": "tammiprince@pyramia.com",
 		"edad": 36,
 		"altura": 1.62,
@@ -71,16 +71,6 @@
 	},
 	{
 		"id": 7,
-		"nombre": "Tammi",
-		"apellido": "Prince",
-		"email": "tammiprince@pyramia.com",
-		"edad": 36,
-		"altura": 1.63,
-		"activo": true,
-		"fechaCreacion": "2016-07-12T09:58:39 +05:00"
-	},
-	{
-		"id": 8,
 		"nombre": "Tammi",
 		"apellido": "Prince",
 		"email": "tammiprince@pyramia.com",

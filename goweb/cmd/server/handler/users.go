@@ -34,9 +34,6 @@ func NewUser(s users.Service) *User {
 	return &User{service: s}
 }
 
-// ==================================
-// Funciones de clases anteriores
-// ==================================
 
 func (u *User) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -55,7 +52,7 @@ func (u *User) GetAll() gin.HandlerFunc {
 	}
 }
 
-// Clase 1 Ejercicio 2 Parte 2
+
 func (u *User) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		idInt, err := strconv.Atoi(ctx.Param("id"))
@@ -65,7 +62,7 @@ func (u *User) GetById() gin.HandlerFunc {
 
 		user, err := u.service.GetById(idInt)
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 			return
 		}
 		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, user, ""))
@@ -87,7 +84,7 @@ func ValidateErrors(campo string, v validator.FieldError) string {
 	case "email":
 		return "Direccion de correo electronico invalida"
 	}
-	return "Error desconoodido..."
+	return "Error desconocido..."
 }
 
 func (u *User) Store() gin.HandlerFunc {
