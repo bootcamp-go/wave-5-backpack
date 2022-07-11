@@ -1,12 +1,13 @@
 package handler
 
 import (
+	"errors"
 	"fmt"
-	"net/http"
 	"os"
 	"strconv"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/users"
+	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/web"
 	"github.com/gin-gonic/gin"
 )
 
@@ -37,174 +38,199 @@ func NewUser(p users.Service) *User {
 
 func (u *User) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(401, gin.H{
-				"error": "token inválido",
-			})
+		if err := validarToken(*ctx); err != nil {
+			ctx.JSON(401, web.NewResponse(401, nil, err.Error()))
 			return
 		}
 		u, err := u.service.GetAll()
 		if err != nil {
-			ctx.JSON(404, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, u)
+		ctx.JSON(200, web.NewResponse(200, u, ""))
 	}
 }
 
 func (u *User) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(401, gin.H{"error": "token inválido"})
+		if err := validarToken(*ctx); err != nil {
+			ctx.JSON(401, web.NewResponse(401, nil, err.Error()))
 			return
 		}
 		var req request
-		if err := ctx.Bind(&req); err != nil {
-			ctx.JSON(404, gin.H{
-				"error": err.Error(),
-			})
-			return
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			if req.Name == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "el nombre del usuario es requerido"))
+				return
+			}
+
+			if req.LastName == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "el apellido del usuario es requerido"))
+				return
+			}
+
+			// validar email con regex
+			if req.Email == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "el email del usuario es requerido"))
+				return
+			}
+
+			if req.Age < 1 {
+				ctx.JSON(400, web.NewResponse(400, nil, "la edad del usuario debe ser mayor a 0"))
+				return
+			}
+
+			if req.Height <= 0 {
+				ctx.JSON(400, web.NewResponse(400, nil, "la altura del usuario es requerida"))
+				return
+			}
+
+			// preguntar, es raro
+			if !req.Active {
+				ctx.JSON(400, web.NewResponse(400, nil, "es requerido saber si es activo el usuario"))
+				return
+			}
+
+			if req.CreationDate == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "la fecha de creacion del usuario es requerida"))
+				return
+			}
 		}
+
 		u, err := u.service.Store(req.Age, req.Name, req.LastName, req.Email, req.CreationDate, req.Height, req.Active)
 		if err != nil {
-			ctx.JSON(404, gin.H{"error": err.Error()})
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, u)
+		ctx.JSON(200, web.NewResponse(200, u, ""))
 	}
 }
 
 func (u *User) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
+		if err := validarToken(*ctx); err != nil {
+			ctx.JSON(401, web.NewResponse(401, nil, err.Error()))
 			return
 		}
 
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
-			ctx.JSON(400, gin.H{"error": "Id inválido"})
+			ctx.JSON(400, web.NewResponse(400, nil, "id inválido"))
 			return
 		}
 
 		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(400, gin.H{"error": err.Error()})
-			return
+			if req.Name == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "el nombre del usuario es requerido"))
+				return
+			}
+
+			if req.LastName == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "el apellido del usuario es requerido"))
+				return
+			}
+
+			// validar email con regex
+			if req.Email == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "el email del usuario es requerido"))
+				return
+			}
+
+			if req.Age < 1 {
+				ctx.JSON(400, web.NewResponse(400, nil, "la edad del usuario debe ser mayor a 0"))
+				return
+			}
+
+			if req.Height <= 0 {
+				ctx.JSON(400, web.NewResponse(400, nil, "la altura del usuario es requerida"))
+				return
+			}
+
+			// preguntar, es raro
+			if !req.Active {
+				ctx.JSON(400, web.NewResponse(400, nil, "es requerido saber si es activo el usuario"))
+				return
+			}
+
+			if req.CreationDate == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "la fecha de creacion del usuario es requerida"))
+				return
+			}
 		}
 
-		if req.Name == "" {
-			ctx.JSON(400, gin.H{"error": "El nombre del usuario es requerido"})
-			return
-		}
-
-		if req.LastName == "" {
-			ctx.JSON(400, gin.H{"error": "El apellido del usuario es requerido"})
-			return
-		}
-
-		// validar email con regex
-		if req.Email == "" {
-			ctx.JSON(400, gin.H{"error": "El email del usuario es requerido"})
-			return
-		}
-
-		if req.Age < 1 {
-			ctx.JSON(400, gin.H{"error": "La edad del usuario debe ser mayor a 0."})
-			return
-		}
-
-		if req.Height <= 0 {
-			ctx.JSON(400, gin.H{"error": "La altura del usuario es requerida"})
-			return
-		}
-
-		// preguntar, es raro
-		if !req.Active {
-			ctx.JSON(400, gin.H{"error": "Es requerido saber si es activo el usuario"})
-			return
-		}
-
-		if req.CreationDate == "" {
-			ctx.JSON(400, gin.H{"error": "La fecha de creacion del usuario es requerida"})
-			return
-		}
-
-		p, err := u.service.Update(id, req.Age, req.Name, req.LastName, req.Email, req.CreationDate, req.Height, req.Active)
+		u, err := u.service.Update(id, req.Age, req.Name, req.LastName, req.Email, req.CreationDate, req.Height, req.Active)
 		if err != nil {
-			ctx.JSON(404, gin.H{"error": err.Error()})
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
 
-		ctx.JSON(200, p)
+		ctx.JSON(200, web.NewResponse(200, u, ""))
 	}
 }
 
 func (u *User) UpdateLastNameAndAge() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
+		if err := validarToken(*ctx); err != nil {
+			ctx.JSON(401, web.NewResponse(401, nil, err.Error()))
 			return
 		}
 
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
-			ctx.JSON(400, gin.H{"error": "Id inválido"})
+			ctx.JSON(400, web.NewResponse(400, nil, "id inválido"))
 			return
 		}
 
 		var req patchRequest
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(400, gin.H{"error": err.Error()})
-			return
-		}
+			if req.LastName == "" {
+				ctx.JSON(400, web.NewResponse(400, nil, "el apellido del usuario es requerido"))
+				return
+			}
 
-		if req.LastName == "" {
-			ctx.JSON(400, gin.H{"error": "El nombre del producto es requerido"})
-			return
-		}
-
-		if req.Age < 1 {
-			ctx.JSON(400, gin.H{"error": "El nombre del producto es requerido"})
-			return
+			if req.Age < 1 {
+				ctx.JSON(400, web.NewResponse(400, nil, "la edad del usuario debe ser mayor a 0"))
+				return
+			}
 		}
 
 		u, err := u.service.UpdateLastNameAndAge(id, req.Age, req.LastName)
 		if err != nil {
-			ctx.JSON(404, gin.H{"error": err.Error()})
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
 
-		ctx.JSON(200, u)
+		ctx.JSON(200, web.NewResponse(200, u, ""))
 	}
 }
 
 func (u *User) Delete() gin.HandlerFunc {
-	return func(c *gin.Context) {
-		token := c.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Token inválido"})
+	return func(ctx *gin.Context) {
+		if err := validarToken(*ctx); err != nil {
+			ctx.JSON(401, web.NewResponse(401, nil, err.Error()))
 			return
 		}
 
-		id, err := strconv.Atoi(c.Param("id"))
+		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
-			c.JSON(400, gin.H{"error": "Id inválido"})
+			ctx.JSON(400, web.NewResponse(400, nil, "id inválido"))
 			return
 		}
 
 		err = u.service.Delete(id)
 		if err != nil {
-			c.JSON(404, gin.H{"error": err.Error()})
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-
-		c.JSON(200, gin.H{"data": fmt.Sprintf("El producto %d ha sido eliminado", id)})
+		ctx.JSON(200, web.NewResponse(200, nil, fmt.Sprintf("El producto %d ha sido eliminado", id)))
 	}
+}
+
+func validarToken(ctx gin.Context) error {
+	token := ctx.Request.Header.Get("token")
+	if token != os.Getenv("TOKEN") {
+		return errors.New("token inválido")
+	}
+	return nil
 }
