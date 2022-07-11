@@ -8,6 +8,7 @@ import (
 	"github.com/bootcamp-go/wave-5-backpack/goweb/cmd/server/handler"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/users"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/store"
+	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/web"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	swaggerFiles "github.com/swaggo/files"
@@ -39,10 +40,30 @@ func main() {
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	usersGroup := router.Group("/users")
+	usersGroup.Use(tokenAuthMiddleware())
 	usersGroup.POST("/", userHandler.Store())
 	usersGroup.GET("/", userHandler.GetAll())
 	usersGroup.PUT("/:id", userHandler.Update())
 	usersGroup.PATCH("/:id", userHandler.UpdateLastNameAndAge())
 	usersGroup.DELETE("/:id", userHandler.Delete())
 	router.Run()
+}
+
+func tokenAuthMiddleware() gin.HandlerFunc {
+	requiredToken := os.Getenv("TOKEN")
+	if requiredToken == "" {
+		log.Fatal("no se encontro el token en la variable de entorno")
+	}
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("token")
+		if token == "" {
+			ctx.AbortWithStatusJSON(401, web.NewResponse(401, nil, "falta token en cabecera"))
+			return
+		}
+		if token != requiredToken {
+			ctx.AbortWithStatusJSON(401, web.NewResponse(401, nil, "token incorrecto"))
+			return
+		}
+		ctx.Next()
+	}
 }

@@ -1,9 +1,7 @@
 package handler
 
 import (
-	"errors"
 	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/users"
@@ -47,10 +45,6 @@ func NewUser(p users.Service) *User {
 // @router /users [get]
 func (u *User) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if err := validarToken(*ctx); err != nil {
-			ctx.JSON(401, web.NewResponse(401, nil, err.Error()))
-			return
-		}
 		u, err := u.service.GetAll()
 		if err != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
@@ -62,10 +56,6 @@ func (u *User) GetAll() gin.HandlerFunc {
 
 func (u *User) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if err := validarToken(*ctx); err != nil {
-			ctx.JSON(401, web.NewResponse(401, nil, err.Error()))
-			return
-		}
 		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			if req.Name == "" {
@@ -117,11 +107,6 @@ func (u *User) Store() gin.HandlerFunc {
 
 func (u *User) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if err := validarToken(*ctx); err != nil {
-			ctx.JSON(401, web.NewResponse(401, nil, err.Error()))
-			return
-		}
-
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
 			ctx.JSON(400, web.NewResponse(400, nil, "id inválido"))
@@ -180,11 +165,6 @@ func (u *User) Update() gin.HandlerFunc {
 
 func (u *User) UpdateLastNameAndAge() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if err := validarToken(*ctx); err != nil {
-			ctx.JSON(401, web.NewResponse(401, nil, err.Error()))
-			return
-		}
-
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
 			ctx.JSON(400, web.NewResponse(400, nil, "id inválido"))
@@ -216,11 +196,6 @@ func (u *User) UpdateLastNameAndAge() gin.HandlerFunc {
 
 func (u *User) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if err := validarToken(*ctx); err != nil {
-			ctx.JSON(401, web.NewResponse(401, nil, err.Error()))
-			return
-		}
-
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
 			ctx.JSON(400, web.NewResponse(400, nil, "id inválido"))
@@ -234,12 +209,4 @@ func (u *User) Delete() gin.HandlerFunc {
 		}
 		ctx.JSON(200, web.NewResponse(200, nil, fmt.Sprintf("El producto %d ha sido eliminado", id)))
 	}
-}
-
-func validarToken(ctx gin.Context) error {
-	token := ctx.Request.Header.Get("token")
-	if token != os.Getenv("TOKEN") {
-		return errors.New("token inválido")
-	}
-	return nil
 }
