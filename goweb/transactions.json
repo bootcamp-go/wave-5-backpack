@@ -1,0 +1,36 @@
+[{
+    "id": 1,
+    "transaction_code": "qw42wde3211",
+    "currency": "USD",
+    "amount": 111.1,
+    "emitter": "visa",
+    "receptor": "idk",
+    "date": "2022-07-06"
+},
+{
+    "id": 2,
+    "transaction_code": "ht4q3wdfqi42wde3211",
+    "currency": "USD",
+    "amount": 200.0,
+    "emitter": "mastercard",
+    "receptor": "pipu",
+    "date": "2022-06-06"
+},
+{
+    "id": 3,
+    "transaction_code": "frgefaqw42wde3211",
+    "currency": "USD",
+    "amount": 300.0,
+    "emitter": "visa",
+    "receptor": "nobody",
+    "date": "2022-05-06"
+},
+{
+    "id": 4,
+    "transaction_code": "ytuqw42bgwd65e32efwf11",
+    "currency": "USD",
+    "amount": 400.0,
+    "emitter": "amex",
+    "receptor": "pepe",
+    "date": "2022-05-06"
+}]
