@@ -1,7 +1,7 @@
 package main
 
 import (
-	"goweb/3/tt/cmd/handler"
+	"goweb/3/tt/cmd/server/handler"
 	"goweb/3/tt/internal/repository"
 	"goweb/3/tt/internal/service"
 	"goweb/3/tt/pkg/store"
