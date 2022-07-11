@@ -52,7 +52,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: List users
+      description: Return all users from the DB
       parameters:
       - description: token
         in: header
@@ -66,13 +66,13 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/web.Response'
-      summary: List Users
+      summary: Return all users
       tags:
       - Users
     post:
       consumes:
       - application/json
-      description: store users
+      description: Create a new user in the database
       parameters:
       - description: token
         in: header
@@ -96,14 +96,14 @@ paths:
           description: Bad Request
           schema:
             $ref: '#/definitions/web.Response'
-      summary: Store users
+      summary: Create user
       tags:
       - Users
   /users/{id}:
     delete:
       consumes:
       - application/json
-      description: Delete by user ID
+      description: Delete user by ID
       parameters:
       - description: token
         in: header
@@ -130,13 +130,13 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/web.Response'
-      summary: Delete a user
+      summary: Delete user
       tags:
       - Users
     get:
       consumes:
       - application/json
-      description: Find user by ID
+      description: Returns a single user
       parameters:
       - description: token
         in: header
@@ -163,13 +163,13 @@ paths:
           description: Internal Server Error
           schema:
             $ref: '#/definitions/web.Response'
-      summary: List User for ID
+      summary: Find user by ID
       tags:
       - Users
     patch:
       consumes:
       - application/json
-      description: update users
+      description: You can only update the last name and age field
       parameters:
       - description: token
         in: header
@@ -202,13 +202,12 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/web.Response'
-      summary: Update user
+      summary: Update an existing user
       tags:
       - Users
     put:
       consumes:
       - application/json
-      description: update users
       parameters:
       - description: token
         in: header
@@ -241,7 +240,7 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/web.Response'
-      summary: Update user
+      summary: Update an existing user
       tags:
       - Users
 swagger: "2.0"

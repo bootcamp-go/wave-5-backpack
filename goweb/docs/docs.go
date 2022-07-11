@@ -18,7 +18,7 @@ const docTemplate = `{
     "paths": {
         "/users": {
             "get": {
-                "description": "List users",
+                "description": "Return all users from the DB",
                 "consumes": [
                     "application/json"
                 ],
@@ -28,7 +28,7 @@ const docTemplate = `{
                 "tags": [
                     "Users"
                 ],
-                "summary": "List Users",
+                "summary": "Return all users",
                 "parameters": [
                     {
                         "type": "string",
@@ -48,7 +48,7 @@ const docTemplate = `{
                 }
             },
             "post": {
-                "description": "store users",
+                "description": "Create a new user in the database",
                 "consumes": [
                     "application/json"
                 ],
@@ -58,7 +58,7 @@ const docTemplate = `{
                 "tags": [
                     "Users"
                 ],
-                "summary": "Store users",
+                "summary": "Create user",
                 "parameters": [
                     {
                         "type": "string",
@@ -95,7 +95,7 @@ const docTemplate = `{
         },
         "/users/{id}": {
             "get": {
-                "description": "Find user by ID",
+                "description": "Returns a single user",
                 "consumes": [
                     "application/json"
                 ],
@@ -105,7 +105,7 @@ const docTemplate = `{
                 "tags": [
                     "Users"
                 ],
-                "summary": "List User for ID",
+                "summary": "Find user by ID",
                 "parameters": [
                     {
                         "type": "string",
@@ -144,7 +144,6 @@ const docTemplate = `{
                 }
             },
             "put": {
-                "description": "update users",
                 "consumes": [
                     "application/json"
                 ],
@@ -154,7 +153,7 @@ const docTemplate = `{
                 "tags": [
                     "Users"
                 ],
-                "summary": "Update user",
+                "summary": "Update an existing user",
                 "parameters": [
                     {
                         "type": "string",
@@ -202,7 +201,7 @@ const docTemplate = `{
                 }
             },
             "delete": {
-                "description": "Delete by user ID",
+                "description": "Delete user by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -212,7 +211,7 @@ const docTemplate = `{
                 "tags": [
                     "Users"
                 ],
-                "summary": "Delete a user",
+                "summary": "Delete user",
                 "parameters": [
                     {
                         "type": "string",
@@ -251,7 +250,7 @@ const docTemplate = `{
                 }
             },
             "patch": {
-                "description": "update users",
+                "description": "You can only update the last name and age field",
                 "consumes": [
                     "application/json"
                 ],
@@ -261,7 +260,7 @@ const docTemplate = `{
                 "tags": [
                     "Users"
                 ],
-                "summary": "Update user",
+                "summary": "Update an existing user",
                 "parameters": [
                     {
                         "type": "string",

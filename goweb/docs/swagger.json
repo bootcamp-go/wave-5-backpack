@@ -9,7 +9,7 @@
     "paths": {
         "/users": {
             "get": {
-                "description": "List users",
+                "description": "Return all users from the DB",
                 "consumes": [
                     "application/json"
                 ],
@@ -19,7 +19,7 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "List Users",
+                "summary": "Return all users",
                 "parameters": [
                     {
                         "type": "string",
@@ -39,7 +39,7 @@
                 }
             },
             "post": {
-                "description": "store users",
+                "description": "Create a new user in the database",
                 "consumes": [
                     "application/json"
                 ],
@@ -49,7 +49,7 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "Store users",
+                "summary": "Create user",
                 "parameters": [
                     {
                         "type": "string",
@@ -86,7 +86,7 @@
         },
         "/users/{id}": {
             "get": {
-                "description": "Find user by ID",
+                "description": "Returns a single user",
                 "consumes": [
                     "application/json"
                 ],
@@ -96,7 +96,7 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "List User for ID",
+                "summary": "Find user by ID",
                 "parameters": [
                     {
                         "type": "string",
@@ -135,7 +135,6 @@
                 }
             },
             "put": {
-                "description": "update users",
                 "consumes": [
                     "application/json"
                 ],
@@ -145,7 +144,7 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "Update user",
+                "summary": "Update an existing user",
                 "parameters": [
                     {
                         "type": "string",
@@ -193,7 +192,7 @@
                 }
             },
             "delete": {
-                "description": "Delete by user ID",
+                "description": "Delete user by ID",
                 "consumes": [
                     "application/json"
                 ],
@@ -203,7 +202,7 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "Delete a user",
+                "summary": "Delete user",
                 "parameters": [
                     {
                         "type": "string",
@@ -242,7 +241,7 @@
                 }
             },
             "patch": {
-                "description": "update users",
+                "description": "You can only update the last name and age field",
                 "consumes": [
                     "application/json"
                 ],
@@ -252,7 +251,7 @@
                 "tags": [
                     "Users"
                 ],
-                "summary": "Update user",
+                "summary": "Update an existing user",
                 "parameters": [
                     {
                         "type": "string",

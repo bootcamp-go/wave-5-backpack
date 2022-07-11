@@ -34,9 +34,9 @@ func NewUser(s users.Service) *User {
 }
 
 // ListUsers godoc
-// @Summary List Users
+// @Summary Return all users
 // @Tags Users
-// @Description List users
+// @Description Return all users from the DB
 // @Accept  json
 // @Produce  json
 // @Param token header string true "token"
@@ -60,9 +60,9 @@ func (u *User) GetAll() gin.HandlerFunc {
 }
 
 // GetUser godoc
-// @Summary List User for ID
+// @Summary Find user by ID
 // @Tags Users
-// @Description Find user by ID
+// @Description Returns a single user
 // @Accept  json
 // @Produce  json
 // @Param token header string true "token"
@@ -88,9 +88,9 @@ func (u *User) GetById() gin.HandlerFunc {
 }
 
 // StoreUsers godoc
-// @Summary Store users
+// @Summary Create user
 // @Tags Users
-// @Description store users
+// @Description Create a new user in the database
 // @Accept json
 // @Produce json
 // @Param token header string true "token"
@@ -130,9 +130,8 @@ func (u *User) Store() gin.HandlerFunc {
 }
 
 // UpdateUser godoc
-// @Summary Update user
+// @Summary Update an existing user
 // @Tags Users
-// @Description update users
 // @Accept json
 // @Produce json
 // @Param token header string true "token"
@@ -170,9 +169,9 @@ func (u *User) Update() gin.HandlerFunc {
 }
 
 // DeleteUser godoc
-// @Summary Delete a user
+// @Summary Delete user
 // @Tags Users
-// @Description Delete by user ID
+// @Description Delete user by ID
 // @Accept  json
 // @Produce  json
 // @Param token header string true "token"
@@ -204,9 +203,9 @@ func (u *User) Delete() gin.HandlerFunc {
 }
 
 // UpdateUser godoc
-// @Summary Update user
+// @Summary Update an existing user
 // @Tags Users
-// @Description update users
+// @Description You can only update the last name and age field
 // @Accept json
 // @Produce json
 // @Param token header string true "token"
