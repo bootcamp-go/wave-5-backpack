@@ -36,6 +36,15 @@ func NewUser(p users.Service) *User {
 	}
 }
 
+// ListUsers godoc
+// @Summary List users
+// @Tags Users
+// @Description get users
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @router /users [get]
 func (u *User) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if err := validarToken(*ctx); err != nil {
