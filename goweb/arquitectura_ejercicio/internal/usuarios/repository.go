@@ -103,9 +103,7 @@ func (r *repository) Update(id, age int, names, lastname, email, dateCreated str
 }
 
 func (r *repository) UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error) {
-
 	upUsuario := domain.Usuario{}
-
 	update := false
 
 	for i := range usersList {
