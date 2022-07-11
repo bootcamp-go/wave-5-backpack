@@ -34,7 +34,6 @@ func NewUser(s users.Service) *User {
 	return &User{service: s}
 }
 
-
 func (u *User) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		users, err := u.service.GetAll()
@@ -52,7 +51,6 @@ func (u *User) GetAll() gin.HandlerFunc {
 	}
 }
 
-
 func (u *User) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		idInt, err := strconv.Atoi(ctx.Param("id"))
@@ -67,24 +65,6 @@ func (u *User) GetById() gin.HandlerFunc {
 		}
 		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, user, ""))
 	}
-}
-
-func validateToken(ctx *gin.Context) bool {
-	if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
-		ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "NO tiene permisos para realizar la petición solicitada"))
-		return false
-	}
-	return true
-}
-
-func ValidateErrors(campo string, v validator.FieldError) string {
-	switch v.Tag() {
-	case "required":
-		return "El campo " + campo + " es requerido"
-	case "email":
-		return "Direccion de correo electronico invalida"
-	}
-	return "Error desconocido..."
 }
 
 func (u *User) Store() gin.HandlerFunc {
@@ -201,4 +181,27 @@ func (u *User) Patch() gin.HandlerFunc {
 
 		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, user, ""))
 	}
+}
+
+/*
+========================================
+FUNCTIONS VALIDATORS				   =
+========================================
+*/
+func validateToken(ctx *gin.Context) bool {
+	if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
+		ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "NO tiene permisos para realizar la petición solicitada"))
+		return false
+	}
+	return true
+}
+
+func ValidateErrors(campo string, v validator.FieldError) string {
+	switch v.Tag() {
+	case "required":
+		return "El campo " + campo + " es requerido"
+	case "email":
+		return "Direccion de correo electronico invalida"
+	}
+	return "Error desconocido..."
 }
