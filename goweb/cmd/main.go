@@ -20,9 +20,6 @@ import (
 // @version 1.0
 // @description This API is from Bootcamp-go
 
-// @contact.name Cristian Lopez
-// @contact.url https://someurl.com
-
 // @license Apache 2.0
 // @license.url https://www.apache.org/licenses/LICENSE-2.0.html
 func main() {

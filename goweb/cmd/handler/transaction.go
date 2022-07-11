@@ -41,6 +41,9 @@ func NewTransaction(s transactions.Service) *Transaction {
 // @Param token header string true "token"
 // @Param transaction body request true "Transaction to store"
 // @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 500 {object} web.Response
 // @Router /transactions [post]
 func (t Transaction) CreateTransaction(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
@@ -70,6 +73,19 @@ func (t Transaction) CreateTransaction(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, web.NewResponse(http.StatusCreated, transaction, ""))
 }
 
+// Update godoc
+// @Summary Update a transaction
+// @Description Update a transaction by ID
+// @Tags Transaction
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "Transaction ID"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /transactions{id} [put]
 func (t Transaction) Update(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
 
@@ -104,6 +120,19 @@ func (t Transaction) Update(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, transaction)
 }
 
+// Patch godoc
+// @Summary Patch a transaction
+// @Description Patch a transaction by ID
+// @Tags Transaction
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "Transaction ID"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 500 {object} web.Response
+// @Router /transactions{id} [patch]
 func (t Transaction) Patch(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
 
@@ -149,6 +178,18 @@ func (t Transaction) UpdateMontoCod(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, transaction)
 }
 
+// GetAll godoc
+// @Summary Get all transactions
+// @Tags Transaction
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "Transaction ID"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 500 {object} web.Response
+// @Router /transactions [get]
 func (t Transaction) GetAll(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
 
@@ -167,6 +208,18 @@ func (t Transaction) GetAll(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, transactions, ""))
 }
 
+// GetByID godoc
+// @Summary Get a transaction by ID
+// @Tags Transaction
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "Transaction ID"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 500 {object} web.Response
+// @Router /transactions{id} [get]
 func (t Transaction) GetByID(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
 
@@ -190,6 +243,18 @@ func (t Transaction) GetByID(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, transaction, ""))
 }
 
+// Delete godoc
+// @Summary Delete a transaction by ID
+// @Tags Transaction
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "Transaction ID"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /transactions{id} [delete]
 func (t Transaction) Delete(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
 
