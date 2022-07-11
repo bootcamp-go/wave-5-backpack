@@ -6,6 +6,7 @@ import (
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/internal/domain"
 	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/internal/users"
+	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/pkg/web"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
@@ -43,47 +44,42 @@ func NewUser(u users.Service) *User {
 func (c *User) GetAll(ctx *gin.Context) {
 	filters, err := querysMap(ctx)
 	if err != nil {
-		ctx.JSON(400, gin.H{"eror": err.Error()})
+		ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 		return
 	}
 
 	users, err := c.service.GetAll(filters)
 
 	if err != nil {
-		ctx.JSON(500, gin.H{"error": "internal server error"})
-		fmt.Printf("Internal Error: %v", err.Error())
+		ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
 		return
 	}
 
-	ctx.JSON(200, users)
+	ctx.JSON(200, web.NewResponse(200, users, ""))
 }
 
 func (c *User) GetById(ctx *gin.Context) {
 	Id, err := strconv.Atoi(ctx.Param("Id"))
 
 	if err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 		return
 	}
 
 	user, err := c.service.GetById(Id)
 
 	if err != nil {
-		ctx.JSON(400, gin.H{
-			"error": err.Error(),
-		})
+		ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 		return
 	}
 
 	empty := domain.User{}
 	if user == empty {
-		ctx.JSON(404, gin.H{
-			"error": "user not found",
-		})
+		ctx.JSON(404, web.NewResponse(404, nil, "user not found"))
 		return
 	}
 
-	ctx.JSON(200, user)
+	ctx.JSON(200, web.NewResponse(200, user, ""))
 }
 
 func (c *User) Store(ctx *gin.Context) {
@@ -93,35 +89,29 @@ func (c *User) Store(ctx *gin.Context) {
 		errs := err.(validator.ValidationErrors)
 		for _, valError := range errs {
 			if valError.Tag() == "required" {
-				ctx.JSON(400, gin.H{
-					"error": fmt.Sprintf("el campo '%s' es requerido", valError.Field()),
-				})
+				ctx.JSON(400, web.NewResponse(400, nil, fmt.Sprintf("el campo '%s' es requerido", valError.Field())))
 				return
 			}
 		}
-		ctx.JSON(400, gin.H{
-			"error": err.Error(),
-		})
+		ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 		return
 	}
 
 	user, err := c.service.Store(req.Age, req.FirstName, req.LastName, req.Email, req.Height, *req.Active)
 
 	if err != nil {
-		ctx.JSON(400, gin.H{
-			"error": err.Error(),
-		})
+		ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 		return
 	}
 
-	ctx.JSON(201, user)
+	ctx.JSON(201, web.NewResponse(201, user, ""))
 }
 
 func (c *User) Update(ctx *gin.Context) {
 	Id, err := strconv.Atoi(ctx.Param("Id"))
 
 	if err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 		return
 	}
 
@@ -131,81 +121,67 @@ func (c *User) Update(ctx *gin.Context) {
 		errs := err.(validator.ValidationErrors)
 		for _, valError := range errs {
 			if valError.Tag() == "required" {
-				ctx.JSON(400, gin.H{
-					"error": fmt.Sprintf("el campo '%s' es requerido", valError.Field()),
-				})
+				ctx.JSON(400, web.NewResponse(400, nil, fmt.Sprintf("el campo '%s' es requerido", valError.Field())))
 				return
 			}
 		}
-		ctx.JSON(400, gin.H{
-			"error": err.Error(),
-		})
+		ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 		return
 	}
 
 	user, err := c.service.Update(Id, req.Age, req.FirstName, req.LastName, req.Email, req.CreatedAt, req.Height, *req.Active)
 
 	if err != nil {
-		ctx.JSON(404, gin.H{
-			"error": err.Error(),
-		})
+		ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 		return
 	}
 
-	ctx.JSON(200, user)
+	ctx.JSON(200, web.NewResponse(200, user, ""))
 }
 
 func (c *User) UpdateAgeLastName(ctx *gin.Context) {
 	Id, err := strconv.Atoi(ctx.Param("Id"))
 
 	if err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 		return
 	}
 
 	var req pathRequest
 	if err := ctx.BindJSON(&req); err != nil {
-		ctx.JSON(400, gin.H{
-			"error": err.Error(),
-		})
+		ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 		return
 	}
 	if req.LastName == "" && req.Age == 0 {
-		ctx.JSON(400, gin.H{
-			"error": "Debe enviar por lo menos uno de los siguientes campos: 'LastName', 'Age'",
-		})
+		ctx.JSON(400, web.NewResponse(400, nil, "Debe enviar por lo menos uno de los siguientes campos: 'LastName', 'Age'"))
 		return
 	}
 	user, err := c.service.UpdateAgeLastName(Id, req.Age, req.LastName)
 
 	if err != nil {
-		ctx.JSON(404, gin.H{
-			"error": err.Error(),
-		})
+		ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 		return
 	}
 
-	ctx.JSON(200, user)
+	ctx.JSON(200, web.NewResponse(200, user, ""))
 }
 
 func (c *User) Delete(ctx *gin.Context) {
 	Id, err := strconv.Atoi(ctx.Param("Id"))
 
 	if err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 		return
 	}
 
 	err = c.service.Delete(Id)
 
 	if err != nil {
-		ctx.JSON(404, gin.H{
-			"error": err.Error(),
-		})
+		ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 		return
 	}
 
-	ctx.Status(204)
+	ctx.JSON(204, web.NewResponse(204, nil, ""))
 }
 
 func querysMap(ctx *gin.Context) (map[string]interface{}, error) {
