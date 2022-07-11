@@ -1,63 +1,33 @@
 package products
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
-	"os"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/internal/domain"
+	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/pkg/file"
 )
 
 var lastId uint64
-var products []domain.Product
 
 type Repository interface {
-	GetAll() ([]domain.Product, error)
 	Store(id uint64, nombre string, color string, precio float64, stock uint64, codigo string, publicado bool, fechaCreacion string) (domain.Product, error)
+	GetAll() ([]domain.Product, error)
 	GetById(id uint64) (domain.Product, error)
-	LastId() (uint64, error)
 	UpdateTotal(id uint64, nombre string, color string, precio float64, stock uint64, codigo string, publicado bool, fechaCreacion string) (domain.Product, error)
 	UpdatePartial(id uint64, nombre string, color string, precio float64, stock uint64, codigo string, publicado bool, fechaCreacion string) (domain.Product, error)
 	Delete(id uint64) (domain.Product, error)
+	LastId() (uint64, error)
 }
 
-type repository struct{}
+type repository struct {
+	db file.File
+}
 
-func getProductList() {
-	data, err := os.ReadFile("./resources/products.json")
-	if err != nil {
-		panic(err)
+func NewRepository(db file.File) Repository {
+	return &repository{
+		db: db,
 	}
-	var res []domain.Product
-	err = json.Unmarshal(data, &res)
-	if err != nil {
-		panic(err)
-	}
-	lastId = uint64(len(res))
-	products = res
-}
-
-func NewRepository() Repository {
-	getProductList()
-	return &repository{}
-}
-
-func (r *repository) GetAll() ([]domain.Product, error) {
-	return products, nil
-}
-
-func (r *repository) GetById(id uint64) (domain.Product, error) {
-	for _, product := range products {
-		if product.Id == id {
-			return product, nil
-		}
-	}
-	return domain.Product{}, errors.New("no se encontró el producto")
-}
-
-func (r *repository) LastId() (uint64, error) {
-	return lastId, nil
 }
 
 func (r *repository) Store(id uint64, name string, color string, price float64, stock uint64, code string, published bool, createdAt string) (domain.Product, error) {
@@ -72,10 +42,38 @@ func (r *repository) Store(id uint64, name string, color string, price float64, 
 		Created_at: createdAt,
 	}
 
+	var products []domain.Product
+	if err := r.db.Read(&products); err != nil {
+		return domain.Product{}, err
+	}
+
 	products = append(products, product)
 	lastId = id
-
+	if err := r.db.Write(&products); err != nil {
+		return domain.Product{}, err
+	}
 	return product, nil
+}
+
+func (r *repository) GetAll() ([]domain.Product, error) {
+	var products []domain.Product
+	if err := r.db.Read(&products); err != nil {
+		return []domain.Product{}, err
+	}
+	return products, nil
+}
+
+func (r *repository) GetById(id uint64) (domain.Product, error) {
+	var products []domain.Product
+	if err := r.db.Read(&products); err != nil {
+		return domain.Product{}, err
+	}
+	for _, product := range products {
+		if product.Id == id {
+			return product, nil
+		}
+	}
+	return domain.Product{}, errors.New("no se encontró el producto")
 }
 
 func (r *repository) UpdateTotal(id uint64, name string, color string, price float64, stock uint64, code string, published bool, createdAt string) (domain.Product, error) {
@@ -89,9 +87,16 @@ func (r *repository) UpdateTotal(id uint64, name string, color string, price flo
 		Published:  published,
 		Created_at: createdAt,
 	}
+	var products []domain.Product
+	if err := r.db.Read(&products); err != nil {
+		return domain.Product{}, err
+	}
 	for i, product := range products {
 		if product.Id == id {
 			products[i] = newProduct
+			if err := r.db.Write(&products); err != nil {
+				return domain.Product{}, err
+			}
 			return newProduct, nil
 		}
 	}
@@ -109,10 +114,17 @@ func (r *repository) UpdatePartial(id uint64, name string, color string, price f
 		Published:  published,
 		Created_at: createdAt,
 	}
+	var products []domain.Product
+	if err := r.db.Read(&products); err != nil {
+		return domain.Product{}, err
+	}
 	for i, product := range products {
 		if product.Id == id {
 			updated := partialUpdate(product, newProduct)
 			products[i] = updated
+			if err := r.db.Write(&products); err != nil {
+				return domain.Product{}, err
+			}
 			return updated, nil
 		}
 	}
@@ -120,13 +132,28 @@ func (r *repository) UpdatePartial(id uint64, name string, color string, price f
 }
 
 func (r *repository) Delete(id uint64) (domain.Product, error) {
+	var products []domain.Product
+	if err := r.db.Read(&products); err != nil {
+		return domain.Product{}, err
+	}
 	for i, product := range products {
 		if product.Id == id {
 			products = append(products[:i], products[i+1:]...)
+			if err := r.db.Write(&products); err != nil {
+				return domain.Product{}, err
+			}
 			return product, nil
 		}
 	}
 	return domain.Product{}, errors.New("no se encontró el producto")
+}
+
+func (r *repository) LastId() (uint64, error) {
+	prList, err := r.GetAll()
+	if err != nil {
+		return 0, err
+	}
+	return prList[len(prList)-1].Id, nil
 }
 
 func partialUpdate(oldProduct domain.Product, newProduct domain.Product) domain.Product {

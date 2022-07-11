@@ -3,12 +3,17 @@ package main
 import (
 	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/cmd/sever/handler"
 	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/internal/products"
+	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/pkg/file"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	repository := products.NewRepository()
+	fileDB := file.NewFile("/Users/andreramos/Documents/Bootcamp-Go Meli/wave-5-backpack/goweb/resources/products.json")
+	if err := fileDB.Ping(); err != nil {
+		panic(err)
+	}
+	repository := products.NewRepository(fileDB)
 	service := products.NewService(repository)
 	p := handler.NewProduct(service)
 
