@@ -203,8 +203,19 @@ func (u *User) Delete() gin.HandlerFunc {
 	}
 }
 
-
-
+// UpdateUser godoc
+// @Summary Update user
+// @Tags Users
+// @Description update users
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id    path   int    true "id"
+// @Param product body RequestPatch true "User to update"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /users/{id} [patch]
 func (u *User) Patch() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		/* if !validateToken(ctx) {

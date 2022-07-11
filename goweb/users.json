@@ -2,9 +2,9 @@
 	{
 		"id": 1,
 		"nombre": "Daniela",
-		"apellido": "Bedoya",
+		"apellido": "Poveda",
 		"email": "bedoya@gmail.com",
-		"edad": 20,
+		"edad": 21,
 		"altura": 1.62,
 		"activo": true,
 		"fechaCreacion": "2016-07-12T09:58:39 +05:00"

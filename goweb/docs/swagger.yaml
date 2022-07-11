@@ -24,6 +24,16 @@ definitions:
     - fechaCreacion
     - nombre
     type: object
+  handler.RequestPatch:
+    properties:
+      apellido:
+        type: string
+      edad:
+        type: integer
+    required:
+    - apellido
+    - edad
+    type: object
   web.Response:
     properties:
       code:
@@ -154,6 +164,45 @@ paths:
           schema:
             $ref: '#/definitions/web.Response'
       summary: List User for ID
+      tags:
+      - Users
+    patch:
+      consumes:
+      - application/json
+      description: update users
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User to update
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/handler.RequestPatch'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Update user
       tags:
       - Users
     put:

@@ -249,6 +249,64 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "patch": {
+                "description": "update users",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Update user",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "User to update",
+                        "name": "product",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.RequestPatch"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/web.Response"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/web.Response"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/web.Response"
+                        }
+                    }
+                }
             }
         }
     },
@@ -285,6 +343,21 @@ const docTemplate = `{
                 },
                 "nombre": {
                     "type": "string"
+                }
+            }
+        },
+        "handler.RequestPatch": {
+            "type": "object",
+            "required": [
+                "apellido",
+                "edad"
+            ],
+            "properties": {
+                "apellido": {
+                    "type": "string"
+                },
+                "edad": {
+                    "type": "integer"
                 }
             }
         },
