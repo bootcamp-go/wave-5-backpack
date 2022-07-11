@@ -10,7 +10,7 @@ import (
 )
 
 type transactions struct {
-	Id       string
+	Id       int
 	Codigo   string
 	Moneda   string
 	Monto    float64
@@ -41,6 +41,8 @@ func main() {
 	})
 
 	router.GET("/transactions", GetAll)
+
+	router.Run()
 }
 
 func GetAll(c *gin.Context) {
