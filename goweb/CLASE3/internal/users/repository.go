@@ -1,8 +1,8 @@
 package users
 
 import (
-	"clase2_parte2/internal/domain"
-	"clase2_parte2/pkg/store"
+	"CLASE3/internal/domain"
+	"CLASE3/pkg/store"
 	"fmt"
 )
 

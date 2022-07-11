@@ -1,7 +1,7 @@
 package users
 
 import (
-	"clase2_parte2/internal/domain"
+	"CLASE3/internal/domain"
 	"fmt"
 )
 

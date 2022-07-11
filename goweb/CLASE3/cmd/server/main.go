@@ -1,9 +1,9 @@
 package main
 
 import (
-	"clase2_parte2/cmd/server/handler"
-	"clase2_parte2/internal/users"
-	"clase2_parte2/pkg/store"
+	"CLASE3/cmd/server/handler"
+	"CLASE3/internal/users"
+	"CLASE3/pkg/store"
 	"log"
 
 	"github.com/gin-gonic/gin"
