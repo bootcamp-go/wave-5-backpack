@@ -1,12 +1,10 @@
 package handler
 
 import (
-	"encoding/json"
 	"net/http"
 	"os"
 	"strconv"
 
-	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/models"
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/transactions"
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/pkg/web"
 	"github.com/gin-gonic/gin"
