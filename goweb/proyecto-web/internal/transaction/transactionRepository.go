@@ -2,6 +2,7 @@ package transaction
 
 import (
 	"errors"
+	"fmt"
 	"proyecto-web/internal/domain"
 	"proyecto-web/pkg/store"
 )
@@ -12,6 +13,7 @@ type IRepository interface {
 	GetById(id int) (domain.Transaction, error)
 	Update(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error)
 	UpdateParcial(id int, codigoTransaccion string, monto float64) (domain.Transaction, error)
+	Delete(id int) error
 }
 
 type repository struct {
@@ -29,7 +31,7 @@ func (r *repository) GetAll() []domain.Transaction {
 }
 
 func (r *repository) GetById(id int) (domain.Transaction, error) {
-	transaccionBuscada, encontrada := r.findById(id)
+	transaccionBuscada, encontrada := findById(id, r.GetAll())
 
 	if encontrada {
 		return *transaccionBuscada, nil
@@ -54,10 +56,11 @@ func (r *repository) Create(id int, codigoTransaccion string, moneda string, mon
 }
 
 func (r *repository) Update(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error) {
-	transaccionAActualizar, encontrada := r.findById(id)
+	transacciones := r.GetAll()
+	transaccionAActualizar, encontrada := findById(id, transacciones)
 
 	if !encontrada {
-		return domain.Transaction{}, errors.New("No se encontro el recurso a actualizar")
+		return domain.Transaction{}, errors.New("no se encontro el recurso a actualizar")
 	}
 
 	transaccionAActualizar.CodigoTransaccion = codigoTransaccion
@@ -67,11 +70,13 @@ func (r *repository) Update(id int, codigoTransaccion string, moneda string, mon
 	transaccionAActualizar.Receptor = receptor
 	transaccionAActualizar.FechaTransaccion = fecha
 
+	r.bd.Write(transacciones)
 	return *transaccionAActualizar, nil
 }
 
 func (r *repository) UpdateParcial(id int, codigoTransaccion string, monto float64) (domain.Transaction, error) {
-	transaccionAActualizar, encontrada := r.findById(id)
+	transacciones := r.GetAll()
+	transaccionAActualizar, encontrada := findById(id, transacciones)
 
 	if !encontrada {
 		return domain.Transaction{}, errors.New("No se encontro el recurso a actualizar")
@@ -80,7 +85,26 @@ func (r *repository) UpdateParcial(id int, codigoTransaccion string, monto float
 	transaccionAActualizar.CodigoTransaccion = codigoTransaccion
 	transaccionAActualizar.Monto = monto
 
+	r.bd.Write(transacciones)
 	return *transaccionAActualizar, nil
+}
+
+func (r *repository) Delete(id int) error {
+	var indexBuscado int = -1
+	transacciones := r.GetAll()
+
+	for index, transaccion := range transacciones {
+		if transaccion.Id == id {
+			indexBuscado = index
+		}
+	}
+	if indexBuscado < 0 {
+		fmt.Println("no encontrado")
+		return errors.New("no se encontró el recurso a eliminar")
+	}
+	nuevasTransaciones := remove(transacciones, indexBuscado)
+
+	return r.bd.Write(nuevasTransaciones)
 }
 
 func (r *repository) generateId() int {
@@ -92,8 +116,7 @@ func (r *repository) generateId() int {
 	return lastId.Id + 1
 }
 
-func (r *repository) findById(id int) (*domain.Transaction, bool) {
-	transacciones := r.GetAll()
+func findById(id int, transacciones []domain.Transaction) (*domain.Transaction, bool) {
 	var transaccionBuscada *domain.Transaction
 	var encontrada bool
 	for i, transaccion := range transacciones {
@@ -104,4 +127,8 @@ func (r *repository) findById(id int) (*domain.Transaction, bool) {
 		}
 	}
 	return transaccionBuscada, encontrada
+}
+
+func remove(slice []domain.Transaction, s int) []domain.Transaction {
+	return append(slice[:s], slice[s+1:]...)
 }

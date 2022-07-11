@@ -2,9 +2,12 @@ package handlers
 
 import (
 	"net/http"
+	"os"
 	"proyecto-web/internal/domain"
 	"proyecto-web/internal/transaction"
 	"strconv"
+
+	"proyecto-web/pkg/web"
 
 	"github.com/gin-gonic/gin"
 )
@@ -21,13 +24,11 @@ func NewTransactionHandler(t transaction.ITransactionService) *TransactionHandle
 
 func (t *TransactionHandler) GetAll() gin.HandlerFunc {
 
-	//var transacciones = c.service.GetAll()
-
 	return func(ctx *gin.Context) {
 		if !validarToken(ctx) {
 			return
 		}
-		ctx.JSON(http.StatusAccepted, t.service.GetAll())
+		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, t.service.GetAll(), ""))
 	}
 
 	// codigo_transaccion := c.Query("codigo_transaccion")
@@ -68,16 +69,16 @@ func (t *TransactionHandler) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err1 := strconv.Atoi(ctx.Param("id"))
 		if err1 != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"message": "Id inválido"})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, "id inválido"))
 			return
 		}
 		transaccion, err := t.service.GetById(id)
 
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 			return
 		}
-		ctx.JSON(http.StatusOK, transaccion)
+		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, transaccion, ""))
 	}
 }
 
@@ -90,14 +91,18 @@ func (t *TransactionHandler) Create() gin.HandlerFunc {
 
 		var request domain.Transaction
 		err := ctx.ShouldBindJSON(&request)
-
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 			return
 		}
+		valido := validarCampos(request, ctx)
+		if !valido {
+			return
+		}
+
 		var newTransaction = t.service.Create(request.Id, request.CodigoTransaccion, request.Moneda, request.Monto, request.Emisor, request.Receptor, request.FechaTransaccion)
 
-		ctx.JSON(http.StatusOK, newTransaction)
+		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, newTransaction, ""))
 	}
 }
 
@@ -106,7 +111,7 @@ func (t *TransactionHandler) Update() gin.HandlerFunc {
 
 		id, err1 := strconv.Atoi(ctx.Param("id"))
 		if err1 != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"message": "Id inválido"})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, "id inválido"))
 			return
 		}
 
@@ -120,10 +125,10 @@ func (t *TransactionHandler) Update() gin.HandlerFunc {
 		updatedTransaction, err := t.service.Update(id, request.CodigoTransaccion, request.Moneda, request.Monto, request.Emisor, request.Receptor, request.FechaTransaccion)
 
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 			return
 		}
-		ctx.JSON(http.StatusOK, updatedTransaction)
+		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, updatedTransaction, ""))
 	}
 
 }
@@ -133,7 +138,7 @@ func (t *TransactionHandler) UpdateParcial() gin.HandlerFunc {
 
 		id, err1 := strconv.Atoi(ctx.Param("id"))
 		if err1 != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"message": "Id inválido"})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, "id inválido"))
 			return
 		}
 
@@ -147,19 +152,70 @@ func (t *TransactionHandler) UpdateParcial() gin.HandlerFunc {
 		updatedTransaction, err := t.service.UpdateParcial(id, request.CodigoTransaccion, request.Monto)
 
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 			return
 		}
-		ctx.JSON(http.StatusOK, updatedTransaction)
+		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, updatedTransaction, ""))
 	}
+}
 
+func (t *TransactionHandler) Delete() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id, err1 := strconv.Atoi(ctx.Param("id"))
+		if err1 != nil {
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, "id inválido"))
+			return
+		}
+
+		if !validarToken(ctx) {
+			return
+		}
+
+		err := t.service.Delete(id)
+
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
+			return
+		}
+
+		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, "Delete exitoso", ""))
+		return
+	}
 }
 
 func validarToken(ctx *gin.Context) bool {
 	token := ctx.GetHeader("Token")
 
-	if token != "123456" {
-		ctx.JSON(http.StatusUnauthorized, gin.H{"error": "No autorizado"})
+	if token != os.Getenv("TOKEN") {
+		ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "no autorizado"))
+		return false
+	}
+	return true
+}
+
+func validarCampos(req domain.Transaction, c *gin.Context) bool {
+	if req.CodigoTransaccion == "" {
+		c.JSON(400, web.NewResponse(400, nil, "El código de transacción es requerido"))
+		return false
+	}
+	if req.Emisor == "" {
+		c.JSON(400, web.NewResponse(400, nil, "El emisor es requerido"))
+		return false
+	}
+	if req.Monto == 0 {
+		c.JSON(400, web.NewResponse(400, nil, "El monto es requerida"))
+		return false
+	}
+	if req.Moneda == "" {
+		c.JSON(400, web.NewResponse(400, nil, "La moneda es requerida"))
+		return false
+	}
+	if req.Receptor == "" {
+		c.JSON(400, web.NewResponse(400, nil, "El receptor es requerido"))
+		return false
+	}
+	if req.FechaTransaccion == "" {
+		c.JSON(400, web.NewResponse(400, nil, "La fecha es requerida"))
 		return false
 	}
 	return true
