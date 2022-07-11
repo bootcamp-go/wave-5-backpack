@@ -4,14 +4,24 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="89867a4e-74d9-4878-8678-b0b5dbb1d101" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/server/controller/userController.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server/controller/userController.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/domain/user.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/user/userModel.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/user/userService.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/user/userService.go" afterDir="false" />
+    <list default="true" id="c61c0a6e-ec4e-437f-9119-49f6d8decf00" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clase/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/clase/.idea/clase.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/clase/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/clase/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/clase/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/clase/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/clase/cmd/server/.env" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/clase/cmd/server/handler/transaction.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/clase/cmd/server/main.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/clase/go.mod" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/clase/go.sum" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/clase/internal/transactions/repository.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/clase/internal/transactions/service.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/clase/pkg/store/file.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/clase/transactions.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/clase3/.idea/workspace.xml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,44 +35,34 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
-  <component name="ProjectId" id="2Bfoo29M6TZBY5T2ONTkCtQKk7j" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
-    <ConfirmationsSetting value="2" id="Add" />
-  </component>
+  <component name="ProjectId" id="2BnlvV24urEwXpLJAR8xz949dRs" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/pmelegatti&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "/Users/pmelegatti/Documents/wave-5-backpack/goweb"
   }
-}</component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/internal/user" />
-    </key>
-  </component>
+}]]></component>
   <component name="RunManager">
     <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="goweb" />
       <working_directory value="$PROJECT_DIR$" />
       <kind value="FILE" />
-      <package value="goweb" />
+      <package value="github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica" />
       <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$/cmd/server/main.go" />
+      <filePath value="$PROJECT_DIR$/cmd/sever/main.go" />
       <method v="2" />
     </configuration>
     <recent_temporary>
@@ -85,9 +85,6 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
