@@ -10,6 +10,16 @@
         "createdat": "21/06/21"
     },
     {
+        "id": 2,
+        "name": "Pepe",
+        "lastname": "Messi",
+        "email": "pepe@mail.com",
+        "age": 33,
+        "height": 1.7,
+        "active": true,
+        "createdat": "24/06/1987"
+    },
+    {
         "id": 3,
         "name": "Lionel",
         "lastname": "Messi",
@@ -56,16 +66,6 @@
         "email": "dibu@martinez.com",
         "age": 28,
         "height": 1.87,
-        "active": true,
-        "createdat": "24/06/1987"
-    },
-    {
-        "id": 8,
-        "name": "Pepe",
-        "lastname": "Messi",
-        "email": "pepe@messi.com",
-        "age": 33,
-        "height": 1.7,
         "active": true,
         "createdat": "24/06/1987"
     }
