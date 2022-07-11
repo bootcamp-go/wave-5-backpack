@@ -10,20 +10,25 @@ import (
 )
 
 type User struct {
-	Id           string  `json:"id"`
-	Name         string  `json:"name"`
-	LastName     string  `json:"lastname"`
-	Email        string  `json:"email"`
-	Age          int     `json:"age"`
-	Height       float64 `json:"height"`
-	Active       bool    `json:"active"`
-	CreationDate string  `json:"creation-date"`
+	Id           int     `json:"-"`
+	Name         string  `json:"name" binding:"required"`
+	LastName     string  `json:"lastname" binding:"required"`
+	Email        string  `json:"email" binding:"required"`
+	Age          int     `json:"age" binding:"required"`
+	Height       float64 `json:"height" binding:"required"`
+	Active       bool    `json:"active" binding:"required"`
+	CreationDate string  `json:"creation-date" `
 }
+
+var lastID int
+var usersList []User
 
 //Este handler se encargará de responder a /.
 func HomePage(ctx *gin.Context) {
 	ctx.String(200, "¡Bienvenido a la Empresa Gophers!")
 }
+
+// GET
 
 //EJERCICIO 2 M
 func GetName(ctx *gin.Context) {
@@ -159,7 +164,8 @@ func GetUserById(ctx *gin.Context) {
 	}
 
 	for _, user := range users {
-		if ctx.Param("id") == user.Id {
+		strId := strconv.Itoa(user.Id)
+		if ctx.Param("id") == strId {
 			usersFilterById = append(usersFilterById, user)
 		}
 	}
@@ -167,6 +173,37 @@ func GetUserById(ctx *gin.Context) {
 		ctx.JSON(200, gin.H{"message": &usersFilterById})
 	} else {
 		ctx.String(404, "Información del empleado ¡No existe!")
+	}
+}
+
+// POST
+
+// EJERCICIO 1, 2, 3 M
+func NewEntity() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var req User
+		// Validar token
+		token := c.GetHeader("token")
+		if token != "123456" {
+			c.JSON(401, gin.H{
+				"error": "token inválido",
+			})
+			return
+		}
+		// Si el token fue valido, avanzo
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(404, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		lastID++
+		req.Id = lastID
+
+		usersList = append(usersList, req)
+
+		c.JSON(200, req)
 	}
 }
 
@@ -181,6 +218,8 @@ func main() {
 	router.GET("/hello-world", GetName)
 	router.GET("users/filter", GetAll)
 	router.GET("/users/:id", GetUserById)
+	rt := router.Group("/users")
+	rt.POST("/", NewEntity())
 
 	router.Run(":8080")
 
