@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"strconv"
@@ -91,6 +92,21 @@ func (t Transaction) Update(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, transaction)
+}
+
+func (t Transaction) Patch(ctx *gin.Context) {
+	token := ctx.GetHeader("token")
+
+	if token != os.Getenv("TOKEN") {
+		ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "token inválido"))
+		return
+	}
+
+	var req request
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+
+		return
+	}
 }
 
 func (t Transaction) UpdateMontoCod(ctx *gin.Context) {
@@ -184,7 +200,9 @@ func (t Transaction) Delete(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, deleted, ""))
+	res := fmt.Sprintf("el ID: %v fue eliminado", deleted)
+
+	ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, res, ""))
 }
 
 // Recibe una request y devuelve un string con los campos faltantes
