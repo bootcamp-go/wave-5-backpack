@@ -12,6 +12,8 @@ type Repository interface {
 	GetById(id int) (domain.User, error)
 	StoreUser(id int, name, lastname, email string, age int, height float32, active bool, doCreation string) (domain.User, error)
 	UpdateUser(id int, name, lastname, email string, age int, height float32, active bool, doCreation string) (domain.User, error)
+	DeleteUser(id int) error
+	UpdateLastnameAndAge(id int, lastname string, age int)(*domain.User, error)
 }
 
 const (
@@ -53,6 +55,24 @@ func (r *repository) GetById(id int) (domain.User, error) {
 	}
 
 	return domain.User{}, fmt.Errorf(UserNotFound, id)
+}
+func (r *repository) DeleteUser(id int) error {
+	allUsers, err := r.GetAll()
+	if err != nil {
+		return err
+	}
+	for i := range allUsers {
+		if allUsers[i].ID == id {
+			allUsers = append(allUsers[:i], allUsers[i+1:]...)
+			break
+		}
+	}
+
+	if err := r.db.Write(allUsers); err != nil {
+		return fmt.Errorf(FailWriting, err)
+	}
+
+	return nil
 }
 
 func (r *repository) LastId() (int, error) {
@@ -116,5 +136,27 @@ func (r *repository) UpdateUser(id int, name, lastname, email string, age int, h
 		}
 	}
 	return domain.User{}, fmt.Errorf(UserNotFound, id)
+
+}
+
+func (r *repository) UpdateLastnameAndAge(id int, lastname string, age int) (*domain.User, error) {
+	allUsers, err := r.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+
+	for index := range allUsers {
+		if allUsers[index].ID == id {
+			allUsers[index].Lastname = lastname
+			allUsers[index].Age = age
+
+			if err := r.db.Write(allUsers); err != nil {
+				return nil, fmt.Errorf(FailWriting, err)
+			}
+			return &allUsers[index], nil
+		}
+	}
+	return nil, fmt.Errorf(UserNotFound, id)
 
 }

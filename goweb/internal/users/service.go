@@ -1,8 +1,7 @@
 package users
 
 import (
-	"errors"
-	"os"
+	"fmt"
 
 	"github.com/bootcamp-go/wave-5-backpack/internal/domain"
 )
@@ -10,11 +9,10 @@ import (
 type Service interface {
 	GetAll() ([]domain.User, error)
 	StoreUser(name, lastname, email string, age int, height float32, active bool, doCreation string) (domain.User, error)
-	ValidateToken(token string) error
 	GetById(id int) (domain.User, error)
 	UpdateUser(id int, name, lastname, email string, age int, height float32, active bool, doCreation string) (domain.User, error)
-	/* 	ValidateReq(domain.User)([]string)
-	 */
+	DeleteUser(id int) error
+	UpdateLastnameAndAge(id int, lastname string, age int) (*domain.User, error)
 }
 
 type service struct {
@@ -27,50 +25,6 @@ func NewService(r Repository) Service {
 	}
 }
 
-/* type request struct {
-	Name       string  `json: "name"`
-	Lastname   string  `json: "lastname"`
-	Email      string  `json: "email"`
-	Age        int     `json: "age"`
-	Height     float32 `json: "height"`
-	Active     bool    `json: "active"`
-	DoCreation string  `json: "doCreation"`
-}
-
-func (s *service) ValidateReq(req request) []string {
-	var errMsg []string
-
-	if req.Name == "" {
-		errMsg = append(errMsg, "Name required")
-	}
-
-	if req.Lastname == "" {
-		errMsg = append(errMsg, "Lastname required")
-	}
-	if req.Email == "" {
-		errMsg = append(errMsg, "Email required")
-	}
-	if req.Age == 0 {
-		errMsg = append(errMsg, "Age required")
-	}
-	if req.Height == 0 {
-		errMsg = append(errMsg, "Height required")
-	}
-	if req.DoCreation == "" {
-		errMsg = append(errMsg, "Date of creation required")
-	}
-
-	return errMsg
-
-} */
-
-func (s *service) ValidateToken(token string) error {
-	if token != os.Getenv("TOKEN") {
-		err := errors.New("ERROR: Invalid token")
-		return err
-	}
-	return nil
-}
 func (s *service) GetAll() ([]domain.User, error) {
 	us, err := s.repository.GetAll()
 	if err != nil {
@@ -111,5 +65,22 @@ func (s *service) UpdateUser(id int, name, lastname, email string, age int, heig
 		return domain.User{}, err
 	}
 
+	return updatedUser, nil
+}
+
+func (s *service) DeleteUser(id int) error {
+	err := s.repository.DeleteUser(id)
+	if err != nil {
+		return fmt.Errorf("error deleting user %w", err)
+	}
+	return nil
+}
+
+
+func(s *service) UpdateLastnameAndAge(id int, lastname string, age int) (*domain.User, error){
+	updatedUser, err := s.repository.UpdateLastnameAndAge(id, lastname, age)
+	if err != nil {
+		return nil, fmt.Errorf("error deleting user %w", err)
+	}
 	return updatedUser, nil
 }

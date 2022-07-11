@@ -1,13 +1,13 @@
 package handler
 
 import (
-	"net/http"
-	"strconv"
-	"strings"
-
+	"fmt"
 	"github.com/bootcamp-go/wave-5-backpack/internal/users"
 	"github.com/bootcamp-go/wave-5-backpack/pkg/web"
 	"github.com/gin-gonic/gin"
+	"net/http"
+	"strconv"
+	"strings"
 )
 
 type request struct {
@@ -32,10 +32,7 @@ func NewUser(u users.Service) *User {
 
 func (c *User) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if err := c.service.ValidateToken(ctx.Request.Header.Get("token")); err != nil {
-			ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "Invalid Token"))
-			return
-		}
+
 		allUsers, err := c.service.GetAll()
 		if err != nil {
 			ctx.JSON(404, gin.H{
@@ -49,10 +46,7 @@ func (c *User) GetAll() gin.HandlerFunc {
 
 func (c *User) StoreUser() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if err := c.service.ValidateToken(ctx.Request.Header.Get("token")); err != nil {
-			ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "Invalid Token"))
-			return
-		}
+
 		var req request
 		if err := ctx.ShouldBind(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{
@@ -79,10 +73,7 @@ func (c *User) StoreUser() gin.HandlerFunc {
 }
 func (c *User) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if err := c.service.ValidateToken(ctx.Request.Header.Get("token")); err != nil {
-			ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "Invalid Token"))
-			return
-		}
+
 		id, _ := strconv.Atoi(ctx.Param("id"))
 		userFound, err := c.service.GetById(id)
 		if err != nil {
@@ -96,10 +87,7 @@ func (c *User) GetById() gin.HandlerFunc {
 
 func (c *User) UpdateUser() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if err := c.service.ValidateToken(ctx.Request.Header.Get("token")); err != nil {
-			ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "Invalid Token"))
-			return
-		}
+
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Id"})
@@ -108,7 +96,6 @@ func (c *User) UpdateUser() gin.HandlerFunc {
 		var req request
 		if err := ctx.ShouldBind(&req); err != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
-
 			return
 		}
 
@@ -119,12 +106,46 @@ func (c *User) UpdateUser() gin.HandlerFunc {
 
 		updatedUser, err := c.service.UpdateUser(id, req.Name, req.Lastname, req.Email, req.Age, req.Height, req.Active, req.DoCreation)
 		if err != nil {
-			ctx.JSON(404, gin.H{
-				"ERROR": err.Error(),
-			})
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, updatedUser)
+		ctx.JSON(200, web.NewResponse(200, updatedUser, ""))
+	}
+}
+func (c *User) UpdateLastnameAndAge() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "error: Invalid Id"))
+			return
+		}
+		var req request
+		if err := ctx.ShouldBind(&req); err != nil {
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
+			return
+		}
+		var errMsg []string
+
+		if req.Lastname == "" {
+			errMsg = append(errMsg, "Lastname required")
+		}
+		if req.Age == 0 {
+			errMsg = append(errMsg, "Age required")
+		}
+
+		if len(errMsg) > 0 {
+			fullMsg := "Missing data, please complete " + strings.Join(errMsg, ", ")
+			ctx.JSON(400, web.NewResponse(400, nil, fullMsg))
+			return
+		}
+
+		updatedUser, err := c.service.UpdateLastnameAndAge(id, req.Lastname, req.Age)
+		if err != nil {
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
+			return
+		}
+		ctx.JSON(200, web.NewResponse(200, updatedUser, ""))
 	}
 }
 
@@ -134,7 +155,6 @@ func fieldsValidator(req request) string {
 	if req.Name == "" {
 		errMsg = append(errMsg, "Name required")
 	}
-
 	if req.Lastname == "" {
 		errMsg = append(errMsg, "Lastname required")
 	}
@@ -156,4 +176,24 @@ func fieldsValidator(req request) string {
 		return fullMsg
 	}
 	return ""
+}
+
+func (c *User) DeleteUser() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		// valido token
+
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(400, web.NewResponse(400, nil, "invalid ID"))
+			return
+		}
+
+		err = c.service.DeleteUser(id)
+		if err != nil {
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
+			return
+		}
+		ctx.JSON(200, web.NewResponse(200, fmt.Sprintf("El producto %d ha sido eliminado",
+			id), ""))
+	}
 }
