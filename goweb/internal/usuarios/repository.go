@@ -60,20 +60,30 @@ func (r *repository) UpdateNameAndLastName(id int, name string, last string) (do
 }
 
 func (r *repository) Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error) {
-	u := domain.Usuarios{Nombre: nombre, Apellido: apellido, Email: email, Edad: edad, Altura: altura, Activo: activo, FechaCreacion: fecha}
-	actualizado := false
+	var us []domain.Usuarios
+
+	if err := r.db.Read(&us); err != nil {
+		return domain.Usuarios{}, fmt.Errorf(FailReading)
+	}
+
 	for i := range us {
-		if us[i].Id == id {
-			u.Id = id
-			us[i] = u
-			actualizado = true
+		user := &us[i]
+		if user.Id == id {
+			user.Nombre = nombre
+			user.Apellido = apellido
+			user.Email = email
+			user.FechaCreacion = fecha
+			user.Activo = activo
+			user.Edad = edad
+			user.Altura = altura
+
+			if err := r.db.Write(us); err != nil {
+				return domain.Usuarios{}, fmt.Errorf(FailWriting)
+			}
+			return *user, nil
 		}
 	}
-	if !actualizado {
-		return domain.Usuarios{}, fmt.Errorf("el producto con id %d no fue encontrado", id)
-	}
-	return u, nil
-
+	return domain.Usuarios{}, fmt.Errorf(UsuarioNotFound, id)
 }
 
 func (r *repository) Delete(id int) error {
