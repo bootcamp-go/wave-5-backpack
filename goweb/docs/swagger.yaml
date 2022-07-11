@@ -1,0 +1,217 @@
+definitions:
+  handler.patchRequest:
+    properties:
+      age:
+        type: integer
+      lastName:
+        type: string
+    type: object
+  handler.putRequest:
+    properties:
+      active:
+        type: boolean
+      age:
+        type: integer
+      createdAt:
+        type: string
+      email:
+        type: string
+      firstName:
+        type: string
+      height:
+        type: number
+      lastName:
+        type: string
+    required:
+    - active
+    - age
+    - createdAt
+    - email
+    - firstName
+    - height
+    - lastName
+    type: object
+  handler.request:
+    properties:
+      active:
+        type: boolean
+      age:
+        type: integer
+      email:
+        type: string
+      firstName:
+        type: string
+      height:
+        type: number
+      lastName:
+        type: string
+    required:
+    - active
+    - age
+    - email
+    - firstName
+    - height
+    - lastName
+    type: object
+  web.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      error:
+        type: string
+    type: object
+info:
+  contact:
+    name: API Support
+  description: This API Handle MELI Users.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: MELI Bootcamp API
+  version: "1.0"
+paths:
+  /users:
+    get:
+      description: get users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Get all users
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: store users
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: User to store
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handler.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Store users
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      description: delete user by id
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: User id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Delete user by id
+      tags:
+      - Users
+    get:
+      description: get user by id
+      parameters:
+      - description: User id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Get user by id
+      tags:
+      - Users
+    patch:
+      consumes:
+      - application/json
+      description: update user Age or LastName by id
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: User id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Fields to update
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handler.patchRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Update user Age or LastName by id
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: update users by id
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: User id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User to update
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handler.putRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Update users
+      tags:
+      - Users
+swagger: "2.0"

@@ -12,23 +12,27 @@ import (
 )
 
 type request struct {
-	Age                        int     `binding:"required"`
-	FirstName, LastName, Email string  `binding:"required"`
-	Height                     float64 `binding:"required"`
-	Active                     *bool   `binding:"required"`
+	Age       int     `json:"age" binding:"required"`
+	FirstName string  `json:"firstName" binding:"required"`
+	LastName  string  `json:"lastName" binding:"required"`
+	Email     string  `json:"email" binding:"required"`
+	Height    float64 `json:"height" binding:"required"`
+	Active    *bool   `json:"active" binding:"required"`
 }
 
 type putRequest struct {
-	Age                        int     `binding:"required"`
-	FirstName, LastName, Email string  `binding:"required"`
-	CreatedAt                  string  `binding:"required"`
-	Height                     float64 `binding:"required"`
-	Active                     *bool   `binding:"required"`
+	Age       int     `json:"age" binding:"required"`
+	FirstName string  `json:"firstName" binding:"required"`
+	LastName  string  `json:"lastName" binding:"required"`
+	Email     string  `json:"email" binding:"required"`
+	CreatedAt string  `json:"createdAt" binding:"required"`
+	Height    float64 `json:"height" binding:"required"`
+	Active    *bool   `json:"active" binding:"required"`
 }
 
-type pathRequest struct {
-	Age      int
-	LastName string
+type patchRequest struct {
+	Age      int    `json:"age"`
+	LastName string `json:"lastName"`
 }
 
 type User struct {
@@ -41,6 +45,13 @@ func NewUser(u users.Service) *User {
 	}
 }
 
+// GetUsers godoc
+// @Summary Get all users
+// @Tags Users
+// @Description get users
+// @Produce json
+// @Success 200 {object} web.Response
+// @Router /users [get]
 func (c *User) GetAll(ctx *gin.Context) {
 	filters, err := querysMap(ctx)
 	if err != nil {
@@ -58,6 +69,14 @@ func (c *User) GetAll(ctx *gin.Context) {
 	ctx.JSON(200, web.NewResponse(200, users, ""))
 }
 
+// GetUsers godoc
+// @Summary Get user by id
+// @Tags Users
+// @Description get user by id
+// @Produce json
+// @Success 200 {object} web.Response
+// @Param id path string true "User id"
+// @Router /users/{id} [get]
 func (c *User) GetById(ctx *gin.Context) {
 	Id, err := strconv.Atoi(ctx.Param("Id"))
 
@@ -82,6 +101,16 @@ func (c *User) GetById(ctx *gin.Context) {
 	ctx.JSON(200, web.NewResponse(200, user, ""))
 }
 
+// StoreUsers godoc
+// @Summary Store users
+// @Tags Users
+// @Description store users
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param user body request true "User to store"
+// @Success 200 {object} web.Response
+// @Router /users [post]
 func (c *User) Store(ctx *gin.Context) {
 	var req request
 
@@ -107,6 +136,17 @@ func (c *User) Store(ctx *gin.Context) {
 	ctx.JSON(201, web.NewResponse(201, user, ""))
 }
 
+// UpadteUsers godoc
+// @Summary Update users
+// @Tags Users
+// @Description update users by id
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path string true "User id"
+// @Param user body putRequest true "User to update"
+// @Success 201 {object} web.Response
+// @Router /users/{id} [put]
 func (c *User) Update(ctx *gin.Context) {
 	Id, err := strconv.Atoi(ctx.Param("Id"))
 
@@ -139,6 +179,17 @@ func (c *User) Update(ctx *gin.Context) {
 	ctx.JSON(200, web.NewResponse(200, user, ""))
 }
 
+// UpadteUsersAgeLastName godoc
+// @Summary Update user Age or LastName by id
+// @Tags Users
+// @Description update user Age or LastName by id
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path string true "User id"
+// @Param user body patchRequest true "Fields to update"
+// @Success 201 {object} web.Response
+// @Router /users/{id} [patch]
 func (c *User) UpdateAgeLastName(ctx *gin.Context) {
 	Id, err := strconv.Atoi(ctx.Param("Id"))
 
@@ -147,7 +198,7 @@ func (c *User) UpdateAgeLastName(ctx *gin.Context) {
 		return
 	}
 
-	var req pathRequest
+	var req patchRequest
 	if err := ctx.BindJSON(&req); err != nil {
 		ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 		return
@@ -166,6 +217,15 @@ func (c *User) UpdateAgeLastName(ctx *gin.Context) {
 	ctx.JSON(200, web.NewResponse(200, user, ""))
 }
 
+// DeleteUser godoc
+// @Summary Delete user by id
+// @Tags Users
+// @Description delete user by id
+// @Produce json
+// @Param token header string true "token"
+// @Param id path string true "User id"
+// @Success 204 {object} web.Response
+// @Router /users/{id} [delete]
 func (c *User) Delete(ctx *gin.Context) {
 	Id, err := strconv.Atoi(ctx.Param("Id"))
 
