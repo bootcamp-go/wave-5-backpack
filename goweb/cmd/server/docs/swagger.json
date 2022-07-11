@@ -1,0 +1,48 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "esta api maneja los productos de nuestro proyecto",
+        "title": "Bootcamp MELI API",
+        "termsOfService": "N/A",
+        "contact": {
+            "name": "API Support",
+            "url": "www.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "www.com"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/product": {
+            "get": {
+                "description": "get Products",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Products"
+                ],
+                "summary": "product List",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        }
+    }
+}

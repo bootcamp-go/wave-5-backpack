@@ -5,23 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c61c0a6e-ec4e-437f-9119-49f6d8decf00" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/cmd/server/docs/docs.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmd/server/docs/swagger.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/cmd/server/docs/swagger.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clase/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/clase/.idea/clase.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/clase/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/clase/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/clase/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/clase/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/clase/cmd/server/.env" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/clase/cmd/server/handler/transaction.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/clase/cmd/server/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/clase/go.mod" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/clase/go.sum" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/clase/internal/transactions/repository.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/clase/internal/transactions/service.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/clase/pkg/store/file.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/clase/transactions.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/clase3/.idea/workspace.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/sever/handler/products.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server/handler/products.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/sever/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,13 +27,16 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2BnlvV24urEwXpLJAR8xz949dRs" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.go.formatter.settings.were.checked": "true",
@@ -55,7 +49,16 @@
     "last_opened_file_path": "/Users/pmelegatti/Documents/wave-5-backpack/goweb"
   }
 }]]></component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Go Build.go build main.go (1)">
+    <configuration name="go build main.go (1)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="goweb" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <package value="github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/cmd/server/main.go" />
+      <method v="2" />
+    </configuration>
     <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="goweb" />
       <working_directory value="$PROJECT_DIR$" />
@@ -67,6 +70,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Build.go build main.go (1)" />
         <item itemvalue="Go Build.go build main.go" />
       </list>
     </recent_temporary>
@@ -85,6 +89,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

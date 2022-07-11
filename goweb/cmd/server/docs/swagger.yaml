@@ -1,0 +1,32 @@
+info:
+  contact:
+    name: API Support
+    url: www.com
+  description: esta api maneja los productos de nuestro proyecto
+  license:
+    name: Apache 2.0
+    url: www.com
+  termsOfService: N/A
+  title: Bootcamp MELI API
+  version: "1.0"
+paths:
+  /product:
+    get:
+      consumes:
+      - application/json
+      description: get Products
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      summary: product List
+      tags:
+      - Products
+swagger: "2.0"
