@@ -51,6 +51,7 @@ func (s *service) GetAll() ([]domain.Usuarios, error) {
 	}
 	return us, nil
 }
+
 func (s *service) Guardar(nombre string, apellido string, email string, edad int, altura float64, actico bool, fecha string) (domain.Usuarios, error) {
 	lasNro, erro := s.repository.LastId()
 	if erro != nil {
