@@ -147,7 +147,7 @@ func (t Transaction) GetByID(ctx *gin.Context) {
 
 	transaction, err := t.service.GetByID(id)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusInternalServerError, web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
 		return
 	}
 
