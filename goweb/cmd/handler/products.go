@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/products"
@@ -18,7 +19,7 @@ type request struct {
 	Precio        float64 `json:"Precio" binding:"required"`
 	Stock         int     `json:"Stock" binding:"required"`
 	Codigo        string  `json:"Codigo" binding:"required"`
-	Publicado     bool    `json:"Publicado" binding:"required"`
+	Publicado     *bool   `json:"Publicado" binding:"required"`
 	FechaCreacion string  `json:"FechaCreacion" binding:"-"`
 }
 
@@ -34,7 +35,7 @@ func NewProduct(p products.Service) *Product {
 
 func (p Product) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if token := ctx.GetHeader("token"); token != "123456" {
+		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token invalido",
 			})
@@ -54,9 +55,39 @@ func (p Product) GetAll() gin.HandlerFunc {
 	}
 }
 
+func (p Product) GetProduct() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
+			ctx.JSON(http.StatusUnauthorized, gin.H{
+				"error": "token invalido",
+			})
+			return
+		}
+
+		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		product, err := p.service.GetProduct(int(id))
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+
+		ctx.JSON(http.StatusOK, product)
+		return
+	}
+}
+
 func (p *Product) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if token := ctx.GetHeader("token"); token != "123456" {
+		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token invalido",
 			})
@@ -79,7 +110,7 @@ func (p *Product) Store() gin.HandlerFunc {
 			return
 		}
 
-		product, err := p.service.Store(r.Nombre, r.Color, r.Precio, r.Stock, r.Codigo, r.Publicado)
+		product, err := p.service.Store(r.Nombre, r.Color, r.Precio, r.Stock, r.Codigo, *r.Publicado)
 
 		if err != nil {
 			ctx.JSON(404, gin.H{
@@ -95,7 +126,7 @@ func (p *Product) Store() gin.HandlerFunc {
 
 func (p *Product) UpdateAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if token := ctx.GetHeader("token"); token != "123456" {
+		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token invalido",
 			})
@@ -126,7 +157,7 @@ func (p *Product) UpdateAll() gin.HandlerFunc {
 			return
 		}
 
-		product, err := p.service.UpdateAll(int(id), r.Nombre, r.Color, r.Precio, r.Stock, r.Codigo, r.Publicado)
+		product, err := p.service.UpdateAll(int(id), r.Nombre, r.Color, r.Precio, r.Stock, r.Codigo, *r.Publicado)
 
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{
@@ -142,7 +173,7 @@ func (p *Product) UpdateAll() gin.HandlerFunc {
 
 func (p *Product) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if token := ctx.GetHeader("token"); token != "123456" {
+		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token invalido",
 			})
@@ -159,7 +190,7 @@ func (p *Product) Delete() gin.HandlerFunc {
 
 		if err = p.service.Delete(int(id)); err != nil {
 			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": errors.New("No fue posible borrar el producto"),
+				"error": "No fue posible borrar el producto",
 			})
 			return
 		}
@@ -171,7 +202,7 @@ func (p *Product) Delete() gin.HandlerFunc {
 
 func (p *Product) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if token := ctx.GetHeader("token"); token != "123456" {
+		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token invalido",
 			})
@@ -231,38 +262,4 @@ func (p *Product) Update() gin.HandlerFunc {
 // 		}
 // 	}
 // 	ctx.JSON(http.StatusOK, productsFilt)
-// }
-
-// func GetProduct(ctx *gin.Context) {
-// 	id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	} else {
-// 		for _, product := range products {
-// 			if product.ID == int(id) {
-// 				ctx.JSON(http.StatusOK, product)
-// 				return
-// 			}
-// 		}
-// 		ctx.JSON(http.StatusNotFound, "Error 404")
-// 	}
-// }
-
-// func NewProduct() gin.HandlerFunc {
-// 	return func(ctx *gin.Context) {
-// 		if "123456" != ctx.GetHeader("token") {
-// 			ctx.JSON(401, "No tiene permisos para realizar la peticion solicitada")
-// 			return
-// 		}
-
-// 		var p product
-// 		if err := ctx.ShouldBindJSON(&p); err != nil {
-// 			return
-// 		}
-
-// 		p.ID = newID()
-// 		products = append(products, p)
-
-// 		ctx.JSON(http.StatusOK, products)
-// 	}
 // }

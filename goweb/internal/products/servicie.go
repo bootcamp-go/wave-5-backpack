@@ -6,6 +6,7 @@ import (
 
 type Service interface {
 	GetAll() ([]domain.Product, error)
+	GetProduct(id int) (domain.Product, error)
 	Store(nombre string, color string, precio float64, stock int, codigo string, publicado bool) (domain.Product, error)
 	UpdateAll(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool) (domain.Product, error)
 	Delete(id int) error
@@ -29,6 +30,16 @@ func (s service) GetAll() ([]domain.Product, error) {
 	}
 
 	return products, nil
+}
+
+func (s service) GetProduct(id int) (domain.Product, error) {
+	product, err := s.repository.GetProduct(id)
+
+	if err != nil {
+		return domain.Product{}, err
+	}
+
+	return product, nil
 }
 
 func (s service) Store(nombre string, color string, precio float64, stock int, codigo string, publicado bool) (domain.Product, error) {
