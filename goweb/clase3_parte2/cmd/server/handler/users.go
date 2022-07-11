@@ -35,7 +35,7 @@ func NewUser(u users.Service) *User {
 
 func (c *User) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
+		token := ctx.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
 			ctx.JSON(401, gin.H{"error": "El token no es válido"})
 			return
@@ -52,15 +52,21 @@ func (c *User) GetAll() gin.HandlerFunc {
 
 func (c *User) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-		if token != "123456" {
+		token := ctx.GetHeader("token")
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(401, gin.H{ "error": "El token no es válido"})
 			return
 		}
 
 		var req request
-		if err := ctx.Bind(&req); err != nil {
+		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(404, gin.H{"error": err.Error()})
+			return
+		}
+
+		errors := validateRequest(req)
+		if len(errors) > 0 { 
+			ctx.JSON(400, gin.H{ "errores": errors }) 
 			return
 		}
 
@@ -78,7 +84,7 @@ func (c *User) Store() gin.HandlerFunc {
 func (c *User) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(401, gin.H{ "error": "El token no es válido" })
 			return
 		}
@@ -95,15 +101,7 @@ func (c *User) Update() gin.HandlerFunc {
 			return
 		}
 
-		var errors []string
-		if req.Nombre == "" { errors = append(errors, "El nombre del usuario es requerido")}
-		if req.Apellido == "" { errors = append(errors, "El apellido del usuario es requerido")}
-		if req.Email == "" { errors = append(errors, "El email del usuario es requerido.")}
-		if req.Edad  == 0 { errors = append(errors, "La edad del usuario es requerida.")}
-		if req.Altura == 0 { errors = append(errors, "La altura del usuario es requerida.")}
-		if req.Activo == nil { errors = append(errors, "El campo activo del usuario es requerido.")}
-		if req.FechaCreacion == "" { errors = append(errors, "El campo fecha de creación del usuario es requerido.")}
-		
+		errors := validateRequest(req)
 		if len(errors) > 0 { 
 			ctx.JSON(400, gin.H{ "errores": errors }) 
 			return
@@ -123,7 +121,7 @@ func (c *User) Update() gin.HandlerFunc {
 func (c *User) UpdateLastNameAndAge() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(401, gin.H{ "error": "El token no es válido" })
 			return
 		}
@@ -160,9 +158,9 @@ func (c *User) UpdateLastNameAndAge() gin.HandlerFunc {
 
 // Se agrega el controlador Delete en el Handler de usuarios
 func (c *User) Delete() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
+	return func(ctx *gin.Context) { 
 		token := ctx.GetHeader("token")
-		if token != "123456" {
+		if token != os.Getenv("TOKEN") {
 			ctx.JSON(401, gin.H{ "error": "El token no es válido" })
 			return
 		}
@@ -180,4 +178,17 @@ func (c *User) Delete() gin.HandlerFunc {
 		}
 		ctx.JSON(200, gin.H{ "data": fmt.Sprintf("El usuario %d ha sido eliminado", id) })
 	}
+}
+
+// Función que valida los campos de la request
+func validateRequest(req request) []string {
+	var errors []string
+	if req.Nombre == "" { errors = append(errors, "El nombre del usuario es requerido")}
+	if req.Apellido == "" { errors = append(errors, "El apellido del usuario es requerido")}
+	if req.Email == "" { errors = append(errors, "El email del usuario es requerido.")}
+	if req.Edad  == 0 { errors = append(errors, "La edad del usuario es requerida.")}
+	if req.Altura == 0 { errors = append(errors, "La altura del usuario es requerida.")}
+	if req.Activo == nil { errors = append(errors, "El campo activo del usuario es requerido.")}
+	if req.FechaCreacion == "" { errors = append(errors, "El campo fecha de creación del usuario es requerido.")}
+	return errors
 }

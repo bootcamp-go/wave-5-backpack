@@ -7,7 +7,7 @@
         "edad": 24,
         "altura": 1.64,
         "activo": true,
-        "fecha_creacion": "07/07/22"
+        "fecha_creacion": "11/07/22"
     },
     {
         "id": 2,
@@ -17,7 +17,7 @@
         "edad": 24,
         "altura": 1.65,
         "activo": true,
-        "fecha_creacion": "06/07/22"
+        "fecha_creacion": "11/07/22"
     },
     {
         "id": 3,
@@ -27,7 +27,7 @@
         "edad": 27,
         "altura": 1.73,
         "activo": true,
-        "fecha_creacion": "07/07/22"
+        "fecha_creacion": "11/07/22"
     },
     {
         "id": 4,
@@ -37,7 +37,7 @@
         "edad": 26,
         "altura": 1.85,
         "activo": true,
-        "fecha_creacion": "07/07/22"
+        "fecha_creacion": "11/07/22"
     },
     {
         "id": 5,
@@ -47,7 +47,7 @@
         "edad": 26,
         "altura": 1.83,
         "activo": true,
-        "fecha_creacion": "07/07/22"
+        "fecha_creacion": "11/07/22"
     },
     {
         "id": 6,
@@ -57,6 +57,6 @@
         "edad": 25,
         "altura": 1.78,
         "activo": true,
-        "fecha_creacion": "07/07/22"
+        "fecha_creacion": "11/07/22"
     }
 ]
