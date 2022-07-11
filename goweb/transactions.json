@@ -34,5 +34,14 @@
 "emisor": "PayPal",
 "receptor": "BBVA",
 "date_transaction": "2022-07-11 09:29:04.354814 -0300 -03"
+},
+{
+"id": 6,
+"monto": 1550.55,
+"cod_transaction": "abc1234abc",
+"moneda": "ARS",
+"emisor": "PayPal",
+"receptor": "BBVA",
+"date_transaction": "2022-07-11 13:03:46.857118 -0300 -03"
 }
 ]

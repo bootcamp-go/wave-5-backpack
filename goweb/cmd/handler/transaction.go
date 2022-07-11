@@ -11,11 +11,11 @@ import (
 )
 
 type request struct {
-	Monto    float64 `json:"monto" binding:"required"`
-	Cod      string  `json:"cod_transaction" binding:"required"`
-	Moneda   string  `json:"moneda" binding:"required"`
-	Emisor   string  `json:"emisor" binding:"required"`
-	Receptor string  `json:"receptor" binding:"required"`
+	Monto    float64 `json:"monto"`
+	Cod      string  `json:"cod_transaction"`
+	Moneda   string  `json:"moneda"`
+	Emisor   string  `json:"emisor"`
+	Receptor string  `json:"receptor"`
 }
 
 type requestPatch struct {
@@ -45,6 +45,11 @@ func (t Transaction) CreateTransaction(ctx *gin.Context) {
 		return
 	}
 
+	if errors := checkEmpty(req); len(errors) != 0 {
+		ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, errors...))
+		return
+	}
+
 	transaction, err := t.service.Store(req.Monto, req.Cod, req.Moneda, req.Emisor, req.Receptor)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
@@ -71,6 +76,11 @@ func (t Transaction) Update(ctx *gin.Context) {
 	var req request
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
+		return
+	}
+
+	if errors := checkEmpty(req); len(errors) != 0 {
+		ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, errors...))
 		return
 	}
 
@@ -175,4 +185,31 @@ func (t Transaction) Delete(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, deleted, ""))
+}
+
+// Recibe una request y devuelve un string con los campos faltantes
+func checkEmpty(req request) []string {
+	var errors []string
+
+	if req.Monto == 0 {
+		errors = append(errors, "falta el campo 'monto'")
+	}
+
+	if req.Cod == "" {
+		errors = append(errors, "falta el campo 'cod_transaction'")
+	}
+
+	if req.Moneda == "" {
+		errors = append(errors, "falta el campo 'moneda'")
+	}
+
+	if req.Emisor == "" {
+		errors = append(errors, "falta el campo 'emisor'")
+	}
+
+	if req.Receptor == "" {
+		errors = append(errors, "falta el campo 'receptor'")
+	}
+
+	return errors
 }
