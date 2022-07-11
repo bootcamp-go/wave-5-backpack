@@ -1,9 +1,14 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/cmd/sever/handler"
+	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/docs"
 	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/internal/products"
 	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/pkg/file"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,6 +17,8 @@ func main() {
 	fileDB := file.NewFile("/Users/andreramos/Documents/Bootcamp-Go Meli/wave-5-backpack/goweb/resources/products.json")
 	if err := fileDB.Ping(); err != nil {
 		panic(err)
+	} else {
+		fmt.Println("good to go")
 	}
 	repository := products.NewRepository(fileDB)
 	service := products.NewService(repository)
@@ -29,6 +36,9 @@ func main() {
 		})
 
 	})
+
+	docs.SwaggerInfo.Host = "localhost:8080"
+	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	productos := router.Group("/products")
 	{

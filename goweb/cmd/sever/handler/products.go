@@ -32,6 +32,14 @@ func NewProduct(s products.Service) *Product {
 	return &Product{service: s}
 }
 
+// ListProducts godoc
+// @Summary List products
+// @Tags Products
+// @Description get products
+// @Produce  json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Router /products [get]
 func (p *Product) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		products, err := p.service.GetAll()
@@ -58,6 +66,16 @@ func (p *Product) GetById() gin.HandlerFunc {
 	}
 }
 
+// StoreProducts godoc
+// @Summary Store products
+// @Tags Products
+// @Description store products
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param product body domain.Product true "Product to store"
+// @Success 200 {object} web.Response
+// @Router /products [post]
 func (p *Product) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var pr Request

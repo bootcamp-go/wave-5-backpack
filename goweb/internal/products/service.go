@@ -31,7 +31,7 @@ func (s *service) GetAll() ([]domain.Product, error) {
 	if err != nil {
 		return nil, errors.New("no se pudo obtener los productos")
 	}
-	return products, errors.New("no se pudo obtener los productos")
+	return products, nil
 }
 
 func (s *service) Store(name string, color string, price float64, stock uint64, code string, published bool, createdAt string) (domain.Product, error) {

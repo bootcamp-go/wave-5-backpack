@@ -2,6 +2,7 @@ package file
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 )
 
@@ -23,6 +24,7 @@ func NewFile(path string) File {
 
 func (fs *fileStruct) Read(data interface{}) error {
 	file, err := os.ReadFile(fs.FilePath)
+	fmt.Println(err)
 	if err != nil {
 		return err
 	}
