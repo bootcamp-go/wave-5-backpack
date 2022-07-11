@@ -34,5 +34,14 @@
 "emisor": "PayPal",
 "receptor": "BBVA",
 "date_transaction": "2022-07-11 13:03:46.857118 -0300 -03"
+},
+{
+"id": 7,
+"monto": 123.345,
+"cod_transaction": "asfjk12343",
+"moneda": "ARS",
+"emisor": "BBVA",
+"receptor": "Mercado Pago",
+"date_transaction": "2022-07-11 17:56:43.800397 -0300 -03"
 }
 ]

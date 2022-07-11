@@ -32,6 +32,16 @@ func NewTransaction(s transactions.Service) *Transaction {
 	return &Transaction{service: s}
 }
 
+// CreateTransaction godoc
+// @Summary Create a transaction
+// @Description Create a transaction
+// @Tags Transaction
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param transaction body request true "Transaction to store"
+// @Success 200 {object} web.Response
+// @Router /transactions [post]
 func (t Transaction) CreateTransaction(ctx *gin.Context) {
 	token := ctx.GetHeader("token")
 
