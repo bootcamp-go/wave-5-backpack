@@ -42,19 +42,21 @@ func main() {
 	for _, k := range firstNames {
 		fmt.Println(atrib[k])
 	}
+	fmt.Println("revisar")
+
 	// t := reflect.TypeOf(h)
 	// strNumFields := t.NumField()
-	v := reflect.ValueOf(h)
-	for i := 0; i < v.NumField(); i++ {
-		fmt.Println(v.Type().Field(i).Name)
-		fmt.Println("\t", v.Field(i))
-		fmt.Println(t.Field(i).Type.Kind())
-		if t.Field(i).Type.Kind().String() == "int" {
-			fmt.Println("hola23232")
-		}
-		if v.Field(i).String() == "nada" {
-			fmt.Println("hoa")
-		}
-	}
+	// v := reflect.ValueOf(h)
+	// for i := 0; i < v.NumField(); i++ {
+	// 	fmt.Println(v.Type().Field(i).Name)
+	// 	fmt.Println("\t", v.Field(i))
+	// 	fmt.Println(t.Field(i).Type.Kind())
+	// 	if t.Field(i).Type.Kind().String() == "int" {
+	// 		fmt.Println("hola23232")
+	// 	}
+	// 	if v.Field(i).String() == "nada" {
+	// 		fmt.Println("hoa")
+	// 	}
+	// }
 
 }
