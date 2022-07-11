@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/products"
+	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/web"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 )
@@ -36,21 +37,21 @@ func NewProduct(p products.Service) *Product {
 func (p Product) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "token invalido",
-			})
+			ctx.JSON(http.StatusUnauthorized, web.NewResponse(
+				401, nil, "Token invalido",
+			))
 			return
 		}
 
 		products, err := p.service.GetAll()
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(
+				400, nil, "No fue posible obtener los productos",
+			))
 			return
 		}
 
-		ctx.JSON(http.StatusOK, products)
+		ctx.JSON(http.StatusOK, web.NewResponse(200, products, ""))
 
 	}
 }
@@ -58,29 +59,29 @@ func (p Product) GetAll() gin.HandlerFunc {
 func (p Product) GetProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "token invalido",
-			})
+			ctx.JSON(http.StatusUnauthorized, web.NewResponse(
+				401, nil, "Token invalido",
+			))
 			return
 		}
 
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(
+				404, nil, "ID invalido",
+			))
 			return
 		}
 
 		product, err := p.service.GetProduct(int(id))
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(
+				404, nil, "No fue posible encontrar el producto",
+			))
 			return
 		}
 
-		ctx.JSON(http.StatusOK, product)
+		ctx.JSON(http.StatusOK, web.NewResponse(200, product, ""))
 		return
 	}
 }
@@ -88,9 +89,9 @@ func (p Product) GetProduct() gin.HandlerFunc {
 func (p *Product) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "token invalido",
-			})
+			ctx.JSON(http.StatusUnauthorized, web.NewResponse(
+				401, nil, "Token invalido",
+			))
 			return
 		}
 
@@ -103,23 +104,21 @@ func (p *Product) Store() gin.HandlerFunc {
 					messageError += fmt.Sprintf(" %s", vE.Field())
 				}
 			}
-
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": messageError,
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(
+				400, nil, messageError,
+			))
 			return
 		}
 
 		product, err := p.service.Store(r.Nombre, r.Color, r.Precio, r.Stock, r.Codigo, *r.Publicado)
 
 		if err != nil {
-			ctx.JSON(404, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(
+				404, nil, "No fue posible crear el producto",
+			))
 			return
 		}
-
-		ctx.JSON(http.StatusOK, product)
+		ctx.JSON(http.StatusOK, web.NewResponse(200, product, ""))
 	}
 
 }
@@ -127,9 +126,9 @@ func (p *Product) Store() gin.HandlerFunc {
 func (p *Product) UpdateAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "token invalido",
-			})
+			ctx.JSON(http.StatusUnauthorized, web.NewResponse(
+				401, nil, "Token invalido",
+			))
 			return
 		}
 
@@ -143,30 +142,30 @@ func (p *Product) UpdateAll() gin.HandlerFunc {
 				}
 			}
 
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": messageError,
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(
+				400, nil, messageError,
+			))
 			return
 		}
 
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "ID invalido",
-			})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(
+				404, nil, "ID invalido",
+			))
 			return
 		}
 
 		product, err := p.service.UpdateAll(int(id), r.Nombre, r.Color, r.Precio, r.Stock, r.Codigo, *r.Publicado)
 
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(
+				404, nil, "No fue posible actualizar el producto",
+			))
 			return
 		}
 
-		ctx.JSON(http.StatusOK, product)
+		ctx.JSON(http.StatusOK, web.NewResponse(200, product, ""))
 
 	}
 }
@@ -174,28 +173,28 @@ func (p *Product) UpdateAll() gin.HandlerFunc {
 func (p *Product) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "token invalido",
-			})
+			ctx.JSON(http.StatusUnauthorized, web.NewResponse(
+				401, nil, "Token invalido",
+			))
 			return
 		}
 
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "ID invalido",
-			})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(
+				404, nil, "ID invalido",
+			))
 			return
 		}
 
 		if err = p.service.Delete(int(id)); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "No fue posible borrar el producto",
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(400, nil, "No fue posible eliminar el producto"))
 			return
 		}
 
-		ctx.JSON(http.StatusOK, "El producto fue eliminado correctamente")
+		message := fmt.Sprintf("El producto (ID: %d) se elimino correctamente", id)
+
+		ctx.JSON(http.StatusOK, web.NewResponse(200, message, ""))
 
 	}
 }
@@ -203,9 +202,9 @@ func (p *Product) Delete() gin.HandlerFunc {
 func (p *Product) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "token invalido",
-			})
+			ctx.JSON(http.StatusUnauthorized, web.NewResponse(
+				401, nil, "Token invalido",
+			))
 			return
 		}
 		type requestPatch struct {
@@ -223,30 +222,30 @@ func (p *Product) Update() gin.HandlerFunc {
 				}
 			}
 
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": messageError,
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(
+				400, nil, messageError,
+			))
 			return
 		}
 
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "ID invalido",
-			})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(
+				404, nil, "ID invalido",
+			))
 			return
 		}
 
 		product, err := p.service.Update(int(id), rP.Nombre, rP.Precio)
 
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(
+				404, nil, "No fue posible actualizar el producto",
+			))
 			return
 		}
 
-		ctx.JSON(http.StatusOK, product)
+		ctx.JSON(http.StatusOK, web.NewResponse(200, product, ""))
 
 	}
 }
