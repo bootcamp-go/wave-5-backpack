@@ -7,9 +7,9 @@ import (
 )
 
 func main() {
-  leerArchivo("./customers.txt") 
+	leerArchivo("./customers.txt")
 
-  fmt.Println("ejecución finalizada")
+	fmt.Println("ejecución finalizada")
 }
 
 func leerArchivo(nombre string) []byte {
@@ -17,14 +17,14 @@ func leerArchivo(nombre string) []byte {
 		err := recover()
 
 		if err != nil {
-			log.Printf("panic al leer el archivo: %v\n",err)
+			log.Printf("panic al leer el archivo: %v\n", err)
 		}
 	}()
 
-  data, err := os.ReadFile(nombre)
-  if err != nil {
-    panic("el archivo indicado no fue encontrado o está dañado")
-  }
+	data, err := os.ReadFile(nombre)
+	if err != nil {
+		panic("el archivo indicado no fue encontrado o está dañado")
+	}
 
-  return data
+	return data
 }

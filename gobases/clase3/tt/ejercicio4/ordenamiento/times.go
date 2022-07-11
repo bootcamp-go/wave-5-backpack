@@ -16,7 +16,7 @@ func track(s string, comienzo time.Time) time.Duration {
 	final := time.Now()
 
 	log.Printf("Finaliza: %s\n", s)
-	log.Printf("Duration: %s\n",final.Sub(final))
+	log.Printf("Duration: %s\n", final.Sub(final))
 
 	return final.Sub(final)
 }

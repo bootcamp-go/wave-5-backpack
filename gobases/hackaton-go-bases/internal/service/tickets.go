@@ -10,7 +10,7 @@ type Bookings interface {
 	// Read read a Ticket by id
 	Read(id int) (Ticket, error)
 	// ReadAll  read al Tickets
-	ReadAll() ([]Ticket)
+	ReadAll() []Ticket
 	// Update update values of a Ticket
 	Update(id int, t Ticket) (Ticket, error)
 	// Delete delete a Ticket by id
@@ -43,12 +43,12 @@ func (b *bookings) Create(t Ticket) (Ticket, error) {
 
 	t.Id = b.Tickets[last].Id + 1
 
-	b.Tickets =  append(b.Tickets, t)
+	b.Tickets = append(b.Tickets, t)
 
 	return t, nil
 }
 
-func (b *bookings) Read(id int) (Ticket, error) {	
+func (b *bookings) Read(id int) (Ticket, error) {
 	for _, t := range b.Tickets {
 		if t.Id == id {
 			return t, nil
@@ -58,12 +58,12 @@ func (b *bookings) Read(id int) (Ticket, error) {
 	return Ticket{}, errors.New("error: no existe el ticket")
 }
 
-func (b *bookings) ReadAll() ([]Ticket) {
+func (b *bookings) ReadAll() []Ticket {
 	return b.Tickets
 }
 
 // t Ticket contiene una instancia de ticket con los datos a actualizar
-func (b *bookings) Update(id int, t Ticket) (Ticket, error) {	
+func (b *bookings) Update(id int, t Ticket) (Ticket, error) {
 	for i, tt := range b.Tickets {
 		if tt.Id == id {
 			tt = update(t, &tt)

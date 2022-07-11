@@ -10,56 +10,56 @@ import (
 )
 
 type Cliente struct {
-  Legajo uint64
-  Nombre string
-  Apellido string
-  DNI uint
-  Domicilio string
-  NumeroTel string 
+	Legajo    uint64
+	Nombre    string
+	Apellido  string
+	DNI       uint
+	Domicilio string
+	NumeroTel string
 }
 
 // Retorna un id para usar en el legajo
 func NuevoId() uint64 {
-  return rand.Uint64()
+	return rand.Uint64()
 }
 
 // Check si el id ya existe
 func CheckId(id uint64) error {
-  defer func () {
-    err := recover()
+	defer func() {
+		err := recover()
 
 		if err != nil {
 			log.Printf("panic detectado: %v\n", err)
 		}
 
 		log.Println("No han quedado archivos abiertos")
-  }()
+	}()
 
-  data, err := os.ReadFile("./customers.txt")
-  if err != nil {
-    panic("error: el archivo indicado no fue encontrado o está dañado")
-  }
+	data, err := os.ReadFile("./customers.txt")
+	if err != nil {
+		panic("error: el archivo indicado no fue encontrado o está dañado")
+	}
 
-  // Leer data
-  lineas := strings.Split(string(data), "\n")
+	// Leer data
+	lineas := strings.Split(string(data), "\n")
 
-  for _, v := range lineas {
-  	idLeido, err := strconv.ParseUint(v, 10, 64)
-  	if err != nil {
-  		return err
-  	}
+	for _, v := range lineas {
+		idLeido, err := strconv.ParseUint(v, 10, 64)
+		if err != nil {
+			return err
+		}
 
-  	if id == idLeido {
-  		return errors.New("ya existe cliente con ese id")
-  	}
-  }
+		if id == idLeido {
+			return errors.New("ya existe cliente con ese id")
+		}
+	}
 
-  return nil
+	return nil
 }
 
 func NuevoCliente(legajo uint64, dni uint, nombre, apellido, domicilio, numTel string) (*Cliente, error) {
 	defer func() {
-		err := recover()	
+		err := recover()
 
 		if err != nil {
 			log.Printf("err: ocurrieron errores durante la validación")
@@ -77,7 +77,7 @@ func NuevoCliente(legajo uint64, dni uint, nombre, apellido, domicilio, numTel s
 	if nombre == "" {
 		panic("panic: nombre es requerido")
 	}
-	
+
 	if apellido == "" {
 		panic("panic: apellido es requerido")
 	}
@@ -91,11 +91,11 @@ func NuevoCliente(legajo uint64, dni uint, nombre, apellido, domicilio, numTel s
 	}
 
 	return &Cliente{
-		Legajo: legajo,
-		Nombre: nombre,
-		Apellido: apellido,
+		Legajo:    legajo,
+		Nombre:    nombre,
+		Apellido:  apellido,
 		Domicilio: domicilio,
 		NumeroTel: numTel,
-		DNI: dni,
-	},nil
+		DNI:       dni,
+	}, nil
 }

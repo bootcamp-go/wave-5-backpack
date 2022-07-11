@@ -7,17 +7,17 @@ import (
 )
 
 func main() {
-  usuario := &usuarios.Usuarios{
-    Nombre: "Magnus",
-    Apellido: "Carlsen",
-  }
+	usuario := &usuarios.Usuarios{
+		Nombre:   "Magnus",
+		Apellido: "Carlsen",
+	}
 
-  fmt.Printf("Datos del usuario: %+v\n", usuario)
+	fmt.Printf("Datos del usuario: %+v\n", usuario)
 
-  usuario.CambiarNombre("Pepe","Cuenca")
-  usuario.CambiarEdad(35)
-  usuario.CambiarCorreo("pepe@email.com")
-  usuario.CambiarPassword("12345")
+	usuario.CambiarNombre("Pepe", "Cuenca")
+	usuario.CambiarEdad(35)
+	usuario.CambiarCorreo("pepe@email.com")
+	usuario.CambiarPassword("12345")
 
-  fmt.Printf("Datos nuevo del usuario: %+v\n", usuario)
+	fmt.Printf("Datos nuevo del usuario: %+v\n", usuario)
 }

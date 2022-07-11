@@ -44,12 +44,12 @@ func (f *File) Read() ([]service.Ticket, error) {
 		}
 
 		ticket := service.Ticket{
-			Id: id,
-			Names: names,	
-			Email: email,
+			Id:          id,
+			Names:       names,
+			Email:       email,
 			Destination: destination,
-			Date: date,
-			Price: price,
+			Date:        date,
+			Price:       price,
 		}
 
 		tickets = append(tickets, ticket)
@@ -61,13 +61,13 @@ func (f *File) Read() ([]service.Ticket, error) {
 func (f *File) Write(tickets []service.Ticket) error {
 	var data string
 
-	for i , t := range tickets {
-		if i == len(tickets) - 1 {
+	for i, t := range tickets {
+		if i == len(tickets)-1 {
 			data += fmt.Sprintf("%d,%s,%s,%s,%s,%d", t.Id, t.Names, t.Email, t.Destination, t.Date, t.Price)
 
 			if err := os.WriteFile(f.Path, []byte(data), 664); err != nil {
 				return err
-			}	
+			}
 			break
 		}
 

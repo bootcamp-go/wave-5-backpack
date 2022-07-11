@@ -14,24 +14,24 @@ func main() {
 	tickets, err := file.Read()
 	if err != nil {
 		log.Println(err)
-	}	
+	}
 
 	// Funcion para obtener tickets del archivo csv
 	book := service.NewBookings(tickets)
 
 	nuevoTicket := service.Ticket{
-		Names: "cristian",
-		Email: "cristian@email.com",
+		Names:       "cristian",
+		Email:       "cristian@email.com",
 		Destination: "misiones",
-		Date: "19:00",
-		Price: 700,
+		Date:        "19:00",
+		Price:       700,
 	}
 
 	ticket, err := book.Create(nuevoTicket)
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Printf("ticket creado: %v\n", ticket)	
+	fmt.Printf("ticket creado: %v\n", ticket)
 
 	read, err := book.Read(1001)
 	if err != nil {

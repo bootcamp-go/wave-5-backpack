@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	usuario := ecommerce.NuevoUsuario("Pepe","Cuenca","pepe@email.com")
-	fmt.Printf("Iniciando usuario %+v\n", usuario)	
+	usuario := ecommerce.NuevoUsuario("Pepe", "Cuenca", "pepe@email.com")
+	fmt.Printf("Iniciando usuario %+v\n", usuario)
 
 	// Crea producto mate
 	mate := ecommerce.NuevoProducto("mate", 100)
@@ -26,7 +26,7 @@ func main() {
 	for _, v := range *usuario.Productos {
 		fmt.Printf("Producto: %+v\n", v)
 	}
-	
+
 	ecommerce.BorrarProductos(&usuario)
 	fmt.Println(*usuario.Productos)
 }
