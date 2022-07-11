@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/internal/products"
+	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/pkg/web"
 	"github.com/gin-gonic/gin"
 )
 
@@ -35,10 +36,10 @@ func (p *Product) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		products, err := p.service.GetAll()
 		if err != nil {
-			ctx.JSON(500, gin.H{"error": err.Error()})
+			ctx.JSON(500, web.NewRespose(500, nil, "error consultando los datos"))
 			return
 		}
-		ctx.JSON(200, products)
+		ctx.JSON(200, web.NewRespose(200, products, ""))
 	}
 }
 
