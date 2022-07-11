@@ -76,18 +76,29 @@ func (r *repository) Update(id int, nombre, apellido, email string, edad int, al
 }
 
 func (r *repository) Delete(id int) error {
+	var listaUs []domain.Usuarios
+	if err := r.db.Read(&listaUs); err != nil {
+		return fmt.Errorf(FailReading)
+	}
 	deleted := false
-	var index int
-	for i := range us {
-		if us[i].Id == id {
-			index = i
-			deleted = true
+
+	for i := range listaUs {
+		user := listaUs[i]
+		if user.Id == id {
+			listaUs = append(listaUs[:i], listaUs[i+1:]...)
+			if err := r.db.Write(listaUs); err != nil {
+				return fmt.Errorf(FailWriting)
+			}
+			return nil
 		}
 	}
+
 	if !deleted {
 		return fmt.Errorf("producto %d no encontrado", id)
 	}
-	us = append(us[:index], us[index+1:]...)
+	if err := r.db.Write(listaUs); err != nil {
+		return fmt.Errorf(FailWriting)
+	}
 	return nil
 }
 
