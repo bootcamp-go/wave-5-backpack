@@ -1,9 +1,7 @@
 package handler
 
 import (
-	"errors"
 	"fmt"
-	"os"
 	"strconv"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/usuarios"
@@ -41,10 +39,6 @@ func NewUsuario(u usuarios.Service) *Usuarios {
 
 func (c *Usuarios) UpdateNameAndLastName() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if err := validateToken(ctx); err != nil {
-			ctx.JSON(404, web.NewResponse(401, nil, "no tiene permisos para realizar la peticion solicitada"))
-			return
-		}
 
 		id, error := strconv.Atoi(ctx.Param("id"))
 		if error != nil {
@@ -74,10 +68,6 @@ func (c *Usuarios) UpdateNameAndLastName() gin.HandlerFunc {
 
 func (c *Usuarios) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if err := validateToken(ctx); err != nil {
-			ctx.JSON(404, web.NewResponse(401, nil, "no tiene permisos para realizar la peticion solicitada"))
-			return
-		}
 		id, error := strconv.Atoi(ctx.Param("id"))
 		if error != nil {
 			ctx.JSON(401, web.NewResponse(401, nil, "El id es invalido"))
@@ -93,10 +83,6 @@ func (c *Usuarios) Delete() gin.HandlerFunc {
 
 func (c *Usuarios) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if err := validateToken(ctx); err != nil {
-			ctx.JSON(404, web.NewResponse(401, nil, "no tiene permisos para realizar la peticion solicitada"))
-			return
-		}
 		id, error := strconv.Atoi(ctx.Param("id"))
 		if error != nil {
 			ctx.JSON(401, web.NewResponse(401, nil, "el id es invalido"))
@@ -141,13 +127,17 @@ func (c *Usuarios) Update() gin.HandlerFunc {
 	}
 }
 
+// ListUsers godoc
+// @Summary GetAll usuarios
+// @Tags Usuarios
+// @Description get usuarios
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Router /usuarios [get]
 func (c *Usuarios) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if err := validateToken(ctx); err != nil {
-			ctx.JSON(404, web.NewResponse(401, nil, "no tiene permisos para realizar la peticion solicitada"))
-			return
-		}
-
 		u, erro := c.service.GetAll()
 		if erro != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, "error al obtener los datos"))
@@ -158,10 +148,6 @@ func (c *Usuarios) GetAll() gin.HandlerFunc {
 }
 func (c *Usuarios) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if err := validateToken(ctx); err != nil {
-			ctx.JSON(404, web.NewResponse(401, nil, "no tiene permisos para realizar la peticion solicitada"))
-			return
-		}
 		id, error := strconv.Atoi(ctx.Param("id"))
 		if error != nil {
 			ctx.JSON(401, web.NewResponse(401, nil, "el id es invalido"))
@@ -178,11 +164,6 @@ func (c *Usuarios) GetById() gin.HandlerFunc {
 
 func (c *Usuarios) Guardar() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if err := validateToken(ctx); err != nil {
-			ctx.JSON(404, web.NewResponse(401, nil, "no tiene permisos para realizar la peticion solicitada"))
-			return
-		}
-
 		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			if req.Nombre == "" {
@@ -222,13 +203,4 @@ func (c *Usuarios) Guardar() gin.HandlerFunc {
 		ctx.JSON(200, web.NewResponse(200, user, ""))
 
 	}
-}
-
-func validateToken(ctx *gin.Context) error {
-	token := ctx.Request.Header.Get("token")
-
-	if token != os.Getenv("TOKEN") {
-		return errors.New("token invalido")
-	}
-	return nil
 }
