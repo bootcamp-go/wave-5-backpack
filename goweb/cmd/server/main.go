@@ -16,7 +16,9 @@ func main() {
 	users := server.Group("/users")
 
 	users.GET("/", u.GetAll())
+	users.GET("/:id", u.GetById())
 	users.POST("/", u.StoreUser())
+	users.PUT("/:id", u.UpdateUser())
 
 	server.Run(":8080")
 
