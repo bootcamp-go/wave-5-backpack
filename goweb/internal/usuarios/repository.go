@@ -80,7 +80,6 @@ func (r *repository) Delete(id int) error {
 	if err := r.db.Read(&listaUs); err != nil {
 		return fmt.Errorf(FailReading)
 	}
-	deleted := false
 
 	for i := range listaUs {
 		user := listaUs[i]
@@ -91,13 +90,6 @@ func (r *repository) Delete(id int) error {
 			}
 			return nil
 		}
-	}
-
-	if !deleted {
-		return fmt.Errorf("producto %d no encontrado", id)
-	}
-	if err := r.db.Write(listaUs); err != nil {
-		return fmt.Errorf(FailWriting)
 	}
 	return nil
 }
