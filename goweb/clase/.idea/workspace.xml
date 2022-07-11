@@ -4,30 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d9263292-ab44-4bf8-bf9d-4743b2094fe7" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/clase3.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go-web/.env" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go-web/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go-web/cmd/server/.env" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go-web/cmd/server/handler/transaction.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go-web/cmd/server/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go-web/go.mod" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go-web/go.sum" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go-web/internal/transactions/repository.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go-web/internal/transactions/service.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go-web/pkg/store/file.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/go-web/transactions.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../cmd/server/controller/userController.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../cmd/server/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../ejercicios/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../internal/user/userModel.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../internal/user/userService.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../users.JSON" beforeDir="false" />
-    </list>
+    <list default="true" id="d9263292-ab44-4bf8-bf9d-4743b2094fe7" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
