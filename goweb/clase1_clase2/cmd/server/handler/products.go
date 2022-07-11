@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"goweb/clase1_clase2/internal/products"
+	"goweb/clase1_clase2/pkg/web"
 	"os"
 	"strconv"
 
@@ -35,23 +36,23 @@ func (p *Product) GetAll() gin.HandlerFunc {
 		token := ctx.GetHeader("token")
 
 		if err := validateToken(token); err != nil {
-			ctx.JSON(401, gin.H{"error: ": err.Error()})
+			//ctx.JSON(401, gin.H{"error: ": err.Error()})
+			ctx.JSON(401, web.NewResponse(401, nil, err.Error()))
 			return
 		}
 
 		if err := ctx.ShouldBindQuery(&req); err != nil {
-			ctx.JSON(400, gin.H{"error": err.Error()})
+			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 
 		pr, err := p.service.GetAll(req.Nombre, req.Color, req.Precio, req.Stock, req.Codigo, req.Publicado, req.Fecha)
 
 		if err != nil {
-			ctx.JSON(404, gin.H{
-				"error: ": err.Error(),
-			})
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
+			return
 		}
-		ctx.JSON(200, pr)
+		ctx.JSON(200, web.NewResponse(200, pr, ""))
 	}
 }
 
@@ -61,30 +62,28 @@ func (p *Product) Store() gin.HandlerFunc {
 		token := ctx.GetHeader("token")
 
 		if err := validateToken(token); err != nil {
-			ctx.JSON(401, gin.H{"error: ": err.Error()})
+			ctx.JSON(401, web.NewResponse(401, nil, err.Error()))
 			return
 		}
 
 		var req request
 
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(404, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
 
 		if err := validateFields(req); err != nil {
-			ctx.JSON(401, gin.H{"error: ": err.Error()})
+			ctx.JSON(401, web.NewResponse(401, nil, err.Error()))
 			return
 		}
 
 		pr, err := p.service.Store(req.Nombre, req.Color, req.Precio, req.Stock, req.Codigo, req.Publicado, req.Fecha)
 		if err != nil {
-			ctx.JSON(404, gin.H{"error": err.Error()})
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, pr)
+		ctx.JSON(200, web.NewResponse(200, pr, ""))
 	}
 }
 
@@ -94,31 +93,31 @@ func (p *Product) Update() gin.HandlerFunc {
 		token := ctx.GetHeader("token")
 
 		if err := validateToken(token); err != nil {
-			ctx.JSON(400, gin.H{"error: ": err.Error()})
+			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(400, gin.H{"error: ": err.Error()})
+			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 
 		if err := validateFields(req); err != nil {
-			ctx.JSON(401, gin.H{"error: ": err.Error()})
+			ctx.JSON(401, web.NewResponse(401, nil, err.Error()))
 			return
 		}
 
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
-			ctx.JSON(400, gin.H{"error: ": err.Error()})
+			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 		ps, err := p.service.Update(id, req.Nombre, req.Color, req.Precio, req.Stock, req.Codigo, req.Publicado, req.Fecha)
 		if err != nil {
-			ctx.JSON(404, gin.H{"error: ": err.Error()})
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, ps)
+		ctx.JSON(200, web.NewResponse(200, ps, ""))
 	}
 }
 
@@ -128,22 +127,22 @@ func (p *Product) Delete() gin.HandlerFunc {
 		token := ctx.GetHeader("token")
 
 		if err := validateToken(token); err != nil {
-			ctx.JSON(400, gin.H{"error: ": err.Error()})
+			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
-			ctx.JSON(400, gin.H{"error: ": err.Error()})
+			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 
 		ps, err := p.service.Delete(id)
 		if err != nil {
-			ctx.JSON(404, gin.H{"error: ": err.Error()})
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, ps)
+		ctx.JSON(200, web.NewResponse(200, ps, ""))
 	}
 }
 
@@ -152,32 +151,37 @@ func (p *Product) UpdateFields() gin.HandlerFunc {
 		var req request
 		token := ctx.GetHeader("token")
 		if err := validateToken(token); err != nil {
-			ctx.JSON(400, gin.H{"error: ": err.Error()})
+			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
+			return
 		}
 
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(400, gin.H{"error: ": err.Error()})
+			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
+			return
 		}
 
 		if req.Nombre == "" {
-			ctx.JSON(401, gin.H{"error: ": "el campo nombre es requerido"})
+			ctx.JSON(401, web.NewResponse(401, nil, "error: el campo nombre es requerido"))
+			return
 		}
 
 		if req.Precio == 0 {
-			ctx.JSON(401, gin.H{"error: ": "el campo precio debe ser mayor de 0"})
+			ctx.JSON(401, web.NewResponse(401, nil, "error: el campo precio debe ser mayor de 0"))
+			return
 		}
 
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
-			ctx.JSON(400, gin.H{"error: ": err.Error()})
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
 
 		ps, err := p.service.UpdateFields(id, req.Nombre, req.Precio)
 		if err != nil {
-			ctx.JSON(400, gin.H{"error: ": err.Error()})
+			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
+			return
 		}
-		ctx.JSON(200, ps)
+		ctx.JSON(200, web.NewResponse(200, ps, ""))
 	}
 }
 
@@ -185,21 +189,22 @@ func (p *Product) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
-			ctx.JSON(400, gin.H{"error: ": err.Error()})
+			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
+			return
 		}
 		token := ctx.GetHeader("token")
 
 		if err := validateToken(token); err != nil {
-			ctx.JSON(401, gin.H{"error: ": err.Error()})
+			ctx.JSON(401, web.NewResponse(401, nil, err.Error()))
 			return
 		}
 
 		producto, err := p.service.GetById(id)
 		if err != nil {
-			ctx.JSON(401, gin.H{"error: ": err.Error()})
+			ctx.JSON(401, web.NewResponse(401, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, producto)
+		ctx.JSON(200, web.NewResponse(200, producto, ""))
 	}
 }
 
