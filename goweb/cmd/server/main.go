@@ -29,6 +29,7 @@ func main() {
 	{
 		pr.GET("/", u.GetAll())
 		pr.GET("/:id", u.GetById())
+		pr.GET("/search", u.SearchUser())
 		pr.POST("/", u.Store())
 		pr.PUT("/:id", u.Update())
 		pr.PATCH("/:id", u.UpdateApellidoEdad())
