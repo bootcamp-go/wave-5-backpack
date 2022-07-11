@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
-	users "ejercicioTM/internal/users"
-	"ejercicioTM/pkg/web"
+	users "ejercicioTT/internal/users"
+	"ejercicioTT/pkg/web"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,7 +20,7 @@ type request struct {
 	Edad     int       `json:"edad"`
 	Altura   float64   `json:"altura"`
 	Activo   bool      `json:"activo"`
-	Fecha    time.Time `json:"fecha"`
+	Fecha    time.Time `json:"fecha" example:"2022-07-12T00:53:16.535668Z" format:"date-time"`
 }
 
 type Usuarios struct {
@@ -81,7 +81,7 @@ func (u *Usuarios) Update() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(200, u)
+		c.JSON(200, web.NewResponse(200, u, ""))
 	}
 }
 
@@ -121,7 +121,7 @@ func (u *Usuarios) UpdateLastAge() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(200, u)
+		c.JSON(200, web.NewResponse(200, u, ""))
 	}
 }
 
@@ -145,10 +145,19 @@ func (u *Usuarios) Delete() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(200, gin.H{"data": fmt.Sprintf("El usuario %d ha sido eliminado", id)})
+		c.JSON(200, web.NewResponse(200, gin.H{"data": fmt.Sprintf("El usuario %d ha sido eliminado", id)}, ""))
 	}
 }
 
+// ListUsers godoc
+// @Summary List users
+// @Tags Usuarios
+// @Description get usuarios
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Router /usuarios [get]
 func (u *Usuarios) GetAll() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
@@ -162,10 +171,22 @@ func (u *Usuarios) GetAll() gin.HandlerFunc {
 			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		c.JSON(200, u)
+		c.JSON(200, web.NewResponse(200, u, ""))
 	}
 }
 
+// StoreUsers godoc
+// @Summary Store usuarios
+// @Tags Usuarios
+// @Description store usuarios
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param usuario body request true "User to store"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 409 {object} web.Response
+// @Router /usuarios [post]
 func (u *Usuarios) Store() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
@@ -211,6 +232,6 @@ func (u *Usuarios) Store() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(200, gin.H{"usuarios": u})
+		c.JSON(200, web.NewResponse(200, u, ""))
 	}
 }
