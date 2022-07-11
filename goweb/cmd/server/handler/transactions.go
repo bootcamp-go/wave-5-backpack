@@ -3,10 +3,8 @@ package handler
 import (
 	"errors"
 	"fmt"
-	"goweb/internal/domain"
 	"goweb/internal/transactions"
 	"goweb/pkg/web"
-	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -20,6 +18,11 @@ type request struct {
 	Issuer    string  `json:"issuer" binding:"required"`
 	Recipient string  `json:"recipient" binding:"required"`
 	Date      string  `json:"date" binding:"required"`
+}
+
+type request2 struct {
+	Code   string  `json:"code" binding:"required"`
+	Amount float64 `json:"amount" binding:"required"`
 }
 
 type Transaction struct {
@@ -43,40 +46,31 @@ func validateFields(err *error) string {
 	return errAns
 }
 
+// ListTransactions godoc
+// @Summary List transactions
+// @Tags Transactions
+// @Description get transactions
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Sucess 200 {object} web.Response
+// @Router /transactions [get]
 func (t *Transaction) GetAll(ctx *gin.Context) {
-	if ctx.GetHeader("token") != os.Getenv("TOKEN") {
-		ctx.JSON(401, web.NewResponse(401, nil, "token inválido"))
-		return
-	}
-	issuer := ctx.Query("issuer")
-	date := ctx.Query("date")
-	ans := []domain.Transaction{}
 	transactions, _ := t.service.GetAll()
-	for _, transaction := range transactions {
-		filter := true
-		if issuer != "" && issuer != transaction.Issuer {
-			filter = false
-		}
-		if date != "" && date != transaction.Date {
-			filter = false
-		}
-		if filter {
-			ans = append(ans, transaction)
-		}
-	}
-	if len(ans) == 0 {
-		ctx.JSON(404, web.NewResponse(404, nil, "Nada fue encontrado"))
-		return
-	}
-	ctx.JSON(200, web.NewResponse(200, ans, ""))
+	ctx.JSON(200, web.NewResponse(200, transactions, ""))
 }
 
+// CreateTransactions godoc
+// @Summary Create transaction
+// @Tags Transactions
+// @Description create transactions
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param transaction body request true "Transaction to create"
+// @Sucess 200 {object} web.Response
+// @Router /transaction [post]
 func (t *Transaction) Create(ctx *gin.Context) {
-	if ctx.GetHeader("token") != os.Getenv("TOKEN") {
-		ctx.JSON(401, web.NewResponse(401, nil, "token inválido"))
-		return
-	}
-
 	var req request
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(400, web.NewResponse(400, nil, validateFields(&err)))
@@ -91,11 +85,17 @@ func (t *Transaction) Create(ctx *gin.Context) {
 	ctx.JSON(200, web.NewResponse(200, transaction, ""))
 }
 
+// GetOneTransaction godoc
+// @Summary Get transaction
+// @Tags Transactions
+// @Description get transaction
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "transaction id"
+// @Sucess 200 {object} web.Response
+// @Router /transaction/{id} [get]
 func (t *Transaction) GetOne(ctx *gin.Context) {
-	if ctx.GetHeader("token") != os.Getenv("TOKEN") {
-		ctx.JSON(401, web.NewResponse(401, nil, "token invalido"))
-		return
-	}
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.JSON(400, web.NewResponse(400, nil, "id invalido"))
@@ -109,12 +109,18 @@ func (t *Transaction) GetOne(ctx *gin.Context) {
 	ctx.JSON(200, web.NewResponse(200, transaction, ""))
 }
 
+// UpdateTransaction godoc
+// @Summary Update transaction
+// @Tags Transactions
+// @Description Update transaction
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param transaction body request true "Transaction to update"
+// @Param id path int true "transaction id"
+// @Sucess 200 {object} web.Response
+// @Router /transaction/{id} [put]
 func (t *Transaction) Update(ctx *gin.Context) {
-	if ctx.GetHeader("token") != os.Getenv("TOKEN") {
-		ctx.JSON(401, web.NewResponse(401, nil, "token invalido"))
-		return
-	}
-
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.JSON(400, web.NewResponse(400, nil, "id no vallido"))
@@ -133,12 +139,17 @@ func (t *Transaction) Update(ctx *gin.Context) {
 	ctx.JSON(200, web.NewResponse(200, transaction, ""))
 }
 
+// DeleteTransaction godoc
+// @Summary Delete transaction
+// @Tags Transactions
+// @Description Delete transaction
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "transaction id"
+// @Sucess 200 {object} web.Response
+// @Router /transaction/{id} [delete]
 func (t *Transaction) Delete(ctx *gin.Context) {
-	if ctx.GetHeader("token") != "elpepe" {
-		ctx.JSON(401, web.NewResponse(401, nil, "token no valido"))
-		return
-	}
-
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.JSON(400, web.NewResponse(400, nil, "id no valido"))
@@ -152,17 +163,24 @@ func (t *Transaction) Delete(ctx *gin.Context) {
 	ctx.JSON(200, web.NewResponse(200, "Eliminado exitosamente", ""))
 }
 
+// PartialUpdateTransaction godoc
+// @Summary Update transaction
+// @Tags Transactions
+// @Description Update code and ammount of transaction
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param transaction body request2 true "Transaction to update"
+// @Param id path int true "transaction id"
+// @Sucess 200 {object} web.Response
+// @Router /transaction/{id} [patch]
 func (t *Transaction) Update2(ctx *gin.Context) {
-	if ctx.GetHeader("token") != "elpepe" {
-		ctx.JSON(401, web.NewResponse(401, nil, "token invalido"))
-		return
-	}
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		ctx.JSON(400, web.NewResponse(400, nil, "id no existente"))
 		return
 	}
-	var req request
+	var req request2
 	ctx.ShouldBindJSON(&req)
 	if req.Code == "" {
 		ctx.JSON(400, web.NewResponse(400, nil, "code requerido"))

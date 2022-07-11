@@ -1,9 +1,9 @@
 [
     {
         "id": 10,
-        "code": "30ba",
+        "code": "bba",
         "currency": "COP",
-        "amount": 300.5,
+        "amount": 99.99,
         "issuer": "kevin",
         "recipient": "jose",
         "date": "10 july 2022"
