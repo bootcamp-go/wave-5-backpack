@@ -61,32 +61,8 @@ func (c *User) StoreUser() gin.HandlerFunc {
 			return
 		}
 
-		/* 		errMsg := c.service.ValidateReq()
-		 */
-
-		var errMsg []string
-
-		if req.Name == "" {
-			errMsg = append(errMsg, "Name required")
-		}
-
-		if req.Lastname == "" {
-			errMsg = append(errMsg, "Lastname required")
-		}
-		if req.Email == "" {
-			errMsg = append(errMsg, "Email required")
-		}
-		if req.Age == 0 {
-			errMsg = append(errMsg, "Age required")
-		}
-		if req.Height == 0 {
-			errMsg = append(errMsg, "Height required")
-		}
-		if req.DoCreation == "" {
-			errMsg = append(errMsg, "Date of creation required")
-		}
-		if len(errMsg) > 0 {
-			ctx.JSON(400, gin.H{"errores": errMsg})
+		if validated := fieldsValidator(req); validated != "" {
+			ctx.JSON(400, web.NewResponse(400, nil, validated))
 			return
 		}
 
@@ -136,11 +112,11 @@ func (c *User) UpdateUser() gin.HandlerFunc {
 			return
 		}
 
-		if v := fieldsValidator(req); v != "" {
-			ctx.JSON(400, web.NewResponse(400, nil, v))
+		if validated := fieldsValidator(req); validated != "" {
+			ctx.JSON(400, web.NewResponse(400, nil, validated))
 			return
 		}
-	
+
 		updatedUser, err := c.service.UpdateUser(id, req.Name, req.Lastname, req.Email, req.Age, req.Height, req.Active, req.DoCreation)
 		if err != nil {
 			ctx.JSON(404, gin.H{
@@ -151,7 +127,6 @@ func (c *User) UpdateUser() gin.HandlerFunc {
 		ctx.JSON(200, updatedUser)
 	}
 }
-
 
 func fieldsValidator(req request) string {
 	var errMsg []string
@@ -177,7 +152,7 @@ func fieldsValidator(req request) string {
 	}
 
 	if len(errMsg) > 0 {
-		fullMsg := "Por favor completar los siguientes campos: "+strings.Join(errMsg, ", ")
+		fullMsg := "Por favor completar los siguientes campos: " + strings.Join(errMsg, ", ")
 		return fullMsg
 	}
 	return ""
