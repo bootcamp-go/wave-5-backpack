@@ -1,6 +1,10 @@
 package transactions
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/bootcamp-go/wave-5-backpack/tree/olivera_sebastian/goweb/clase2_parte2+siguientes/pkg/store"
+)
 
 type Repository interface {
 	LastId() (int64, error)
@@ -20,20 +24,30 @@ type Transaction struct {
 	Receptor string
 }
 
-var transactions []Transaction
-var lastId int64
+//var transactions []Transaction
+// var lastId int64
 
-type repository struct{}
+type repository struct {
+	db store.Store
+}
 
 func NewRepository() Repository {
 	return &repository{}
 }
 
 func (r *repository) GetAll() ([]Transaction, error) {
-	return transactions, nil
+	var ts []Transaction
+	if err := r.db.Read(&ts); err != nil {
+		return nil, err
+	}
+
+	return ts, nil
 }
 
 func (r *repository) Store(id int64, codigo, moneda, emisor, receptor string, monto float64) (Transaction, error) {
+	var ts []Transaction
+	r.db.Read(&ts)
+
 	transaction := Transaction{
 		Id:       id,
 		Codigo:   codigo,
@@ -43,13 +57,25 @@ func (r *repository) Store(id int64, codigo, moneda, emisor, receptor string, mo
 		Receptor: receptor,
 	}
 
-	transactions = append(transactions, transaction)
-	lastId = transaction.Id
+	ts = append(ts, transaction)
+	if err := r.db.Write(&ts); err != nil {
+		return Transaction{}, err
+	}
 	return transaction, nil
 }
 
 func (r *repository) LastId() (int64, error) {
-	return lastId, nil
+	var ts []Transaction
+
+	if err := r.db.Read(&ts); err != nil {
+		return 0, err
+	}
+
+	if len(ts) == 0 {
+		return 0, nil
+	}
+
+	return ts[len(ts)-1].Id, nil
 }
 
 func (r *repository) Update(id int64, monto float64, codigo, emisor, receptor, moneda string) (Transaction, error) {
@@ -61,46 +87,71 @@ func (r *repository) Update(id int64, monto float64, codigo, emisor, receptor, m
 		Moneda:   moneda,
 	}
 	updated := false
-	for i := range transactions {
-		if transactions[i].Id == id {
-			t.Id = id
-			transactions[i] = t
+	var ts []Transaction
+	r.db.Read(&ts)
+
+	for value := range ts {
+		if ts[value].Id == id {
+			ts[value] = t
 			updated = true
 		}
 	}
+
 	if !updated {
 		return Transaction{}, fmt.Errorf("transaccion %d no encontrada", id)
 	}
+	if err := r.db.Write(&ts); err != nil {
+		return Transaction{}, err
+	}
+
 	return t, nil
 }
 
 func (r *repository) Delete(id int64) error {
 	deleted := false
 	var index int
-	for value := range transactions {
-		index = value
-		deleted = true
+
+	var ts []Transaction
+	r.db.Read(&ts)
+	for value := range ts {
+		if ts[value].Id == id {
+			index = value
+			deleted = true
+		}
 	}
 	if !deleted {
 		return fmt.Errorf("la transacción id=%d no existe", id)
 	}
-	transactions = append(transactions[:index], transactions[index+1:]...)
+
+	ts = append(ts[:index], ts[index+1:]...)
+	if err := r.db.Write(&ts); err != nil {
+		return err
+	}
 	return nil
 }
 
 func (r *repository) UpdateReceptorYMonto(id int64, receptor string, monto float64) (Transaction, error) {
 	update := false
 	var transaction Transaction
-	for value := range transactions {
-		if transactions[value].Id == id {
-			transactions[value].Receptor = receptor
-			transactions[value].Monto = monto
-			transaction = transactions[value]
+	var ts []Transaction
+	r.db.Read(&ts)
+	for value := range ts {
+		if ts[value].Id == id {
+			ts[value].Receptor = receptor
+			ts[value].Monto = monto
+			transaction = ts[value]
 			update = true
 		}
 	}
+
 	if !update {
-		return Transaction{}, fmt.Errorf("transaccion id=%d no encontrada", id)
+		return Transaction{}, fmt.Errorf("transaccion id %d no encontrada", id)
 	}
+
+	if err := r.db.Write(&ts); err != nil {
+		return Transaction{}, err
+	}
+
 	return transaction, nil
+
 }

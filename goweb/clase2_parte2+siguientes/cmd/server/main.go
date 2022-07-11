@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/bootcamp-go/wave-5-backpack/tree/olivera_sebastian/goweb/clase2_parte2+siguientes/internal/cmd/server/handler"
+	"github.com/bootcamp-go/wave-5-backpack/tree/olivera_sebastian/goweb/clase2_parte2+siguientes/cmd/server/handler"
 	"github.com/bootcamp-go/wave-5-backpack/tree/olivera_sebastian/goweb/clase2_parte2+siguientes/internal/transactions"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
