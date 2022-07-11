@@ -47,14 +47,14 @@ func (p *Product) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		idInt, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(500, gin.H{"error": err.Error()})
+			ctx.JSON(500, web.NewRespose(500, nil, err.Error()))
 		}
 		producto, err := p.service.GetById(idInt)
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusNotFound, web.NewRespose(404, nil, fmt.Sprintf("product with id %d not found", idInt)))
 			return
 		}
-		ctx.JSON(http.StatusOK, producto)
+		ctx.JSON(http.StatusOK, web.NewRespose(200, producto, ""))
 	}
 }
 
@@ -63,9 +63,7 @@ func (p *Product) Store() gin.HandlerFunc {
 		var pr Request
 
 		if err := ctx.ShouldBindJSON(&pr); err != nil {
-			ctx.JSON(400, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(400, web.NewRespose(400, nil, err.Error()))
 			return
 		}
 		errs := validate(pr)
@@ -78,10 +76,10 @@ func (p *Product) Store() gin.HandlerFunc {
 
 		created, err := p.service.Store(pr.Name, pr.Color, pr.Price, pr.Stock, pr.Code, pr.Published, pr.Created_at)
 		if err != nil {
-			ctx.JSON(400, err)
+			ctx.JSON(400, web.NewRespose(400, nil, err.Error()))
 			return
 		}
-		ctx.JSON(http.StatusOK, created)
+		ctx.JSON(http.StatusOK, web.NewRespose(400, created, ""))
 	}
 }
 
@@ -90,13 +88,11 @@ func (p *Product) UpdateTotal() gin.HandlerFunc {
 		var pr Request
 		idInt, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(500, gin.H{"error": err.Error()})
+			ctx.JSON(400, web.NewRespose(400, nil, err.Error()))
 			return
 		}
 		if err := ctx.ShouldBindJSON(&pr); err != nil {
-			ctx.JSON(400, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(400, web.NewRespose(400, nil, err.Error()))
 			return
 		}
 		errs := validate(pr)
@@ -109,12 +105,10 @@ func (p *Product) UpdateTotal() gin.HandlerFunc {
 
 		updated, err := p.service.UpdateTotal(idInt, pr.Name, pr.Color, pr.Price, pr.Stock, pr.Code, pr.Published, pr.Created_at)
 		if err != nil {
-			ctx.JSON(400, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(500, web.NewRespose(400, nil, err.Error()))
 			return
 		}
-		ctx.JSON(http.StatusOK, updated)
+		ctx.JSON(200, web.NewRespose(200, updated, ""))
 	}
 }
 
@@ -123,24 +117,34 @@ func (p *Product) UpdatePartial() gin.HandlerFunc {
 		var pr Request
 		idInt, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(500, gin.H{"error": err.Error()})
+			ctx.JSON(500, web.NewRespose(500, nil, err.Error()))
 			return
 		}
 		if err := ctx.ShouldBindJSON(&pr); err != nil {
-			ctx.JSON(400, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(400, web.NewRespose(400, nil, err.Error()))
 			return
 		}
 		fmt.Println(pr)
 		updated, err := p.service.UpdatePartial(idInt, pr.Name, pr.Color, pr.Price, pr.Stock, pr.Code, pr.Published, pr.Created_at)
 		if err != nil {
-			ctx.JSON(400, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(500, web.NewRespose(500, nil, err.Error()))
+		}
+		ctx.JSON(200, web.NewRespose(200, updated, ""))
+	}
+}
+
+func (p *Product) Delete() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		idInt, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+		if err != nil {
+			ctx.JSON(500, web.NewRespose(500, nil, err.Error()))
+		}
+		producto, err := p.service.Delete(idInt)
+		if err != nil {
+			ctx.JSON(500, web.NewRespose(500, nil, fmt.Sprintf("product: %d not found", idInt)))
 			return
 		}
-		ctx.JSON(http.StatusOK, updated)
+		ctx.JSON(500, web.NewRespose(500, producto, ""))
 	}
 }
 
@@ -162,19 +166,4 @@ func validate(product Request) []string {
 		errors = append(errors, fmt.Errorf(FIELD_EMPTY, "stock").Error())
 	}
 	return errors
-}
-
-func (p *Product) Delete() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		idInt, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
-		if err != nil {
-			ctx.JSON(500, gin.H{"error": err.Error()})
-		}
-		producto, err := p.service.Delete(idInt)
-		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
-			return
-		}
-		ctx.JSON(http.StatusOK, producto)
-	}
 }

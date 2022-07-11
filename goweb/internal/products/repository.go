@@ -8,8 +8,6 @@ import (
 	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/pkg/file"
 )
 
-var lastId uint64
-
 type Repository interface {
 	Store(id uint64, nombre string, color string, precio float64, stock uint64, codigo string, publicado bool, fechaCreacion string) (domain.Product, error)
 	GetAll() ([]domain.Product, error)
@@ -48,7 +46,6 @@ func (r *repository) Store(id uint64, name string, color string, price float64, 
 	}
 
 	products = append(products, product)
-	lastId = id
 	if err := r.db.Write(&products); err != nil {
 		return domain.Product{}, err
 	}
