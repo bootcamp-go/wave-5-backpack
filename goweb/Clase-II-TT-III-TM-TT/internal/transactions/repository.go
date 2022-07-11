@@ -1,9 +1,9 @@
 package transactions
 
 import (
-	"arquitectura/internal/domain"
-	"arquitectura/pkg/store"
 	"fmt"
+	"goweb/internal/domain"
+	"goweb/pkg/store"
 )
 
 const (
@@ -158,7 +158,11 @@ func (r *repository) Delete(id int) error {
 }
 
 func (r *repository) UpdateCodeAmount(id int, tranCode string, amount float64) (domain.Transaction, error) {
+
 	var lista []domain.Transaction
+	if err := r.db.Read(&lista); err != nil {
+		return domain.Transaction{}, fmt.Errorf(FailReading)
+	}
 
 	var t domain.Transaction
 	update := false
@@ -173,6 +177,10 @@ func (r *repository) UpdateCodeAmount(id int, tranCode string, amount float64) (
 
 	if !update {
 		return domain.Transaction{}, fmt.Errorf("Producto %d no encontrado", id)
+	}
+
+	if err := r.db.Write(lista); err != nil {
+		return domain.Transaction{}, fmt.Errorf(FailWriting, err)
 	}
 
 	return t, nil

@@ -1,7 +1,7 @@
 package transactions
 
 import (
-	"arquitectura/internal/domain"
+	"goweb/internal/domain"
 )
 
 type Service interface {

@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"arquitectura/internal/transactions"
-	"arquitectura/pkg/web"
 	"fmt"
+	"goweb/internal/transactions"
+	"goweb/pkg/web"
 	"net/http"
 	"os"
 	"strconv"
@@ -35,6 +35,15 @@ func NewTransaction(s transactions.Service) *Transaction {
 	}
 }
 
+//List of Transactions
+//@Summary Obtain list of transactions.
+//@Tags Transactions
+//@description Get all transactions.
+//@Accept json
+//@Produce json
+//@Param token header string true "token"
+//@Success 200 {object} web.Response
+//@Router /transactions [get]
 func (t *Transaction) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := os.Getenv("TOKEN")
@@ -55,6 +64,17 @@ func (t *Transaction) GetAll() gin.HandlerFunc {
 	}
 }
 
+//Store of Transactions
+//@Summary Store transaction in the list of them
+//@Tags Transactions
+//@description Store transactions indicating its parameters.
+//@Accept json
+//@Produce json
+//@Param token header string true "token"
+//@Param transaction body request true "Product to store"
+//@Success 200 {object} web.Response
+//@Failed 400 {object} web.Response
+//@Router /transactions [post]
 func (t *Transaction) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
@@ -76,6 +96,18 @@ func (t *Transaction) Store() gin.HandlerFunc {
 	}
 }
 
+//Update Transactions
+//@Summary Update of transaction by id
+//@Tags Transactions
+//@Description Update transaction modifying the parameters.
+//@Accept json
+//@Produce json
+//@Param token header string true "token"
+//@Param transaction body request true "Product to store"
+//@Param id path string true "id"
+//@Success 200 {object} web.Response
+//@Failed 400 {object} web.Response
+//@Router /transactions/{id} [put]
 func (t *Transaction) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
@@ -129,6 +161,15 @@ func (t *Transaction) Update() gin.HandlerFunc {
 	}
 }
 
+//Delete Transactions
+//@Summary Delete one transaction by id.
+//@Tags Transactions
+//@Description Delete transaction typing the id of transaction to eliminate.
+//@Param token header string true "token"
+//@Param id path string true "transanction id"
+//@Success 200 {object} web.Response
+//@Failed 400 {object} web.Response
+//@Router /transactions/{id} [delete]
 func (t *Transaction) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
@@ -155,6 +196,18 @@ func (t *Transaction) Delete() gin.HandlerFunc {
 	}
 }
 
+//Update Transactions Patch
+//@Summary Update transaction with Patch by id
+//@Tags Transactions
+//@Description Update transaction modifying only code and amount parameters.
+//@Accept json
+//@Produce json
+//@Param token header string true "token"
+//@Param transaction body request true "Transaction to uptdate Code and Amount"
+//@Param id path string true "id"
+//@Success 200 {object} web.Response
+//@Failed 400 {object} web.Response
+//@Router /transactions/{id} [patch]
 func (t *Transaction) UpdateCodeAmount() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")

@@ -1,15 +1,29 @@
 package main
 
 import (
-	"arquitectura/cmd/server/handler"
-	"arquitectura/internal/transactions"
-	"arquitectura/pkg/store"
+	"goweb/cmd/server/handler"
+	"goweb/docs"
+	"goweb/internal/transactions"
+	"goweb/pkg/store"
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+//@title Go Web API
+//@version 1.0
+//@description This API is about Transactions
+//@temsOfService https://example.com
+
+//@contact.name API Support
+//@contac.url https://developers.mercadolibre.com.cl/support
+
+//@license.name FRP
+//@license.url https://example.com
 func main() {
 	err := godotenv.Load()
 	if err != nil {
@@ -27,10 +41,15 @@ func main() {
 	transactions := handler.NewTransaction(service)
 
 	router := gin.Default()
-	router.POST("/transactions", transactions.Store())
-	router.GET("/transactions", transactions.GetAll())
-	router.PUT("/transactions/:id", transactions.Update())
-	router.DELETE("/transactions/:id", transactions.Delete())
-	router.PATCH("/transactions/:id", transactions.UpdateCodeAmount())
+
+	docs.SwaggerInfo.Host = os.Getenv("HOST")
+	router.GET("docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	r := router.Group("/transactions")
+	r.POST("/", transactions.Store())
+	r.GET("/", transactions.GetAll())
+	r.PUT("/:id", transactions.Update())
+	r.DELETE("/:id", transactions.Delete())
+	r.PATCH("/:id", transactions.UpdateCodeAmount())
 	router.Run()
 }
