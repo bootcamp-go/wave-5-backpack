@@ -44,7 +44,7 @@ func (s *service) Create(name string, color string, price float64, stock int, co
 // GetAll implements Service
 func (s *service) GetAll() ([]domain.Product, error) {
 	ps, err := s.repository.GetAll()
-	if err != nil {
+	if err !=  nil {
 		return nil, err
 	}
 	return ps, nil

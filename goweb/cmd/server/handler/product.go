@@ -3,6 +3,7 @@ package handler
 import (
 	"fmt"
 	"goweb/internal/products"
+	"goweb/pkg/web"
 	"os"
 	"strconv"
 
@@ -30,13 +31,13 @@ func (p *Product) GetAll() gin.HandlerFunc  {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
-			c.JSON(401, gin.H{"error": "Token inválido"})
+			c.JSON(401, web.NewResponse(401, nil, "Token invalido"))
 			return
 		}
 
 		p, err := p.service.GetAll()
 		if err != nil {
-			c.JSON(404, gin.H{"error": err.Error()})
+			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
 		c.JSON(200, p)
@@ -47,7 +48,7 @@ func (p *Product) Create() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
-			c.JSON(401, gin.H{"error": "Token inválido"})
+			c.JSON(401, web.NewResponse(401, nil, "Token invalido"))
 			return
 		}
 
@@ -56,32 +57,32 @@ func (p *Product) Create() gin.HandlerFunc {
 		var boolean bool = false
 	
 		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(404, gin.H{"error": err.Error()})
+			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
 
 		if req.Name == "" {
-			c.JSON(400, gin.H{"error": "El nombre del producto es requerido"})
+			c.JSON(400, web.NewResponse(400, nil, "El nombre del producto es requerido"))
 			return
 		}
 
 		if req.Color == "" {
-			c.JSON(400, gin.H{"error": "El color del producto es requerido"})
+			c.JSON(400, web.NewResponse(400, nil, "El color del producto es requerido"))
 			return
 		}
 
 		if req.Code == "" {
-			c.JSON(400, gin.H{"error": "El código del producto es requerido"})
+			c.JSON(400, web.NewResponse(400, nil, "El código del producto es requerido"))
 			return
 		}
 
 		if req.Price == 0 {
-			c.JSON(400, gin.H{"error": "El precio del producto es requerido"})
+			c.JSON(400, web.NewResponse(400, nil, "El precio del producto es requerido"))
 			return
 		}
 
 		if req.Stock == 0 {
-			c.JSON(400, gin.H{"error": "El stock del producto es requerido"})
+			c.JSON(400, web.NewResponse(400, nil, "El stock del producto es requerido"))
 			return
 		}
 
@@ -92,11 +93,11 @@ func (p *Product) Create() gin.HandlerFunc {
 		productServ, err := p.service.Create(req.Name, req.Color, req.Price, req.Stock, req.Code, boolean)
 
 		if err != nil {
-			c.JSON(404, gin.H{"error": err.Error()})
+			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
 
-		c.JSON(200, gin.H{"product": productServ})
+		c.JSON(200, web.NewResponse(200, productServ, ""))
 	}
 }
 
@@ -104,13 +105,13 @@ func (p *Product) Update() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
 		if token != "123456" {
-			c.JSON(401, gin.H{"error": "Token inválido"})
+			c.JSON(401, web.NewResponse(401, nil, "Token invalido"))
 			return
 		}
 
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
-			c.JSON(400, gin.H{"error": "Id inválido"})
+			c.JSON(400, web.NewResponse(400, nil, "Id inválido"))
 			return
 		}
 
@@ -119,32 +120,32 @@ func (p *Product) Update() gin.HandlerFunc {
 		var boolean bool = false
 	
 		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(404, gin.H{"error": err.Error()})
+			c.JSON(404, web.NewResponse(401, nil, "Token invalido"))
 			return
 		}
 
 		if req.Name == "" {
-			c.JSON(400, gin.H{"error": "El nombre del producto es requerido"})
+			c.JSON(400, web.NewResponse(400, nil, "El nombre del producto es requerido"))
 			return
 		}
 
 		if req.Color == "" {
-			c.JSON(400, gin.H{"error": "El color del producto es requerido"})
+			c.JSON(400, web.NewResponse(400, nil, "El color del producto es requerido"))
 			return
 		}
 
 		if req.Code == "" {
-			c.JSON(400, gin.H{"error": "El código del producto es requerido"})
+			c.JSON(400, web.NewResponse(400, nil, "El código del producto es requerido"))
 			return
 		}
 
 		if req.Price == 0 {
-			c.JSON(400, gin.H{"error": "El precio del producto es requerido"})
+			c.JSON(400, web.NewResponse(400, nil, "El precio del producto es requerido"))
 			return
 		}
 
 		if req.Stock == 0 {
-			c.JSON(400, gin.H{"error": "El stock del producto es requerido"})
+			c.JSON(400, web.NewResponse(400, nil, "El stock del producto es requerido"))
 			return
 		}
 
@@ -155,11 +156,11 @@ func (p *Product) Update() gin.HandlerFunc {
 		p, err := p.service.Update(int(id), req.Name, req.Color, req.Price, req.Stock, req.Code, boolean)
 
 		if err != nil {
-			c.JSON(404, gin.H{"error": err.Error()})
+			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
 
-		c.JSON(200, gin.H{"product": p})
+		c.JSON(200, web.NewResponse(200, p, ""))
 	}
 }
 
@@ -167,13 +168,13 @@ func (p *Product) ParcialUpdate() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
-			c.JSON(401, gin.H{"error": "Token inválido"})
+			c.JSON(401, web.NewResponse(401, nil, "Token invalido"))
 			return
 		}
 
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
-			c.JSON(400, gin.H{"error": "Id inválido"})
+			c.JSON(400, web.NewResponse(400, nil, "Id inválido"))
 			return
 		}
 
@@ -185,21 +186,21 @@ func (p *Product) ParcialUpdate() gin.HandlerFunc {
 		}
 
 		if req.Name == "" && req.Price == 0 {
-			c.JSON(400, gin.H{"error": "Se debe enviar al menos 1 dato nombre o precio"})
+			c.JSON(400, web.NewResponse(400, nil, "Se debe enviar al menos 1 dato nombre o precio"))
 			return
 		}
 		if req.Price < 0 {
-			c.JSON(400, gin.H{"error": "El precio no puede ser negativo"})
+			c.JSON(400, web.NewResponse(400, nil, "El precio no puede ser negativo"))
 			return
 		}
 
 		p, err2 := p.service.ParcialUpdate(int(id), req.Name, req.Price)
 		if err2 != nil {
-			c.JSON(404, gin.H{"error": err.Error()})
+			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
 
-		c.JSON(200, p)
+		c.JSON(200, web.NewResponse(200, p, ""))
 	}
 }
 
@@ -207,22 +208,22 @@ func (p *Product) Delete() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
-			c.JSON(401, gin.H{"error": "Token inválido"})
+			c.JSON(401, web.NewResponse(401, nil, "Token invalido"))
 			return
 		}
 
 		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
-			c.JSON(400, gin.H{"error": "Id inválido"})
+			c.JSON(400, web.NewResponse(400, nil, "Id inválido"))
 			return
 		}
 
 		err = p.service.Delete(int(id))
 		if err != nil {
-			c.JSON(404, gin.H{"error": err.Error()})
+			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
 
-		c.JSON(200, gin.H{"data": fmt.Sprintf("El producto %d ha sido eliminado", id)})
+		c.JSON(200, web.NewResponse(200,fmt.Sprintf("El producto %d ha sido eliminado", id), ""))
 	}
 }
