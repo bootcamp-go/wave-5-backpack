@@ -5,7 +5,6 @@ import (
 	"goweb/internal/users"
 	"goweb/pkg/web"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -34,6 +33,15 @@ func NewUser(s users.Service) *User {
 	return &User{service: s}
 }
 
+// ListUsers godoc
+// @Summary List Users
+// @Tags Users
+// @Description List users
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Router /users [get]
 func (u *User) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		users, err := u.service.GetAll()
@@ -67,13 +75,24 @@ func (u *User) GetById() gin.HandlerFunc {
 	}
 }
 
+// StoreUsers godoc
+// @Summary Store users
+// @Tags Users
+// @Description store users
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param product body Request true "User to store"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Router /users [post]
 func (u *User) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req Request
 
-		if !validateToken(ctx) {
+		/* if !validateToken(ctx) {
 			return
-		}
+		} */
 
 		if !validateFields(ctx, &req) {
 			return
@@ -100,9 +119,9 @@ func (u *User) Store() gin.HandlerFunc {
 
 func (u *User) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if !validateToken(ctx) {
+		/* if !validateToken(ctx) {
 			return
-		}
+		} */
 
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
@@ -127,9 +146,9 @@ func (u *User) Update() gin.HandlerFunc {
 
 func (u *User) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if !validateToken(ctx) {
+		/* if !validateToken(ctx) {
 			return
-		}
+		} */
 
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
@@ -149,9 +168,9 @@ func (u *User) Delete() gin.HandlerFunc {
 
 func (u *User) Patch() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if !validateToken(ctx) {
+		/* if !validateToken(ctx) {
 			return
-		}
+		} */
 
 		id, err := strconv.Atoi(ctx.Param("id"))
 		if err != nil {
@@ -179,13 +198,13 @@ func (u *User) Patch() gin.HandlerFunc {
 FUNCTIONS VALIDATORS				   =
 ========================================
 */
-func validateToken(ctx *gin.Context) bool {
+/* func validateToken(ctx *gin.Context) bool {
 	if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
 		ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "NO tiene permisos para realizar la petición solicitada"))
 		return false
 	}
 	return true
-}
+} */
 
 func ValidateErrors(campo string, v validator.FieldError) string {
 	switch v.Tag() {
