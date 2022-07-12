@@ -1,13 +1,13 @@
 package products
 
-import "github.com/bootcamp-go/wave-5-backpack/goweb/internal/models"
+import "github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
 
 type Service interface {
-	Store(nombre, color, precio, stock, codigo, publicado, fechaCreacion) (models.Products, error)
-	Update(id, nombre, color, precio, stock, codigo, publicado, fechaCreacion) (models.Products, error)
-	UpdatePrecioStock(id, precio, stock) (models.Products, error)
-	GetAll() ([]models.Products, error)
-	GetByID(id int) (models.Products, error)
+	Store(nombre string, color string, precio float64, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Products, error)
+	Update(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Products, error)
+	UpdatePrecioStock(id int, precio float64, stock int) (domain.Products, error)
+	GetAll() ([]domain.Products, error)
+	GetByID(id int) (domain.Products, error)
 	Delete(id int) (int, error)
 }
 
@@ -21,19 +21,19 @@ type service struct {
 	repository Repository
 }
 
-func (s service) Store(nombre, color, precio, stock, codigo, publicado, fechaCreacion) (models.Products, error) {
+func (s service) Store(nombre string, color string, precio float64, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Products, error) {
 	return s.repository.Store(nombre, color, precio, stock, codigo, publicado, fechaCreacion)
 }
 
-func (s service) Update(id, nombre, color, precio, stock, codigo, publicado, fechaCreacion) (models.Products, error) {
-	return s.repository.Store(id, nombre, color, precio, stock, codigo, publicado, fechaCreacion)
+func (s service) Update(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Products, error) {
+	return s.repository.Update(id, nombre, color, precio, stock, codigo, publicado, fechaCreacion)
 }
 
-func (s service) UpdatePrecioStock(id, precio, stock) (models.Products, error) {
-	return s.repository.Store(id, precio, stock)
+func (s service) UpdatePrecioStock(id int, precio float64, stock int) (domain.Products, error) {
+	return s.repository.UpdatePrecioStock(id, precio, stock)
 }
 
-func (s service) GetAll() ([]models.Products, error) {
+func (s service) GetAll() ([]domain.Products, error) {
 	products, err := s.repository.GetAll()
 
 	if err != nil {
@@ -41,7 +41,7 @@ func (s service) GetAll() ([]models.Products, error) {
 	}
 	return products, nil
 }
-func (s service) GetByID(id int) (models.Products, error) {
+func (s service) GetByID(id int) (domain.Products, error) {
 	return s.repository.GetByID(id)
 }
 

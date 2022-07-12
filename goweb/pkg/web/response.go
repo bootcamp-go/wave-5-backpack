@@ -1,4 +1,4 @@
-package main
+package web
 
 type Response struct {
 	Code  int         `json:"code"`

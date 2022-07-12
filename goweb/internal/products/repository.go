@@ -3,17 +3,17 @@ package products
 import (
 	"errors"
 	"fmt"
-	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/models"
+	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/storage"
 	"time"
 )
 
 type Repository interface {
-	Store(nombre, color, precio, stock, codigo, publicado, fechaCreacion) (models.Products, error)
-	Update(id, nombre, color, precio, stock, codigo, publicado, fechaCreacion) (models.Products, error)
-	UpdatePrecioStock(id, precio, stock) (models.Products, error)
-	GetAll() ([]models.Products, error)
-	GetByID(id int) (models.Products, error)
+	Store(nombre string, color string, precio float64, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Products, error)
+	Update(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Products, error)
+	UpdatePrecioStock(id int, precio float64, stock int) (domain.Products, error)
+	GetAll() ([]domain.Products, error)
+	GetByID(id int) (domain.Products, error)
 	GetLastID() (int, error)
 	Delete(id int) (int, error)
 }
@@ -26,13 +26,13 @@ type repository struct {
 	storage storage.Storage
 }
 
-func (r repository) Store(nombre, color, precio, stock, codigo, publicado, fechaCreacion) (models.Products, error) {
-	var pr []models.Products
+func (r repository) Store(nombre string, color string, precio float64, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Products, error) {
+	var pr []domain.Products
 	if err := r.storage.Read(&pr); err != nil {
-		return models.Products{}, fmt.Errorf("error: al leer el archivo %v", err)
+		return domain.Products{}, fmt.Errorf("error: al leer el archivo %v", err)
 	}
 	newID := (pr[len(pr)-1].ID) + 1
-	p := models.Products{
+	p := domain.Products{
 		ID:            newID,
 		Nombre:        nombre,
 		Color:         color,
@@ -46,19 +46,19 @@ func (r repository) Store(nombre, color, precio, stock, codigo, publicado, fecha
 
 	err := r.storage.Write(pr)
 	if err != nil {
-		return models.Products{}, fmt.Errorf("error: al escribir el archivo %v", err)
+		return domain.Products{}, fmt.Errorf("error: al escribir el archivo %v", err)
 	}
 	return p, nil
 }
 
-func (r repository) Update(id, nombre, color, precio, stock, codigo, publicado, fechaCreacion) (models.Products, error) {
-	var pr []models.Products
+func (r repository) Update(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Products, error) {
+	var pr []domain.Products
 	if err := r.storage.Read(&pr); err != nil {
-		return models.Products{}, fmt.Errorf("error: al leer el archivo %v", err)
+		return domain.Products{}, fmt.Errorf("error: al leer el archivo %v", err)
 	}
 	for i, pp := range pr {
 		if pp.ID == id {
-			p := models.Products{
+			p := domain.Products{
 				ID:            id,
 				Nombre:        nombre,
 				Color:         color,
@@ -72,22 +72,22 @@ func (r repository) Update(id, nombre, color, precio, stock, codigo, publicado, 
 
 			err := r.storage.Write(pr)
 			if err != nil {
-				return models.Products{}, fmt.Errorf("error: al escribir el archivo %v", err)
+				return domain.Products{}, fmt.Errorf("error: al escribir el archivo %v", err)
 			}
 			return p, nil
 		}
 	}
-	return models.Products{}, fmt.Errorf("error: no existe el ID: %v", id)
+	return domain.Products{}, fmt.Errorf("error: no existe el ID: %v", id)
 }
 
-func (r repository) UpdatePrecioStock(id, precio, stock) (models.Products, error) {
-	var pr []models.Products
+func (r repository) UpdatePrecioStock(id int, precio float64, stock int) (domain.Products, error) {
+	var pr []domain.Products
 	if err := r.storage.Read(&pr); err != nil {
-		return models.Products{}, fmt.Errorf("error: al leer el archivo %v", err)
+		return domain.Products{}, fmt.Errorf("error: al leer el archivo %v", err)
 	}
 	for i, pp := range pr {
 		if pp.ID == id {
-			p := models.Products{
+			p := domain.Products{
 				ID:     pp.ID,
 				Precio: pp.Precio,
 				Stock:  pp.Stock,
@@ -106,16 +106,16 @@ func (r repository) UpdatePrecioStock(id, precio, stock) (models.Products, error
 			pr[i] = p
 
 			if err := r.storage.Write(pr); err != nil {
-				return models.Products{}, fmt.Errorf("error: al escribit el archivo %v\n", err)
+				return domain.Products{}, fmt.Errorf("error: al escribit el archivo %v\n", err)
 			}
 			return p, nil
 		}
 	}
-	return models.Products{}, fmt.Errorf("error: ID: %v no encontrado", id)
+	return domain.Products{}, fmt.Errorf("error: ID: %v no encontrado", id)
 }
 
-func (r repository) GetAll() ([]models.Products, error) {
-	var pr []models.Products
+func (r repository) GetAll() ([]domain.Products, error) {
+	var pr []domain.Products
 	if err := r.storage.Read(&pr); err != nil {
 		return nil, err
 	}
@@ -125,21 +125,21 @@ func (r repository) GetAll() ([]models.Products, error) {
 	return pr, nil
 }
 
-func (r repository) GetByID(id int) (models.Products, error) {
-	var pr []models.Products
+func (r repository) GetByID(id int) (domain.Products, error) {
+	var pr []domain.Products
 	if err := r.storage.Read(&pr); err != nil {
-		return models.Products{}, err
+		return domain.Products{}, err
 	}
 	for _, p := range pr {
 		if p.ID == id {
 			return p, nil
 		}
 	}
-	return models.Products{}, fmt.Errorf("producto con ID: %v no encontrado", id)
+	return domain.Products{}, fmt.Errorf("producto con ID: %v no encontrado", id)
 }
 
 func (r repository) GetLastID() (int, error) {
-	var pr []models.Products
+	var pr []domain.Products
 	if err := r.storage.Read(&pr); err != nil {
 		return 0, err
 	}
@@ -153,7 +153,7 @@ func (r repository) GetLastID() (int, error) {
 }
 
 func (r repository) Delete(id int) (int, error) {
-	var pr []models.Products
+	var pr []domain.Products
 	if err := r.storage.Read(&pr); err != nil {
 		return 0, err
 	}
