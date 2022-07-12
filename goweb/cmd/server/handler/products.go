@@ -2,10 +2,9 @@ package handler
 
 import (
 	"fmt"
-	"goweb/internal/domain"
 	"goweb/internal/products"
+	"goweb/pkg/web"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -32,45 +31,63 @@ func InitProduct(p products.Service) *Product {
 	}
 }
 
+// ListProducts godoc
+// @Summary List products
+// @Tags Products
+// @Description get products
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Router /products [get]
 func (c *Product) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
+		/* token := ctx.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token inválido",
 			})
 			return
-		}
+		} */
 		p, err := c.service.GetAll()
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
-		ctx.JSON(http.StatusOK, p)
+		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, p, ""))
 	}
 }
 
+// CreateProducts godoc
+// @Summary Create products
+// @Tags Products
+// @Description create products
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Router /products/create [post]
 func (c *Product) CreateProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
+		/* token := ctx.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token inválido",
 			})
 			return
-		}
-		var req domain.Products
+		} */
+		var req request
 
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"Error: ": err.Error(),
-			})
+			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 
-		if req.Nombre == "" {
+		if v := validador(req); v != "" {
+			ctx.JSON(400, web.NewResponse(400, nil, v))
+			return
+		}
+		/* if req.Nombre == "" {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"error": "El nombre del producto es requerido",
 			})
@@ -105,46 +122,43 @@ func (c *Product) CreateProduct() gin.HandlerFunc {
 				"error": "La fecha de creación del producto es requerida",
 			})
 			return
-		}
+		} */
 
 		p, err := c.service.CreateProduct(req.Id, req.Nombre, req.Color, req.Precio, req.Stock, req.Codigo, req.Publicado, req.FechaCreacion)
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{
-				"Error: ": err.Error(),
-			})
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusOK, nil, err.Error()))
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{
-			"responseMessage": p,
-		})
+		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, p, ""))
 
 	}
 }
 
 func (c *Product) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
+		/* token := ctx.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token inválido",
 			})
 			return
-		}
+		} */
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
 		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
-		if req.Nombre == "" {
+
+		if v := validador(req); v != "" {
+			ctx.JSON(400, web.NewResponse(400, nil, v))
+			return
+		}
+		/* if req.Nombre == "" {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"error": "El nombre del producto es requerido",
 			})
@@ -179,96 +193,98 @@ func (c *Product) Update() gin.HandlerFunc {
 				"error": "La fecha de creación del producto es requerida",
 			})
 			return
-		}
+		} */
 		p, err := c.service.Update(int(id), req.Nombre, req.Color, req.Precio, req.Stock, req.Codigo, req.Publicado, req.FechaCreacion)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{
-			"responseMessage": p,
-		})
+		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, p, ""))
 	}
 
 }
 
 func (c *Product) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
+		/* token := ctx.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token inválido",
 			})
 			return
-		}
+		} */
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "Id inválido",
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "Id inválido"))
 			return
 		}
 		err = c.service.Delete(int(id))
 		if err != nil {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, err.Error()))
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{
-			"responseMessage": fmt.Sprintf("El producto %d ha sido eliminado", id),
-		})
+		ctx.JSON(http.StatusOK,
+			web.NewResponse(http.StatusOK, nil, fmt.Sprintf("El producto %d ha sido eliminado", id)))
 	}
 
 }
 
 func (c *Product) UpdateOne() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
+		/* token := ctx.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, gin.H{
 				"error": "token inválido",
 			})
 			return
-		}
+		} */
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "Id inválido",
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "id inválido"))
 			return
 		}
 		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
 		if req.Nombre == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "El nombre del producto es requerido",
-			})
+			ctx.JSON(400, web.NewResponse(400, nil, "El nombre del producto es requerido"))
 			return
 		}
 		if req.Precio == 0 {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "El precio del producto es requerido",
-			})
+			ctx.JSON(400, web.NewResponse(400, nil, "El precio del producto es requerido"))
 			return
 		}
 		p, err := c.service.UpdateOne(int(id), req.Nombre, req.Precio)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": err.Error(),
-			})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
-		ctx.JSON(http.StatusOK, gin.H{
-			"responseMessage": p,
-		})
+		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, p, ""))
 	}
 
+}
+
+func validador(req request) string {
+	var response string
+	if req.Nombre == "" {
+		response += "Falta el campo nombre "
+	}
+	if req.Color == "" {
+		response += "Falta el campo color "
+	}
+	if req.Precio == 0 {
+		response += "Falta el campo precio "
+	}
+	if req.Stock == 0 {
+		response += "Falta el campo stock "
+	}
+	if req.Codigo == "" {
+		response += "Falta el campo código "
+	}
+	if req.FechaCreacion == "" {
+		response += "Falta el campo fecha de creación "
+	}
+	return response
 }
