@@ -5,11 +5,39 @@ import (
 	"goweb/cmd/server/handler"
 	"goweb/internal/users"
 	"goweb/pkg/store"
+	"goweb/pkg/web"
+	"log"
+	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+	"github.com/swaggo/swag/example/basic/docs"
 )
 
+func AuthMiddleware() gin.HandlerFunc {
+	token := os.Getenv("TOKEN")
+	if token == "" {
+		log.Fatal("error: Token was not found as enviroment variable")
+	}
+
+	return func(ctx *gin.Context) {
+		tokenRequest := ctx.GetHeader("Authorization")
+		if token != tokenRequest {
+			ctx.AbortWithStatusJSON(web.NewResponse(http.StatusUnauthorized, nil, "error: Unauthorized"))
+		}
+
+		ctx.Next()
+	}
+}
+
 func main() {
+
+	err := godotenv.Load()
+
+	if err != nil {
+		log.Fatal("error: ", err.Error())
+	}
 
 	db := store.NewStore("users.json")
 
@@ -22,9 +50,12 @@ func main() {
 	service := users.NewService(repository)
 	users := handler.NewUser(service)
 
+	docs.SwaggerInfo.Host = os.Getenv("HOST")
+
 	router := gin.Default()
 
 	useresRoute := router.Group("/users")
+	useresRoute.Use()
 	useresRoute.GET("/", users.GetAll())
 	useresRoute.GET("/:id", users.GetById())
 	useresRoute.POST("/", users.Create())
