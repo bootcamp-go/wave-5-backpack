@@ -6,7 +6,9 @@ import (
 	"os"
 	"strconv"
 
+	"desafio-go-web-master/cmd/server/handler"
 	"desafio-go-web-master/internal/domain"
+	"desafio-go-web-master/internal/tickets"
 
 	"github.com/gin-gonic/gin"
 )
@@ -14,18 +16,24 @@ import (
 func main() {
 
 	// Cargo csv.
-	list, err := LoadTicketsFromFile("../../tickets.csv")
+	list, err := LoadTicketsFromFile("tickets.csv")
 	if err != nil {
 		panic("Couldn't load tickets")
 	}
 
-	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
+	repository := tickets.NewRepository(list)
+	service := tickets.NewService(repository)
+	hand := handler.NewTicket(service)
+
+	router := gin.Default()
+	//router.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
 	// Rutas a desarollar:
 
 	// GET - “/ticket/getByCountry/:dest”
+	router.GET("/ticket/getByCountry/:dest", hand.GetTicketsByCountry())
 	// GET - “/ticket/getAverage/:dest”
-	if err := r.Run(); err != nil {
+	router.GET("/ticket/getAverage/:dest", hand.AverageDestination())
+	if err := router.Run(); err != nil {
 		panic(err)
 	}
 
