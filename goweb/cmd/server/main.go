@@ -4,8 +4,8 @@ import (
 	"log"
 	"os"
 
+	"github.com/bootcamp-go/wave-5-backpack/docs"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/cmd/server/handler"
-	"github.com/bootcamp-go/wave-5-backpack/goweb/docs"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/usuarios"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/store"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/web"
