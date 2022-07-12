@@ -29,7 +29,15 @@ func NewUser(u users.Service) *User {
 		service: u,
 	}
 }
-
+// ListUsers godoc
+// @Summary List users
+// @Tags users
+// @Description get users
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Router /users [get]
 func (c *User) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -43,7 +51,16 @@ func (c *User) GetAll() gin.HandlerFunc {
 		ctx.JSON(200, web.NewResponse(200, allUsers, ""))
 	}
 }
-
+// StoreUsers godoc
+// @Summary Store users
+// @Tags Users
+// @Description store users
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param Users body request true "User to store"
+// @Success 200 {object} web.Response
+// @Router /users [post]
 func (c *User) StoreUser() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
