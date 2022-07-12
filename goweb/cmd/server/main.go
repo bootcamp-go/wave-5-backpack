@@ -55,14 +55,18 @@ func main() {
 	docs.SwaggerInfo.Host = os.Getenv("HOST")
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	//
+
 	us := router.Group("/usuarios")
 	us.Use(tokenAuthMiddleware())
-	us.PUT("/:id", u.Update())
-	us.GET("/:id", u.GetById())
-	us.POST("/", u.Guardar())
-	us.GET("/", u.GetAll())
-	us.DELETE("/:id", u.Delete())
-	us.PATCH("/:id", u.UpdateNameAndLastName())
+	//Aca ponemos los corchetes para dar una tabulacion
+	{
+		us.PUT("/:id", u.Update())
+		us.GET("/:id", u.GetById())
+		us.POST("/", u.Guardar())
+		us.GET("/", u.GetAll())
+		us.DELETE("/:id", u.Delete())
+		us.PATCH("/:id", u.UpdateNameAndLastName())
+	}
 	router.Run()
 }
 
