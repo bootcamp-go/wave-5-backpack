@@ -40,7 +40,8 @@ func NewUser(u users.Service) *User{
 // @Produce  json
 // @Param token header string true "token"
 // @Success 200 {object} web.Response
-// @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 404 {object} web.Response
 // @Router /users [get]
 func (c *User) GetAllUsers() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -68,7 +69,8 @@ func (c *User) GetAllUsers() gin.HandlerFunc {
 // @Param token header string true "token"
 // @Param id path int true "id"
 // @Success 200 {object} web.Response
-// @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 404 {object} web.Response
 // @Router /users/{id} [get]
 func (c *User) GetUserById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -99,6 +101,8 @@ func (c *User) GetUserById() gin.HandlerFunc {
 // @Param user body request true "User to store"
 // @Success 200 {object} web.Response
 // @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 404 {object} web.Response
 // @Router /users [post]
 func (c *User) StoreUser() gin.HandlerFunc {
 	return func(ctx *gin.Context){
@@ -143,6 +147,8 @@ func (c *User) StoreUser() gin.HandlerFunc {
 // @Param user body request true "User to update"
 // @Success 200 {object} web.Response
 // @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 404 {object} web.Response
 // @Router /users/{id} [put]
 func (c *User) UpdateTotal() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -194,6 +200,8 @@ func (c *User) UpdateTotal() gin.HandlerFunc {
 // @Param user body request true "User to update"
 // @Success 200 {object} web.Response
 // @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 404 {object} web.Response
 // @Router /users/{id} [patch]
 func (c *User) UpdatePartial() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -251,6 +259,8 @@ func (c *User) UpdatePartial() gin.HandlerFunc {
 // @Param id path int true "id"
 // @Success 200 {object} web.Response
 // @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 404 {object} web.Response
 // @Router /users/{id} [delete]
 func (c *User) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
