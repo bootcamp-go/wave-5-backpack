@@ -12,6 +12,10 @@ type Service interface {
 	GetTotalTickets(c *gin.Context, destination string) ([]domain.Ticket, error)
 }
 
+func NewService(r Repository) Service {
+	return &service{repository: r}
+}
+
 type service struct {
 	repository Repository
 }
