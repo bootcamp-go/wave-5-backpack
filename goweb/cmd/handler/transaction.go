@@ -19,11 +19,6 @@ type request struct {
 	Receptor string  `json:"receptor"`
 }
 
-type requestPatch struct {
-	Monto float64 `json:"monto"`
-	Cod   string  `json:"cod_transaction"`
-}
-
 type Transaction struct {
 	service transactions.Service
 }
@@ -193,6 +188,7 @@ func (t Transaction) Update(ctx *gin.Context) {
 // @Produce json
 // @Param token header string true "token"
 // @Param id path int true "Transaction ID"
+// @Param transaction body request true "Transaction to store"
 // @Success 200 {object} web.Response
 // @Failure 400 {object} web.Response
 // @Failure 401 {object} web.Response
