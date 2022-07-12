@@ -1,14 +1,13 @@
 package tickets
 
 import (
-	"context"
 	"desafio-go-web/interal/domain"
 	"fmt"
 )
 
 type Repository interface {
-	GetAll(ctx context.Context) ([]domain.Ticket, error)
-	GetTicketByDestination(ctx context.Context, destination string) ([]domain.Ticket, error)
+	GetAll() ([]domain.Ticket, error)
+	GetTicketByDestination(destination string) ([]domain.Ticket, error)
 }
 
 type repository struct {
@@ -21,7 +20,7 @@ func NewRepository(db []domain.Ticket) Repository {
 	}
 }
 
-func (r *repository) GetAll(ctx context.Context) ([]domain.Ticket, error) {
+func (r *repository) GetAll() ([]domain.Ticket, error) {
 
 	if len(r.db) == 0 {
 		return []domain.Ticket{}, fmt.Errorf("empty list of tickets")
@@ -30,7 +29,7 @@ func (r *repository) GetAll(ctx context.Context) ([]domain.Ticket, error) {
 	return r.db, nil
 }
 
-func (r *repository) GetTicketByDestination(ctx context.Context, destination string) ([]domain.Ticket, error) {
+func (r *repository) GetTicketByDestination(destination string) ([]domain.Ticket, error) {
 
 	var ticketsDest []domain.Ticket
 

@@ -1,15 +1,14 @@
 package tickets
 
 import (
-	"context"
 	"desafio-go-web/interal/domain"
 )
 
 type Service interface {
-	GetAll(ctx context.Context) ([]domain.Ticket, error)
+	GetAll() ([]domain.Ticket, error)
 	//GetTicketByDestination(ctx context.Context, destination string) ([]domain.Ticket, error)
-	GetTotalTickets(c context.Context, destination string) ([]domain.Ticket, error)
-	AverageDestination(c context.Context, destination string) (float64, error)
+	GetTotalTickets(destination string) ([]domain.Ticket, error)
+	AverageDestination(destination string) (float64, error)
 }
 
 type service struct {
@@ -22,8 +21,8 @@ func NewService(r Repository) Service {
 	}
 }
 
-func (s *service) GetAll(ctx context.Context) ([]domain.Ticket, error) {
-	ticks, err := s.repository.GetAll(ctx)
+func (s *service) GetAll() ([]domain.Ticket, error) {
+	ticks, err := s.repository.GetAll()
 	if err != nil {
 		return nil, err
 	}
@@ -39,22 +38,22 @@ func (s *service) GetAll(ctx context.Context) ([]domain.Ticket, error) {
 // 	return ticketsDestino, nil
 // }
 
-func (s *service) GetTotalTickets(c context.Context, destination string) ([]domain.Ticket, error) {
+func (s *service) GetTotalTickets(destination string) ([]domain.Ticket, error) {
 	//ticketsAlDestino, eror := s.GetTicketByDestination(c, destination)
-	ticketsAlDestino, eror := s.repository.GetTicketByDestination(c, destination)
+	ticketsAlDestino, eror := s.repository.GetTicketByDestination(destination)
 	if eror != nil {
 		return nil, eror
 	}
 
 	return ticketsAlDestino, nil
 }
-func (s *service) AverageDestination(c context.Context, destination string) (float64, error) {
-	ticketsTotales, eror := s.repository.GetAll(c)
+func (s *service) AverageDestination(destination string) (float64, error) {
+	ticketsTotales, eror := s.repository.GetAll()
 	//ticketsTotales, eror := s.GetAll(c)
 	if eror != nil {
 		return 0, nil
 	}
-	ticketsADestino, eror := s.GetTotalTickets(c, destination)
+	ticketsADestino, eror := s.GetTotalTickets(destination)
 	if eror != nil {
 		return 0, nil
 	}
