@@ -3,9 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/gin-gonic/gin"
-
-	"github.com/bootcamp-go/wave-5-backpack/desafio-go-web-master/interal/tickets"
+	"github.com/bootcamp-go/wave-5-backpack/desafio-go-web-master/internal/tickets"
 	"github.com/gin-gonic/gin"
 )
 

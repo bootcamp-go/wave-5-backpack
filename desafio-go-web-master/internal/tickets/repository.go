@@ -1,8 +1,9 @@
 package tickets
 
 import (
-	"desafio-go-web/interal/domain"
 	"fmt"
+
+	"github.com/bootcamp-go/wave-5-backpack/desafio-go-web-master/internal/domain"
 )
 
 type Repository interface {

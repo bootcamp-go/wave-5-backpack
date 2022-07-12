@@ -6,17 +6,16 @@ import (
 	"os"
 	"strconv"
 
-	"desafio-go-web/cmd/server/handler"
-	"desafio-go-web/interal/domain"
-	"desafio-go-web/interal/tickets"
-
+	"github.com/bootcamp-go/wave-5-backpack/desafio-go-web-master/cmd/server/handler"
+	"github.com/bootcamp-go/wave-5-backpack/desafio-go-web-master/internal/domain"
+	"github.com/bootcamp-go/wave-5-backpack/desafio-go-web-master/internal/tickets"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
 
 	// Cargo csv.
-	list, err := LoadTicketsFromFile("tickets.csv")
+	list, err := LoadTicketsFromFile("desafio-go-web-master/tickets.csv")
 	if err != nil {
 		panic("Couldn't load tickets")
 	}
