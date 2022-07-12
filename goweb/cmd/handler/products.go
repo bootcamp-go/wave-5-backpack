@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/products"
@@ -34,15 +33,19 @@ func NewProduct(p products.Service) *Product {
 	}
 }
 
+// ListProducts godoc
+// @Summary List products
+// @Tags Products
+// @Description get all products
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Failure 400  {object} web.Response
+// @Failure 401  {object} web.Response
+// @Router /products [get]
 func (p Product) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, web.NewResponse(
-				401, nil, "Token invalido",
-			))
-			return
-		}
-
 		products, err := p.service.GetAll()
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(
@@ -56,15 +59,20 @@ func (p Product) GetAll() gin.HandlerFunc {
 	}
 }
 
+// ListProducts godoc
+// @Summary List product
+// @Tags Products
+// @Description get one product
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Failure 400  {object} web.Response
+// @Failure 401  {object} web.Response
+// @Failure 404  {object} web.Response
+// @Router /products/{id} [get]
 func (p Product) GetProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, web.NewResponse(
-				401, nil, "Token invalido",
-			))
-			return
-		}
-
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, web.NewResponse(
@@ -86,15 +94,21 @@ func (p Product) GetProduct() gin.HandlerFunc {
 	}
 }
 
+// StoreProducts godoc
+// @Summary Store products
+// @Tags Products
+// @Description store products, receives a json with the product structure and creates it
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param product body request true "Product to store"
+// @Success 200 {object} web.Response
+// @Failure 400  {object} web.Response
+// @Failure 401  {object} web.Response
+// @Failure 404  {object} web.Response
+// @Router /products [post]
 func (p *Product) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, web.NewResponse(
-				401, nil, "Token invalido",
-			))
-			return
-		}
-
 		var r request
 		if err := ctx.ShouldBindJSON(&r); err != nil {
 			var vErrors validator.ValidationErrors
@@ -123,15 +137,21 @@ func (p *Product) Store() gin.HandlerFunc {
 
 }
 
+// UpdateProducts godoc
+// @Summary Update products
+// @Tags Products
+// @Description update all product, receives id parameter and update it
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param product body request true "Product to update"
+// @Success 200 {object} web.Response
+// @Failure 400  {object} web.Response
+// @Failure 401  {object} web.Response
+// @Failure 404  {object} web.Response
+// @Router /products/{id} [put]
 func (p *Product) UpdateAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, web.NewResponse(
-				401, nil, "Token invalido",
-			))
-			return
-		}
-
 		var r request
 		if err := ctx.ShouldBindJSON(&r); err != nil {
 			var vErrors validator.ValidationErrors
@@ -170,15 +190,20 @@ func (p *Product) UpdateAll() gin.HandlerFunc {
 	}
 }
 
+// DeleteProducts godoc
+// @Summary Delete products
+// @Tags Products
+// @Description delete product, receives a id parameter and delete the product
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Failure 400  {object} web.Response
+// @Failure 401  {object} web.Response
+// @Failure 404  {object} web.Response
+// @Router /products/{id} [delete]
 func (p *Product) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, web.NewResponse(
-				401, nil, "Token invalido",
-			))
-			return
-		}
-
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, web.NewResponse(
@@ -199,14 +224,21 @@ func (p *Product) Delete() gin.HandlerFunc {
 	}
 }
 
+// UpdateProducts godoc
+// @Summary Update products
+// @Tags Products
+// @Description update product, receive id parameter and update only some fields of the product
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param product body request true "fields to update"
+// @Success 200 {object} web.Response
+// @Failure 400  {object} web.Response
+// @Failure 401  {object} web.Response
+// @Failure 404  {object} web.Response
+// @Router /products/{id} [patch]
 func (p *Product) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		if token := ctx.GetHeader("token"); token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, web.NewResponse(
-				401, nil, "Token invalido",
-			))
-			return
-		}
 		type requestPatch struct {
 			Nombre string  `json:"Nombre" binding:"required"`
 			Precio float64 `json:"Precio" binding:"required"`
