@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 
+	"desafio-go-web/internal/domain"
 )
 
 type Repository interface {
