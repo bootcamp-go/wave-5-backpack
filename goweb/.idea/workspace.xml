@@ -4,15 +4,21 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c61c0a6e-ec4e-437f-9119-49f6d8decf00" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/cmd/server/docs/docs.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cmd/server/docs/swagger.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cmd/server/docs/swagger.yaml" afterDir="false" />
+    <list default="true" id="c61c0a6e-ec4e-437f-9119-49f6d8decf00" name="Changes" comment="Swagger">
+      <change afterPath="$PROJECT_DIR$/proyectoFinal/.env" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/proyectoFinal/cmd/server/handler/users.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/proyectoFinal/cmd/server/main.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/proyectoFinal/go.mod" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/proyectoFinal/go.sum" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/proyectoFinal/internal/domain/users.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/proyectoFinal/internal/users/errors.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/proyectoFinal/internal/users/repository.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/proyectoFinal/internal/users/service.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/proyectoFinal/pkg/store/file.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/proyectoFinal/pkg/web/response.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/proyectoFinal/users.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/proyectoFinal/web.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/sever/handler/products.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server/handler/products.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/sever/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -92,6 +98,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Swagger" />
+    <option name="LAST_COMMIT_MESSAGE" value="Swagger" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
