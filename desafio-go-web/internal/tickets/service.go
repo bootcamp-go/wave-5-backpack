@@ -9,7 +9,7 @@ import (
 
 type Service interface {
 	AverageDestination(c *gin.Context, destination string) (float64, error)
-	GetTotalTickets(c *gin.Context, destination string) ([]domain.Ticket, error)
+	GetDestination(c *gin.Context, destination string) ([]domain.Ticket, error)
 }
 
 func NewService(r Repository) Service {
@@ -20,7 +20,7 @@ type service struct {
 	repository Repository
 }
 
-func (s *service) GetTotalTickets(c *gin.Context, destination string) ([]domain.Ticket, error) {
+func (s *service) GetDestination(c *gin.Context, destination string) ([]domain.Ticket, error) {
 	tickets, err := s.repository.GetTicketByDestination(c, destination)
 	if err != nil {
 		return []domain.Ticket{}, fmt.Errorf("error al obtener Tickets de %s. error: %s", destination, err)
