@@ -33,6 +33,9 @@ func (s *Service) GetTicketsByCountry() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		destination := c.Param("dest")
+		if destination == "" {
+			c.JSON(http.StatusBadRequest, "Destination must be provided")
+		}
 
 		tickets, err := s.service.GetTicketByDestination(destination)
 		if err != nil {
@@ -48,6 +51,9 @@ func (s *Service) AverageDestination() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		destination := c.Param("dest")
+		if destination == "" {
+			c.JSON(http.StatusBadRequest, "Destination must be provided")
+		}
 
 		avg, err := s.service.AverageDestination(destination)
 		if err != nil {

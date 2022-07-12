@@ -8,7 +8,6 @@ import (
 type Repository interface {
 	GetAll() ([]domain.Ticket, error)
 	GetTicketByDestination(destination string) ([]domain.Ticket, error)
-	AverageDestination(destination string) ([]domain.Ticket, error)
 }
 
 type repository struct {
@@ -31,23 +30,17 @@ func (r *repository) GetAll() ([]domain.Ticket, error) {
 }
 
 func (r *repository) GetTicketByDestination(destination string) ([]domain.Ticket, error) {
-
-	var ticketsDest []domain.Ticket
-
+	var tickets []domain.Ticket
 	if len(r.db) == 0 {
 		return []domain.Ticket{}, fmt.Errorf("empty list of tickets")
 	}
 
 	for _, t := range r.db {
 		if t.Country == destination {
-			ticketsDest = append(ticketsDest, t)
+			tickets = append(tickets, t)
 		}
 	}
 
-	return ticketsDest, nil
+	return tickets, nil
 }
 
-func (r *repository) AverageDestination(destination string) ([]domain.Ticket, error) {
-
-	return []domain.Ticket{}, nil
-}
