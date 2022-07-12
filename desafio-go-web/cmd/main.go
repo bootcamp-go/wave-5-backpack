@@ -6,7 +6,10 @@ import (
 	"os"
 	"strconv"
 
+	"desafio-go-web/cmd/handler"
 	"desafio-go-web/internal/domain"
+	"desafio-go-web/internal/tickets"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -18,12 +21,22 @@ func main() {
 		panic("Couldn't load tickets")
 	}
 
+	repo := tickets.NewRepository(list)
+	service := tickets.NewService(repo)
+	tickets := handler.NewTickets(service)
+
 	r := gin.Default()
 	r.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
 	// Rutas a desarollar:
 
-	// GET - “/ticket/getByCountry/:dest”
-	// GET - “/ticket/getAverage/:dest”
+	rt := r.Group("/tickets")
+	{
+		// GET - “/ticket/getByCountry/:dest”
+		rt.GET("/:dest", tickets.GetTicketsByCountry())
+		// GET - “/ticket/getAverage/:dest”
+		rt.GET("/average/:dest", tickets.AverageDestination())
+	}
+
 	if err := r.Run(); err != nil {
 		panic(err)
 	}

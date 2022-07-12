@@ -7,42 +7,42 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type Service struct {
+type Tickets struct {
 	service tickets.Service
 }
 
-func NewService(s tickets.Service) *Service {
-	return &Service{
+func NewTickets(s tickets.Service) *Tickets {
+	return &Tickets{
 		service: s,
 	}
 }
 
-func (s *Service) GetTicketsByCountry() gin.HandlerFunc {
+func (s *Tickets) GetTicketsByCountry() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		destination := c.Param("dest")
 
-		tickets, err := s.service.GetTotalTickets(c, destination)
+		tickets, err := s.service.GetDestination(destination)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
-		c.JSON(200, tickets)
+		c.JSON(200, gin.H{"data": tickets})
 	}
 }
 
-func (s *Service) AverageDestination() gin.HandlerFunc {
+func (s *Tickets) AverageDestination() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		destination := c.Param("dest")
 
-		avg, err := s.service.AverageDestination(c, destination)
+		avg, err := s.service.AverageDestination(destination)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
 
-		c.JSON(200, avg)
+		c.JSON(200, gin.H{"data": avg})
 	}
 }
