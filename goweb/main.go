@@ -12,13 +12,13 @@ import (
 )
 
 type transactions struct {
-	Id       uint
-	Codigo   string
-	Moneda   string
-	Monto    float64
-	Emisor   string
-	Receptor string
-	Fecha    string
+	Id       uint    `json:"id"`
+	Codigo   string  `json:"codigo"`
+	Moneda   string  `json:"moneda"`
+	Monto    float64 `json:"monto"`
+	Emisor   string  `json:"emisor"`
+	Receptor string  `json:"receptor"`
+	Fecha    string  `json:"fecha"`
 }
 
 var t []transactions
@@ -45,6 +45,7 @@ func main() {
 	router.GET("/transactions", GetAll)
 	router.GET("/transactions/:id", GetOne)
 	router.GET("/transactions/filter", Filter)
+	router.POST("/transactions/new", NewTransaction)
 
 	router.Run()
 }
@@ -87,4 +88,61 @@ func Filter(c *gin.Context) {
 	}
 
 	c.IndentedJSON(http.StatusFound, filteredList)
+}
+
+func NewTransaction(c *gin.Context) {
+	if token := c.GetHeader("token"); token != "123456" {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "no tiene permisos para realizar la petición solicitada",
+		})
+		return
+	}
+
+	var req transactions
+	var errors []string
+
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	if req.Codigo == "" {
+		errors = append(errors, fmt.Sprintf("El campo %s es requerido", "Codigo"))
+	}
+
+	if req.Moneda == "" {
+		errors = append(errors, fmt.Sprintf("El campo %s es requerido", "Moneda"))
+	}
+
+	if req.Monto == 0 {
+		errors = append(errors, fmt.Sprintf("El campo %s es requerido", "Monto"))
+	}
+
+	if req.Emisor == "" {
+		errors = append(errors, fmt.Sprintf("El campo %s es requerido", "Emisor"))
+	}
+
+	if req.Receptor == "" {
+		errors = append(errors, fmt.Sprintf("El campo %s es requerido", "Receptor"))
+	}
+
+	if req.Fecha == "" {
+		errors = append(errors, fmt.Sprintf("El campo %s es requerido", "Fecha"))
+	}
+
+	if len(errors) > 0 {
+		c.JSON(http.StatusForbidden, gin.H{
+			"error": errors,
+		})
+		return
+	}
+
+	lastID := t[len(t)-1].Id
+	fmt.Println(lastID)
+	req.Id = lastID + 1
+	t = append(t, req)
+
+	c.JSON(http.StatusAccepted, req)
 }
