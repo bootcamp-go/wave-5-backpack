@@ -1,0 +1,228 @@
+package handler
+
+import (
+	"github.com/gin-gonic/gin"
+	"goweb/clase4_parte2/internal/users"
+	"goweb/clase4_parte2/pkg/web"
+	"strconv"
+	"fmt"
+)
+
+// Se genera la estructura del request
+type request struct {
+	Nombre         string  `json:"nombre"`
+	Apellido       string  `json:"apellido"`
+	Email          string  `json:"email"`
+	Edad           int     `json:"edad"`
+	Altura         float64 `json:"altura"`
+	Activo         *bool   `json:"activo"`
+}
+
+type patchRequest struct {
+	Apellido       string  `json:"apellido"`
+	Edad           int     `json:"edad"`
+}
+
+// Se genera la estructura del controlador que tiene como campo el servicio
+type User struct {
+	service users.Service
+}
+
+// Se genera la función que retorna el controlador
+func NewUser(u users.Service) *User {
+	return &User{
+		service: u,
+	}
+}
+
+// ListUsers godoc
+// @Summary List users
+// @Tags Users
+// @Description List all registered users
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Failure 500 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /users [get]
+func (c *User) GetAll() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		u, err := c.service.GetAll()
+		if err != nil {
+			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
+			return
+		}
+
+		if len(u) == 0 {
+			ctx.JSON(404, web.NewResponse(404, nil, "No hay usuarios registrados"))
+			return
+		}
+		ctx.JSON(200, web.NewResponse(200, u, ""))
+	}
+}
+
+// StoreUsers godoc
+// @Summary Store user
+// @Tags Users
+// @Description Store user
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param user body request true "User to store"
+// @Success 201 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 500 {object} web.Response
+// @Router /users [post]
+func (c *User) Store() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req request
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
+			return
+		}
+
+		errors := validateRequest(req)
+		if errors != "" { 
+			ctx.JSON(400, web.NewResponse(400, nil, errors)) 
+			return
+		}
+
+		u, err := c.service.Store(req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, req.Activo)
+		if err != nil {
+			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
+			return
+		}
+
+		ctx.JSON(200, web.NewResponse(201, u, ""))
+	}
+}
+
+// UpdateUser godoc
+// @Summary Update users
+// @Tags Users
+// @Description Update user by id
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param id path int true "User ID"
+// @Param users body request true "User to update"
+// @Success 201 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 500 {object} web.Response
+// @Router /users/{id} [put]
+func (c *User) Update() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+		if err != nil {
+			ctx.JSON(400, web.NewResponse(400, nil, "ID inválido"))
+			return
+		}
+
+		var req request
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
+			return
+		}
+
+		errors := validateRequest(req)
+		if errors != "" { 
+			ctx.JSON(400, web.NewResponse(400, nil, errors)) 
+			return
+		}
+
+		u, err := c.service.Update(int(id), req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, req.Activo)
+		if err != nil {
+			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
+			return
+		}
+		ctx.JSON(201, web.NewResponse(201, u, ""))
+	}
+}
+
+// UpdateUser godoc
+// @Summary Update user
+// @Tags Users
+// @Description Update user's lastname and age
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param id path int true "User ID"
+// @Param User body patchRequest true "User's lastname and age"
+// @Success 201 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 500 {object} web.Response
+// @Router /users/{id} [patch]
+func (c *User) UpdateLastNameAndAge() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+		if err != nil {
+			ctx.JSON(400, web.NewResponse(400, nil, "ID inválido"))
+			return
+		}
+
+		var req patchRequest
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
+			return
+		}
+
+		var errors string
+		if req.Apellido == "" { errors += "El apellido del usuario es requerido. " }
+		if req.Edad == 0 { errors += "La edad del usuario es requerida." }
+
+		if errors != "" { 
+			ctx.JSON(400, web.NewResponse(400, nil, errors)) 
+			return
+		}
+
+		u, err := c.service.UpdateLastNameAndAge(int(id), req.Apellido, req.Edad)
+		if err != nil {
+			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
+			return
+		}
+		ctx.JSON(201, web.NewResponse(201, u, ""))
+	}
+}
+
+// DeleteUser godoc
+// @Summary Delete user
+// @Tags Users
+// @Description Delete user by ID
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param id path int true "User ID"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 500 {object} web.Response
+// @Router /users/{id} [delete]
+func (c *User) Delete() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+		if err != nil {
+			ctx.JSON(400, web.NewResponse(400, nil, "ID inválido"))
+			return
+		}
+		
+		err = c.service.Delete(int(id))
+		if err != nil {
+			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
+			return
+		}
+		ctx.JSON(200, web.NewResponse(200, fmt.Sprintf("El usuario %d ha sido eliminado", id), ""))
+		//ctx.JSON(200, gin.H{ "data": fmt.Sprintf("El usuario %d ha sido eliminado", id) })
+	}
+}
+
+// Validación de los campos del request
+func validateRequest(req request) string {
+	var errors string
+	if req.Nombre == "" { errors += "El nombre del usuario es requerido. "}
+	if req.Apellido == "" { errors += "El apellido del usuario es requerido. "}
+	if req.Email == "" { errors += "El email del usuario es requerido. "}
+	if req.Edad  == 0 { errors += "La edad del usuario es requerida. "}
+	if req.Altura == 0 { errors += "La altura del usuario es requerida. "}
+	if req.Activo == nil { errors += "El campo activo del usuario es requerido. "}
+	return errors
+}
