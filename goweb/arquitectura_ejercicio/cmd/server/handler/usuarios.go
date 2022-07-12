@@ -33,6 +33,17 @@ func NewUsuario(u usuarios.Service) *Usuario {
 	}
 }
 
+// ListUsers godoc
+//@Summary List of Usuarios
+//@Tags Usuarios
+//@Description Método que enlista a todos los usuarios registrados.
+//@Produce  json
+//@Param token header string true "token"
+//@Success 200 {object} web.Response
+//@Failure 401 {object} web.Response
+//@Failure 404 {object} web.Response
+//@Failure 500 {object} web.Response
+//@Router /usuarios [get]
 func (u *Usuario) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
@@ -49,6 +60,20 @@ func (u *Usuario) GetAll() gin.HandlerFunc {
 	}
 }
 
+// StoreUsers godoc
+//@Summary Store Usuarios
+//@Tags Usuarios
+//@Description Método que guarda un usuario nuevo.
+//@Accept  json
+//@Produce  json
+//@Param token header string true "token"
+//@Param user body request true "User to store"
+//@Success 200 {object} web.Response
+//@Failure 400 {object} web.Response
+//@Failure 404 {object} web.Response
+//@Failure 409 {object} web.Response
+//@Failure 500 {object} web.Response
+//@Router /usuarios [post]
 func (c *Usuario) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
@@ -70,6 +95,18 @@ func (c *Usuario) Store() gin.HandlerFunc {
 	}
 }
 
+// UpdateUser godoc
+//@Summary      Update users
+//@Description  update a complete user
+//@Tags         Usuarios
+//@Accept       json
+//@Produce      json
+//@Param        id    path     int  	true  	"ID USER"
+//@Param 		user 	body 	request true 	"User to store"
+//@Success      200  {object}  web.Response
+//@Failure      400  {object}  web.Response
+//@Failure      500  {object}  web.Response
+//@Router       /usuarios/{id} [update]
 func (c *Usuario) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")
@@ -94,6 +131,21 @@ func (c *Usuario) Update() gin.HandlerFunc {
 	}
 }
 
+// PatchUsers godoc
+//@Summary Patch Usuarios
+//@Tags Usuarios
+//@Description Método que actualiza el apellido y la edad de un usuario.
+//@Accept  json
+//@Produce  json
+//@Param token header string true "token"
+//@Param user body LastNameAgePatchRequest true "User to patch"
+//@Param id path  int  true  "User ID"
+//@Success 200 {object} web.Response
+//@Failure 400 {object} web.Response
+//@Failure 404 {object} web.Response
+//@Failure 409 {object} web.Response
+//@Failure 500 {object} web.Response
+//@Router /usuarios/{id} [patch]
 func (c *Usuario) PatchLastNameAge() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.Request.Header.Get("token")

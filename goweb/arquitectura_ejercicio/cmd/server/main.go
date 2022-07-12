@@ -2,15 +2,30 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/anesquivel/wave-5-backpack/goweb/arquitectura_ejercicio/cmd/server/handler"
 	"github.com/anesquivel/wave-5-backpack/goweb/arquitectura_ejercicio/internal/usuarios"
 	"github.com/anesquivel/wave-5-backpack/goweb/arquitectura_ejercicio/pkg/store"
 	"github.com/joho/godotenv"
 
+	"github.com/anesquivel/wave-5-backpack/goweb/arquitectura_ejercicio/docs"
 	"github.com/gin-gonic/gin"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+// @title MELI Bootcamp API
+// @version 1.0
+// @description This API Handle MELI Products.
+// @termsOfService https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
+
+// @contact.name API Support
+// @contact.url https://developers.mercadolibre.com.ar/support
+
+// @license.name Apache 2.0
+// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 	gin.SetMode(gin.ReleaseMode)
 
@@ -30,6 +45,10 @@ func main() {
 	u := handler.NewUsuario(service)
 
 	r := gin.Default()
+
+	docs.SwaggerInfo.Host = os.Getenv("HOST")
+	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	users := r.Group("/usuarios")
 	users.POST("/", u.Store())
 	users.GET("/", u.GetAll())
