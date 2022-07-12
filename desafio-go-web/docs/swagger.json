@@ -1,0 +1,91 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This API Handle Fly Tickets.",
+        "title": "MELI Bootcamp API",
+        "termsOfService": "https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones",
+        "contact": {
+            "name": "API Support",
+            "url": "https://developers.mercadolibre.com.ar/support"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "paths": {
+        "/getByCountry/{dest}": {
+            "get": {
+                "description": "Get a ticket total by destination",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Get a ticket total by destination",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Destination",
+                        "name": "dest",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/web.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/getPercentage/{dest}": {
+            "get": {
+                "description": "Get a ticket percentage by destination",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Tickets"
+                ],
+                "summary": "Get a ticket percentage by destination",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Destination",
+                        "name": "dest",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/web.Response"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "web.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {},
+                "err": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

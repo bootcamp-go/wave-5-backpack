@@ -1,0 +1,60 @@
+definitions:
+  web.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      err:
+        type: string
+    type: object
+info:
+  contact:
+    name: API Support
+    url: https://developers.mercadolibre.com.ar/support
+  description: This API Handle Fly Tickets.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
+  title: MELI Bootcamp API
+  version: "1.0"
+paths:
+  /getByCountry/{dest}:
+    get:
+      description: Get a ticket total by destination
+      parameters:
+      - description: Destination
+        in: path
+        name: dest
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Get a ticket total by destination
+      tags:
+      - Tickets
+  /getPercentage/{dest}:
+    get:
+      description: Get a ticket percentage by destination
+      parameters:
+      - description: Destination
+        in: path
+        name: dest
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Get a ticket percentage by destination
+      tags:
+      - Tickets
+swagger: "2.0"
