@@ -1,0 +1,67 @@
+definitions:
+  web.Response:
+    properties:
+      data: {}
+      error:
+        type: string
+      status:
+        type: string
+    type: object
+info:
+  contact:
+    name: Cristobal Monsalve
+    url: https://developers.mercadolibre.com.ar/support
+  description: Documentación API Desafío GoWeb
+  termsOfService: https://developers.mercadolibre.com.ar/es_ar/terminos_y_condiciones
+  title: MELI Bootcamp Desafío
+  version: "1.0"
+paths:
+  /ticket/getAverage/{dest}:
+    get:
+      description: Get average number of tickets from the selected country
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: country
+        in: path
+        name: dest
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Average Tickets By Country
+      tags:
+      - Tickets
+  /ticket/getByCountry/{dest}:
+    get:
+      description: Get all tickets from the selected country
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: country
+        in: path
+        name: dest
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Tickets By Country
+      tags:
+      - Tickets
+swagger: "2.0"
