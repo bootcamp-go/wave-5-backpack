@@ -26,11 +26,21 @@ func NewUsers(usuario users.Service) *Users {
 	}
 }
 
+// ListUsers godoc
+// @Summary List Users
+// @Tags Users
+// @Description get Users
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /users [get]
 func (c *Users) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
-			ctx.JSON(401, web.Response(401, nil, "Token Invalido"))
+			ctx.JSON(401, web.NewResponse(401, nil, "Token Invalido"))
 			return
 		}
 		usuario, err := c.service.GetAll()
@@ -38,15 +48,27 @@ func (c *Users) GetAll() gin.HandlerFunc {
 			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, web.Response(200, usuario, ""))
+		ctx.JSON(200, web.NewResponse(200, usuario, ""))
 	}
 }
 
+// StoreUsers godoc
+// @Summary Store Users
+// @Tags Users
+// @Description store Users
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param product body request true "Product to store"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /users [post]
 func (c *Users) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
-			ctx.JSON(401, web.Response(401, nil, "Token Invalido"))
+			ctx.JSON(401, web.NewResponse(401, nil, "Token Invalido"))
 			return
 		}
 		var req request
@@ -59,20 +81,32 @@ func (c *Users) Store() gin.HandlerFunc {
 			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, web.Response(200, usuario, ""))
+		ctx.JSON(200, web.NewResponse(200, usuario, ""))
 	}
 }
 
+// UpdateUsers godoc
+// @Summary Update Users
+// @Tags Users
+// @Description Update Users
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param product body request true "Product to Update"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /users [put]
 func (u *Users) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
-			ctx.JSON(401, web.Response(401, nil, "Token Invalido"))
+			ctx.JSON(401, web.NewResponse(401, nil, "Token Invalido"))
 			return
 		}
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(400, web.Response(400, nil, "El id no es valido"))
+			ctx.JSON(400, web.NewResponse(400, nil, "El id no es valido"))
 			return
 		}
 
@@ -107,11 +141,23 @@ func (u *Users) Update() gin.HandlerFunc {
 	}
 }
 
+// UpdateLastnameAndAgeUsers godoc
+// @Summary UpdateLastnameAndAge Users
+// @Tags Users
+// @Description UpdateLastnameAndAge Users
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param product body request true "Product to UpdateLastnameAndAge"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /users [patch]
 func (u *Users) UpdateApellidoAndEdad() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
-			ctx.JSON(401, web.Response(401, nil, "Token Invalido"))
+			ctx.JSON(401, web.NewResponse(401, nil, "Token Invalido"))
 			return
 		}
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
@@ -147,11 +193,23 @@ func (u *Users) UpdateApellidoAndEdad() gin.HandlerFunc {
 	}
 }
 
+// DeleteUsers godoc
+// @Summary Delete Users
+// @Tags Users
+// @Description Delete Users
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param product body request true "Product to Delete"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /users [delete]
 func (u *Users) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
-			ctx.JSON(400, web.Response(401, nil, "Token Invalido"))
+			ctx.JSON(400, web.NewResponse(400, nil, "Token Invalido"))
 			return
 		}
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
@@ -164,6 +222,6 @@ func (u *Users) Delete() gin.HandlerFunc {
 			ctx.JSON(404, web.NewResponse(400, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, web.Response(200, u, ""))
+		ctx.JSON(200, web.NewResponse(200, u, ""))
 	}
 }
