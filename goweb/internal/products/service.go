@@ -1,6 +1,7 @@
 package products
 
 import (
+	"fmt"
 	"web-server/internal/domain"
 )
 
@@ -35,31 +36,48 @@ func (s *service) GetAll() ([]domain.Products, error) {
 func (s *service) Store(nombre string, color string, precio float64, stock int, codigo string, publicado bool, fecha string) (domain.Products, error) {
 	lastId, err := s.repository.LastID()
 	if err != nil {
-		return domain.Products{}, err
+		return domain.Products{}, fmt.Errorf("error getting product last id: %w", err)
 	}
 
 	lastId++
 
 	producto, err := s.repository.Store(lastId, nombre, color, precio, stock, codigo, publicado, fecha)
 	if err != nil {
-		return domain.Products{}, err
+		return domain.Products{}, fmt.Errorf("error creating product: %w", err)
+
 	}
 
 	return producto, nil
 }
 
 func (s *service) Update(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool, fecha string) (domain.Products, error) {
-	return s.repository.Update(id, nombre, color, precio, stock, codigo, publicado, fecha)
+	p, err := s.repository.Update(id, nombre, color, precio, stock, codigo, publicado, fecha)
+	if err != nil {
+		return domain.Products{}, fmt.Errorf("error updating product %w", err)
+	}
+	return p, nil
 }
 
 func (s *service) UpdateName(id int, nombre string) (domain.Products, error) {
-	return s.repository.UpdateName(id, nombre)
+	p, err := s.repository.UpdateName(id, nombre)
+	if err != nil {
+		return domain.Products{}, fmt.Errorf("Error updating name product %w", err)
+	}
+	return p, nil
 }
 
 func (s *service) UpdatePrice(id int, precio float64) (domain.Products, error) {
-	return s.repository.UpdatePrice(id, precio)
+	p, err := s.repository.UpdatePrice(id, precio)
+	if err != nil {
+		return domain.Products{}, fmt.Errorf("Error updating price product %w", err)
+	}
+	return p, nil
 }
 
 func (s *service) Delete(id int) error {
-	return s.repository.Delete(id)
+	if err := s.repository.Delete(id); err != nil {
+		return fmt.Errorf("error deleting product %w", err)
+	}
+
+	return nil
 }

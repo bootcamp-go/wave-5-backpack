@@ -1,12 +1,1 @@
-
-    {
-    "id": 1,
-    "nombre": "Celular",
-    "color": "Rojo",
-    "precio": 500.00,
-    "stock": 5,
-    "codigo": "R4T5ERFD2",
-    "publicado": true,
-    "fecha_creacion": "6/07/2022"
-    }
-
+[{"id":1,"nombre":"Celular","color":"Rojo","precio":500,"stock":5,"codigo":"R4T5ERFD2","publicado":true,"fecha_creacion":"6/07/2022"},{"id":2,"nombre":"tel","color":"Azul","precio":600,"stock":6,"codigo":"R4T7ERFD2","publicado":true,"fecha_creacion":"7/07/2022"}]

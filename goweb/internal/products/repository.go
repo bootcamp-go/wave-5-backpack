@@ -3,6 +3,13 @@ package products
 import (
 	"fmt"
 	"web-server/internal/domain"
+	"web-server/pkg/store"
+)
+
+const (
+	ProductNotFound = "product %d not found"
+	FailReading     = "cant read database"
+	FailWriting     = "cant write database, error: %w"
 )
 
 type Repository interface {
@@ -15,40 +22,60 @@ type Repository interface {
 	Delete(id int) error
 }
 
-type repository struct{}
-
-func NewRepository() Repository {
-	return &repository{}
+type repository struct {
+	db store.Store
 }
 
-var productsSlide []domain.Products
-var lastId int
+func NewRepository(db store.Store) Repository {
+	return &repository{
+		db: db,
+	}
+}
 
 func (r *repository) GetAll() ([]domain.Products, error) {
+	var productsSlide []domain.Products
+	if err := r.db.Read(&productsSlide); err != nil {
+		return nil, fmt.Errorf(FailReading)
+	}
 	return productsSlide, nil
 }
 
 func (r *repository) LastID() (int, error) {
-	return lastId, nil
+	var productsSlide []domain.Products
+	if err := r.db.Read(&productsSlide); err != nil {
+		return 0, fmt.Errorf(FailReading)
+	}
+
+	if len(productsSlide) == 0 {
+		return 0, nil
+	}
+
+	return productsSlide[len(productsSlide)-1].Id, nil
 }
 
 func (r *repository) Store(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool, fecha string) (domain.Products, error) {
+	var productsSlide []domain.Products
+	if err := r.db.Read(&productsSlide); err != nil {
+		return domain.Products{}, fmt.Errorf(FailReading)
+	}
+
 	p := domain.Products{Id: id, Nombre: nombre, Color: color, Precio: precio, Stock: stock, Codigo: codigo, Publicado: publicado, Fecha: fecha}
 	productsSlide = append(productsSlide, p)
-	lastId = p.Id
+
+	if err := r.db.Write(productsSlide); err != nil {
+		return domain.Products{}, fmt.Errorf(FailWriting, err)
+	}
+
 	return p, nil
 }
 
-// func readFile() ([]domain.Products,error){
-
-// 	products,err := os.ReadFile("./products.json")
-// 	if err != nil {
-// 		return nil, fmt.Errorf(err.Error())
-// 	}
-
-// }
-
 func (r *repository) Update(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool, fecha string) (domain.Products, error) {
+	var productsSlide []domain.Products
+
+	if err := r.db.Read(&productsSlide); err != nil {
+		return domain.Products{}, fmt.Errorf(FailReading)
+	}
+
 	p := domain.Products{Nombre: nombre, Color: color, Precio: precio, Stock: stock, Codigo: codigo, Publicado: publicado, Fecha: fecha}
 	updated := false
 	for i := range productsSlide {
@@ -67,6 +94,8 @@ func (r *repository) Update(id int, nombre string, color string, precio float64,
 }
 
 func (r *repository) UpdateName(id int, nombre string) (domain.Products, error) {
+	var productsSlide []domain.Products
+
 	updated := false
 	var p domain.Products
 	for i := range productsSlide {
@@ -85,6 +114,8 @@ func (r *repository) UpdateName(id int, nombre string) (domain.Products, error) 
 }
 
 func (r *repository) UpdatePrice(id int, precio float64) (domain.Products, error) {
+	var productsSlide []domain.Products
+
 	updated := false
 	var p domain.Products
 	for i := range productsSlide {
@@ -103,6 +134,12 @@ func (r *repository) UpdatePrice(id int, precio float64) (domain.Products, error
 }
 
 func (r *repository) Delete(id int) error {
+	var productsSlide []domain.Products
+
+	if err := r.db.Read(&productsSlide); err != nil {
+		return fmt.Errorf(FailReading)
+	}
+
 	deleted := false
 	var index int
 	for i := range productsSlide {
@@ -113,9 +150,14 @@ func (r *repository) Delete(id int) error {
 	}
 
 	if !deleted {
-		return fmt.Errorf("producto %d no encontrado", id)
+		return fmt.Errorf(ProductNotFound, id)
 	}
 
 	productsSlide = append(productsSlide[:index], productsSlide[index+1:]...)
+
+	if err := r.db.Write(productsSlide); err != nil {
+		return fmt.Errorf(FailWriting, err)
+	}
+
 	return nil
 }
