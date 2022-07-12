@@ -31,8 +31,6 @@ info:
 paths:
   /products:
     get:
-      consumes:
-      - application/json
       description: get products
       parameters:
       - description: token

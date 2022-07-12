@@ -19,9 +19,6 @@ const docTemplate = `{
         "/products": {
             "get": {
                 "description": "get products",
-                "consumes": [
-                    "application/json"
-                ],
                 "produces": [
                     "application/json"
                 ],
