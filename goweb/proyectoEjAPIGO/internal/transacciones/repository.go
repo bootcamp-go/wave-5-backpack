@@ -13,7 +13,7 @@ const (
 )
 
 type Repository interface {
-	getAll() ([]domain.Transaccion, error)
+	GetAll() ([]domain.Transaccion, error)
 	Store(id int, codigo_transaccion, moneda, emisor, receptor, fecha_transaccion string, monto float64) (domain.Transaccion, error)
 	LastID() (int, error)
 	Update(id int, codigo_transaccion, moneda, emisor, receptor, fecha_transaccion string, monto float64) (domain.Transaccion, error)
@@ -124,7 +124,7 @@ func (r *repository) UpdateCTandMonto(id int, codigo_transaccion string, monto f
 	if err := r.db.Read(&ts); err != nil {
 		return domain.Transaccion{}, fmt.Errorf(FailReading)
 	}
-
+	var t domain.Transaccion
 	for i := range ts {
 		if ts[i].ID == id {
 			ts[i].Codigo_transaccion = codigo_transaccion
@@ -135,12 +135,22 @@ func (r *repository) UpdateCTandMonto(id int, codigo_transaccion string, monto f
 	}
 	if !updated {
 
-		return domain.Transaccion{}, nil
+		return domain.Transaccion{}, fmt.Errorf(TransaccionNotFound, id)
+	}
+
+	if err := r.db.Write(ts); err != nil {
+		return domain.Transaccion{}, fmt.Errorf(FailWriting, err)
 	}
 	return t, nil
 }
 
 func (r *repository) Delete(id int) error {
+	var ts []domain.Transaccion
+
+	if err := r.db.Read(&ts); err != nil {
+		return fmt.Errorf(FailReading)
+	}
+
 	deleted := false
 	var index int
 	for i := range ts {
@@ -151,9 +161,14 @@ func (r *repository) Delete(id int) error {
 	}
 
 	if !deleted {
-		return fmt.Errorf("producto %d no encontrado", id)
+		return fmt.Errorf(TransaccionNotFound, id)
 	}
 
 	ts = append(ts[:index], ts[index+1:]...)
+
+	if err := r.db.Write(ts); err != nil {
+		return fmt.Errorf(FailWriting, err)
+	}
+
 	return nil
 }
