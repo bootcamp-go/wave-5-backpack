@@ -8,6 +8,7 @@ import (
 type Repository interface {
 	GetAll() ([]domain.Ticket, error)
 	GetTicketByDestination(destination string) ([]domain.Ticket, error)
+	AverageDestination(destination string) (float64, error)
 }
 
 type repository struct {
@@ -44,4 +45,22 @@ func (r *repository) GetTicketByDestination(destination string) ([]domain.Ticket
 	}
 
 	return ticketsDest, nil
+}
+func (r *repository) AverageDestination(destination string) (float64, error) {
+
+	if len(r.db) == 0 {
+		return 0, fmt.Errorf("empty list of tickets")
+	}
+	var average float64
+	getByDest, err := r.GetTicketByDestination(destination)
+	if err != nil {
+		return 0, fmt.Errorf("no se pudieron cargar los tickets con ese destino")
+	}
+	getAll, err := r.GetAll()
+	if err != err {
+		return 0, fmt.Errorf("no se pudieron cargar los tickets")
+	}
+
+	average = (float64(len(getByDest)) * float64(len(getAll))) / 100
+	return average, nil
 }

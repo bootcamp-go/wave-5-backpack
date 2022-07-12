@@ -7,6 +7,7 @@ import (
 type Service interface {
 	GetAll() ([]domain.Ticket, error)
 	GetTicketByDestination(destination string) ([]domain.Ticket, error)
+	AverageDestination(destination string) (float64, error)
 }
 
 type service struct {
@@ -31,4 +32,11 @@ func (s *service) GetTicketByDestination(destination string) ([]domain.Ticket, e
 		return nil, err
 	}
 	return tickets, nil
+}
+func (s *service) AverageDestination(destination string) (float64, error) {
+	average, err := s.repo.AverageDestination(destination)
+	if err != nil {
+		return 0, err
+	}
+	return average, nil
 }
