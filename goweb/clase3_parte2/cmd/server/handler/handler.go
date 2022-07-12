@@ -28,13 +28,64 @@ func NewProduct(s productos.Service) *Product {
 	return &Product{service: s}
 }
 
-func (p *Product) Store() gin.HandlerFunc {
+// List products godoc
+// @Summary List Products
+// @Tags Products
+// @Description get products
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Succes 200 {object} web.Response
+// @Router /productos [get]
+func (p *Product) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
+		p, err := p.service.GetAll()
+		if err != nil {
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
+			return
+		}
+		ctx.JSON(200, web.NewResponse(200, p, ""))
+	}
+}
+
+// List products by Id godoc
+// @Summary List Product by Id
+// @Tags Products
+// @Description get product by id
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "ProductId to view"
+// @Succes 200 {object} web.Response
+// @Router /productos/{id} [get]
+func (p *Product) GetForId() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+		if err != nil {
 			ctx.JSON(401, web.NewResponse(401, nil, "Token Invalido"))
 			return
 		}
+		p, err := p.service.GetForId(int(id))
+		if err != nil {
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
+			return
+		}
+		ctx.JSON(200, web.NewResponse(200, p, ""))
+	}
+}
+
+//StoreProducts godoc
+//@Summary Store Products
+//@Tags Products
+//@Description store products
+//@Accept json
+//@Produce json
+//@Param token header string true "token"
+//@Param product body request true "Product to store"
+//@Succes 200 {object} web.Response
+//@Router /productos [POST]
+func (p *Product) Store() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
 		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
@@ -73,13 +124,19 @@ func (p *Product) Store() gin.HandlerFunc {
 	}
 }
 
+// UpdateProducts godoc
+// @Summary Update products
+// @Tags Products
+// @Description endpoint to update a product
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param id path int true "ProductId to update"
+// @Param product body request true "Product to update"
+// @Success 200 {object} web.Response
+// @Router /productos/{id} [put]
 func (p *Product) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(401, web.NewResponse(401, nil, "Token Invalido"))
-			return
-		}
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.JSON(400, web.NewResponse(400, nil, "Id invalido"))
@@ -123,13 +180,19 @@ func (p *Product) Update() gin.HandlerFunc {
 	}
 }
 
+// ParcialUpdateProducts godoc
+// @Summary Update price for the product
+// @Tags Products
+// @Description endpoint to update price for a product
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param id path string true "ProductId to update price"
+// @Param precio body request false "price data for update"
+// @Success 200 {object} web.Response
+// @Router /productos/{id} [patch]
 func (p *Product) UpdatePrecio() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(401, web.NewResponse(401, nil, "Token Invalido"))
-			return
-		}
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.JSON(400, web.NewResponse(400, nil, "Id invalido"))
@@ -153,6 +216,16 @@ func (p *Product) UpdatePrecio() gin.HandlerFunc {
 	}
 }
 
+// DeleteProducts godoc
+// @Summary Delete products
+// @Tags Products
+// @Description endpoint to delete a product
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param id path string true "ProductId to delete"
+// @Success 200 {object} web.Response
+// @Router /productos/{id} [delete]
 func (p *Product) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
@@ -171,42 +244,5 @@ func (p *Product) Delete() gin.HandlerFunc {
 			return
 		}
 		ctx.JSON(200, web.NewResponse(200, fmt.Sprintf("El producto %d ha sido eliminado", id), ""))
-	}
-}
-
-func (p *Product) GetForId() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(401, web.NewResponse(401, nil, "Token Invalido"))
-			return
-		}
-		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
-		if err != nil {
-			ctx.JSON(401, web.NewResponse(401, nil, "Token Invalido"))
-			return
-		}
-		p, err := p.service.GetForId(int(id))
-		if err != nil {
-			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
-			return
-		}
-		ctx.JSON(200, web.NewResponse(200, p, ""))
-	}
-}
-
-func (p *Product) GetAll() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(401, web.NewResponse(401, nil, "Token Invalido"))
-			return
-		}
-		p, err := p.service.GetAll()
-		if err != nil {
-			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
-			return
-		}
-		ctx.JSON(200, web.NewResponse(200, p, ""))
 	}
 }
