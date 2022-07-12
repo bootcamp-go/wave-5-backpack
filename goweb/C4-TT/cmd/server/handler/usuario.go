@@ -1,9 +1,10 @@
 package handler
 
 import (
-	"C2-TT/internal/usuarios"
-	"fmt"
+	"C4-TT/internal/usuarios"
+	"C4-TT/pkg/web"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
@@ -27,156 +28,205 @@ func NewUsuario(s usuarios.Service) *Usuario {
 	return &Usuario{service: s}
 }
 
+// ListUsuarios godoc
+// @Summary List usuarios
+// @Tags Usuarios
+// @Description get usuarios
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Router /usuarios [get]
 func (u *Usuario) GetAll() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.Request.Header.Get("token")
-		if token != "123" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "token inválido"}) //401
+		if token != os.Getenv("TOKEN") {
+			c.JSON(http.StatusUnauthorized, web.NewResponse(401, nil, "token inválido")) //401
 			return
 		}
 
 		usuarios, err := u.service.GetAll()
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "token inválido"}) // 500
+			c.JSON(http.StatusInternalServerError, web.NewResponse(500, nil, "token inválido")) // 500
 			return
 		}
 
 		if len(usuarios) <= 0 {
-			c.JSON(http.StatusOK, gin.H{"message": "No se encontraron usuarios."}) // 500
+			c.JSON(401, web.NewResponse(401, nil, "No se encontraron usuarios."))
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"usuarios": usuarios})
+		c.JSON(http.StatusOK, web.NewResponse(200, usuarios, ""))
 	}
 }
 
+// RegistrarUsuario godoc
+// @Summary Registrar usuarios
+// @Tags Usuarios
+// @Description registrar usuarios
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param product body request true "Usuarios to registro"
+// @Success 200 {object} web.Response
+// @Router /usuarios [post]
 func (u *Usuario) Registrar() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.Request.Header.Get("token")
-		if token != "123" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "token inválido"}) //401
+		if token != os.Getenv("TOKEN") {
+			c.JSON(http.StatusUnauthorized, web.NewResponse(401, nil, "token inválido")) //401
 			return
 		}
 
 		var req request
 		if err := c.ShouldBindJSON(&req); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()}) //400
+			c.JSON(http.StatusBadRequest, web.NewResponse(400, nil, err.Error())) //400
 			return
 		}
 
 		usuario, err := u.service.Registrar(req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, req.Activo, req.FechaCreacion)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()}) //400
+			c.JSON(http.StatusInternalServerError, web.NewResponse(400, nil, err.Error())) //400
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"usuario": usuario})
+		c.JSON(http.StatusOK, web.NewResponse(200, usuario, ""))
 	}
 }
 
-func (c *Usuario) Modificar() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != "123" {
-			ctx.JSON(401, gin.H{"error": "token inválido"})
+// ModificarUsuario godoc
+// @Summary Modificar usuario
+// @Tags Usuarios
+// @Description modificar usuario
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param product body request true "modifica usuario"
+// @Success 200 {object} web.Response
+// @Router /usuarios [put]
+func (u *Usuario) Modificar() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		token := c.GetHeader("token")
+		if token != os.Getenv("TOKEN") {
+			c.JSON(401, web.NewResponse(401, nil, "token inválido"))
 			return
 		}
-		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(400, gin.H{"error": "invalid ID"})
+			c.JSON(400, web.NewResponse(400, nil, "invalid ID"))
 			return
 		}
 		var req request
-		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(400, gin.H{"error": err.Error()})
+		if err := c.ShouldBindJSON(&req); err != nil {
+			c.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 		if req.Nombre == "" {
-			ctx.JSON(400, gin.H{"error": "El nombre del usuario es requerido"})
+			c.JSON(400, web.NewResponse(400, nil, "El nombre del usuario es requerido"))
 			return
 		}
 		if req.Apellido == "" {
-			ctx.JSON(400, gin.H{"error": "El apellido del usuario es requerido"})
+			c.JSON(400, web.NewResponse(400, nil, "El apellido del usuario es requerido"))
 			return
 		}
 		if req.Email == "" {
-			ctx.JSON(400, gin.H{"error": "El email del usuario es requerido"})
+			c.JSON(400, web.NewResponse(400, nil, "El email del usuario es requerido"))
 			return
 		}
 		if req.Edad == 0 {
-			ctx.JSON(400, gin.H{"error": "La edad es requerida"})
+			c.JSON(400, web.NewResponse(400, nil, "La edad es requerida"))
 			return
 		}
 		if req.Altura == 0 {
-			ctx.JSON(400, gin.H{"error": "La altura es requerida"})
+			c.JSON(400, web.NewResponse(400, nil, "La altura es requerida"))
 			return
 		}
 		if req.FechaCreacion == "" {
-			ctx.JSON(400, gin.H{"error": "La fecha de creacion del usuario es requerido"})
+			c.JSON(400, web.NewResponse(400, nil, "La fecha de creacion del usuario es requerido"))
 			return
 		}
 
-		u, err := c.service.Modificar(int(id), req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, req.Activo, req.FechaCreacion)
+		u, err := u.service.Modificar(int(id), req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, req.Activo, req.FechaCreacion)
 		if err != nil {
-			ctx.JSON(404, gin.H{"error": err.Error()})
+			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, u)
+		c.JSON(http.StatusOK, web.NewResponse(200, u, ""))
 	}
 }
 
+// EliminarUsuario godoc
+// @Summary Eliminar usuario
+// @Tags Usuarios
+// @Description eliminar usuario
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param product body request true "elimina usuario"
+// @Success 200 {object} web.Response
+// @Router /usuarios [delete]
 func (c *Usuario) Eliminar() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		if token != "123" {
-			ctx.JSON(401, gin.H{"error": "token inválido"})
+		if token != os.Getenv("TOKEN") {
+			ctx.JSON(401, web.NewResponse(401, nil, "token inválido"))
 			return
 		}
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(400, gin.H{"error": "invalid ID"})
+			ctx.JSON(400, web.NewResponse(400, nil, "invalid ID"))
 			return
 		}
 		err = c.service.Eliminar(int(id))
 		if err != nil {
-			ctx.JSON(404, gin.H{"error": err.Error()})
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, gin.H{"data": fmt.Sprintf("El producto %d ha sido eliminado", id)})
+		ctx.JSON(200, web.NewResponse(200, id, ""))
 	}
 }
 
+// ModificarApellidoEdadUsuario godoc
+// @Summary Modificar Apellido y Edad usuario
+// @Tags Usuarios
+// @Description modificar apellido edad usuario
+// @Accept  json
+// @Produce  json
+// @Param token header string true "token"
+// @Param product body request true "modifica apellido edad usuario"
+// @Success 200 {object} web.Response
+// @Router /usuarios [patch]
 func (c *Usuario) ModificarAE() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")
-		if token != "123" {
-			ctx.JSON(401, gin.H{"error": "token inválido"})
+		if token != os.Getenv("TOKEN") {
+			ctx.JSON(401, web.NewResponse(401, nil, "token inválido"))
 			return
 		}
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(400, gin.H{"error": "invalid ID"})
+			ctx.JSON(400, web.NewResponse(400, nil, "invalid ID"))
 			return
 		}
 		var req request
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(400, gin.H{"error": err.Error()})
+			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
 		if req.Apellido == "" {
-			ctx.JSON(400, gin.H{"error": "El apellido del usuario es requerido"})
+			ctx.JSON(400, web.NewResponse(400, nil, "El apellido del usuario es requerido"))
 			return
 		}
 		if req.Edad == 0 {
-			ctx.JSON(400, gin.H{"error": "La edad es requerida"})
+			ctx.JSON(400, web.NewResponse(400, nil, "La edad es requerida"))
 			return
 		}
 
 		u, err := c.service.ModificarAE(int(id), req.Apellido, req.Edad)
 		if err != nil {
-			ctx.JSON(404, gin.H{"error": err.Error()})
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, u)
+		ctx.JSON(200, web.NewResponse(200, u, ""))
 	}
 }

@@ -1,6 +1,7 @@
 package usuarios
 
 import (
+	"C4-TT/pkg/registro"
 	"fmt"
 )
 
@@ -15,6 +16,10 @@ type Usuario struct {
 	FechaCreacion string `json:"fecha_creacion" binding:"required"`
 }
 
+type repository struct {
+	db registro.Registro
+}
+
 type Repository interface {
 	GetAll() ([]*Usuario, error)
 	Registrar(nombre, apellido, email string, edad, altura int, activo bool, fecha_creacion string) (*Usuario, error)
@@ -23,29 +28,30 @@ type Repository interface {
 	ModificarAE(id int, apellido string, edad int) (*Usuario, error)
 }
 
-var usuarios []*Usuario
-var lastID int
-
-func NewRepository() Repository {
-	usuarios = append(usuarios, &Usuario{
-		Nombre:        "Matias",
-		Apellido:      "Vince",
-		Email:         "matiasvince9@gmail.com",
-		Edad:          22,
-		Altura:        175,
-		Activo:        true,
-		FechaCreacion: "09121999",
-	})
-	return &Usuario{}
+func NewRepository(db registro.Registro) Repository {
+	return &repository{db: db}
 }
 
-func (u *Usuario) GetAll() ([]*Usuario, error) {
-	return usuarios, nil
+func (r *repository) GetAll() ([]*Usuario, error) {
+	var users []*Usuario
+	if err := r.db.Read(&users); err != nil {
+		return nil, err
+	}
+	return users, nil
 }
 
-func (u *Usuario) Registrar(nombre, apellido, email string, edad, altura int, activo bool, fecha_creacion string) (*Usuario, error) {
+func (r *repository) Registrar(nombre, apellido, email string, edad, altura int, activo bool, fecha_creacion string) (*Usuario, error) {
+	var users []Usuario
+	r.db.Read(&users)
+	lastID := 0
+
+	for _, val := range users {
+		if val.ID > lastID {
+			lastID = val.ID
+		}
+	}
+
 	lastID++
-
 	usuario := Usuario{
 		ID:            lastID,
 		Nombre:        nombre,
@@ -57,19 +63,25 @@ func (u *Usuario) Registrar(nombre, apellido, email string, edad, altura int, ac
 		FechaCreacion: fecha_creacion,
 	}
 
-	usuarios = append(usuarios, &usuario)
+	users = append(users, usuario)
+	if err := r.db.Write(&users); err != nil {
+		return nil, err
+	}
 
 	return &usuario, nil
 }
 
-func (u *Usuario) Modificar(id int, nombre, apellido, email string, edad, altura int, activo bool, fecha_creacion string) (*Usuario, error) {
+func (r *repository) Modificar(id int, nombre, apellido, email string, edad, altura int, activo bool, fecha_creacion string) (*Usuario, error) {
 	user := Usuario{Nombre: nombre, Apellido: apellido, Email: email, Edad: edad, Altura: altura, Activo: activo, FechaCreacion: fecha_creacion}
 	updated := false
 
-	for i := range usuarios {
-		if usuarios[i].ID == id {
+	var users []*Usuario
+	r.db.Read(&users)
+
+	for i := range users {
+		if users[i].ID == id {
 			user.ID = id
-			usuarios[i] = &user
+			users[i] = &user
 			updated = true
 		}
 	}
@@ -78,13 +90,22 @@ func (u *Usuario) Modificar(id int, nombre, apellido, email string, edad, altura
 		return &Usuario{}, fmt.Errorf("Usuario %d no encontrado", id)
 	}
 
+	if err := r.db.Write(&users); err != nil {
+		return nil, err
+	}
+
 	return &user, nil
 }
 
-func (u *Usuario) Eliminar(id int) error {
+func (r *repository) Eliminar(id int) error {
+	var users []*Usuario
+	if err := r.db.Read(&users); err != nil {
+		return err
+	}
+
 	eliminado := false
 	var index int
-	for i, val := range usuarios {
+	for i, val := range users {
 		if val.ID == id {
 			index = i
 			eliminado = true
@@ -94,25 +115,38 @@ func (u *Usuario) Eliminar(id int) error {
 		return fmt.Errorf("Producto %d no encontrado", id)
 	}
 
-	usuarios = append(usuarios[:index], usuarios[index+1:]...)
+	users = append(users[:index], users[index+1:]...)
+
+	if err := r.db.Write(&users); err != nil {
+		return err
+	}
 
 	return nil
 }
 
-func (u *Usuario) ModificarAE(id int, apellido string, edad int) (*Usuario, error) {
+func (r *repository) ModificarAE(id int, apellido string, edad int) (*Usuario, error) {
+	var users []*Usuario
+	if err := r.db.Read(&users); err != nil {
+		return nil, err
+	}
+
 	user := Usuario{}
 	updated := false
 
-	for i, val := range usuarios {
+	for i, val := range users {
 		if val.ID == id {
 			user = Usuario{Nombre: val.Nombre, Apellido: apellido, Email: val.Email, Edad: edad, Altura: val.Altura, Activo: val.Activo, FechaCreacion: val.FechaCreacion}
-			usuarios[i] = &user
+			users[i] = &user
 			updated = true
 		}
 	}
 
 	if !updated {
 		return &Usuario{}, fmt.Errorf("Usuario %d no encontrado", id)
+	}
+
+	if err := r.db.Write(&users); err != nil {
+		return nil, err
 	}
 
 	return &user, nil
