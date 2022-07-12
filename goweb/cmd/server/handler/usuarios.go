@@ -37,6 +37,15 @@ func NewUsuario(u usuarios.Service) *Usuarios {
 	return &Usuarios{service: u}
 }
 
+// ListUsers godoc
+// @Summary UpdateNameAndLastName usuarios
+// @Tags Usuarios
+// @Description update usuarios name and lastname
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Router /usuarios/:id [patch]
 func (c *Usuarios) UpdateNameAndLastName() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -130,7 +139,7 @@ func (c *Usuarios) Update() gin.HandlerFunc {
 // ListUsers godoc
 // @Summary GetAll usuarios
 // @Tags Usuarios
-// @Description get usuarios
+// @Description get all usuarios
 // @Accept json
 // @Produce json
 // @Param token header string true "token"

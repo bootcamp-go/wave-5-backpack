@@ -26,7 +26,7 @@ const docTemplate = `{
     "paths": {
         "/usuarios": {
             "get": {
-                "description": "get usuarios",
+                "description": "get all usuarios",
                 "consumes": [
                     "application/json"
                 ],
@@ -37,6 +37,38 @@ const docTemplate = `{
                     "Usuarios"
                 ],
                 "summary": "GetAll usuarios",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/web.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/usuarios/:id": {
+            "patch": {
+                "description": "update usuarios name and lastname",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Usuarios"
+                ],
+                "summary": "UpdateNameAndLastName usuarios",
                 "parameters": [
                     {
                         "type": "string",

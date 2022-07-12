@@ -23,7 +23,7 @@ paths:
     get:
       consumes:
       - application/json
-      description: get usuarios
+      description: get all usuarios
       parameters:
       - description: token
         in: header
@@ -38,6 +38,27 @@ paths:
           schema:
             $ref: '#/definitions/web.Response'
       summary: GetAll usuarios
+      tags:
+      - Usuarios
+  /usuarios/:id:
+    patch:
+      consumes:
+      - application/json
+      description: update usuarios name and lastname
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: UpdateNameAndLastName usuarios
       tags:
       - Usuarios
 swagger: "2.0"
