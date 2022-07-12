@@ -7,8 +7,8 @@ import (
 type Service interface {
 	GetAll() ([]domain.ModelUser, error)
 	GetById(id int) (domain.ModelUser, error)
-	Store(nombre string, apellido string, email string, edad int, altura float64, activo bool) (domain.ModelUser, error)
-	Update(id int, nombre string, apellido string, email string, edad int, altura float64, activo bool) (domain.ModelUser, error)
+	Store(nombre string, apellido string, email string, edad int, altura float64) (domain.ModelUser, error)
+	Update(id int, nombre string, apellido string, email string, edad int, altura float64) (domain.ModelUser, error)
 	UpdateApellidoEdad(id int, nombre string, edad int) (domain.ModelUser, error)
 	Delete(id int) error
 	SearchUser(nombreQuery string, apellidoQuery string, emailQuery string, edadQuery string, alturaQuery string, activoQuery string, fechaCreacionQuery string) ([]domain.ModelUser, error)
@@ -39,8 +39,8 @@ func (s *service) GetById(id int) (domain.ModelUser, error) {
 }
 
 // Función para guardar una entidad
-func (s *service) Store(nombre string, apellido string, email string, edad int, altura float64, activo bool) (domain.ModelUser, error) {
-	user, err := s.repository.Store(nombre, apellido, email, edad, altura, activo)
+func (s *service) Store(nombre string, apellido string, email string, edad int, altura float64) (domain.ModelUser, error) {
+	user, err := s.repository.Store(nombre, apellido, email, edad, altura)
 	if err != nil {
 		return domain.ModelUser{}, err
 	}
@@ -49,8 +49,8 @@ func (s *service) Store(nombre string, apellido string, email string, edad int, 
 }
 
 // Función para actualizar una entidad completa
-func (s *service) Update(id int, nombre string, apellido string, email string, edad int, altura float64, activo bool) (domain.ModelUser, error) {
-	return s.repository.Update(id, nombre, apellido, email, edad, altura, activo)
+func (s *service) Update(id int, nombre string, apellido string, email string, edad int, altura float64) (domain.ModelUser, error) {
+	return s.repository.Update(id, nombre, apellido, email, edad, altura)
 }
 
 // Función para actualizar 2 campos de una entidad

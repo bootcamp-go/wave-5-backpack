@@ -20,8 +20,8 @@ const (
 type Repository interface {
 	GetAll() ([]domain.ModelUser, error)
 	GetById(id int) (domain.ModelUser, error)
-	Store(nombre string, apellido string, email string, edad int, altura float64, activo bool) (domain.ModelUser, error)
-	Update(id int, nombre string, apellido string, email string, edad int, altura float64, activo bool) (domain.ModelUser, error)
+	Store(nombre string, apellido string, email string, edad int, altura float64) (domain.ModelUser, error)
+	Update(id int, nombre string, apellido string, email string, edad int, altura float64) (domain.ModelUser, error)
 	UpdateApellidoEdad(id int, nombre string, edad int) (domain.ModelUser, error)
 	Delete(id int) error
 	SearchUser(nombreQuery string, apellidoQuery string, emailQuery string, edadQuery string, alturaQuery string, activoQuery string, fechaCreacionQuery string) ([]domain.ModelUser, error)
@@ -85,8 +85,8 @@ func (r *repository) GetById(id int) (domain.ModelUser, error) {
 }
 
 // Función para guardar una entidad
-func (r *repository) Store(nombre string, apellido string, email string, edad int, altura float64, activo bool) (domain.ModelUser, error) {
-	user := domain.ModelUser{Nombre: nombre, Apellido: apellido, Email: email, Edad: edad, Altura: altura, Activo: activo}
+func (r *repository) Store(nombre string, apellido string, email string, edad int, altura float64) (domain.ModelUser, error) {
+	user := domain.ModelUser{Nombre: nombre, Apellido: apellido, Email: email, Edad: edad, Altura: altura}
 	lastId := 0
 
 	// Leemos los usuarios del JSON
@@ -106,6 +106,7 @@ func (r *repository) Store(nombre string, apellido string, email string, edad in
 	user.Id = lastId + 1
 	user.FechaCreacion = time.Now()
 	user.Borrado = false
+	user.Activo = true
 
 	// Se adiciona el usuario al slice de usuarios
 	users = append(users, user)
@@ -120,19 +121,20 @@ func (r *repository) Store(nombre string, apellido string, email string, edad in
 }
 
 // Función para actualizar una entidad completa
-func (r *repository) Update(id int, nombre string, apellido string, email string, edad int, altura float64, activo bool) (domain.ModelUser, error) {
+func (r *repository) Update(id int, nombre string, apellido string, email string, edad int, altura float64) (domain.ModelUser, error) {
 	// Leemos los usuarios del JSON
 	var users []domain.ModelUser
 	if err := r.db.Read(&users); err != nil {
 		return domain.ModelUser{}, fmt.Errorf(errorLectura, err)
 	}
 
-	user := domain.ModelUser{Nombre: nombre, Apellido: apellido, Email: email, Edad: edad, Altura: altura, Activo: activo}
+	user := domain.ModelUser{Nombre: nombre, Apellido: apellido, Email: email, Edad: edad, Altura: altura}
 	found := false
 	for i := range users {
 		if users[i].Id == id && !users[i].Borrado && !found {
 			user.Id = id
 			user.FechaCreacion = users[i].FechaCreacion
+			user.Activo = users[i].Activo
 			users[i] = user
 			found = true
 		}

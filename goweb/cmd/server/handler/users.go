@@ -10,16 +10,37 @@ import (
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/users"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/web"
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 // Estructura de rerquest
 type request struct {
-	Nombre   string  `json:"nombre"`
-	Apellido string  `json:"apellido"`
-	Email    string  `json:"email"`
+	Nombre   string  `json:"nombre" binding:"required"`
+	Apellido string  `json:"apellido" binding:"required"`
+	Email    string  `json:"email" binding:"required,email"`
 	Edad     int     `json:"edad"`
 	Altura   float64 `json:"altura"`
-	Activo   bool    `json:"activo"`
+}
+
+// Estructura de rerquest
+type putrequest struct {
+	Nombre   string  `json:"nombre" binding:"required"`
+	Apellido string  `json:"apellido" binding:"required"`
+	Email    string  `json:"email" binding:"required,email"`
+	Edad     int     `json:"edad" binding:"required"`
+	Altura   float64 `json:"altura" binding:"required"`
+}
+
+// Estructura de patch rerquest
+type patchrequest struct {
+	Apellido string `json:"apellido"`
+	Edad     int    `json:"edad"`
+}
+
+// Estructura para los errores
+type ErroresMsg struct {
+	Field   string `json:"field"`
+	Message string `json:"message"`
 }
 
 type User struct {
@@ -32,15 +53,17 @@ func NewUser(s users.Service) *User {
 	}
 }
 
+// GetAll godoc
+// @Summary Obtiene todos los usuarios
+// @Tags Usuarios
+// @Description Obtiene todos los usuarios que no estan borrados
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Router /users [get]
 func (u *User) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-		if token != os.Getenv("TOKEN") {
-			log.Println("GetAll() token")
-			ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "token inválido"))
-			return
-		}
-
 		users, err := u.service.GetAll()
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
@@ -51,14 +74,18 @@ func (u *User) GetAll() gin.HandlerFunc {
 	}
 }
 
+// GetById godoc
+// @Summary Obtieneun usuario por id
+// @Tags Usuarios
+// @Description Obtiene un usuario por su id que no este borrado
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "id"
+// @Success 200 {object} web.Response
+// @Router /users/{id} [get]
 func (u *User) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "token inválido"))
-			return
-		}
-
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "invalid id"))
@@ -75,23 +102,32 @@ func (u *User) GetById() gin.HandlerFunc {
 	}
 }
 
+// StoreUsers godoc
+// @Summary Guarda un usuario
+// @Tags Usuarios
+// @Description Guarda un usuario
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param user body request true "User to store"
+// @Success 200 {object} web.Response
+// @Router /users [post]
 func (u *User) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.Request.Header.Get("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "token inválido"))
-			return
-		}
-
 		var req request
-		if err := ctx.Bind(&req); err != nil {
-			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
+
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			var errores []ErroresMsg
+			for _, fieldError := range err.(validator.ValidationErrors) {
+				errores = append(errores, ErroresMsg{fieldError.Field(), getErrorMsg(fieldError)})
+			}
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, errores))
 			return
 		}
 
-		user, err := u.service.Store(req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, req.Activo)
+		user, err := u.service.Store(req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura)
 		if err != nil {
-			ctx.JSON(http.StatusInternalServerError, web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
 
@@ -99,14 +135,28 @@ func (u *User) Store() gin.HandlerFunc {
 	}
 }
 
+func getErrorMsg(fe validator.FieldError) string {
+	switch fe.Tag() {
+	case "required":
+		return "El campo es requerido"
+	case "email":
+		return "El email no es válido"
+	}
+	return "Error desconocido"
+}
+
+// UpdateUser godoc
+// @Summary Actualiza un usuario
+// @Tags Usuarios
+// @Description Actualiza toda la información de un usuario
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param user body putrequest true "User to update"
+// @Success 200 {object} web.Response
+// @Router /users [put]
 func (u *User) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "token inválido"))
-			return
-		}
-
 		// Se valida el param id
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
@@ -114,37 +164,17 @@ func (u *User) Update() gin.HandlerFunc {
 			return
 		}
 
-		var req request
+		var req putrequest
 		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
-			return
-		}
-		if req.Nombre == "" {
-			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "El nombre es requerido"))
-			return
-		}
-		if req.Apellido == "" {
-			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "El apellido es requerido"))
-			return
-		}
-		if req.Email == "" {
-			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "El email es requerido"))
-			return
-		}
-		if req.Edad == 0 {
-			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "La edad es requerida"))
-			return
-		}
-		if req.Altura == 0 {
-			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "La altura es requerida"))
-			return
-		}
-		if req.Activo {
-			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "El activo es requerido"))
+			var errores []ErroresMsg
+			for _, fieldError := range err.(validator.ValidationErrors) {
+				errores = append(errores, ErroresMsg{fieldError.Field(), getErrorMsg(fieldError)})
+			}
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, errores))
 			return
 		}
 
-		user, err := u.service.Update(int(id), req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, req.Activo)
+		user, err := u.service.Update(int(id), req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura)
 		if err != nil {
 			ctx.JSON(http.StatusInternalServerError, web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
 			return
@@ -154,31 +184,33 @@ func (u *User) Update() gin.HandlerFunc {
 	}
 }
 
+// UpdateApellidoEdad godoc
+// @Summary Actualiza parcialmente un usuario
+// @Tags Usuarios
+// @Description Actualiza el apellido y edad de un usuario
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "Update user by id"
+// @Param data body patchrequest true "User to update"
+// @Success 200 {object} web.Response
+// @Router /users/{id} [patch]
 func (u *User) UpdateApellidoEdad() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "token inválido"))
-			return
-		}
-
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "invalid id"))
 			return
 		}
 
-		var req request
+		var req patchrequest
 		if err := ctx.ShouldBindJSON(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
-		if req.Apellido == "" {
-			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "El apellido es requerido"))
-			return
-		}
-		if req.Edad == 0 {
-			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "La edad es requerida"))
+
+		if (req.Apellido == "" || req.Apellido == "string") && req.Edad == 0 {
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "No hay información para actualización"))
 			return
 		}
 
@@ -188,18 +220,22 @@ func (u *User) UpdateApellidoEdad() gin.HandlerFunc {
 			return
 		}
 
-		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, user, ""))
+		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, user, "que"))
 	}
 }
 
+// DeleteUsers godoc
+// @Summary Borra un usuario
+// @Tags Usuarios
+// @Description Borra un usuario por su id
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "Delete user by id"
+// @Success 200 {object} web.Response
+// @Router /users/{id} [delete]
 func (u *User) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "token inválido"))
-			return
-		}
-
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "invalid id"))
@@ -216,14 +252,24 @@ func (u *User) Delete() gin.HandlerFunc {
 	}
 }
 
+// SearchUsers godoc
+// @Summary Busca usuarios
+// @Tags Usuarios
+// @Description Busca usuarios por algun criterio de búsqueda
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param nombre query string false "Nombre"
+// @Param apellido query string false "Apellido"
+// @Param email query string false "Email"
+// @Param edad query string false "Edad"
+// @Param altura query string false "Altura"
+// @Param activo query string false "Activo"
+// @Param fecha_creacion query string false "Fecha de creación"
+// @Success 200 {object} web.Response
+// @Router /users/search [get]
 func (u *User) SearchUser() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "token inválido"))
-			return
-		}
-
 		// Se obtienen los query params
 		nombreQuery := ctx.Query("nombre")
 		apellidoQuery := ctx.Query("apellido")
@@ -245,5 +291,29 @@ func (u *User) SearchUser() gin.HandlerFunc {
 		}
 
 		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, users, ""))
+	}
+}
+
+func TokenAuthMiddleware() gin.HandlerFunc {
+	requiredToken := os.Getenv("TOKEN")
+
+	if requiredToken == "" {
+		log.Fatal("no esta definido el token de seguridad")
+	}
+
+	return func(ctx *gin.Context) {
+		token := ctx.GetHeader("token")
+
+		if token == "" {
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "token requerido"))
+			return
+		}
+
+		if token != requiredToken {
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "token incorrecto"))
+			return
+		}
+
+		ctx.Next()
 	}
 }
