@@ -1,15 +1,14 @@
 package tickets
 
 import (
-	"desafio-go-web/internal/domain"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Service interface {
-	GetTotalTickets(c *gin.Context, destination string) ([]domain.Ticket, error)
-	AverageDestination(c *gin.Context, destination string) (string, error)
+	GetTotalTickets(c *gin.Context, destination string) (float64, error)
+	AverageDestination(c *gin.Context, destination string) (float64, error)
 }
 
 type service struct {
@@ -22,27 +21,27 @@ func NewService(r Repository) Service {
 	}
 }
 
-func (s *service) GetTotalTickets(c *gin.Context, destination string) ([]domain.Ticket, error) {
+func (s *service) GetTotalTickets(c *gin.Context, destination string) (float64, error) {
 	tickets, err := s.repository.GetTicketByDestination(c, destination)
 	if err != nil {
-		return nil, fmt.Errorf("no se pudo obtener los tickets por destino: %w", err)
+		return 0, fmt.Errorf("no se pudo obtener los tickets por destino: %w", err)
 	}
-	return tickets, nil
+	return float64(len(tickets)), nil
 }
 
-func (s *service) AverageDestination(c *gin.Context, destination string) (string, error) {
+func (s *service) AverageDestination(c *gin.Context, destination string) (float64, error) {
 	tickets, err := s.repository.GetAll(c)
 	if err != nil {
-		return "", fmt.Errorf("no se pudo obtener los tickets: %w", err)
+		return 0, fmt.Errorf("no se pudo obtener los tickets: %w", err)
 	}
 
 	if len(tickets) == 0 {
-		return "", fmt.Errorf("no se encontraron tickets")
+		return 0, fmt.Errorf("no se encontraron tickets")
 	}
 
 	ticketsDestino, err := s.repository.GetTicketByDestination(c, destination)
 	if err != nil {
-		return "", fmt.Errorf("no se pudo obtener los tickets por destino: %w", err)
+		return 0, fmt.Errorf("no se pudo obtener los tickets por destino: %w", err)
 	}
 
 	// Asumiré que el promedio de personas será el total de tickets de un destino
@@ -51,8 +50,8 @@ func (s *service) AverageDestination(c *gin.Context, destination string) (string
 
 	sumX := float64(len(ticketsDestino))
 	total := float64(len(tickets))
-	avg := (sumX / total) * 100.0
+	avg := (sumX / total)
 
-	return fmt.Sprintf("%.1f%%", avg), nil
+	return avg, nil
 
 }
