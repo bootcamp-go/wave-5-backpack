@@ -1,0 +1,203 @@
+definitions:
+  domain.Transaction:
+    properties:
+      Id:
+        type: integer
+      codigo_transaccion:
+        type: string
+      emisor:
+        type: string
+      fecha_transaccion:
+        type: string
+      moneda:
+        type: string
+      monto:
+        type: number
+      receptor:
+        type: string
+    type: object
+  web.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      error:
+        type: string
+    type: object
+info:
+  contact:
+    name: API Support
+    url: https://github.com/cgdesiderio96
+  description: Esta API es para manejar transacciones
+  license:
+    name: Gin
+    url: https://github.com/gin-gonic/gin
+  termsOfService: https://www.google.com
+  title: MELI Botocamp API
+  version: "1.0"
+paths:
+  /transacciones:
+    get:
+      consumes:
+      - application/json
+      description: get transaction
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Lista todos las transacciones
+      tags:
+      - Transacciones
+    post:
+      consumes:
+      - application/json
+      description: post transaction
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Transaccion a crear
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Transaction'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: httputil.HTTPError
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Crea una nueva transacción
+      tags:
+      - Transacciones
+  /transacciones/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete transaction
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Elimina una transacción
+      tags:
+      - Transacciones
+    get:
+      consumes:
+      - application/json
+      description: get transaction
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Obtiene una transacción por su ID
+      tags:
+      - Transacciones
+    patch:
+      consumes:
+      - application/json
+      description: patch transaction
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Transaccion a crear
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Transaction'
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Actualiza parcialmente una transacción
+      tags:
+      - Transacciones
+    put:
+      consumes:
+      - application/json
+      description: put transaction
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Transaccion a crear
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Transaction'
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Actualiza una transacción
+      tags:
+      - Transacciones
+swagger: "2.0"

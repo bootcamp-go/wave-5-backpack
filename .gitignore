@@ -1,3 +1,6 @@
 gobases/clase3_parte2/ej3-sin-strategy.go
 gobases/clase3_parte2/pruebas.go
 gobases/clase5_parte1/pruebas.go
+goweb/proyecto-web/.env
+goweb/proyecto-web/transacciones.json
+.DS_Store

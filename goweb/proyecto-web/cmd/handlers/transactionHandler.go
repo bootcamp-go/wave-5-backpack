@@ -22,6 +22,14 @@ func NewTransactionHandler(t transaction.ITransactionService) *TransactionHandle
 	}
 }
 
+// @Summary Lista todos las transacciones
+// @Tags Transacciones
+// @Description get transaction
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Router /transacciones [get]
 func (t *TransactionHandler) GetAll() gin.HandlerFunc {
 
 	return func(ctx *gin.Context) {
@@ -30,40 +38,17 @@ func (t *TransactionHandler) GetAll() gin.HandlerFunc {
 		}
 		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, t.service.GetAll(), ""))
 	}
-
-	// codigo_transaccion := c.Query("codigo_transaccion")
-	// moneda := c.Query("moneda")
-	// emisor := c.Query("emisor")
-	// receptor := c.Query("receptor")
-	// fechaTransaccion := c.Query("fecha_transaccion")
-	// monto := c.Query("monto")
-	// id := c.Query("id")
-	// idInt, errId := strconv.Atoi(id)
-	// montoFloat, errMonto := strconv.ParseFloat(monto, 64)
-
-	// if errId != nil && id != "" {
-	// 	c.JSON(http.StatusBadRequest, gin.H{"message": "id inválido"})
-	// 	return
-	// }
-
-	// if errMonto != nil && monto != "" {
-	// 	c.JSON(http.StatusBadRequest, gin.H{"message": "monto inválido"})
-	// 	return
-	// }
-
-	// transaccionesFiltradas := []domain.Transaccion{}
-
-	// // El filtrado es con "o lógico". O sea, cualquier condición que se cumpla, se devuelve como resultado
-	// for _, transaccion := range transaciones {
-	// 	if transaccion.Id == idInt || transaccion.CodigoTransaccion == codigo_transaccion || transaccion.Moneda == moneda || transaccion.Monto == montoFloat || transaccion.Emisor == emisor || transaccion.Receptor == receptor || transaccion.FechaTransaccion == fechaTransaccion {
-	// 		transaccionesFiltradas = append(transaccionesFiltradas, transaccion)
-	// 	}
-	// }
-	// c.IndentedJSON(http.StatusOK, transaciones)
-
-	//c.IndentedJSON(http.StatusOK, transaccionesFiltradas)
 }
 
+// @Summary Obtiene una transacción por su ID
+// @Tags Transacciones
+// @Description get transaction
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "id"
+// @Success 200 {object} web.Response
+// @Router /transacciones/{id} [get]
 func (t *TransactionHandler) GetById() gin.HandlerFunc {
 
 	return func(ctx *gin.Context) {
@@ -82,6 +67,16 @@ func (t *TransactionHandler) GetById() gin.HandlerFunc {
 	}
 }
 
+// @Summary Crea una nueva transacción
+// @Tags Transacciones
+// @Description post transaction
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param transaction body domain.Transaction true "Transaccion a crear"
+// @Success 200 {object} web.Response
+// @Router /transacciones [post]
+// @Failure 400 {object} web.Response "error"
 func (t *TransactionHandler) Create() gin.HandlerFunc {
 
 	return func(ctx *gin.Context) {
@@ -92,7 +87,7 @@ func (t *TransactionHandler) Create() gin.HandlerFunc {
 		var request domain.Transaction
 		err := ctx.ShouldBindJSON(&request)
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 			return
 		}
 		valido := validarCampos(request, ctx)
@@ -106,6 +101,17 @@ func (t *TransactionHandler) Create() gin.HandlerFunc {
 	}
 }
 
+// UpdateTransactions godoc
+// @Summary Actualiza una transacción
+// @Tags Transacciones
+// @Description put transaction
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param transaction body domain.Transaction true "Transaccion a crear"
+// @Param id path int true "id"
+// @Success 200 {object} web.Response
+// @Router /transacciones/{id} [put]
 func (t *TransactionHandler) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -133,6 +139,16 @@ func (t *TransactionHandler) Update() gin.HandlerFunc {
 
 }
 
+// @Summary Actualiza parcialmente una transacción
+// @Description patch transaction
+// @Tags Transacciones
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param transaction body domain.Transaction true "Transaccion a crear"
+// @Param id path int true "id"
+// @Success 200 {object} web.Response
+// @Router /transacciones/{id} [patch]
 func (t *TransactionHandler) UpdateParcial() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
@@ -159,6 +175,15 @@ func (t *TransactionHandler) UpdateParcial() gin.HandlerFunc {
 	}
 }
 
+// @Summary Elimina una transacción
+// @Description delete transaction
+// @Tags Transacciones
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "id"
+// @Success 200 {object} web.Response
+// @Router /transacciones/{id} [delete]
 func (t *TransactionHandler) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err1 := strconv.Atoi(ctx.Param("id"))

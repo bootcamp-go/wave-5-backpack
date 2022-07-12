@@ -2,14 +2,29 @@ package main
 
 import (
 	"log"
+	"os"
 	"proyecto-web/cmd/handlers"
 	"proyecto-web/internal/transaction"
 	"proyecto-web/pkg/store"
 
 	"github.com/joho/godotenv"
 
+	"proyecto-web/docs"
+
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
 	"github.com/gin-gonic/gin"
 )
+
+// @title MELI Botocamp API
+// @version 1.0
+// @description Esta API es para manejar transacciones
+// @termsOfService https://www.google.com
+// @contact.name API Support
+// @contact.url https://github.com/cgdesiderio96
+// @license.name Gin
+// @license.url https://github.com/gin-gonic/gin
 
 func main() {
 	err := godotenv.Load()
@@ -22,11 +37,18 @@ func main() {
 	handler := handlers.NewTransactionHandler(service)
 	servidor := gin.Default()
 
-	servidor.GET("/transacciones", handler.GetAll())
-	servidor.GET("/transacciones/:id", handler.GetById())
-	servidor.POST("/transacciones", handler.Create())
-	servidor.PUT("/transacciones/:id", handler.Update())
-	servidor.PATCH("/transacciones/:id", handler.UpdateParcial())
-	servidor.DELETE("/transacciones/:id", handler.Delete())
+	docs.SwaggerInfo.Host = os.Getenv("HOST")
+	servidor.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	gr := servidor.Group("transacciones")
+	{
+		gr.GET("/", handler.GetAll())
+		gr.GET("/:id", handler.GetById())
+		gr.POST("/", handler.Create())
+		gr.PUT("/:id", handler.Update())
+		gr.PATCH("/:id", handler.UpdateParcial())
+		gr.DELETE("/:id", handler.Delete())
+	}
+
 	servidor.Run()
 }
