@@ -73,6 +73,71 @@ func (t Transaction) CreateTransaction(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, web.NewResponse(http.StatusCreated, transaction, ""))
 }
 
+// GetAll godoc
+// @Summary Get all transactions
+// @Tags Transaction
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "Transaction ID"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 500 {object} web.Response
+// @Router /transactions [get]
+func (t Transaction) GetAll(ctx *gin.Context) {
+	token := ctx.GetHeader("token")
+
+	if token != os.Getenv("TOKEN") {
+		ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "token inválido"))
+		return
+	}
+
+	transactions, err := t.service.GetAll()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
+		return
+	}
+
+	// Response
+	ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, transactions, ""))
+}
+
+// GetByID godoc
+// @Summary Get a transaction by ID
+// @Tags Transaction
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Param id path int true "Transaction ID"
+// @Success 200 {object} web.Response
+// @Failure 400 {object} web.Response
+// @Failure 401 {object} web.Response
+// @Failure 500 {object} web.Response
+// @Router /transactions{id} [get]
+func (t Transaction) GetByID(ctx *gin.Context) {
+	token := ctx.GetHeader("token")
+
+	if token != os.Getenv("TOKEN") {
+		ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "token inválido"))
+		return
+	}
+
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusOK, nil, err.Error()))
+		return
+	}
+
+	transaction, err := t.service.GetByID(id)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, transaction, ""))
+}
+
 // Update godoc
 // @Summary Update a transaction
 // @Description Update a transaction by ID
@@ -143,16 +208,7 @@ func (t Transaction) Patch(ctx *gin.Context) {
 
 	var req request
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-
-		return
-	}
-}
-
-func (t Transaction) UpdateMontoCod(ctx *gin.Context) {
-	token := ctx.GetHeader("token")
-
-	if token != os.Getenv("TOKEN") {
-		ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "token inválido"))
+		ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 		return
 	}
 
@@ -162,85 +218,13 @@ func (t Transaction) UpdateMontoCod(ctx *gin.Context) {
 		return
 	}
 
-	var req requestPatch
-
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
-		return
-	}
-
-	transaction, err := t.service.UpdateMontoCod(id, req.Monto, req.Cod)
+	transaction, err := t.service.Patch(id, req.Monto, req.Cod, req.Moneda, req.Emisor, req.Receptor)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
 		return
 	}
 
-	ctx.JSON(http.StatusOK, transaction)
-}
-
-// GetAll godoc
-// @Summary Get all transactions
-// @Tags Transaction
-// @Accept json
-// @Produce json
-// @Param token header string true "token"
-// @Param id path int true "Transaction ID"
-// @Success 200 {object} web.Response
-// @Failure 400 {object} web.Response
-// @Failure 401 {object} web.Response
-// @Failure 500 {object} web.Response
-// @Router /transactions [get]
-func (t Transaction) GetAll(ctx *gin.Context) {
-	token := ctx.GetHeader("token")
-
-	if token != os.Getenv("TOKEN") {
-		ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "token inválido"))
-		return
-	}
-
-	transactions, err := t.service.GetAll()
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
-		return
-	}
-
-	// Response
-	ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, transactions, ""))
-}
-
-// GetByID godoc
-// @Summary Get a transaction by ID
-// @Tags Transaction
-// @Accept json
-// @Produce json
-// @Param token header string true "token"
-// @Param id path int true "Transaction ID"
-// @Success 200 {object} web.Response
-// @Failure 400 {object} web.Response
-// @Failure 401 {object} web.Response
-// @Failure 500 {object} web.Response
-// @Router /transactions{id} [get]
-func (t Transaction) GetByID(ctx *gin.Context) {
-	token := ctx.GetHeader("token")
-
-	if token != os.Getenv("TOKEN") {
-		ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "token inválido"))
-		return
-	}
-
-	id, err := strconv.Atoi(ctx.Param("id"))
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusOK, nil, err.Error()))
-		return
-	}
-
-	transaction, err := t.service.GetByID(id)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
-		return
-	}
-
-	ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, transaction, ""))
+	ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, transaction))
 }
 
 // Delete godoc

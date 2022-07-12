@@ -9,7 +9,7 @@ type Service interface {
 	GetByID(id int) (models.Transaction, error)
 	Store(monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error)
 	Update(id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error)
-	UpdateMontoCod(id int, monto float64, cod string) (models.Transaction, error)
+	Patch(id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error)
 	Delete(id int) (int, error)
 }
 
@@ -27,26 +27,20 @@ func (s service) Store(monto float64, cod, moneda, emisor, receptor string) (mod
 	return s.repository.Store(monto, cod, moneda, emisor, receptor)
 }
 
-func (s service) Update(id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
-	return s.repository.Update(id, monto, cod, moneda, emisor, receptor)
-}
-
-func (s service) UpdateMontoCod(id int, monto float64, cod string) (models.Transaction, error) {
-	return s.repository.UpdateMontoCod(id, monto, cod)
+func (s service) GetAll() ([]models.Transaction, error) {
+	return s.repository.GetAll()
 }
 
 func (s service) GetByID(id int) (models.Transaction, error) {
 	return s.repository.GetByID(id)
 }
 
-func (s service) GetAll() ([]models.Transaction, error) {
-	transactions, err := s.repository.GetAll()
+func (s service) Update(id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
+	return s.repository.Update(id, monto, cod, moneda, emisor, receptor)
+}
 
-	if err != nil {
-		return nil, err
-	}
-
-	return transactions, nil
+func (s service) Patch(id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
+	return s.repository.Patch(id, monto, cod, moneda, emisor, receptor)
 }
 
 func (s service) Delete(id int) (int, error) {

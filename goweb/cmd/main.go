@@ -48,7 +48,7 @@ func main() {
 		rt.GET("/:id", t.GetByID)
 
 		rt.PUT("/:id", t.Update)
-		rt.PATCH("/:id", t.UpdateMontoCod)
+		rt.PATCH("/:id", t.Patch)
 
 		rt.POST("", t.CreateTransaction)
 
