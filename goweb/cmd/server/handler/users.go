@@ -101,7 +101,7 @@ func (u *User) Store() gin.HandlerFunc {
 			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, web.NewResponse(200, u, ""))
+		ctx.JSON(201, web.NewResponse(201, u, ""))
 	}
 }
 
@@ -207,6 +207,6 @@ func (u *User) Delete() gin.HandlerFunc {
 			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, web.NewResponse(200, nil, fmt.Sprintf("El producto %d ha sido eliminado", id)))
+		ctx.JSON(204, web.NewResponse(204, nil, fmt.Sprintf("El producto %d ha sido eliminado", id)))
 	}
 }
