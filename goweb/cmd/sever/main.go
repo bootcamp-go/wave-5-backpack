@@ -1,12 +1,14 @@
 package main
 
 import (
-	"fmt"
+	"log"
+	"os"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/cmd/sever/handler"
 	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/docs"
 	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/internal/products"
 	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/pkg/file"
+	"github.com/joho/godotenv"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
@@ -14,11 +16,13 @@ import (
 )
 
 func main() {
-	fileDB := file.NewFile("/Users/andreramos/Documents/Bootcamp-Go Meli/wave-5-backpack/goweb/resources/products.json")
+	err := godotenv.Load("./resources/.env")
+	if err != nil {
+		log.Fatal("cant load .env file")
+	}
+	fileDB := file.NewFile("./resources/products.json")
 	if err := fileDB.Ping(); err != nil {
-		panic(err)
-	} else {
-		fmt.Println("good to go")
+		log.Fatal(err)
 	}
 	repository := products.NewRepository(fileDB)
 	service := products.NewService(repository)
@@ -37,7 +41,7 @@ func main() {
 
 	})
 
-	docs.SwaggerInfo.Host = "localhost:8080"
+	docs.SwaggerInfo.Host = os.Getenv("HOST")
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	productos := router.Group("/products")
@@ -50,5 +54,5 @@ func main() {
 		productos.DELETE("/:id", p.Delete())
 	}
 
-	router.Run(":8080")
+	router.Run(os.Getenv("PORT"))
 }
