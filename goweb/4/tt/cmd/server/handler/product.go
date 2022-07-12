@@ -129,7 +129,7 @@ func (h *Handler) Create() gin.HandlerFunc {
 			return
 		}
 
-		code := http.StatusOK
+		code := http.StatusCreated
 		ctx.JSON(code, web.NewResponse(code, product, ""))
 	}
 }
