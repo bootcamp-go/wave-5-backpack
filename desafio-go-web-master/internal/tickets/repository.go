@@ -2,10 +2,8 @@ package tickets
 
 import (
 	"desafio-go-web/internal/domain"
-	"encoding/csv"
+	"desafio-go-web/pkg/store"
 	"fmt"
-	"os"
-	"strconv"
 )
 
 var ts []domain.Ticket
@@ -16,16 +14,25 @@ type Repository interface {
 }
 
 type repository struct {
-	db []domain.Ticket
+	db store.Store
 }
 
-func NewRepository(db []domain.Ticket) Repository {
+func NewRepository(db store.Store) Repository {
 	return &repository{
 		db: db,
 	}
 }
-
 func (r *repository) GetAll() ([]domain.Ticket, error) {
+	err := r.db.Read(&ts)
+
+	if err != nil {
+		return []domain.Ticket{}, fmt.Errorf(err.Error())
+	}
+
+	return ts, nil
+}
+
+/*func (r *repository) GetAll() ([]domain.Ticket, error) {
 	var ticketList []domain.Ticket
 
 	file, err := os.Open("./tickets.csv")
@@ -55,7 +62,7 @@ func (r *repository) GetAll() ([]domain.Ticket, error) {
 	}
 
 	return ticketList, nil
-}
+}*/
 
 func (r *repository) GetTicketByDestination(destination string) ([]domain.Ticket, error) {
 

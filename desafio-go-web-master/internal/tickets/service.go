@@ -2,6 +2,7 @@ package tickets
 
 import (
 	"desafio-go-web/internal/domain"
+	"fmt"
 	"strconv"
 )
 
@@ -49,10 +50,10 @@ func (s *service) GetAverageDestination(destination string) (string, error){
 	allTickets, err1 := s.repository.GetAll()
 
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("en el 1")
 	}
 	if err1 != nil {
-		return "", err1
+		return "", fmt.Errorf("en el 2")
 	}
 
 	cantTotal := len(allTickets)
