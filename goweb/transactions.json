@@ -16,5 +16,14 @@
 "emisor": "BBVA",
 "receptor": "Mercado Pago",
 "date_transaction": "2022-07-11 17:56:43.800397 -0300 -03"
+},
+{
+"id": 8,
+"monto": 10.55,
+"cod_transaction": "ab123ab",
+"moneda": "ARS",
+"emisor": "PayPal",
+"receptor": "HSBC",
+"date_transaction": "2022-07-12 10:01:21.212054 -0300 -03"
 }
 ]

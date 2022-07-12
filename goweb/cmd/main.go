@@ -14,6 +14,7 @@ import (
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/cmd/handler"
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/transactions"
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/pkg/storage"
+	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/pkg/web"
 )
 
 // @title MELI Bootcamp-go practice API
@@ -31,28 +32,33 @@ func main() {
 	file, err := os.Open("transactions.json")
 	defer file.Close()
 
+	// Init capas de transactions
 	storage := storage.NewStorage("transactions.json")
-
 	repo := transactions.NewRepository(storage)
 	service := transactions.NewService(repo)
-	t := handler.NewTransaction(service)
+	tr := handler.NewTransaction(service)
 
 	router := gin.Default()
 
+	// Router docu
 	docs.SwaggerInfo.Host = os.Getenv("HOST")
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
+	// Middleware
+	router.Use(web.TokenAuthMiddleware()) // el orden declarado de los Middleware afecta a su llamado
+
+	// Router
 	rt := router.Group("/transactions")
 	{
-		rt.GET("", t.GetAll)
-		rt.GET("/:id", t.GetByID)
+		rt.GET("", tr.GetAll)
+		rt.GET("/:id", tr.GetByID)
 
-		rt.PUT("/:id", t.Update)
-		rt.PATCH("/:id", t.Patch)
+		rt.PUT("/:id", tr.Update)
+		rt.PATCH("/:id", tr.Patch)
 
-		rt.POST("", t.CreateTransaction)
+		rt.POST("", tr.CreateTransaction)
 
-		rt.DELETE("/:id", t.Delete)
+		rt.DELETE("/:id", tr.Delete)
 	}
 
 	router.Run()
