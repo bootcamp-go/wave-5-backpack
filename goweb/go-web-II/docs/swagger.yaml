@@ -1,0 +1,99 @@
+definitions:
+  handler.request:
+    properties:
+      active:
+        type: boolean
+      age:
+        type: integer
+      created:
+        type: string
+      email:
+        type: string
+      name:
+        type: string
+      surname:
+        type: string
+    required:
+    - age
+    - created
+    - email
+    - name
+    - surname
+    type: object
+  web.Response:
+    properties:
+      code:
+        type: string
+      data: {}
+      error:
+        type: string
+    type: object
+info:
+  contact:
+    name: API Support
+    url: https://developers.mercadolibre.com.ar/support
+  description: This API Handle MELI Products.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
+  title: MELI Bootcamp API
+  version: "1.0"
+paths:
+  /:
+    post:
+      consumes:
+      - application/json
+      description: store users
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Users to store
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/handler.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Store user
+      tags:
+      - Users
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: get users
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: List users
+      tags:
+      - Users
+swagger: "2.0"
