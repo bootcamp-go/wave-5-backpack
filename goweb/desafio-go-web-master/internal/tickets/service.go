@@ -41,7 +41,7 @@ func (s *service) AverageDestination(ctx context.Context, destination string) (f
 		return 0, err
 	}
 
-	average := (float64(len(ticketsDestination)) / float64(len(tickets))) * 100
+	percentage := (float64(len(ticketsDestination)) / float64(len(tickets))) * 100
 
-	return float64(average), nil
+	return float64(percentage), nil
 }
