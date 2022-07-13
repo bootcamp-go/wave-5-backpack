@@ -1,8 +1,8 @@
 package servicio
 
 import (
-	"github.com/rodrigoeshard/goweb/Practica2.2/internal/domain"
-	"github.com/rodrigoeshard/goweb/Practica2.2/internal/repositorio"
+	"C2-C3/internal/domain"
+	"C2-C3/internal/repositorio"
 )
 
 type Service interface {

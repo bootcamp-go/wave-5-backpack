@@ -3,9 +3,9 @@ package repositorio
 import (
 	"fmt"
 
-	"github.com/rodrigoeshard/goweb/Practica2.2/pkg/store"
+	"C2-C3/pkg/store"
 
-	"github.com/rodrigoeshard/goweb/Practica2.2/internal/domain"
+	"C2-C3/internal/domain"
 )
 
 /*
@@ -43,9 +43,6 @@ func NewRepository(db store.Store) Repository {
 	}
 }
 
-var ps []domain.User
-var lastID int
-
 func (r *repository) GetAll() ([]domain.User, error) {
 	var ps []domain.User
 	r.db.Read(&ps)
@@ -72,6 +69,8 @@ func (r *repository) Store(id int, firstName string, lastName string, email stri
 }
 
 func (r *repository) Update(id int, firstName string, lastName string, email string, age int, height float64, activo bool, createdAt string) (domain.User, error) {
+	var ps []domain.User
+	r.db.Read(&ps)
 	u := domain.User{Id: id, FirstName: firstName, LastName: lastName, Email: email, Age: age, Height: height, Activo: activo, CreatedAt: createdAt}
 	var update bool = false
 	for k, v := range ps {
@@ -88,6 +87,8 @@ func (r *repository) Update(id int, firstName string, lastName string, email str
 }
 
 func (r *repository) UpdateLastNameAge(id int, lastName string, age int) (domain.User, error) {
+	var ps []domain.User
+	r.db.Read(&ps)
 	u := domain.User{}
 	var update bool = false
 	for k, v := range ps {
@@ -105,20 +106,25 @@ func (r *repository) UpdateLastNameAge(id int, lastName string, age int) (domain
 	return u, nil
 }
 func (r *repository) Delete(id int) error {
-	fmt.Println(id)
+	var ps []domain.User
+	r.db.Read(&ps)
 	var delete bool = false
 	var idDel = 0
 	for k, v := range ps {
 		if v.Id == id {
 			idDel = k
+			fmt.Println(idDel)
 			delete = true
 		}
 
 	}
+
 	if delete != true {
 		return fmt.Errorf("No se pudo eliminar el usuario")
 	}
+	fmt.Println("eliminando..", idDel)
 	ps = append(ps[:idDel], ps[idDel+1:]...)
+	r.db.Write(ps)
 
 	return nil
 }

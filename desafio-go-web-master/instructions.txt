@@ -1,0 +1,30 @@
+Requerimiento 1: 
+Crear los packages correspondientes para que la arquitectura de la aplicación cumpla 
+con la definición de REST y el Diseño Orientado a Dominio.
+Tip: Los paquetes internal y cmd son fundamentales.
+
+Requerimiento 2: 
+
+Ubicar los archivos de manera tal que cada uno quede en su respectivo package.
+
+
+Tip: Recordar chequear los imports.
+
+Requerimiento 3: 
+Desarrollar los métodos correspondientes a la estructura Ticket. Uno de ellos debe devolver la cantidad de tickets de un destino. El  otro método debe devolver el promedio de personas que viajan a un país determinado en un dia:
+
+Tip 2: El promedio de x se calcula como: x̄ =  xn 
+
+
+Requerimiento 4: 
+Una vez desarrollado el servicio y el repositorio, deben desarrollar los controladores para los siguientes endpoints:
+
+GET - “/ticket/getByCountry/:dest”
+GET - “/ticket/getAverage/:dest”
+
+
+
+Requerimiento 5: 
+Correr el main.go y testear los endpoints con la herramienta de Postman.
+
+Tip: El comando go mod tidy puede ser necesario previo a correr el main.
