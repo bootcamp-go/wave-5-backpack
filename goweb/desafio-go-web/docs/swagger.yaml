@@ -1,0 +1,72 @@
+definitions:
+  web.Response:
+    properties:
+      code:
+        type: string
+      data: {}
+      error: {}
+    type: object
+info:
+  contact:
+    url: https:&&go.dev/blog&
+  description: Api pade gestión de tickets
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://go.dev/tos
+  title: Desafio Go-Web API MACN
+  version: "1.0"
+paths:
+  /ticket/getAverage/{dest}:
+    get:
+      consumes:
+      - application/json
+      description: Get average by country
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: destiny
+        in: path
+        name: dest
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Get average by country
+      tags:
+      - Tickets
+  /ticket/getByCountry/{dest}:
+    get:
+      consumes:
+      - application/json
+      description: Get tickets by country
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: destiny
+        in: path
+        name: dest
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Get tickets by country
+      tags:
+      - Tickets
+swagger: "2.0"
