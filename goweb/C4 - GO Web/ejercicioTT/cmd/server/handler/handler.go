@@ -13,6 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//request que envío a cada JSON en swagger
 type request struct {
 	Nombre   string    `json:"nombre"`
 	Apellido string    `json:"apellido"`
