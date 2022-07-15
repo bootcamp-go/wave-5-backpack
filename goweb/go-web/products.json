@@ -1,0 +1,32 @@
+{
+    "productos": [{
+        "id": 1,
+        "nombre": "Chocrramo",
+        "color": "Cafe",
+        "precio": 2000,
+        "stock": 500,
+        "codigo": "AD184",
+        "publicado": true,
+        "fecha": 1972
+    },
+    {
+        "id": 2,
+        "nombre": "Gala",
+        "color": "Cafe",
+        "precio": 2000,
+        "stock": 250,
+        "codigo": "BR0014",
+        "publicado": true,
+        "fecha": 1968
+    },
+    {
+        "id": 3,
+        "nombre": "Bon Bon Bum",
+        "color": "Rojo",
+        "precio": 300,
+        "stock": 500,
+        "codigo": "RL981",
+        "publicado": true,
+        "fecha": 1970
+    }]
+}
