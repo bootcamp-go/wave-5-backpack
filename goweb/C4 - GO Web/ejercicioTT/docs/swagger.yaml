@@ -1,8 +1,6 @@
 definitions:
   handler.request:
     properties:
-      activo:
-        type: boolean
       altura:
         type: number
       apellido:
@@ -10,10 +8,6 @@ definitions:
       edad:
         type: integer
       email:
-        type: string
-      fecha:
-        example: "2022-07-12T00:53:16.535668Z"
-        format: date-time
         type: string
       nombre:
         type: string
@@ -131,12 +125,12 @@ paths:
         name: token
         required: true
         type: string
-      - description: id from user to update
+      - description: id from user to patch
         in: path
         name: id
         required: true
         type: string
-      - description: User to update
+      - description: User to patch
         in: body
         name: usuario
         required: true
@@ -157,7 +151,7 @@ paths:
           description: Conflict
           schema:
             $ref: '#/definitions/web.Response'
-      summary: Update a user by Id
+      summary: Patch a user by Id
       tags:
       - Usuarios
     put:

@@ -216,7 +216,7 @@ const docTemplate = `{
                 "tags": [
                     "Usuarios"
                 ],
-                "summary": "Update a user by Id",
+                "summary": "Patch a user by Id",
                 "operationId": "update-user-by-id",
                 "parameters": [
                     {
@@ -228,13 +228,13 @@ const docTemplate = `{
                     },
                     {
                         "type": "string",
-                        "description": "id from user to update",
+                        "description": "id from user to patch",
                         "name": "id",
                         "in": "path",
                         "required": true
                     },
                     {
-                        "description": "User to update",
+                        "description": "User to patch",
                         "name": "usuario",
                         "in": "body",
                         "required": true,
@@ -270,9 +270,6 @@ const docTemplate = `{
         "handler.request": {
             "type": "object",
             "properties": {
-                "activo": {
-                    "type": "boolean"
-                },
                 "altura": {
                     "type": "number"
                 },
@@ -284,11 +281,6 @@ const docTemplate = `{
                 },
                 "email": {
                     "type": "string"
-                },
-                "fecha": {
-                    "type": "string",
-                    "format": "date-time",
-                    "example": "2022-07-12T00:53:16.535668Z"
                 },
                 "nombre": {
                     "type": "string"
