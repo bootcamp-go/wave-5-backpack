@@ -37,7 +37,7 @@ func (m *Matrix) Print() {
 	for i := 0; i < m.alto; i++ {
 		file := ""
 		for j := 0; j < m.ancho; j++ {
-			file += fmt.Sprintf("[%2.2f]  ", m.matrix[i][j])
+			file += fmt.Sprintf("[%.2f]  ", m.matrix[i][j])
 		}
 		fmt.Println(file)
 	}

@@ -28,11 +28,16 @@ func main() {
 			productos = append(productos, producto{id, precio, cantidad})
 		}
 	}
-	fmt.Printf("%s %20s %20s\n", "ID", "Precio", "Cantidad")
-	var total float64
+	fmt.Printf("%s\t%20s%10s\n", "ID", "Precio", "Cantidad")
+	var (
+		total         float64
+		cantidadTotal int
+	)
+
 	for _, p := range productos {
-		fmt.Printf("%d %20.2f %20d\n", p.ID, p.Precio, p.Cantidad)
+		fmt.Printf("%d\t%20.2f\t%6d\n", p.ID, p.Precio, p.Cantidad)
 		total += (p.Precio * float64(p.Cantidad))
+		cantidadTotal += p.Cantidad
 	}
-	fmt.Println(total)
+	fmt.Printf("\t%20.2f\t%6d\n", total, cantidadTotal)
 }
