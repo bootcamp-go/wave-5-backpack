@@ -5,13 +5,29 @@ import "fmt"
 func main() {
 
 	//EJERCICIO 1
-	var word = "Un balon"
+	ejercicio1()
+
+	//EJERCICIO 2
+	ejercicio2()
+
+	//EJERCICIO 3
+	ejercicio3()
+
+	//EJERCICIO 4
+	ejercicio4()
+}
+
+func ejercicio1() {
+	fmt.Println("******************** INICIO EJERCICIO 1 ********************")
+	var word = "Inyeccion"
 	fmt.Println("Tu palabra tiene: ", len(word))
 	for _, letter := range word {
 		fmt.Println("Tu apalabra elegida es: ", string(letter))
 	}
-
-	//EJERCICIO 2
+	fmt.Println("******************** FIN EJERCICIO 1 ********************\n\n\n")
+}
+func ejercicio2() {
+	fmt.Println("******************** INICIO EJERCICIO 2 ********************")
 	var edad int = 25
 	var antiguedad int = 2
 	var empleado bool = true
@@ -27,13 +43,17 @@ func main() {
 	} else {
 		fmt.Println("Su prestamo ha sido rechazado, no cumple con los requsitos basicos")
 	}
-
-	//EJERCICIO 3
+	fmt.Println("******************** FIN EJERCICIO 2 ********************\n\n\n")
+}
+func ejercicio3() {
+	fmt.Println("******************** INICIO EJERCICIO 3 ********************")
 	var meses = map[int]string{1: "ENERO", 2: "FEBRERO", 3: "MARZO", 4: "ABRIL", 5: "MAYO", 6: "JUNIO", 7: "JULIO", 8: "AGOSTO", 9: "SEPTIEMBRE", 10: "OCTUBRE", 11: "NOVIEMBRE", 12: "DICIEMBRE"}
 	var indice int = 2
 	fmt.Println(meses[indice])
-
-	//EJERCICIO 4
+	fmt.Println("******************** FIN EJERCICIO 3 ********************\n\n\n")
+}
+func ejercicio4() {
+	fmt.Println("******************** INICIO EJERCICIO 4 ********************")
 	var employees = map[string]int{"Benjamin": 20, "Nahuel": 26, "Brenda": 19, "Darío": 44, "Pedro": 30}
 	var counter = 0
 	fmt.Println(employees["Benjamin"])
@@ -43,13 +63,10 @@ func main() {
 			counter++
 		}
 	}
-	fmt.Println("La cantidad de empleados que son mayores de 21", counter)
-
+	fmt.Println("La cantidad de empleados que son mayores de 21 son: ", counter)
 	employees["Federico"] = 25
-
 	fmt.Println(employees)
-
 	delete(employees, "Pedro")
-
 	fmt.Println(employees)
+	fmt.Println("******************** FIN EJERCICIO 4 ********************\n\n\n")
 }
