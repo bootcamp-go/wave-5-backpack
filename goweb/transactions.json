@@ -1,0 +1,119 @@
+[
+  {
+    "id": 1000,
+    "codTransaction": "123cba",
+    "currency": "COP",
+    "amount": 100,
+    "sender": "Camila",
+    "receiver": "Michael",
+    "dateOrder": "10-12-22"
+  },
+  {
+    "id": 1004,
+    "codTransaction": "123cba",
+    "currency": "COP",
+    "amount": 5000,
+    "sender": "Camila",
+    "receiver": "Michael",
+    "dateOrder": "10-12-22"
+  },
+  {
+    "id": 1007,
+    "codTransaction": "",
+    "currency": "",
+    "amount": 121212,
+    "sender": "Camila",
+    "receiver": "Michael",
+    "dateOrder": ""
+  },
+  {
+    "id": 1008,
+    "codTransaction": "",
+    "currency": "DOL",
+    "amount": 3,
+    "sender": "Camila",
+    "receiver": "Michael",
+    "dateOrder": ""
+  },
+  {
+    "id": 1009,
+    "codTransaction": "321",
+    "currency": "DOL",
+    "amount": 3,
+    "sender": "Camila",
+    "receiver": "Michael",
+    "dateOrder": "01/01/2022"
+  },
+  {
+    "id": 1010,
+    "codTransaction": "321",
+    "currency": "DOL",
+    "amount": 3,
+    "sender": "Camila",
+    "receiver": "Michael",
+    "dateOrder": "01/01/2022"
+  },
+  {
+    "id": 1011,
+    "codTransaction": "321",
+    "currency": "DOL",
+    "amount": 3,
+    "sender": "Camila",
+    "receiver": "Michael",
+    "dateOrder": "01/01/2022"
+  },
+  {
+    "id": 1012,
+    "codTransaction": "321",
+    "currency": "DOL",
+    "amount": 3,
+    "sender": "Camila",
+    "receiver": "Michael",
+    "dateOrder": "01/01/2022"
+  },
+  {
+    "id": 1013,
+    "codTransaction": "321",
+    "currency": "DOL",
+    "amount": 3,
+    "sender": "Camila",
+    "receiver": "Michael",
+    "dateOrder": "01/01/2022"
+  },
+  {
+    "id": 1014,
+    "codTransaction": "321",
+    "currency": "DOL",
+    "amount": 3,
+    "sender": "Camila",
+    "receiver": "Michael",
+    "dateOrder": "01/01/2022"
+  },
+  {
+    "id": 1015,
+    "codTransaction": "",
+    "currency": "string",
+    "amount": 1000,
+    "sender": "string",
+    "receiver": "string",
+    "dateOrder": ""
+  },
+  {
+    "id": 1016,
+    "codTransaction": "string",
+    "currency": "string",
+    "amount": 1111,
+    "sender": "string",
+    "receiver": "string",
+    "dateOrder": "string"
+  },
+  {
+    "id": 1017,
+    "codTransaction": "string",
+    "currency": "string",
+    "amount": 101,
+    "sender": "string",
+    "receiver": "string",
+    "dateOrder": "string"
+  }
+]
