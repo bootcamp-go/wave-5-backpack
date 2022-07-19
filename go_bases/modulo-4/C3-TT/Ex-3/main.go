@@ -49,29 +49,59 @@ func main() {
 	instalacion := Servicios{nombre: "Instalacion", precio: 1000, minutos: 120}
 	reparacion := Servicios{nombre: "Reparación", precio: 1200, minutos: 250}
 
+	preventivo := Mantenimiento{nombre: "Mantto Preventivo", precio: 2000}
+	correctivo := Mantenimiento{nombre: "Mantto Correctivo", precio: 3500}
+
 	fmt.Println(productos, servicios, mantenimiento)
 
 	productos = append(productos, macbook, acer, thinkpad)
 	servicios = append(servicios, instalacion, reparacion)
+	mantenimiento = append(mantenimiento, preventivo, correctivo)
 
-	tProductos := sumProductos(productos)
-	tServicios := sumServicios(servicios)
-	fmt.Println(tProductos, tServicios)
+	c1 := make(chan float64)
+	c2 := make(chan float64)
+	c3 := make(chan float64)
+
+	go sumProductos(&productos, c1)
+	go sumServicios(&servicios, c2)
+	go sumMantenimiento(&mantenimiento, c3)
+
+	t1 := <-c1
+	t2 := <-c2
+	t3 := <-c3
+
+	fmt.Println("* Total final * $ ", t1+t2+t3)
 
 }
 
-func sumProductos(p []Productos) int {
-	var total int
-	for _, v := range p {
-		total += v.precio * v.cantidad
+func sumProductos(p *[]Productos, c chan float64) {
+	var total float64
+	for _, v := range *p {
+		total += float64(v.precio * v.cantidad)
 	}
-	return total
+
+	fmt.Println("Total productos", total)
+	c <- total
+	close(c)
 }
 
-func sumServicios(s []Servicios) int {
-	var total int
-	for _, v := range s {
-		total += v.precio * (v.minutos / 30) //ojo con el residuo
+func sumServicios(s *[]Servicios, c chan float64) {
+	var total float64
+	for _, v := range *s {
+		total += float64(v.precio * (v.minutos / 30)) //ojo con el residuo
 	}
-	return total
+	fmt.Println("Total servicios", total)
+	c <- total
+	close(c)
+}
+
+func sumMantenimiento(m *[]Mantenimiento, c chan float64) {
+	var total float64
+	for _, v := range *m {
+		total += float64(v.precio)
+	}
+
+	fmt.Println("Total mantenimiento", total)
+	c <- total
+	close(c)
 }
