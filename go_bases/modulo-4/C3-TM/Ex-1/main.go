@@ -6,27 +6,33 @@ import (
 	"os"
 )
 
+type Product struct {
+	id       int     `csv:"id"`
+	price    float64 `csv:"price"`
+	quantity int     `csv:"quantity"`
+}
+
 func main() {
-
-	var myShop [3][]string
-	var ID, Precio, Cantidad []string
-	ID = append(ID, "ID")
-	Precio = append(Precio, "Precio")
-	Cantidad = append(Cantidad, "Cantidad")
-
-	myShop[0] = ID
-	myShop[1] = Precio
-	myShop[2] = Cantidad
-
-	fmt.Println(myShop)
-
-	err2 := os.WriteFile("Gopher.csv", []byte("Hello Go %t Precio%t Producto"), 0644)
-	if err2 != nil {
-		log.Fatal(err2)
+	products := []Product{
+		{001, 5500.30, 10},
+		{011, 2500.20, 34},
+		{021, 1500.10, 12},
+		{031, 3500.80, 11},
+		{041, 6500.50, 8},
 	}
-	data, err := os.ReadFile("Gopher.csv")
-	if err != nil {
-		log.Fatal(err)
+
+	productStore(&products)
+}
+
+func productStore(p *[]Product) {
+	csvFile := fmt.Sprintln("ID, PRICE, QUANTITY")
+
+	for _, product := range *p {
+		csvFile += fmt.Sprintf("%d,%f,%d\n", product.id, product.price, product.quantity)
 	}
-	os.Stdout.Write(data)
+
+	if err := os.WriteFile("products.csv", []byte(csvFile), 0644); err != nil {
+		log.Fatal("writing file Error!")
+	}
+
 }
