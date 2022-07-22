@@ -39,5 +39,6 @@ func main() {
 		total += (p.Precio * float64(p.Cantidad))
 		cantidadTotal += p.Cantidad
 	}
-	fmt.Printf("\t%20.2f\t%6d\n", total, cantidadTotal)
+	fmt.Println("--------------------------------------")
+	fmt.Printf("Total\t%20.2f\t%6d\n", total, cantidadTotal)
 }
