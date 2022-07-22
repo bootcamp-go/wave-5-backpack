@@ -11,42 +11,36 @@ Se solicita generar una función que reciba por parámetro la cantidad de minuto
 
 */
 
-/*
 package main
-
 
 import (
 	"fmt"
 )
 
-
-
 func main() {
 
-	fmt.Printf("El salario es: %f\n", calcularSalario(120,"A"))
+	fmt.Printf("El salario es: %f\n", calcularSalario(120, "A"))
 	// se espera 9.000
-	fmt.Printf("El salario es: %f \n" , calcularSalario(120,"B"))
+	fmt.Printf("El salario es: %f \n", calcularSalario(120, "B"))
 	// se espera 3.600
-	fmt.Printf("El salario es: %f \n", calcularSalario(120,"C"))
+	fmt.Printf("El salario es: %f \n", calcularSalario(120, "C"))
 	// se espera 2.000
 }
 
-func calcularSalario (minutosTrabajados int, categoria string) float64 {
+func calcularSalario(minutosTrabajados int, categoria string) float64 {
 
 	var horasTrabajadas float64 = float64(minutosTrabajados) / 60
 	var salario float64 = 0.0
 	switch categoria {
-    case "A":
+	case "A":
 		//Si es de categoría A, su salario es de $3.000 por hora más un %50 de su salario mensual
-        salario = (3.000 * horasTrabajadas) * 1.5
-    case "B":
+		salario = (3.000 * horasTrabajadas) * 1.5
+	case "B":
 		// Si es categoría B, su salario es de $1.500 por hora más un %20 de su salario mensual
 		salario = (1.500 * horasTrabajadas) * 1.2
-    case "C":
-        salario = (1.000 * horasTrabajadas)   
-    }
+	case "C":
+		salario = (1.000 * horasTrabajadas)
+	}
 
 	return salario
 }
-
-*/
