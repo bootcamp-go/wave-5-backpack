@@ -1,0 +1,18 @@
+Ejercicio 1 
+    ¿Cuáles son las diferencias entre White Box y Black Box? 
+    En la caja negra el que lo ejecuta no sabe como funciona, solo envia un input y recibe un output.
+    En la caja blanca, el que lo realiza sabe y tiene acceso al codigo y como funciona el mismo.
+Ejercicio 2
+    ¿Qué es un test funcional?.
+    Son pruebas que evalúan la entrada y salida del software. Su objetivo es evaluar la respuesta final en cada escenario.
+Ejercicio 3
+    ¿Qué es un Test de Integración?
+        Es una prueba que evalúa la comunicación e interacción entre componentes o capas de una aplicación.
+Ejercicio 4
+    Indicar las dimensiones de calidad prioritarias en MELI.
+    Rápidos
+    Aislados
+    Repetibles
+    Auto Validados
+    Completos
+
