@@ -1,0 +1,34 @@
+¿Cuáles son las diferencias entre White Box y Black Box? 
+
+Los test de caja negra (Black Box) se realizan sin tener el conocimiento de conocimiento de cómo esta desarrollada la aplicación.
+Su objetivo es validar el funcionamiento de esta desde una parte netamente funcional.
+Por otra parte, los test de caja blanca (White Box) se realizan con el conocimiento del código fuente y la construcción de la aplicación.
+Esto permite realizar validaciones más técnicas de eficiencia, seguridad y estructura de código (ej. validar que sucede si el número que espera un
+método o función esta por sobre el límite que permite un tipo de dato, etc).
+
+
+
+¿Qué es un test funcional?
+
+Se refiere a un tipo de prueba enfocado en la validación de las respuestas esperadas de cada servicio o método (input y output).
+Si objetivo es validar que la aplicación cumpla con los requerimientos funcionales requeridos.
+Se realizan cuando una aplicacíon con cuplió con las pruebas unitarias y de integración.
+
+
+
+¿Qué es un Test de Integración?
+
+Se refiere al tipo de prueba en la cual se valida el correcto comportamiento de una aplicación en cuanto a la comunicación y trabajo en conjunto
+de las diferentes piezas de este (componentes, modulos, dependencias, etc).
+Se realiza luego de las pruebas unitarias de cada elemento de la aplicación y permite validar el comportamiento general de la aplicación (diseño,
+desempeño y comportamiento).
+
+
+
+Indicar las dimensiones de calidad prioritarias en MELI.
+
+Funcionalidad: cumple con el objetivo y resultado final esperado por el cliente para dicho producto.
+Rendimiento: se refiere a la velocidad y tiempos de respuesta de la aplicación.
+Fiabilidad: probabilidad de funcionamiento sin fallas durante un periodo y en un entorno especifico. Operacionalidad de la aplicación.
+Seguridad: anticiparse a posibles fallos de código que puedan ser utilizados por un atacante malicioso.
+Mantenibilidad: se refiere a la calidad del código desde un punto de vista no funcional (buenas prácticas, sin duplicidad, cobertura de còdigo, etc).
