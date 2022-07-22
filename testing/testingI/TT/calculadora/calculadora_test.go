@@ -115,6 +115,7 @@ func TestDividirMultiple2(t *testing.T) {
 				assert.Nil(t, err)
 			} else {
 				assert.NotNil(t, err)
+				assert.Equal(t, tt.err, err.Error(), "deben ser iguales")
 			}
 		})
 	}
