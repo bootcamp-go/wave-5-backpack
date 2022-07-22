@@ -4,6 +4,7 @@ White box se refiere a que en las pruebas, se tiene en cuenta el "cómo" se resu
 
 
 2) Un test funcional es un test de caja negra, que busca probar que un sistema cumpla con los requerimientos solicitados por el usuario final. No se centra en el "cómo" se resuelven las cosas, sinpo que ante un conjunto de datos de entrada, se generen las salidas esperadas.
+Por ejemplo para el caso de nuestro 1er sprint, un test funcional sería probar que se cree un empleado.
 
 3) Un test de integración es un test de caja blanca, que busca probar la interacción entre distintos componentes de software. Su objetivo es probar que esos distintos componentes que debieron ser probados de forma unitaria, logren concretar el objetivo en conjunto cuando interactuan entre sí.
 
@@ -13,3 +14,4 @@ White box se refiere a que en las pruebas, se tiene en cuenta el "cómo" se resu
 - Fiabilidad
 - Seguridad
 - Mantenibilidad
+
