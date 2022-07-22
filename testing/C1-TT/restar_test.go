@@ -1,6 +1,6 @@
 package calculadora
 
-/* import "testing"
+import "testing"
 
 func TestResta(t *testing.T) {
 	num1 := 5
@@ -12,4 +12,4 @@ func TestResta(t *testing.T) {
 	if result != expectedResult {
 		t.Errorf("La funcion Resta() retorna el resultado = %v, pero el resultado esperado es = %v", result, expectedResult)
 	}
-} */
+}
