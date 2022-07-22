@@ -1,0 +1,45 @@
+PUNTO 1
+
+Black Box test
+
+Un metodo de testing en el cual no sabemos que hace internamente, 
+solo nos interesa saber que le pasamos y que nos devuelve. 
+Se aplica normalmente para evaluar que un software cumpla con un requerimiento, para evaluación de performance, etc.
+
+White Box Test
+
+Contrario al black box test, nos permite saber que sucede en el medio. 
+No se ejecuta desde perspectiva de usuario final, nos permite saber los detalles de ejecución. 
+Se aplica para probar flujo, seguridad y estructura de código. Puede aplicarse para test unitarios y de integración.
+
+La diferencia entre ambos radica en la capacidad para visualizar los procesos internos, 
+lo anterior se puede hacer en el White Box Test. Por el contrario, para el Black Box Test, 
+solo vemos los datos de entrada y los de salida, con el anterior estamos evaluando las respuestas y reacciones de una funcionalidad en nuestro código.
+
+PUNTO 2
+
+Test funcionales
+
+Dentro de este test buscamos comprobar la respuestas del software ante distintos escenarios. 
+Tomando como referencia el API en go, es la evaluación de la respuesta dada por el handler, 
+en donde ya se esta pasando por toda la lógica que hay en las capas del proyecto. 
+Este tipo de test se debe aplicar cuando el sistema paso correctamente pruebas unitarias y funcionales.
+
+PUNTO 3
+
+Test de integración 
+
+Este tipo de test nos permite comprobar la correcta comunicación entre bloques de código. 
+Un ejemplo, tomando como referencia el API de go, se utilizaría para verificar que la capa de repositorio se comunique correctamente 
+con la de servicio. Podemos evaluar el diseño, desempeño y comportamiento de dicha integración.
+
+PUNTO 4
+
+Dimensiones de calidad prioritarias en MELI
+
+En MELI se aplican las siguientes estándares para evaluar la calidad del código:
+- Funcionalidad
+- Rendimiento
+- Fiabilidad
+- Seguridad
+- Mantenibilidad
