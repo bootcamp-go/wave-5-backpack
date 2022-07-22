@@ -5,7 +5,7 @@ import (
 )
 
 type Service interface {
-	GetTicketsByCountry(dest string) ([]domain.Ticket, error)
+	GetAllCountry(dest string) ([]domain.Ticket, error)
 	AverageDestination(dest string) (float64, error)
 }
 

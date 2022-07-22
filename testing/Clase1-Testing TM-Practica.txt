@@ -1,0 +1,39 @@
+Testing
+// Práctica clase 1 - Go Testing
+
+Objetivo
+El objetivo de esta guía práctica es identificar y diferenciar los distintos tipos de test, entender el objetivo de cada uno y su impacto en la calidad de código y del software productivo. Por lo que se harán distintos planteamientos a los que se debe responder según lo visto en la clase 1 
+
+Forma de trabajo
+En base al material visto en la clase 1, se deberá responder las siguientes preguntas.
+Agregando la respuesta abajo de cada pregunta, ejemplo:
+
+
+¿Are you ready? 
+
+ Ejercicio 1 
+¿Cuáles son las diferencias entre White Box y Black Box? 
+
+En el BlackBox quien ejecuta la prueba desconoce la estructura, diseño o funcionamiento interno del componente que esta probando mientras que en el WhiteBox si se tiene ese conocimiento. 
+El BlackBox se utiliza para evaluar respuestas y reacciones del componente a distintos escenarios mientras que el WhiteBox se utiliza para evaluar el flujo, seguridad y estructura para detectar vulnerabilidades, comprobar la correcta implementación y valor que el flujo de datos se comporte de acuerdo a lo esperado.
+
+
+Ejercicio 2
+¿Qué es un test funcional?.
+Los tests funcionales se basan en comprobar  que la respuesta del software ante cada escenario sea la esperada. Se debe evaluar posteriormente a que la pieza de software  haya superado las pruebas unitarias.
+
+
+
+Ejercicio 3
+¿Qué es un Test de Integración?
+Los tests de integración corresponden a las pruebas sobre la comunicación entre distintos componentes o capas de la aplicación. Su objetivo es comprobar que los bloques de código probados anteriormente de forma unitaria, interactúen de forma correcta generando los resultados esperados.
+
+
+Ejercicio 4
+Indicar las dimensiones de calidad prioritarias en MELI.
+
+Funcionalidad (Functionality)
+Rendimiento (Performance)
+Fiabilidad (Reliability)
+Seguridad (Security)
+Mantenibilidad (Maintainability)
