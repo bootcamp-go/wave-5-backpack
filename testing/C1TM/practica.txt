@@ -1,0 +1,24 @@
+Práctica clase 1 - Go Testing
+
+1. ¿Cuáles son las diferencias entre White Box y Black Box? 
+
+La White Box hace referencia a las pruebas que se hacen a los métodos y funciones revisar el correcto funcionamiento de las mismas, las  Black Box solo prueban el funcionamiento de la aplicación según los requerimientos, analizan todos los casos posibles y se aseguran que la aplicación funcione correctamente.
+
+
+2. ¿Qué es un test funcional?
+
+Es un test enfocado a comprobar que un requerimiento sea solucionado de manera correcta por una aplicación, la idea es saber si la aplicación hace correctamente lo que se espera que debe hacer.
+
+3. ¿Qué es un Test de Integración?
+
+Es un test enfocado en ver cómo se conectan las diferentes capas de una aplicación, la idea es ver el funcionamiento correcto de la comunicación entre capas.
+
+4. Indicar las dimensiones de calidad prioritarias en MELI.
+
+Funcionalidad (Functionality): La idea es garantizar que el código cumpla los requerimientos ya definidos.
+Rendimiento (Performance): Los tiempos de respuesta del código deben ser lo menor posible, para eso se deben tomar decisiones buscando el mejor rendimiento.
+Fiabilidad (Reliability): EL código debe tener alta probabilidad de funcionamiento, la idea es garantizar el funcionamiento operativo.
+Seguridad (Security): Se debe anticipar a los posibles fallos que pueden que puedan ser usados por un atacante.
+Mantenibilidad (Maintainability): Por medio de métricas se analiza la calidad del código. 
+
+
