@@ -1,4 +1,4 @@
-package C1_TT
+package Restar
 
 import (
 	"github.com/stretchr/testify/assert"
