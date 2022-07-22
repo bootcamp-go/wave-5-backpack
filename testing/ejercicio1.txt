@@ -13,6 +13,11 @@ es decir, el resultado que este código arroja en los diferentes escenarios que 
 Su objetivo es corrobar el comportamiento funcional del software y solamente se aplican cuando
 dicha porción de código ya fue aprobada en un test unitario.
 
+Su objetivo se basa en comprobar si las funcionalidades del desarrollo se realizaron siguiendo 
+las especificaciones y requisitos del cliente, así como sus necesidades iniciales. De esta manera se 
+detectan las posibles fallas de las fases anteriores.
+
+
 
 3. ¿Qué es un Test de Integración?
 Un test de integración es aquél test cuyo objetivo es corroborar el funcionamiento 
