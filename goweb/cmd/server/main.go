@@ -229,7 +229,7 @@ func main() {
 	pr.GET("/filtrar", filterProducts)
 	pr.POST("/", productHandler.Create())
 	pr.PUT("/:id", productHandler.Update())
-	pr.PATCH("/:id", productHandler.ParcialUpdate())
+	pr.PATCH("/:idgit", productHandler.ParcialUpdate())
 	pr.DELETE("/:id", productHandler.Delete())
 	
 	router.Run()// Corremos nuestro servidor sobre el puerto 8080
