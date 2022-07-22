@@ -69,13 +69,6 @@ func (c *Product) GetAll() gin.HandlerFunc {
 // @Router /products/create [post]
 func (c *Product) CreateProduct() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		/* token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "token inválido",
-			})
-			return
-		} */
 		var req request
 
 		if err := ctx.ShouldBindJSON(&req); err != nil {
@@ -87,42 +80,6 @@ func (c *Product) CreateProduct() gin.HandlerFunc {
 			ctx.JSON(400, web.NewResponse(400, nil, v))
 			return
 		}
-		/* if req.Nombre == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "El nombre del producto es requerido",
-			})
-			return
-		}
-		if req.Color == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "El color del producto es requerido",
-			})
-			return
-		}
-		if req.Precio == 0 {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "El precio del producto es requerido",
-			})
-			return
-		}
-		if req.Stock == 0 {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "El stock del producto es requerido",
-			})
-			return
-		}
-		if req.Codigo == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "El código del producto es requerido",
-			})
-			return
-		}
-		if req.FechaCreacion == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "La fecha de creación del producto es requerida",
-			})
-			return
-		} */
 
 		p, err := c.service.CreateProduct(req.Id, req.Nombre, req.Color, req.Precio, req.Stock, req.Codigo, req.Publicado, req.FechaCreacion)
 		if err != nil {
