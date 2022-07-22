@@ -1,16 +1,15 @@
-package calculator
+package testing
 
 import "github.com/stretchr/testify/assert"
 import "testing"
 
-func TestSum(t *testing.T) {
+func TestOrder(t *testing.T) {
 	//Se inicializan los datos de input/output
-	num1 := 1
-	num2 := 1
-	expectedRes := 2
+	nums := []int{5, 3, 4, 7, 8, 9}
+	expectedRes := []int{3, 4, 5, 7, 8, 9}
 
 	//Ejecutamos el metodo
-	res := Sum(num1, num2)
+	res := Order(nums)
 
 	//Se valida el resultado
 	assert.Equal(t, expectedRes, res, "Deben ser iguales")
