@@ -1,0 +1,34 @@
+EJERCICIO 1
+En la Black Box Test quien ejecuta la prueba no tiene conocimiento interno del codigo, no sabemos sus estructura, diseño o funcionamiento 
+y el objetivo principal de este test es probar la funcionalidad evaluando su comportamiento a diferencia de la White Box Test
+en donde quien ejecuta la prueba si tiene conocimiento y visibilidad sobre el codigo, en este tipo de prueba se centralizan en los detalles
+procedimentales del software por lo que su diseño va ligado al codigo fuente 
+
+EJERCICIO 2
+Los test funcionales son aquellos que se centran en la entrada y slaida del software con el objetivo de comprobar que la respuesta del software
+ante cada escenario sea igual que resultado esperado, en conclusion son test que validan el comportamiento funcional del software
+
+EJERCICIO 3
+Los test de integracion son aquellos que se encargan de probrar la funcionalidad en armonia de los diferentes modulos y/o servicios 
+usados por nuestra aplicacion
+
+EJERCICIO 4
+Las dimensiones de calidad que se manejan en MELI son:
+-Funcionalidad
+    Representa la capacidad del producto software para proporcionar funciones que satisfacen 
+    las necesidades declaradas e implícitas, cuando el producto se usa en las condiciones especificadas.
+
+-Rendimiento
+    Esta característica representa el desempeño relativo a la cantidad de recursos utilizados bajo determinadas condiciones.
+
+-Fiablilidad
+    Capacidad de un sistema o componente para desempeñar  las funciones especificadas,
+    cuando se usa bajo unas condiciones y periodo de tiempo determinados.
+
+-Seguridad
+    Capacidad de protección de la información y los datos de manera que 
+    personas o sistemas no autorizados no puedan leerlos o modificarlos.
+
+-Mantebilidad 
+    Esta característica representa la capacidad del producto software para ser modificado 
+    efectiva y eficientemente, debido a necesidades evolutivas, correctivas o perfectivas.
