@@ -1,0 +1,15 @@
+1) Black box se refiere a las pruebas en las que no se tiene en cuenta el "cómo", sino sólo el "qué". No interesa el paso a paso o los mecanismos que se articulan para obtener el resultado, sino que ante una determinda entrada, se obtenga la salida esperada
+
+White box se refiere a que en las pruebas, se tiene en cuenta el "cómo" se resuelven las problemáticas, y no tanto el "qué". Inspeccionan la forma procedimental en la que se resuelve el requerimiento, contemplado los casos posibles y el flujo de la información
+
+
+2) Un test funcional es un test de caja negra, que busca probar que un sistema cumpla con los requerimientos solicitados por el usuario final. No se centra en el "cómo" se resuelven las cosas, sinpo que ante un conjunto de datos de entrada, se generen las salidas esperadas.
+
+3) Un test de integración es un test de caja blanca, que busca probar la interacción entre distintos componentes de software. Su objetivo es probar que esos distintos componentes que debieron ser probados de forma unitaria, logren concretar el objetivo en conjunto cuando interactuan entre sí.
+
+4) Las dimensiones de calidad que prioriza MELI son:
+- Funcionalidad
+- Rendimiento (performance)
+- Fiabilidad
+- Seguridad
+- Mantenibilidad
