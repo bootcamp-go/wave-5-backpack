@@ -1,0 +1,4 @@
+¿Qué es un Test de Integración?
+Es un test en el cual integramos los distintos test unitarios
+y validamos los test en conjunto.
+Es decir, validamos que la comunicación entre capas sea correcto.

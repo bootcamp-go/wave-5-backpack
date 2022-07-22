@@ -1,0 +1,3 @@
+¿Qué es un test funcional?
+Son test que validan que el requerimiento solicitado por el cliente
+se cumpla en nuestro código.

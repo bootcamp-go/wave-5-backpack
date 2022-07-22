@@ -1,0 +1,7 @@
+¿Cuáles son las diferencias entre White Box y Black Box? 
+
+Black box: A distintas entradas, se generan salidas, en donde no sabemos 
+qué se realiza dentro del código
+
+White Box: Justamente el antónimo, es decir, a ciertas entradas, podemos saber
+qué hace el código y se generan salidas.
