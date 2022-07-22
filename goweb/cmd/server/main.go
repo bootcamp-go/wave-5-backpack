@@ -11,15 +11,16 @@ import (
 )
 
 func main() {
+
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("error al intentar leer el archivo .env")
 	}
 
-	file, err := os.Open("./resources/products.json")
+	file, err := os.Open("products.json")
 	defer file.Close()
 
-	storage := storage.NewStorage("./resources/products.json")
+	storage := storage.NewStorage("products.json")
 	repo := products.NewRepository(storage)
 	service := products.NewService(repo)
 	p := handler.NewProduct(service)
