@@ -1,0 +1,35 @@
+¿Cuáles son las diferencias entre White Box y Black Box? 
+White Box: es un metodo de testing en el que el encargado de ejecutar las pruebas conoce el codigo, le interesa el como se hace centrandose en los detalles procedimentales del software.
+Black Box: es un metodo de testing en el que el encargado de ejecutar las pruebas desconose como funciona internamente el software, solo le interesa que hace, evaluando las respuestas y comportamiento ante distintos escenarios.
+
+
+
+¿Qué es un test funcional?.
+Son las pruebas que se basan en la entrada y salida del software, con el objetivo final de comprobar que la respuesta del software ante cada escenario, coincida exactamente con el resultado esperado. Son test que validan el comportamiento funcional del software.
+
+
+
+¿Qué es un Test de Integración?
+Son aquellos test que prueban la comunicación entre distintos componentes o capas de la aplicación. El objetivo es comprobar que todos aquellos bloques de código que fueron probados de forma unitaria, interactúen y se comuniquen entre sí generando los resultados esperados.
+Los test de integración exponen el funcionamiento general de la aplicación, permitiendo evaluar su diseño, desempeño y comportamiento.
+
+
+
+Indicar las dimensiones de calidad prioritarias en MELI.
+Funcionalidad (Functionality)
+El desarrollo de cualquier producto debe hacerse teniendo una idea clara del objetivo o resultado final esperado, y del comportamiento definido para dicho producto.
+Garantizar que nuestro código cumpla con los requerimientos, es garantizar una de las dimensiones de calidad: la Funcionalidad.
+
+Rendimiento (Performance)
+Los tiempos de respuesta para la correcta ejecución de un proceso, son claves para un mejor desempeño del aplicativo. Mientras más rápido responda o procese un software, mejor será su performance.
+
+Fiabilidad (Reliability)
+El software es confiable cuando demuestra una alta probabilidad de funcionamiento sin fallas durante un período específico y en un entorno específico.
+Tiene en cuenta la frecuencia con la que las fallas causan problemas. Medir y predecir la confiabilidad del software forma parte de una de las dimensiones prioritarias de Calidad.
+
+Seguridad (Security)
+Como práctica de programación tiene como fin anticiparse a todos los posibles puntos de fallas que podrían ser aprovechados por un atacante.
+
+Mantenibilidad (Maintainability)
+Es una dimensión que observa la calidad desde la perspectiva del código fuente del software. 
+Filosofía de código limpio. Codigo mas facil de leer, mantener, extender y menos propenso a errores.

@@ -40,7 +40,7 @@ func (s service) AverageDestination(ctx context.Context, destination string) (fl
 		return 0, err
 	}
 
-	totalTicketsDestination := len(tickets) - 1
+	totalTicketsDestination := len(tickets)
 
 	tickets, err = s.repository.GetAll(ctx)
 
@@ -48,7 +48,7 @@ func (s service) AverageDestination(ctx context.Context, destination string) (fl
 		return 0, err
 	}
 
-	totalTickets := len(tickets) - 1
+	totalTickets := len(tickets)
 
 	return (float64(totalTicketsDestination) / float64(totalTickets)), nil
 }
