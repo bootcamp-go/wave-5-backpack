@@ -1,0 +1,28 @@
+1 - Diferencias entre White Box y Black Box:
+
+Los test de tipo Black Box se utilizan para probar la funcionalidad del 
+código evualuando el comportamiento del mismo , desconociendo la 
+estructura,diseño o funcionamiento interno. Por otro lado los White Box se 
+ejecutan conociendo el código y su funcionalidad probando de esta manera 
+el flujo , seguridad y estructura del mismo.
+
+2- Test de Integración:
+
+Son test que prueban la comunicación entre distintos componentes. Se 
+comprueba que todos los bloques anteriormente probados con test unitarios 
+, interactúen y se comuniquen entre sí. Se utilizan para ver el 
+funcionameinto general de la aplicación.
+
+3- Test Funcionales:
+
+Son los test que validan el comportamiento funcional del software. Debe 
+evaluarse cuando ya previamente cumplió con la aprobación de pruebas 
+unitarias y funcionales.
+
+4 - Dimensiones de calidad prioritarias en MELI:
+
+-Funcionalidad (Functionality)
+-Rendimiento (Performance)
+-Fiabilidad (Reliability)
+-Seguridad (Security)
+-Mantenibilidad (Maintainability)
