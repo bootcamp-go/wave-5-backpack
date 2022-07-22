@@ -98,8 +98,8 @@ func (p *Product) GetAll() gin.HandlerFunc {
 
 		if len(filtrados) == 0 {
 			ctx.JSON(
-				http.StatusNotFound,
-				web.NewResponse(http.StatusNotFound, nil, "No se hallaron resultados"),
+				http.StatusNoContent,
+				web.NewResponse(http.StatusNoContent, nil, "No se hallaron resultados"),
 			)
 			return
 		}
