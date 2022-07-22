@@ -1,7 +1,6 @@
 package ordenamiento
 
 func Ordenar(s []int) []int {
-	tamañoOriginal := len(s)
 	ordenado := false
 	o := []int{}
 
@@ -25,7 +24,7 @@ func Ordenar(s []int) []int {
 		}
 
 		o = append(o, min)
-		if len(o) == tamañoOriginal {
+		if len(s) == 0 {
 			ordenado = true
 		}
 	}
