@@ -1,0 +1,25 @@
+Ejercicio 1 
+¿Cuáles son las diferencias entre White Box y Black Box? 
+el black box no sabe el contenido de la aplicacion , es decir solo opera bajo las entradas y salidas del mismo sin mirar
+sub bloques de codigo mira la aplicacion como un todo y valida el que no el como.
+el white box por el contrario esta ligado a la construccion del codigo con sus segmentos funcionales , arquitectura y demas.
+
+Ejercicio 2
+¿Qué es un test funcional?.
+Son test aplicados a la aplicacion en general para validar que cumpla los requeriientos (resultados esperados),
+luego de que esta ya alla pasado por procesos de test mas especificos sobre fracgmentos
+funcionales de la aplicacion , (test funcional --> black box)
+
+Ejercicio 3
+¿Qué es un Test de Integración?
+este test es aplicado en la union de varias piezas de codigo que interactuan en la aplicacion general , despues de que estos ya han sido validados 
+individualmente , permite validar si la integracion , "union de capas" interactuan sin fricciones o resultados inesperados.
+
+Ejercicio 4
+Indicar las dimensiones de calidad prioritarias en MELI.
+funcionalidad: es relacionado a el cumplimiento de los requisitos para el cial fue diseñado
+rendimeinto: el uso de recursos , eficacia + eficiencia
+fiabilidad: que se pueda confiar en el codigo operando en diferentes escenarios y tiempos
+seguridad: que tenga depurado el uso de codigo de 3ros para minimizar vulneravilidades
+mantenibilidad: buenas practicas de desarrollo para poder escalarlo y entenderlo por mas desarrolladores 
+
