@@ -1,0 +1,29 @@
+1. ¿Cuáles son las diferencias entre White Box y Black Box? 
+
+La White box analiza y comprueba la estructura interna del sistema, incluido el código del programa; se basa en analizar cómo funciona,
+a diferencia de la Black box que se basa en comprobar la funcionalidad del sistema sin considerar la estructura interna del sistema, es 
+decir, verifica que funcione sin importar el cómo.
+
+2. ¿Qué es un test funcional?
+
+Las pruebas funcionales se llevan a cabo para comprobar las características críticas para el negocio, la funcionalidad y la usabilidad.
+Además, garantizan que las características y funcionalidades del software se comportan según lo esperado sin ningún problema validando
+principalmente toda la aplicación con respecto a las especificaciones mencionadas en el documento de especificación de requerimientos 
+del software. 
+
+3. ¿Qué es un Test de Integración?
+
+Las pruebas de integración son aquellas que se realizan en el ámbito del desarrollo de software una vez que se han aprobado las pruebas 
+unitarias y lo que prueban es que todos los elementos unitarios que componen el software, funcionan juntos correctamente probándolos en 
+grupo.
+
+4. Indicar las dimensiones de calidad prioritarias en MELI.
+
+Los principios de calidad de MELI son cinco:
+
+    a) Fast: Es posible tener miles de tests en un proyecto y deben ser rápidos de correr. 
+    b) Isolated/Independent: El test debe cumplir con el método "Dado, cuando, entonces". Además, no deben ser ejecutados en un determinado
+       orden para funcionar. 
+    c) Repeatable: No deben depender de datos del ambiente mientras están corriendo. 
+    d) Self-Validating: No debe ser requerida una inspección manual para validar los resultados.
+    e) Thorough: Se debe cubrir a totalidad cada escenario de un caso de uso.
