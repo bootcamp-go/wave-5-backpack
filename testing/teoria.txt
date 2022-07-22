@@ -1,0 +1,9 @@
+Test unitarios: Son las pruebas aplicadas a sólo una parte del código.Consisten en aislar una parte del código y comprobar que funciona a la perfección. 
+Test De Integracion: Son aquellos test que prueban la comunicación entre distintos componentes o capas de la aplicación. El objetivo es comprobar que todos aquellos bloques de código que fueron probados de forma unitaria, interactúen y se comuniquen entre sí generando los resultados esperados.
+
+Funcionalidad (Functionality)
+Rendimiento (Performance)
+Fiabilidad (Reliability)
+Seguridad (Security)
+Mantenibilidad (Maintainability)
+
