@@ -1,0 +1,21 @@
+
+1. ¿Cuáles son las diferencias entre White Box y Black Box?
+
+las white box son todos aquellos test que tenemos visibilidad del codigo y ponemos aprueba sus debilidades y fortalezas
+los black test estan enfocados al resultado final y su performance
+
+2. ¿Qué es un test funcional?
+
+intengra test unitarios para probar la funcionalidad del conjunto
+
+3. ¿Qué es un Test de Integración?
+
+comprueba la comunicacion entre capas
+
+4. Indicar las dimensiones de calidad prioritarias en MELI.
+
+funcionalidad
+rendimiento
+fiabilidad
+seguridad
+mantenibilidad
