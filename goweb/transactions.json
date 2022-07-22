@@ -1,0 +1,38 @@
+[
+    {
+        "id" : 1,
+        "code" : "X528",
+        "currency" : "USD",
+        "amount" : 310,
+        "transmitter" : "Franco",
+        "receiver" : "Meli",
+        "date" : "20/05/2022"
+    },
+    {
+        "id" : 2,
+        "code" : "A551",
+        "currency" : "USD",
+        "amount" : 220,
+        "transmitter" : "Jorge",
+        "receiver" : "Meli",
+        "date" : "02/12/2021"
+    },
+    {
+        "id" : 3,
+        "code" : "DD44",
+        "currency" : "AR",
+        "amount" : 8819,
+        "transmitter" : "Meli",
+        "receiver" : "Franco",
+        "date" : "28/01/2020"
+    },
+    {
+        "id" : 4,
+        "code" : "66A",
+        "currency" : "USD",
+        "amount" : 400,
+        "transmitter" : "Pedrito",
+        "receiver" : "Juancito",
+        "date" : "10/06/2021"
+    }
+]
