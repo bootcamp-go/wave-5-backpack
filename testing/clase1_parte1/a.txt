@@ -1,0 +1,25 @@
+////////////////////////////¿Cuáles son las diferencias entre White Box y Black Box?/////////////////////////////////////
+
+Los test de Black Box su objetivo principal es probar la funcionalidad del código, respuestas y reacciones, pero sus métodos, estructura, diseño y funcionamiento interno son desconocidos. Existen :
+-Funcionales: ¿Cumple con el requerimiento dado?
+-NO funcionales: Medición y evaluación del performance.
+
+Los test de White Box se conoce y visibiliza el código. Se centra en los detalles procedimentales, por lo que el diseño de la prueba está ligado al código fuente. Existen:
+-Test unitarios
+-Test de integración-
+
+
+/////////////////////////////////////////////¿Qué es un test funcional?///////////////////////////////////////////////////
+Pruebas que se basan en la entrada y salida del software unicamente. Son test que validan el comportamiento funcional del software.
+
+
+////////////////////////////////////////////////////////¿Qué es un test de integración?////////////////////////////////////////////////////////
+Verifican que los fiernetes módulos y/o servicios usados por nuestra aplicación funcione en armonía cuando trabajan en conjunto.
+
+////////////////////////////Indicar las dimensiones de calidad prioritarias en MELI.////////////////////////////////////////////////////////
+
+-Funcionalidad (Functionality)
+-Rendimiento (Performance)
+-Fiabilidad (Reliability)
+-Seguridad (Security)
+-Mantenibilidad (Maintainability)
