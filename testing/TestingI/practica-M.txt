@@ -1,0 +1,43 @@
+Ejercicio 1 
+¿Cuáles son las diferencias entre White Box y Black Box?
+
+Black box: EN este tipo de testiong la estructura, diseño y funcionamiento interno son desconocidas por el usuario que prueba (PERSPECTIVA DE USUARIO FINAL). Sirve para evaluar el comportamiento. Se aplica en:
+    - test funcionales: para validar que cumpla los rrequeriemientos
+    - test no funcionales: solo para medir performance, usabilidad u escalabilidad.
+    - test de regresión: luego de cualquier cambio de código para verificar que el mismo no haya afectado a la aplicación
+
+White box: El que ejecuta conoce y tiene visibilidad sobre el código. Las pruebas no se ejecutan desde la perspectiva de usuario final. Este método se aplica para probar el flujo, seguridad y estructura del código y así, poder detectar vulnerabilidades en el código, comprobar la correcta implementación de cada método o función y validar que el flujo de datos se comporte de acuerdo a lo esperado (condicionales, iteraciones y respuestas). Se pueden aplicar mediante TEST UNITARIOS o TEST INTEGRACION
+
+
+
+Ejercicio 2
+¿Qué es un test funcional?.
+
+Pruebas que se basan en los inputs y outputs del software, verificando que cada respuesta sea la esperada ante determinado input.
+
+
+
+
+Ejercicio 3
+¿Qué es un Test de Integración?
+
+Son aquellos test que prueban la comunicación entre distintos componentes o capas de la aplicación. El objetivo es comprobar que todos aquellos bloques de código que fueron probados de forma unitaria, interactúen y se comuniquen entre sí generando los resultados esperados.
+Los test de integración exponen el funcionamiento general de la aplicación, permitiendo evaluar su diseño, desempeño y comportamiento.
+ 
+
+
+Ejercicio 4
+Indicar las dimensiones de calidad prioritarias en MELI.
+
+Principios SOLID:
+S -> Single responsability: Cada objeto tiene una única responsabilidad
+O -> Open/closed: Objetos abiertos para su extensión pero cerrados para su modificación
+L -> Liskov substitution:  Los objetos deberían ser reemplazables por sus hijos sin alterar el funcionamiento del programa
+I -> Interface segregation: Muchas interfaces específicas antes que una genérica
+D -> Dependency inversion: Desacoplar objetos de sus implementaciones
+
+F -> Fast: Rápidos
+I -> Isolated/Independent: Un método debe cumplir con los 3A (arrange, act, assert) o Given, When, Then
+R -> Repeatable: Resultados determinísticos
+S -> Self-validating: No debe requerirse inspección manual para validar resultados 
+T -> Thorough: Deben cubrir cada escenario de un caso de uso.
