@@ -1,5 +1,5 @@
 package main
 
-func main()  {
-  println("comenzando..")
+func main() {
+	println("comenzando..")
 }

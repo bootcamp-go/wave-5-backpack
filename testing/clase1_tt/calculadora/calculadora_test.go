@@ -7,13 +7,13 @@ import (
 )
 
 func TestRestar(t *testing.T) {
-  num1 := 5
-  num2 := 3
-  esperado := 2
+	num1 := 5
+	num2 := 3
+	esperado := 2
 
-  res := Restar(num1, num2)
+	res := Restar(num1, num2)
 
-  assert.Equal(t, esperado, res)
+	assert.Equal(t, esperado, res)
 }
 
 func TestDividir(t *testing.T) {
