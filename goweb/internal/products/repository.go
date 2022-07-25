@@ -9,8 +9,8 @@ import (
 )
 
 type Repository interface {
-	Store(nombre string, color string, precio float64, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Products, error)
-	Update(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Products, error)
+	Store(nombre, color string, precio float64, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Products, error)
+	Update(id int, nombre, color string, precio float64, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Products, error)
 	UpdatePrecioStock(id int, precio float64, stock int) (domain.Products, error)
 	GetAll() ([]domain.Products, error)
 	GetByID(id int) (domain.Products, error)
@@ -26,7 +26,7 @@ type repository struct {
 	storage storage.Storage
 }
 
-func (r repository) Store(nombre string, color string, precio float64, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Products, error) {
+func (r repository) Store(nombre, color string, precio float64, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Products, error) {
 	var pr []domain.Products
 	if err := r.storage.Read(&pr); err != nil {
 		return domain.Products{}, fmt.Errorf("error: al leer el archivo %v", err)
@@ -51,7 +51,7 @@ func (r repository) Store(nombre string, color string, precio float64, stock int
 	return p, nil
 }
 
-func (r repository) Update(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Products, error) {
+func (r repository) Update(id int, nombre, color string, precio float64, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Products, error) {
 	var pr []domain.Products
 	if err := r.storage.Read(&pr); err != nil {
 		return domain.Products{}, fmt.Errorf("error: al leer el archivo %v", err)
