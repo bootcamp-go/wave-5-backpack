@@ -8,6 +8,7 @@ import (
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/models"
 )
 
+// Stub Test
 type StubRepository struct{}
 
 func (s *StubRepository) Store(monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
