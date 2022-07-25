@@ -14,9 +14,8 @@ func TestDividir(t *testing.T) {
 
 	resultado, err := Dividir(num, den)
 
-	if err != nil {
-		assert.Equal(t, resultadoEsperado, resultado, "El denominador es 0")
-	}
+	assert.Nil(t, err)
+
 	assert.Equal(t, resultadoEsperado, resultado, "La división no se realizó de manera correcta")
 
 }
