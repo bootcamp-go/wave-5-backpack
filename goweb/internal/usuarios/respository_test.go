@@ -19,7 +19,7 @@ func (ss *StubStore) Write(data interface{}) error {
 }
 
 func (ss *StubStore) Read(data interface{}) error {
-	a := data.(*[]domain.Usuarios) //PUNTERO DE LISTA DE USUARIOS
+	a := data.(*[]domain.Usuarios) //ACA ESTOY RECIBIENDO DESDE REPOSITORY UN PUNTERO DE LISTA DE USUARIOS
 	*a = []domain.Usuarios{        //ACA LLENO ESOS VALORES DEL PUNTERO, por eso lo desreferencio
 		{Id: 1, Nombre: "Yvo", Apellido: "Pintos", Altura: 3, FechaCreacion: "1992"},
 		{Id: 2, Nombre: "Pedro", Apellido: "Juan", Altura: 3, FechaCreacion: "1232"},
