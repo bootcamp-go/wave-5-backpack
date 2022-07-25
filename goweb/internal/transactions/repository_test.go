@@ -1,7 +1,6 @@
 package transactions
 
 import (
-	"encoding/json"
 	"goweb/internal/domain"
 	"testing"
 	"time"
@@ -11,29 +10,9 @@ import (
 
 var timeNow, _ = time.Parse("2006-01-02T15:04:05-07:00", "2020-11-02T10:44:48+01:00")
 
-var dataTransaction = []domain.Transaction{
-	{
-		Id:              12,
-		TransactionCode: "beforeUpdate",
-		Currency:        "USD",
-		Amount:          1232,
-		Sender:          "Anonimo",
-		Reciever:        "Anonimo",
-		TransactionDate: timeNow,
-	},
-	{
-		Id:              1,
-		TransactionCode: "kdas23kda",
-		Currency:        "CLP",
-		Amount:          120000,
-		Sender:          "Anonimo 2",
-		Reciever:        "Anonimo 3",
-		TransactionDate: timeNow,
-	},
-}
-
 type Store struct {
 	ReadFlag bool
+	Db       *[]domain.Transaction
 }
 
 func (s *Store) Ping() error {
@@ -41,20 +20,40 @@ func (s *Store) Ping() error {
 }
 func (s *Store) Read(data interface{}) error {
 	s.ReadFlag = true
-	bytes, err := json.Marshal(dataTransaction)
-	json.Unmarshal(bytes, data)
-	return err
+	listProducts := data.(*[]domain.Transaction)
+	*listProducts = *s.Db
+	return nil
 }
 func (s *Store) Write(data interface{}) error {
-
-	transactionMarshal, err := json.Marshal(data)
-	json.Unmarshal(transactionMarshal, &dataTransaction)
-	return err
+	listProducts := data.([]domain.Transaction)
+	*s.Db = listProducts
+	return nil
 }
 
 func TestGetAll(t *testing.T) {
+	var dataTransaction = []domain.Transaction{
+		{
+			Id:              12,
+			TransactionCode: "beforeUpdate",
+			Currency:        "USD",
+			Amount:          1232,
+			Sender:          "Anonimo",
+			Reciever:        "Anonimo",
+			TransactionDate: timeNow,
+		},
+		{
+			Id:              1,
+			TransactionCode: "kdas23kda",
+			Currency:        "CLP",
+			Amount:          120000,
+			Sender:          "Anonimo 2",
+			Reciever:        "Anonimo 3",
+			TransactionDate: timeNow,
+		},
+	}
 	mockStore := Store{
 		ReadFlag: false,
+		Db:       &dataTransaction,
 	}
 	repo := NewRepository(&mockStore)
 
@@ -64,16 +63,28 @@ func TestGetAll(t *testing.T) {
 }
 
 func TestUpdate(t *testing.T) {
+	transactions := []domain.Transaction{
+		{
+			Id:              12,
+			TransactionCode: "beforeUpdate",
+			Currency:        "USD",
+			Amount:          1232,
+			Sender:          "Anonimo",
+			Reciever:        "Anonimo",
+			TransactionDate: timeNow,
+		},
+	}
 	mockStore := Store{
 		ReadFlag: false,
+		Db:       &transactions,
 	}
 	expectedCurrency := "ARG"
 	expectedAmount := 1500.00
 	repo := NewRepository(&mockStore)
 
-	repo.UpdateCurrencyAndAmount(dataTransaction[0].Id, expectedCurrency, expectedAmount)
+	repo.UpdateCurrencyAndAmount(transactions[0].Id, expectedCurrency, expectedAmount)
 
-	updatedTransaction := dataTransaction[0]
+	updatedTransaction := transactions[0]
 	assert.True(t, mockStore.ReadFlag)
 	assert.Equal(t, expectedAmount, updatedTransaction.Amount, "amount not updated")
 	assert.Equal(t, expectedCurrency, updatedTransaction.Currency, "currency not updated")
