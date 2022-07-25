@@ -94,7 +94,7 @@ func (c *Product) Store() gin.HandlerFunc {
 // @Param token header string true "token"
 // @Param product body request true "Product to store"
 // @Success 200 {object} web.Response
-// @Router /products [put]
+// @Router /products/:id [put]
 func (p *Product) Update() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
@@ -154,7 +154,7 @@ func (p *Product) Update() gin.HandlerFunc {
 // @Param token header string true "token"
 // @Param product body request true "Product to store"
 // @Success 200 {object} web.Response
-// @Router /products [patch]
+// @Router /products/:id [patch]
 func (p *Product) Patch() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
@@ -203,7 +203,7 @@ func (p *Product) Patch() gin.HandlerFunc {
 // @Produce  json
 // @Param token header string true "token"
 // @Success 200 {object} web.Response
-// @Router /products [delete]
+// @Router /products/:id [delete]
 func (p *Product) Delete() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")

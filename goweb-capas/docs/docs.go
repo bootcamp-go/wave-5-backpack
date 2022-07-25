@@ -55,8 +55,8 @@ const docTemplate = `{
                     }
                 }
             },
-            "put": {
-                "description": "Update products",
+            "post": {
+                "description": "store products",
                 "consumes": [
                     "application/json"
                 ],
@@ -66,7 +66,7 @@ const docTemplate = `{
                 "tags": [
                     "Products"
                 ],
-                "summary": "Update products",
+                "summary": "Store products",
                 "parameters": [
                     {
                         "type": "string",
@@ -93,9 +93,11 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
-            "post": {
-                "description": "store products",
+            }
+        },
+        "/products/:id": {
+            "put": {
+                "description": "Update products",
                 "consumes": [
                     "application/json"
                 ],
@@ -105,7 +107,7 @@ const docTemplate = `{
                 "tags": [
                     "Products"
                 ],
-                "summary": "Store products",
+                "summary": "Update products",
                 "parameters": [
                     {
                         "type": "string",

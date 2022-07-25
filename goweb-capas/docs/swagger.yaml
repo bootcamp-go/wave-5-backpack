@@ -31,26 +31,6 @@ info:
   version: "1.0"
 paths:
   /products:
-    delete:
-      consumes:
-      - application/json
-      description: store products
-      parameters:
-      - description: token
-        in: header
-        name: token
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/web.Response'
-      summary: Store products
-      tags:
-      - Products
     get:
       consumes:
       - application/json
@@ -71,7 +51,7 @@ paths:
       summary: List products
       tags:
       - Products
-    patch:
+    post:
       consumes:
       - application/json
       description: store products
@@ -97,7 +77,28 @@ paths:
       summary: Store products
       tags:
       - Products
-    post:
+  /products/:id:
+    delete:
+      consumes:
+      - application/json
+      description: store products
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Store products
+      tags:
+      - Products
+    patch:
       consumes:
       - application/json
       description: store products
