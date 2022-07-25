@@ -52,7 +52,7 @@ func (mdb *MockDB) LastId() (int, error) {
 
 func TestUpdate(t *testing.T) {
 	myMock := MockDB{}
-	servi := NewService(&myMock)
+	servi := NewService(&myMock) //Estoy probnando el service, porq uso la implementacion real de service.
 
 	user1 := domain.Usuarios{Id: 1, Nombre: "Perla", Apellido: "Oceano", Email: "yvo", Edad: 30, Altura: 3, Activo: true, FechaCreacion: "1992"}
 

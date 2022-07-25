@@ -39,7 +39,7 @@ func (sdb *StubDB) LastId() (int, error) {
 
 func TestGetAll(t *testing.T) {
 	myStubDB := StubDB{}
-	servi := NewService(&myStubDB)
+	servi := NewService(&myStubDB) //Probando el service, yo le paso datos truchos a lo q quiero probar
 
 	sliceUsers := []domain.Usuarios{{Id: 1, Nombre: "Yvo", Apellido: "Pintos", Email: "yvo", Edad: 30, Altura: 3, Activo: true, FechaCreacion: "1992"}, {Id: 2, Nombre: "Mat", Apellido: "Fant", Email: "mat", Edad: 33, Altura: 3, Activo: true, FechaCreacion: "1990"}}
 
