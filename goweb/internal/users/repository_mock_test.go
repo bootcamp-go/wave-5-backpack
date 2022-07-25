@@ -74,9 +74,8 @@ func TestUpdateAgeLastName(t *testing.T) {
 		readWasCalled: false,
 	}
 	repo := NewRepository(db)
-	service := NewService(repo)
 
-	resultado, _ := service.UpdateAgeLastName(1, 10, "Flores")
+	resultado, _ := repo.UpdateAgeLastName(1, 10, "Flores")
 
 	assert.Equal(t, usersAfterUpdate, db.db)
 	assert.Equal(t, usersAfterUpdate[0], resultado)
