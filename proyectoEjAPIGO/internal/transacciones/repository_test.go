@@ -63,21 +63,21 @@ func TestGetAll(t *testing.T) {
 	transactionsExpected := []domain.Transaccion{
 		{
 			ID:                 1,
-			Monto:              500.5,
-			Codigo_transaccion: "aaa111",
-			Moneda:             "ARS",
+			Monto:              500,
+			Codigo_transaccion: "asd124",
+			Moneda:             "USD",
 			Emisor:             "Mercado Pago",
-			Receptor:           "BBVA",
-			Fecha_transaccion:  "2022-07-25 12:00",
+			Receptor:           "Santander",
+			Fecha_transaccion:  "2022-07-25 12:30",
 		},
 		{
 			ID:                 2,
-			Monto:              1000,
-			Codigo_transaccion: "aaa112",
-			Moneda:             "ARS",
+			Monto:              1500,
+			Codigo_transaccion: "asd123",
+			Moneda:             "USD",
 			Emisor:             "BBVA",
 			Receptor:           "Mercado Pago",
-			Fecha_transaccion:  "2022-07-25 12:00",
+			Fecha_transaccion:  "2022-07-25 12:35",
 		},
 	}
 
