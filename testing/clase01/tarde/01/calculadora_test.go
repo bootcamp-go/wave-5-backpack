@@ -12,5 +12,6 @@ func TestRestar(t *testing.T) {
     // Se ejecuta el test
     resultado := Restar(num1, num2)
     // Se validan los resultados
+    assert.NotNil(t, resultado) // se valida que no sea nulo
     assert.Equal(t, resultadoEsperado, resultado, "deben ser iguales")
 }

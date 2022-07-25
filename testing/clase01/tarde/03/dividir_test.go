@@ -6,14 +6,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestDividirZero(t *testing.T){
-	num := 6
-	den := 0
+// func TestDividirZero(t *testing.T){
+// 	num := 6
+// 	den := 0
 
-	_, err := Dividir(num, den)
+// 	_, err := Dividir(num, den)
 
-	assert.NotNil(t, err)
-}
+// 	assert.NotNil(t, err)
+// }
 
 func TestDividir(t *testing.T){
 	num := 6
@@ -21,7 +21,7 @@ func TestDividir(t *testing.T){
 
 	resultadoEsperado :=3
 
-	resultado,_ := Dividir(num, den)
-
+	resultado,err := Dividir(num, den)
+	assert.Nil(t, err)
 	assert.Equal(t, resultadoEsperado, resultado)
 }
