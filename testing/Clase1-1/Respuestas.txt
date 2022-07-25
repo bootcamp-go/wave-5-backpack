@@ -1,0 +1,36 @@
+---¿Cuáles son las diferencias entre White Box y Black Box? 
+
+Mientras que la Black Box no se tiene en cuenta el funcionamiento del código 
+para su diseño, en la White Box si por lo que estas están ligadas al código.
+
+La White Box es ejecutada con la perspectiva del desarrollador mientras que 
+con la Black Box no se necesita conocimiento acerca del código.
+
+Con las Black Box de prueba el comportamiento del componente mientras que con
+las With Box se prueban flujos, seguridad y estructura.
+
+---¿Qué es un test funcional?.
+
+Son un tipo de test en el que se analiza el comportamiento funcional del 
+componente ante diferentes escenarios, con el objetivo que la respuesta coincida 
+con el resultado esperado.
+
+---¿Qué es un Test de Integración?
+
+Son aquellos test que se encargan de probar la comunicación entre 2 
+o mas componentes, usualmente son mas tardados que un test de funcionalidad y 
+que el microservicio funciones como se espera.
+
+---Indicar las dimensiones de calidad prioritarias en MELI.
+
+Funcionalidad
+Rendimiento
+Fiabilidad
+Seguridad
+Mantenimiento 
+
+
+
+
+
+
