@@ -26,9 +26,9 @@ func TestUpdateNamePrice(t *testing.T) {
 	mockStore := MockStore{}
 	r := NewRepository(&mockStore)
 
-	productEsperado := domain.NewProduct(1, "After Update", 1.5, 2)
+	productEsperado := domain.NewProduct(1, "After Update", 2.5, 2)
 
-	resultado, err := r.UpdateNamePrice(1, "After Update", 1.5)
+	resultado, err := r.UpdateNamePrice(1, "After Update", 2.5)
 
 	assert.Equal(t, productEsperado, resultado)
 	assert.Nil(t, err)
