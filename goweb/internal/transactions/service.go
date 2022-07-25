@@ -1,6 +1,8 @@
 package transactions
 
 import (
+	"fmt"
+
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/models"
 )
 
@@ -36,6 +38,10 @@ func (s service) GetByID(id int) (models.Transaction, error) {
 }
 
 func (s service) Update(id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
+	_, err := s.repository.GetByID(id)
+	if err != nil {
+		return models.Transaction{}, fmt.Errorf("error en repository: %v", err)
+	}
 	return s.repository.Update(id, monto, cod, moneda, emisor, receptor)
 }
 
