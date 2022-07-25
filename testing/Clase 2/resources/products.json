@@ -1,0 +1,52 @@
+[
+ 	{
+ 		"id": 2,
+ 		"name": "Laptop",
+ 		"color": "black",
+ 		"price": 999.99,
+ 		"stock": 100,
+ 		"code": "SJD23RFG",
+ 		"published": false,
+ 		"created_at": "2022-06-30"
+ 	},
+ 	{
+ 		"id": 4,
+ 		"name": "3090 Ti",
+ 		"color": "gray",
+ 		"price": 1000.99,
+ 		"stock": 100,
+ 		"code": "H393NH",
+ 		"published": true,
+ 		"created_at": "2022-04-01"
+ 	},
+ 	{
+ 		"id": 5,
+ 		"name": "3090 Ti",
+ 		"color": "gray",
+ 		"price": 1000.99,
+ 		"stock": 100,
+ 		"code": "H393NH",
+ 		"published": true,
+ 		"created_at": "2022-04-01"
+ 	},
+ 	{
+ 		"id": 6,
+ 		"name": "3090 Ti",
+ 		"color": "gray",
+ 		"price": 1000.99,
+ 		"stock": 100,
+ 		"code": "H393NH",
+ 		"published": true,
+ 		"created_at": "2022-04-01"
+ 	},
+ 	{
+ 		"id": 7,
+ 		"name": "3090 Ti",
+ 		"color": "gray",
+ 		"price": 1000.99,
+ 		"stock": 100,
+ 		"code": "H393NH",
+ 		"published": true,
+ 		"created_at": "2022-04-01"
+ 	}
+ ]
