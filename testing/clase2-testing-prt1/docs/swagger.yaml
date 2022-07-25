@@ -1,0 +1,256 @@
+definitions:
+  cmd_server_handler.request:
+    properties:
+      codigo de transaccion:
+        type: string
+      emisor:
+        type: string
+      fecha de transaccion:
+        type: string
+      id:
+        type: integer
+      moneda:
+        type: string
+      monto:
+        type: number
+      receptor:
+        type: string
+    required:
+    - codigo de transaccion
+    - emisor
+    - fecha de transaccion
+    - moneda
+    - monto
+    - receptor
+    type: object
+  goweb_clase4-go-web-tt_cmd_server_handler.request:
+    properties:
+      codigo de transaccion:
+        type: string
+      emisor:
+        type: string
+      fecha de transaccion:
+        type: string
+      id:
+        type: integer
+      moneda:
+        type: string
+      monto:
+        type: number
+      receptor:
+        type: string
+    required:
+    - codigo de transaccion
+    - emisor
+    - fecha de transaccion
+    - moneda
+    - monto
+    - receptor
+    type: object
+  web.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      error:
+        type: string
+    type: object
+info:
+  contact:
+    name: API Support
+    url: https://developers.mercadolibre.com.ar/support
+  description: This API Handle MELI Transactions.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
+  title: MELI Bootcamp API
+  version: "1.0"
+paths:
+  /transactions:
+    get:
+      consumes:
+      - application/json
+      description: Get all transactions from database
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: List of all transactions from database
+      tags:
+      - Transactions
+    post:
+      consumes:
+      - application/json
+      description: Ecommerce transactions
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Transaction to ecommerce
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/goweb_clase4-go-web-tt_cmd_server_handler.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: New Ecommerce wtih transactions database
+      tags:
+      - Transactions
+  /transactions/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete transaction
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Delete transaction
+      tags:
+      - Transactions
+    get:
+      consumes:
+      - application/json
+      description: Get transaction information using ID
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Get a transaction with ID
+      tags:
+      - Transactions
+    patch:
+      consumes:
+      - application/json
+      description: Change partial transaction information using ID, only complete
+        the fields *monto* & *codigo de transaccion*
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Transaction to ecommerce
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/goweb_clase4-go-web-tt_cmd_server_handler.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Ecommerce transactions
+      tags:
+      - Transactions
+    put:
+      consumes:
+      - application/json
+      description: Change all transaction information using ID but it's necessary
+        to complete all the fields
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Transaction to ecommerce
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/goweb_clase4-go-web-tt_cmd_server_handler.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Ecommerce transactions
+      tags:
+      - Transactions
+swagger: "2.0"
