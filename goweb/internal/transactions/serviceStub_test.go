@@ -3,9 +3,8 @@ package transactions
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/models"
+	"github.com/stretchr/testify/assert"
 )
 
 // Stub Test
@@ -27,21 +26,21 @@ func (s *StubRepository) GetAll() ([]models.Transaction, error) {
 	return []models.Transaction{
 		{
 			ID:       1,
-			Monto:    500.5,
+			Monto:    1000.5,
 			Cod:      "aaa111",
 			Moneda:   "ARS",
 			Emisor:   "Mercado Pago",
 			Receptor: "BBVA",
-			Fecha:    "2022-07-25 12:00",
+			Fecha:    "2020-25-07",
 		},
 		{
-			ID:       2,
-			Monto:    1000,
-			Cod:      "aaa112",
+			ID:       1,
+			Monto:    1000.5,
+			Cod:      "aaa111",
 			Moneda:   "ARS",
-			Emisor:   "BBVA",
-			Receptor: "Mercado Pago",
-			Fecha:    "2022-07-25 12:00",
+			Emisor:   "Mercado Pago",
+			Receptor: "BBVA",
+			Fecha:    "2020-25-07",
 		},
 	}, nil
 }
@@ -60,25 +59,28 @@ func (s *StubRepository) Delete(id int) (int, error) {
 
 func TestGetAll(t *testing.T) {
 	// Arrange
-	service := NewService(&StubRepository{})
+	repoStub := &StubRepository{}
+
+	service := NewService(repoStub)
+
 	transactionsExpected := []models.Transaction{
 		{
 			ID:       1,
-			Monto:    500.5,
+			Monto:    1000.5,
 			Cod:      "aaa111",
 			Moneda:   "ARS",
 			Emisor:   "Mercado Pago",
 			Receptor: "BBVA",
-			Fecha:    "2022-07-25 12:00",
+			Fecha:    "2020-25-07",
 		},
 		{
-			ID:       2,
-			Monto:    1000,
-			Cod:      "aaa112",
+			ID:       1,
+			Monto:    1000.5,
+			Cod:      "aaa111",
 			Moneda:   "ARS",
-			Emisor:   "BBVA",
-			Receptor: "Mercado Pago",
-			Fecha:    "2022-07-25 12:00",
+			Emisor:   "Mercado Pago",
+			Receptor: "BBVA",
+			Fecha:    "2020-25-07",
 		},
 	}
 
@@ -86,6 +88,6 @@ func TestGetAll(t *testing.T) {
 	transactions, err := service.GetAll()
 
 	// Assert
-	assert.Nil(t, err)
 	assert.Equal(t, transactionsExpected, transactions)
+	assert.Nil(t, err)
 }
