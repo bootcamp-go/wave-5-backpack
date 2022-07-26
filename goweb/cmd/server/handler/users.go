@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/internal/domain"
 	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/internal/users"
 	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/pkg/web"
 	"github.com/gin-gonic/gin"
@@ -88,13 +87,7 @@ func (c *User) GetById(ctx *gin.Context) {
 	user, err := c.service.GetById(Id)
 
 	if err != nil {
-		ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
-		return
-	}
-
-	empty := domain.User{}
-	if user == empty {
-		ctx.JSON(404, web.NewResponse(404, nil, "user not found"))
+		ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 		return
 	}
 

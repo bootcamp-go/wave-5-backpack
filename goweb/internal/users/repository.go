@@ -50,7 +50,7 @@ func (r *repository) GetById(Id int) (domain.User, error) {
 		}
 	}
 
-	return domain.User{}, nil
+	return domain.User{}, errors.New("usuario no encontrado")
 }
 
 func (r *repository) GetAll(filters map[string]interface{}) ([]domain.User, error) {
