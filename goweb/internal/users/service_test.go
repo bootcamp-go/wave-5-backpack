@@ -82,3 +82,94 @@ func TestServiceIntegrationDelete(t *testing.T) {
 	//Test de error en el borrado
 	assert.ErrorContains(t, err, "usuario no encontrado")
 }
+
+func TestServiceIntegrationGetById(t *testing.T) {
+	testUsers := []domain.User{
+		{
+			Id:        1,
+			Age:       22,
+			FirstName: "Patricio",
+			LastName:  "Flood",
+			Email:     "patricio.flood@mercadolibre.com",
+			Height:    1.72,
+			Active:    true,
+		},
+		{
+			Id:        2,
+			Age:       25,
+			FirstName: "Julian",
+			LastName:  "Sanchez",
+			Email:     "julian.sanchez@invento.com",
+			Height:    1.52,
+			Active:    false,
+		},
+	}
+
+	db := &store.MockStorage{
+		DataMock:      testUsers,
+		ReadWasCalled: false,
+	}
+	repo := NewRepository(db)
+	service := NewService(repo)
+
+	user, err := service.GetById(2)
+
+	//Test de error nulo
+	assert.Nil(t, err)
+
+	//Test de usuario correcto
+	assert.Equal(t, testUsers[1], user)
+
+	//Test de read utilizado
+	assert.True(t, db.ReadWasCalled)
+
+	//Test de id incorrecto
+	_, err = service.GetById(3)
+	assert.ErrorContains(t, err, "usuario no encontrado")
+}
+
+func TestServiceIntegrationStore(t *testing.T) {
+	testUsers := []domain.User{
+		{
+			Id:        1,
+			Age:       22,
+			FirstName: "Patricio",
+			LastName:  "Flood",
+			Email:     "patricio.flood@mercadolibre.com",
+			Height:    1.72,
+			Active:    true,
+		},
+		{
+			Id:        2,
+			Age:       25,
+			FirstName: "Julian",
+			LastName:  "Sanchez",
+			Email:     "julian.sanchez@invento.com",
+			Height:    1.52,
+			Active:    false,
+		},
+	}
+
+	db := &store.MockStorage{
+		DataMock:      []domain.User{testUsers[0]},
+		ReadWasCalled: false,
+	}
+	repo := NewRepository(db)
+	service := NewService(repo)
+
+	user, err := service.Store(25, "Julian", "Sanchez", "julian.sanchez@invento.com", 1.52, false)
+	//Ignoro la fecha de creación autogenerada
+	user.CreatedAt = ""
+
+	//Test de error nulo
+	assert.Nil(t, err)
+
+	//Test de usuario correcto
+	assert.Equal(t, testUsers[1], user)
+
+	//Ignoro la fecha de creación autogenerada
+	db.DataMock.([]domain.User)[1].CreatedAt = ""
+
+	//Test de cambio en la base de datos
+	assert.Equal(t, testUsers, db.DataMock)
+}
