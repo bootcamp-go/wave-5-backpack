@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/internal/domain"
-	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/pkg/file"
+	"goweb/internal/domain"
+	"goweb/pkg/file"
 )
 
 var lastId uint64

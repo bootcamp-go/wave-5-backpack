@@ -1,15 +1,14 @@
 package main
 
 import (
-	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/cmd/server/handler"
-	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/internal/products"
-	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/pkg/file"
-	"github.com/ncostamagna/meli-bootcamp/docs"
+	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"goweb/cmd/server/docs"
+	"goweb/cmd/server/handler"
+	"goweb/internal/products"
+	"goweb/pkg/file"
 	"os"
-
-	"github.com/gin-gonic/gin"
 )
 
 // @title Bootcamp MELI API

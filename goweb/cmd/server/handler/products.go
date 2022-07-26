@@ -2,12 +2,11 @@ package handler
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"goweb/internal/products"
+	"goweb/pkg/web"
 	"net/http"
 	"strconv"
-
-	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/internal/products"
-	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/pkg/web"
-	"github.com/gin-gonic/gin"
 )
 
 type Request struct {

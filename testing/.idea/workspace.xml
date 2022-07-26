@@ -4,25 +4,8 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f96ab77a-b5ca-439b-8900-bed53830afcc" name="Changes" comment="Testing Mock">
-      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/.env" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/.idea/proyectoFinal.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/cmd/server/handler/users.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/cmd/server/main.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/go.mod" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/go.sum" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/internal/domain/users.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/internal/users/errors.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/internal/users/repository.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/internal/users/service.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/pkg/store/file.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/pkg/web/response.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/web.sh" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../proyectoFinal/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../proyectoFinal/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="f96ab77a-b5ca-439b-8900-bed53830afcc" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmd/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/products/repository_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/products/repository_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/products/service_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/products/service_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -137,7 +120,8 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Testing Mock" />
-    <option name="LAST_COMMIT_MESSAGE" value="Testing Mock" />
+    <MESSAGE value="Testing Ci-lint" />
+    <option name="LAST_COMMIT_MESSAGE" value="Testing Ci-lint" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

@@ -5,27 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c61c0a6e-ec4e-437f-9119-49f6d8decf00" name="Changes" comment="Swagger">
-      <change afterPath="$PROJECT_DIR$/proyectoFinal/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/proyectoFinal/cmd/server/handler/users.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/proyectoFinal/cmd/server/main.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/proyectoFinal/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/proyectoFinal/go.sum" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/proyectoFinal/internal/domain/users.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/proyectoFinal/internal/users/errors.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/proyectoFinal/internal/users/repository.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/proyectoFinal/internal/users/service.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/proyectoFinal/pkg/store/file.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/proyectoFinal/pkg/web/response.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/proyectoFinal/users.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/proyectoFinal/web.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server/handler/products.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server/handler/products.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/products/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/products/repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/products/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/products/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/proyectoFinal/users.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../testing/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../testing/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="GOROOT" url="file:///opt/homebrew/Cellar/go/1.18.3/libexec" />
+  <component name="GOROOT" url="file:///opt/homebrew/Cellar/go/1.18.4/libexec" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
   </component>
@@ -40,21 +35,21 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_ADD_EXTERNAL_FILES": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.go.formatter.settings.were.checked": "true",
-    "RunOnceActivity.go.migrated.go.modules.settings": "true",
-    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
-    "RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed": "true",
-    "WebServerToolWindowFactoryState": "false",
-    "go.import.settings.migrated": "true",
-    "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "/Users/pmelegatti/Documents/wave-5-backpack/goweb"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/pmelegatti/Documents/wave-5-backpack/goweb&quot;
   }
-}]]></component>
+}</component>
   <component name="RunManager" selected="Go Build.go build main.go (1)">
     <configuration name="go build main.go (1)" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="goweb" />
