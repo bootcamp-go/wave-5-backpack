@@ -8,30 +8,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type MockFile struct{}
+type MockFile struct {
+	mockData     []domain.Product
+	isReadCalled bool
+}
 
-var isReadCalled bool = false
-
-func (s MockFile) Read(data interface{}) error {
-	byteData, _ := json.Marshal([]domain.Product{
-		{
-			Id:         1,
-			Name:       "Laptop",
-			Color:      "black",
-			Price:      999.99,
-			Stock:      100,
-			Code:       "SJD23RFG",
-			Published:  false,
-			Created_at: "2022-06-30",
-		},
-	})
-	isReadCalled = true
+func (s *MockFile) Read(data interface{}) error {
+	byteData, _ := json.Marshal(s.mockData)
+	s.isReadCalled = true
 	json.Unmarshal(byteData, data)
 	return nil
 
 }
 
-func (s MockFile) Write(data interface{}) error {
+func (s *MockFile) Write(data interface{}) error {
 	return nil
 }
 
@@ -50,10 +40,23 @@ func TestUpdateName(t *testing.T) {
 		Published:  false,
 		Created_at: "2022-06-30",
 	}
-	stub := MockFile{}
-	r := NewRepository(stub)
+	stub := MockFile{
+		mockData: []domain.Product{
+			{
+				Id:         1,
+				Name:       "Laptop",
+				Color:      "black",
+				Price:      999.99,
+				Stock:      100,
+				Code:       "SJD23RFG",
+				Published:  false,
+				Created_at: "2022-06-30",
+			},
+		},
+	}
+	r := NewRepository(&stub)
 	prMod, err := r.UpdatePartial(1, "Laptop mod", "", 0, 100, "", false, "")
 	assert.Nil(t, err)
-	assert.True(t, isReadCalled)
+	assert.True(t, stub.isReadCalled)
 	assert.Equal(t, expected, prMod)
 }
