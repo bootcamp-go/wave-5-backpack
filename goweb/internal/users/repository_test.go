@@ -22,7 +22,7 @@ func (ss *StubStore) Read(data interface{}) error {
 			Active:     true,
 			DoCreation: "02-03-2020",
 		},{
-			ID:         1,
+			ID:         2,
 			Name:       "name2",
 			Lastname:   "lastname2",
 			Email:      "2@mail.com",
@@ -49,10 +49,10 @@ Comprobar que GetAll() retorne la información exactamente igual a la esperada. 
 1. Dentro de la carpeta /internal/products, crear un archivo repository_test.go con el test diseñado. */
 
 func TestGetAllUsers(t *testing.T) {
-	mock := StubStore{}
+	stub := StubStore{}
 
-	repo := NewRepository(&mock)
-	expectedResponse := []*domain.User{
+	repo := NewRepository(&stub)
+	expectedResponse := []domain.User{
 		{
 			ID:         1,
 			Name:       "name1",
@@ -63,7 +63,7 @@ func TestGetAllUsers(t *testing.T) {
 			Active:     true,
 			DoCreation: "02-03-2020",
 		}, {
-			ID:         1,
+			ID:         2,
 			Name:       "name2",
 			Lastname:   "lastname2",
 			Email:      "2@mail.com",
@@ -112,7 +112,7 @@ func (fs *MockStore) Read(data interface{}) error {
 			Active:     true,
 			DoCreation: "02-03-2020",
 		}, {
-			ID:         1,
+			ID:         2,
 			Name:       "name2",
 			Lastname:   "lastname2",
 			Email:      "2@mail.com",
@@ -130,7 +130,7 @@ func (fs *MockStore) Read(data interface{}) error {
 
 /* Test with Mock */
 func TestUpdateNameUser(t *testing.T) {
-	id, name := 1, "1 Updated"
+	id, name := 1, "After Update"
 	
 	mock := MockStore{}
 
@@ -140,6 +140,6 @@ func TestUpdateNameUser(t *testing.T) {
 
 	assert.True(t, true, mock.ReadOk)
 	assert.Equal(t, id, response.ID)
-	assert.Equal(t, name, response.ID)
+	assert.Equal(t, name, response.Name)
 }
 

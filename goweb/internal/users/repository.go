@@ -19,7 +19,7 @@ type Repository interface {
 const (
 	UserNotFound = "user id %d not found"
 	FailReading  = "fail to read database"
-	FailWriting  = "fail to write database: %w"
+	FailWriting  = "fail to write database"
 )
 
 type repository struct {
@@ -69,7 +69,7 @@ func (r *repository) DeleteUser(id int) error {
 	}
 
 	if err := r.db.Write(allUsers); err != nil {
-		return fmt.Errorf(FailWriting, err)
+		return fmt.Errorf(FailWriting)
 	}
 
 	return nil
@@ -105,7 +105,7 @@ func (r *repository) StoreUser(id int, name, lastname, email string, age int, he
 	allUsers = append(allUsers, newUser)
 
 	if err := r.db.Write(allUsers); err != nil {
-		return domain.User{}, fmt.Errorf(FailWriting, err)
+		return domain.User{}, fmt.Errorf(FailWriting)
 	}
 	return newUser, nil
 }
@@ -130,7 +130,7 @@ func (r *repository) UpdateUser(id int, name, lastname, email string, age int, h
 		if allUsers[index].ID == id {
 			allUsers[index] = newUser
 			if err := r.db.Write(allUsers); err != nil {
-				return domain.User{}, fmt.Errorf(FailWriting, err)
+				return domain.User{}, fmt.Errorf(FailWriting)
 			}
 			return newUser, nil
 		}
@@ -152,7 +152,7 @@ func (r *repository) UpdateLastnameAndAge(id int, lastname string, age int) (*do
 			allUsers[index].Age = age
 
 			if err := r.db.Write(allUsers); err != nil {
-				return nil, fmt.Errorf(FailWriting, err)
+				return nil, fmt.Errorf(FailWriting)
 			}
 			return &allUsers[index], nil
 		}
