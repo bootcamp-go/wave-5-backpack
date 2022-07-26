@@ -13,16 +13,6 @@ type StubStore struct {}
 
 // 2) ahora tendría que escribir los métodos para esa store
 
-//así era el método Read original
-// func (fs *fileStore) Read(data interface{}) error {
-// 	file, err := os.ReadFile(fs.FilePath)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	return json.Unmarshal(file, &data)
-// }
-
-// así quedaría para el test
 func (fs *StubStore) Read(data interface{}) error{
 	a := data.(*[]domain.User)
 	*a = []domain.User{
