@@ -207,5 +207,5 @@ func (r repository) Delete(id int) (int, error) {
 		}
 	}
 
-	return 0, fmt.Errorf("error: ID %v no existe", id)
+	return 0, fmt.Errorf("error: ID %v no existe\n", id)
 }

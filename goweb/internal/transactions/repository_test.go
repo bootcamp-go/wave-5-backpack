@@ -1,7 +1,7 @@
 package transactions
 
 import (
-	"log"
+	"fmt"
 	"testing"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/models"
@@ -93,7 +93,6 @@ func TestDeleteStorage(t *testing.T) {
 	storage := MockStorage{Data: data}
 	repo := NewRepository(&storage)
 	id, err := repo.Delete(2)
-	log.Println(storage.Data)
 
 	//Assert
 	assert.True(t, storage.ReadCalled)
@@ -101,6 +100,25 @@ func TestDeleteStorage(t *testing.T) {
 	assert.Equal(t, 2, id)
 	assert.Len(t, storage.Data, 1)
 	assert.Nil(t, err)
+}
+
+func TestDeleteStorageNotFound(t *testing.T) {
+	//Arrange
+	storage := MockStorage{}
+	errExpected := fmt.Errorf("error: ID %v no existe\n", 1)
+
+	//Act
+	repo := NewRepository(&storage)
+	id, err := repo.Delete(1)
+
+	//Assert
+	if assert.Errorf(t, errExpected, "1") {
+		assert.Equal(t, errExpected, err)
+	}
+	assert.Equal(t, 0, id)
+	assert.Len(t, storage.Data, 0)
+	assert.True(t, storage.ReadCalled)
+	assert.False(t, storage.WriteCalled)
 }
 
 type StubStorage struct{}
