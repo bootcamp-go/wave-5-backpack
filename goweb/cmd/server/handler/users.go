@@ -30,6 +30,15 @@ func NewUser(u users.Service) *User {
 	}
 }
 
+//ListUsers godoc
+//@Summary List All Users
+//@Tags Users
+//@Description Get Users
+//@Accept json
+//@Produce json
+//@Param token header string true "token"
+//@Success 200 {object} web.Response
+//@Router /users [get]
 func (u *User) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		token := ctx.GetHeader("token")

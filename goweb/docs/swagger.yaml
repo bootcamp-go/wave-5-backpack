@@ -1,0 +1,39 @@
+definitions:
+  web.Response:
+    properties:
+      code:
+        type: string
+      data: {}
+      error:
+        type: string
+    type: object
+info:
+  contact:
+    name: JofeGonzalezMeLi
+  description: This API Handle Wave5Go Endpoints
+  license: {}
+  title: Meli Bootcamp API Go
+  version: "1.0"
+paths:
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Get Users
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: List All Users
+      tags:
+      - Users
+swagger: "2.0"
