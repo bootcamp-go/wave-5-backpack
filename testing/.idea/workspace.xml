@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f96ab77a-b5ca-439b-8900-bed53830afcc" name="Changes" comment="Testing Mock">
+      <change beforePath="$PROJECT_DIR$/../goweb/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../goweb/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/cmd/server/handler/products.go" beforeDir="false" afterPath="$PROJECT_DIR$/../goweb/cmd/server/handler/products.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/cmd/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/../goweb/cmd/server/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/go.mod" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/go.sum" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/internal/products/repository.go" beforeDir="false" afterPath="$PROJECT_DIR$/../goweb/internal/products/repository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/internal/products/service.go" beforeDir="false" afterPath="$PROJECT_DIR$/../goweb/internal/products/service.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/.env" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/.idea/proyectoFinal.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/cmd/server/handler/users.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/cmd/server/main.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/go.mod" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/go.sum" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/internal/domain/users.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/internal/users/errors.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/internal/users/repository.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/internal/users/service.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/pkg/store/file.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/pkg/web/response.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/users.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../goweb/proyectoFinal/web.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmd/server/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/cmd/server/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/products/repository_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/products/repository_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/products/service_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/products/service_test.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="GOROOT" url="file:///opt/homebrew/Cellar/go/1.18.4/libexec" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2CU2NFsvji6ifDFGBJSEbCiIbBP" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
+    &quot;go.sdk.automatically.set&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/pmelegatti/Documents/wave-5-backpack/testing&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;
+  }
+}</component>
+  <component name="RunManager" selected="Go Build.go build main.go">
+    <configuration name="go build main.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="testing" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <package value="github.com/bootcamp-go/go-testing" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/cmd/server/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestGetAll in github.com/bootcamp-go/go-testing/internal/products" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="testing" />
+      <working_directory value="$PROJECT_DIR$/internal/products" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="github.com/bootcamp-go/go-testing/internal/products" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestGetAll\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="repository_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="testing" />
+      <working_directory value="$PROJECT_DIR$/internal/products" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <package value="github.com/bootcamp-go/go-testing" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/internal/products/repository_test.go" />
+      <framework value="gotest" />
+      <method v="2" />
+    </configuration>
+    <configuration name="service_test.go" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="testing" />
+      <working_directory value="$PROJECT_DIR$/internal/products" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <package value="github.com/bootcamp-go/go-testing" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/internal/products/service_test.go" />
+      <framework value="gotest" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build main.go" />
+        <item itemvalue="Go Test.repository_test.go" />
+        <item itemvalue="Go Test.TestGetAll in github.com/bootcamp-go/go-testing/internal/products" />
+        <item itemvalue="Go Test.service_test.go" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Testing Mock" />
+    <option name="LAST_COMMIT_MESSAGE" value="Testing Mock" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+</project>
