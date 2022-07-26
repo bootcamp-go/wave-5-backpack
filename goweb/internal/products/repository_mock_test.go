@@ -8,31 +8,31 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type MockRepository struct {
+type MockStore struct {
 	updateCall bool
 	db         []domain.Product
 }
 
-func (mr MockRepository) Ping() error {
+func (ms MockStore) Ping() error {
 	return nil
 }
 
-func (mr MockRepository) Write(data interface{}) error {
+func (ms MockStore) Write(data interface{}) error {
 	return nil
 }
 
-func (mr *MockRepository) Read(data interface{}) error {
+func (ms *MockStore) Read(data interface{}) error {
 	products := reflect.ValueOf(data)
 	products = reflect.Indirect(products)
-	products.Set(reflect.ValueOf(mr.db))
+	products.Set(reflect.ValueOf(ms.db))
 
-	mr.updateCall = true
+	ms.updateCall = true
 
 	return nil
 }
 
 func TestUpdate(t *testing.T) {
-	mock := &MockRepository{
+	mock := &MockStore{
 		db: []domain.Product{{ID: 1, Nombre: "TV SAMSUNG", Color: "Negro", Precio: 10}},
 	}
 	repository := NewRepository(mock)
