@@ -1,6 +1,7 @@
 package transaction
 
 import (
+	"fmt"
 	"proyecto-web/internal/domain"
 	"testing"
 
@@ -38,7 +39,7 @@ func TestGetAll(t *testing.T) {
 	}
 
 	// act
-	result := service.GetAll()
+	result, _ := service.GetAll()
 
 	// assert
 	assert.Equal(t, len(result), 2)
@@ -78,8 +79,10 @@ func (s *StubStorage) Write(data interface{}) error {
 // Ejercicio 2: Crear un mock del Storage para probar el métood UpdateName (UpdateParcial para este proyecto). Verificar la invocación del método Read
 
 type MockStorage struct {
-	Data          []domain.Transaction
-	ReadWasCalled bool
+	dataMock      []domain.Transaction
+	readWasCalled bool
+	errWrite      string
+	errRead       string
 }
 
 func TestUpdateParcial(t *testing.T) {
@@ -96,7 +99,7 @@ func TestUpdateParcial(t *testing.T) {
 		},
 	}
 
-	StorageMock := &MockStorage{Data: transaction}
+	StorageMock := &MockStorage{dataMock: transaction}
 	repo := NewRepository(StorageMock)
 
 	// act
@@ -105,18 +108,30 @@ func TestUpdateParcial(t *testing.T) {
 	updatedData, _ := repo.UpdateParcial(0, "AFTER UPDATE", 5.0)
 
 	// assert
-	assert.Equal(t, true, StorageMock.ReadWasCalled)
+	assert.Equal(t, true, StorageMock.readWasCalled)
 	assert.Equal(t, "BEFORE UPDATE", previusCodigo)
 	assert.Equal(t, "AFTER UPDATE", updatedData.CodigoTransaccion)
 }
 
 func (m *MockStorage) Read(data interface{}) error {
-	m.ReadWasCalled = true
+	m.readWasCalled = true
+	if m.errRead != "" {
+		return fmt.Errorf(m.errRead)
+	}
+
 	dataCasteada := data.(*[]domain.Transaction)
-	*dataCasteada = m.Data
+	*dataCasteada = m.dataMock
 	return nil
 }
 
-func (s *MockStorage) Write(data interface{}) error {
+func (m *MockStorage) Write(data interface{}) error {
+	if m.errWrite != "" {
+		return fmt.Errorf(m.errWrite)
+	}
+
+	dataCasteada := data.([]domain.Transaction)
+
+	last := dataCasteada[len(dataCasteada)-1]
+	m.dataMock = append(m.dataMock, last)
 	return nil
 }

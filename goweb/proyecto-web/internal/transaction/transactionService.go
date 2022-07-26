@@ -22,7 +22,8 @@ func NewService(r IRepository) ITransactionService {
 }
 
 func (s *transactionService) GetAll() []domain.Transaction {
-	return s.repository.GetAll()
+	transactions, _ := s.repository.GetAll()
+	return transactions
 }
 
 func (s *transactionService) Create(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) domain.Transaction {
