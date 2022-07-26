@@ -6,6 +6,7 @@ import (
 	"arquitectura/internal/transactions"
 	"arquitectura/pkg/store"
 	"arquitectura/pkg/web"
+	"fmt"
 	"log"
 	"os"
 
@@ -48,7 +49,9 @@ func main() {
 	tr.PUT("/:id", transactions.Update())
 	tr.DELETE("/:id", transactions.Delete())
 	tr.PATCH("/:id", transactions.UpdateFields())
-	router.Run()
+	if err := router.Run(); err != nil {
+		fmt.Println("Error durante la ejecución del servidor")
+	}
 }
 
 func TokenAuthMiddleWare() gin.HandlerFunc {

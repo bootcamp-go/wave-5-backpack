@@ -81,5 +81,5 @@ func TestServiceDeleteInexistent(t *testing.T) {
 
 	err := service.Delete(2)
 
-	assert.Equal(t, expectedError, err)
+	assert.ErrorContains(t, err, expectedError.Error())
 }
