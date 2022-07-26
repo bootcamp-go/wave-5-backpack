@@ -20,15 +20,15 @@ func TestUpdate(t *testing.T) {
 	products := []*Product{
 		{
 			Id:     1,
-			Nombre: "Pepsi",
+			Nombre: "MacBook Air",
 			Stock:  12,
-			Precio: 100,
+			Precio: 1100,
 		},
 		{
 			Id:     2,
-			Nombre: "Coca Cola",
-			Stock:  1,
-			Precio: 20,
+			Nombre: "MacBook Pro",
+			Stock:  8,
+			Precio: 1400,
 		},
 	}
 

@@ -20,7 +20,10 @@ func main() {
 	pr := r.Group("products")
 	pr.GET("/", p.GetAll())
 
-	r.Run()
+	err := r.Run()
+	if err != nil {
+		return
+	}
 }
 
 func loadEnv() {
