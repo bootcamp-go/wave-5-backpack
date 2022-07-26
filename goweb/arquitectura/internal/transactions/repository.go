@@ -66,7 +66,7 @@ func (r *repository) Store(id int, tranCode, currency string, amount float64, tr
 		Amount:      amount,
 		Transmitter: transmitter,
 		Reciever:    receiver,
-		TranDate:    tranCode,
+		TranDate:    tranDate,
 	}
 	lista = append(lista, t)
 
