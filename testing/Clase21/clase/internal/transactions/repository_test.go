@@ -18,6 +18,22 @@ func (fs *StubStore) Read(data interface{}) error {
 }
 
 func (fs *StubStore) Write(data interface{}) error {
+	return nil
+}
+
+type MockStore struct {
+	data          []domain.Transaction
+	ReadWasCalled bool
+}
+
+func (fs *MockStore) Read(data interface{}) error {
+	a := data.(*[]domain.Transaction)
+	*a = fs.data
+	fs.ReadWasCalled = true
+	return nil
+}
+
+func (fs *MockStore) Write(data interface{}) error {
 	a := data.([]domain.Transaction)
 	fs.data = a
 	return nil
@@ -87,8 +103,8 @@ func TestUpdtate2(t *testing.T) {
 		},
 	}
 
-	stub := StubStore{data: data}
-	repo := NewRepository(&stub)
+	mock := MockStore{data: data, ReadWasCalled: false}
+	repo := NewRepository(&mock)
 
 	tr, err := repo.Update2(1, "bbb", 1.0)
 	assert.Nil(t, err)
@@ -97,4 +113,6 @@ func TestUpdtate2(t *testing.T) {
 	trs, err := repo.GetAll()
 	assert.Nil(t, err)
 	assert.Equal(t, trs, expected2)
+
+	assert.True(t, mock.ReadWasCalled)
 }
