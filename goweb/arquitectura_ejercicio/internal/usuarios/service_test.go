@@ -1,80 +1,16 @@
 package usuarios
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/anesquivel/wave-5-backpack/goweb/arquitectura_ejercicio/internal/domain"
 	"github.com/stretchr/testify/assert"
 )
 
-type MockRepository struct {
-	hadReadAll bool
-	user       domain.Usuario
-}
-
-func (r *MockRepository) GetAll() ([]domain.Usuario, error) {
-	var localUserList []domain.Usuario
-	user1 := domain.Usuario{
-		Id:          1,
-		Names:       "Andy",
-		LastName:    "Esquivel",
-		Age:         23,
-		Estatura:    1.52,
-		Email:       "andy@gmail.com",
-		IsActivo:    true,
-		DateCreated: "",
-	}
-
-	user2 := domain.Usuario{
-		Id:          2,
-		Names:       "Andy",
-		LastName:    "Esquivel",
-		Age:         23,
-		Estatura:    1.52,
-		Email:       "andy@gmail.com",
-		IsActivo:    true,
-		DateCreated: "",
-	}
-
-	localUserList = append(localUserList, user1)
-	localUserList = append(localUserList, user2)
-	r.hadReadAll = true
-	return localUserList, nil
-}
-
-func (r *MockRepository) Store(id, age int, names, lastname, email, dateCreated string, estatura float64) (domain.Usuario, error) {
-
-	return domain.Usuario{}, nil
-}
-
-func (r *MockRepository) Update(id, age int, names, lastname, email, dateCreated string, estatura float64, activo bool) (domain.Usuario, error) {
-	return domain.Usuario{}, nil
-}
-
-func (r *MockRepository) UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error) {
-	_, err := r.GetAll()
-
-	if err != nil {
-		return domain.Usuario{}, err
-	}
-	r.user.Names = "After Update"
-	return r.user, nil
-}
-
-func (r *MockRepository) LastID() (int, error) {
-	return 1, nil
-}
-
-func (r *MockRepository) Delete(id int) error {
-	return nil
-}
-
-func TestGetAll(t *testing.T) {
-	//arrange
-
-	myStubDB := MockRepository{}
-	motor := NewService(&myStubDB)
-	expectedRes := []domain.Usuario{
+func TestIntegracionGetAll(t *testing.T) {
+	// arrange
+	database := []domain.Usuario{
 		{
 			Id:          1,
 			Names:       "Andy",
@@ -83,34 +19,221 @@ func TestGetAll(t *testing.T) {
 			Estatura:    1.52,
 			Email:       "andy@gmail.com",
 			IsActivo:    true,
-			DateCreated: "",
+			DateCreated: "25-07-2022",
 		},
 		{
 			Id:          2,
+			Names:       "Gabriela",
+			LastName:    "Rueda",
+			Age:         23,
+			Estatura:    1.52,
+			Email:       "gr@gmail.com",
+			IsActivo:    true,
+			DateCreated: "26-07-2022",
+		},
+	}
+
+	mockStorage := MockStorage{
+		dataMock: database,
+		errRead:  "",
+		errWrite: "",
+	}
+
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	res, err := service.GetAll()
+
+	// assert
+
+	assert.Nil(t, err)
+	assert.Equal(t, mockStorage.dataMock, res)
+}
+
+func TestIntegracionGetAllFail(t *testing.T) {
+	// arrange
+	database := []domain.Usuario{
+		{
+			Id:          1,
 			Names:       "Andy",
 			LastName:    "Esquivel",
 			Age:         23,
 			Estatura:    1.52,
 			Email:       "andy@gmail.com",
 			IsActivo:    true,
-			DateCreated: "",
+			DateCreated: "25-07-2022",
+		},
+		{
+			Id:          2,
+			Names:       "Gabriela",
+			LastName:    "Rueda",
+			Age:         23,
+			Estatura:    1.52,
+			Email:       "gr@gmail.com",
+			IsActivo:    true,
+			DateCreated: "26-07-2022",
 		},
 	}
 
-	res, err := motor.GetAll()
+	mockStorage := MockStorage{
+		dataMock: database,
+		errRead:  "",
+		errWrite: "",
+	}
+
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	res, err := service.GetAll()
+	//errExpected := fmt.Errorf("can't read database")
+	// assert
+
 	assert.Nil(t, err)
-	assert.Equal(t, res, expectedRes, res)
+	//assert.Equal(t, errExpected, err)
+	assert.Equal(t, mockStorage.dataMock, res)
 }
 
-func TestUpdateNames(t *testing.T) {
-	//arrange
+func TestIntegracionStore(t *testing.T) {
+	newUser := domain.Usuario{
+		Id:          0,
+		Names:       "Ashton",
+		LastName:    "Brooke",
+		Email:       "ash2@gmail.com",
+		Estatura:    1.80,
+		IsActivo:    true,
+		DateCreated: "26-07-2022",
+		Age:         28,
+	}
 
-	myStubDB := MockRepository{}
-	myStubDB.user.Names = "Before Update"
-	motor := NewService(&myStubDB)
-	expectedRes := "After Update"
-	res, err := motor.UpdateLastNameAndAge(1, 23, "After Update")
+	mockStorage := MockStorage{
+		dataMock: []domain.Usuario{},
+		errRead:  "",
+		errWrite: "",
+	}
+
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	res, err := service.Store(newUser.Age, newUser.Names, newUser.LastName,
+		newUser.Email, newUser.Estatura)
+
+	// assert
 
 	assert.Nil(t, err)
-	assert.Equal(t, expectedRes, res.Names, "Los nombres deben ser los mismos")
+	assert.Equal(t, mockStorage.dataMock[0], res)
+	assert.Equal(t, mockStorage.dataMock[0].Id, res.Id)
+
+}
+
+func TestIntegracionStoreFail(t *testing.T) {
+	newUser := domain.Usuario{
+		Id:          0,
+		Names:       "Ashton",
+		LastName:    "Brooke",
+		Email:       "ash2@gmail.com",
+		Estatura:    1.80,
+		IsActivo:    true,
+		DateCreated: "26-07-2022",
+		Age:         28,
+	}
+
+	mockStorage := MockStorage{
+		dataMock: []domain.Usuario{},
+		errRead:  "",
+		errWrite: "can't write to the database",
+	}
+
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	errExpected := fmt.Errorf("can't write to the databse")
+	_, err := service.Store(newUser.Age, newUser.Names, newUser.LastName,
+		newUser.Email, newUser.Estatura)
+
+	// assert
+	assert.NotNil(t, err)
+	assert.Equal(t, errExpected, err)
+
+}
+
+func TestIntegracionUpdate(t *testing.T) {
+	newUser := domain.Usuario{
+		Id:          0,
+		Names:       "ASH",
+		Email:       "ash2@gmail.com",
+		Estatura:    1.83,
+		DateCreated: "26-07-2022",
+	}
+
+	mockStorage := MockStorage{
+		dataMock: []domain.Usuario{newUser},
+		errRead:  "",
+		errWrite: "",
+	}
+
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	res, err := service.Update(newUser.Id, newUser.Age, newUser.Names, newUser.LastName,
+		newUser.Email, newUser.DateCreated, newUser.Estatura, newUser.IsActivo)
+
+	// assert
+
+	assert.Nil(t, err)
+	assert.Equal(t, true, mockStorage.hadCalledRead)
+	assert.Equal(t, mockStorage.dataMock[0], res)
+	assert.Equal(t, mockStorage.dataMock[0].Id, res.Id)
+
+}
+
+func TestIntegracionUpdateFail(t *testing.T) {
+	newUser := domain.Usuario{
+		Id:    0,
+		Names: "ASH",
+	}
+
+	mockStorage := MockStorage{
+		dataMock: []domain.Usuario{newUser},
+		errRead:  "",
+		errWrite: "",
+	}
+
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	res, err := service.Update(5, newUser.Age, newUser.Names, newUser.LastName,
+		newUser.Email, newUser.DateCreated, newUser.Estatura, newUser.IsActivo)
+
+	// assert
+
+	assert.Nil(t, err)
+	assert.Equal(t, true, mockStorage.hadCalledRead)
+	assert.Equal(t, mockStorage.dataMock[0], res)
+	assert.Equal(t, mockStorage.dataMock[0].Id, res.Id)
+
+}
+
+func TestIntegracionDelete(t *testing.T) {
+	newUser := domain.Usuario{
+		Id:          0,
+		Names:       "ASH",
+		Email:       "ash2@gmail.com",
+		Estatura:    1.83,
+		DateCreated: "26-07-2022",
+	}
+
+	mockStorage := MockStorage{
+		dataMock: []domain.Usuario{newUser},
+		errRead:  "",
+		errWrite: "",
+	}
+
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	err := service.Delete(newUser.Id)
+
+	// assert
+	assert.Equal(t, true, mockStorage.hadCalledRead)
+	assert.Nil(t, err)
 }
