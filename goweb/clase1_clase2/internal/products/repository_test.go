@@ -1,15 +1,18 @@
 package products
 
 import (
-	"encoding/json"
+	"fmt"
 	"goweb/clase1_clase2/internal/domain"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
-type Store struct {
+type MockStorage struct {
 	ReadWasCalled bool
+	dataMock      []domain.Product
+	errWrite      string
+	errRead       string
 }
 
 var products = []domain.Product{
@@ -17,39 +20,87 @@ var products = []domain.Product{
 	{Id: 2, Nombre: "Televisor", Color: "Verde", Precio: 100, Stock: 4, Codigo: "V479", Publicado: false, Fecha: "17-06-2022"},
 }
 
-func (s *Store) Write(data interface{}) error {
+func (m *MockStorage) Write(data interface{}) error {
+	if m.errWrite != "" {
+		return fmt.Errorf(m.errWrite)
+	}
+	a := data.([]domain.Product)
+	m.dataMock = a
 	return nil
 }
 
-func (s *Store) Read(data interface{}) error {
-	s.ReadWasCalled = true
-	byteData, _ := json.Marshal(products)
-	return json.Unmarshal(byteData, data)
-}
-
-func (s *Store) Ping() error {
+func (m *MockStorage) Read(data interface{}) error {
+	m.ReadWasCalled = true
+	if m.errRead != "" {
+		return fmt.Errorf(m.errRead)
+	}
+	a := data.(*[]domain.Product)
+	*a = m.dataMock
 	return nil
 }
 
-func TestStub(t *testing.T) {
-	myStore := Store{}
-	repository := NewRepository(&myStore)
-
-	resultado, err := repository.GetAll("", "", 0, 0, "", false, "")
-	assert.Equal(t, products, resultado, "deben ser iguales")
-	assert.Equal(t, nil, err, "deben ser iguales")
+func (m *MockStorage) Ping() error {
+	return nil
 }
 
 func TestMock(t *testing.T) {
-	myStore := Store{}
-	repository := NewRepository(&myStore)
-
+	//arrange
+	database := []domain.Product{
+		{Id: 1, Nombre: "Before Update", Color: "Blanco", Precio: 600, Stock: 4, Codigo: "B453", Publicado: true, Fecha: "05-05-2022"},
+		{Id: 2, Nombre: "Televisor", Color: "Verde", Precio: 100, Stock: 4, Codigo: "V479", Publicado: false, Fecha: "17-06-2022"},
+	}
+	mockStorage := MockStorage{
+		dataMock: database,
+		errWrite: "",
+		errRead:  "",
+	}
 	nombreEsperado := "After Update"
 	precioEsperado := 3
-	resultado, err := repository.UpdateFields(1, nombreEsperado, precioEsperado)
+	//act
+	repo := NewRepository(&mockStorage)
+	resultado, err := repo.UpdateFields(1, nombreEsperado, precioEsperado)
 
-	assert.Equal(t, true, myStore.ReadWasCalled)
+	assert.Equal(t, true, mockStorage.ReadWasCalled)
 	assert.Equal(t, nombreEsperado, resultado.Nombre)
 	assert.Equal(t, precioEsperado, resultado.Precio)
 	assert.Equal(t, nil, err)
+}
+
+func TestGetAll(t *testing.T) {
+	//arrange
+	database := []domain.Product{
+		{
+			Id:        1,
+			Nombre:    "Nevera",
+			Color:     "Blanco",
+			Precio:    600,
+			Stock:     4,
+			Codigo:    "B453",
+			Publicado: true,
+			Fecha:     "05-05-2022",
+		},
+		{
+			Id:        1,
+			Nombre:    "Televisor",
+			Color:     "Verde",
+			Precio:    400,
+			Stock:     9,
+			Codigo:    "T543",
+			Publicado: true,
+			Fecha:     "02-06-2022",
+		},
+	}
+	mockStorage := MockStorage{
+		dataMock: database,
+		errWrite: "",
+		errRead:  "",
+	}
+
+	//act
+	repo := NewRepository(&mockStorage)
+	result, err := repo.GetAll("", "", 0, 0, "", false, "")
+
+	//assert
+	assert.Nil(t, err)
+	assert.Equal(t, mockStorage.dataMock, result)
 }

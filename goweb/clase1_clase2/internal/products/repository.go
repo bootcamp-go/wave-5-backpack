@@ -80,7 +80,7 @@ func (r *repository) Update(id int, nombre, color string, precio, stock int, cod
 		}
 	}
 	if !update {
-		return domain.Product{}, errors.New("error: id no encontrado")
+		return domain.Product{}, fmt.Errorf(ProductNotFound, id)
 	}
 	return p, nil
 }
@@ -103,7 +103,7 @@ func (r *repository) Delete(id int) (domain.Product, error) {
 		}
 	}
 	if !deleted {
-		return domain.Product{}, errors.New("error: id no encontrado")
+		return domain.Product{}, fmt.Errorf(ProductNotFound, id)
 	}
 	return p_deleted, nil
 }
@@ -128,7 +128,7 @@ func (r *repository) UpdateFields(id int, nombre string, precio int) (domain.Pro
 		}
 	}
 	if !update {
-		return domain.Product{}, errors.New("error: el id es invalido")
+		return domain.Product{}, fmt.Errorf(ProductNotFound, id)
 	}
 	return p, nil
 }
@@ -143,7 +143,7 @@ func (r *repository) GetById(id int) (domain.Product, error) {
 			return p, nil
 		}
 	}
-	return domain.Product{}, errors.New("error: el id no es valido")
+	return domain.Product{}, fmt.Errorf(ProductNotFound, id)
 }
 
 func (r *repository) LastID() (int, error) {
