@@ -30,6 +30,9 @@ func main() {
 	}
 
 	file, err := os.Open("transactions.json")
+	if err != nil {
+		log.Panicf("error al abrir el archivo .json %v\n", err)
+	}
 	defer file.Close()
 
 	// Init capas de transactions
@@ -61,5 +64,7 @@ func main() {
 		rt.DELETE("/:id", tr.Delete)
 	}
 
-	router.Run()
+	if err := router.Run(); err != nil {
+		panic(err)
+	}
 }

@@ -3,7 +3,6 @@ package transactions
 import (
 	"errors"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/models"
@@ -200,7 +199,9 @@ func (r repository) Delete(id int) (int, error) {
 	for i, t := range tr {
 		if t.ID == id {
 			tr = append(tr[:i], tr[i+1:]...)
-			r.storage.Write(tr)
+			if err := r.storage.Write(tr); err != nil {
+				return 0, fmt.Errorf("error: no se pudo escribir el archivo %v\n", err)
+			}
 
 			return id, nil
 		}
