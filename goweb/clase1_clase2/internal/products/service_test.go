@@ -22,7 +22,7 @@ func TestServiceIntegrationGetAll(t *testing.T) {
 			Fecha:     "05-05-2022",
 		},
 		{
-			Id:        1,
+			Id:        2,
 			Nombre:    "Televisor",
 			Color:     "Verde",
 			Precio:    400,
@@ -61,6 +61,61 @@ func TestServiceIntegrationGetAllFail(t *testing.T) {
 	// assert
 	assert.Equal(t, expectedError, err)
 	assert.Nil(t, result)
+}
+
+func TestServiceIntegrationGetById(t *testing.T) {
+	// arrange
+	database := []domain.Product{
+		{
+			Id:        1,
+			Nombre:    "Nevera",
+			Color:     "Blanco",
+			Precio:    600,
+			Stock:     4,
+			Codigo:    "B453",
+			Publicado: true,
+			Fecha:     "05-05-2022",
+		},
+		{
+			Id:        2,
+			Nombre:    "Televisor",
+			Color:     "Verde",
+			Precio:    400,
+			Stock:     9,
+			Codigo:    "T543",
+			Publicado: true,
+			Fecha:     "02-06-2022",
+		},
+	}
+	mockStorage := MockStorage{
+		dataMock: database,
+		errWrite: "",
+		errRead:  "",
+	}
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	result, err := service.GetById(1)
+	// assert
+	assert.Nil(t, err)
+	assert.Equal(t, mockStorage.dataMock[0], result)
+}
+
+func TestServiceIntegrationGetByIdFail(t *testing.T) {
+	// arrange
+	expectedError := fmt.Errorf("cant read database")
+	mockStorage := MockStorage{
+		dataMock: nil,
+		errWrite: "",
+		errRead:  "cant read database",
+	}
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	result, err := service.GetById(1)
+	// assert
+	assert.Equal(t, expectedError, err)
+	assert.Equal(t, domain.Product{}, result)
 }
 
 func TestServiceIntegrationStore(t *testing.T) {

@@ -285,16 +285,6 @@ func (p *Product) TokenAuthMiddleware() gin.HandlerFunc {
 
 }
 
-func validateToken(token string) error {
-	if token == "" {
-		return errors.New("no ingresó el token y es requerido")
-	}
-	if token != os.Getenv("TOKEN") {
-		return errors.New("no tiene permisos para realizar la petición solicitada")
-	}
-	return nil
-}
-
 func validateFields(req request) error {
 	if req.Nombre == "" {
 		return errors.New("el campo nombre es requerido")
