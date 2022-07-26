@@ -36,8 +36,10 @@ func InitRepository(db store.Store) Repository {
 func (r *repository) GetAll() ([]domain.Products, error) {
 	var ps2 []domain.Products
 	if err := r.db.Read(&ps2); err != nil {
+		fmt.Println("Ocurrio un error")
 		return nil, fmt.Errorf(FailReading)
 	}
+	fmt.Println("repository: ", ps2)
 	return ps2, nil
 }
 

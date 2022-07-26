@@ -30,6 +30,7 @@ func (s *service) GetAll() ([]domain.Products, error) {
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("service: ", ps)
 	return ps, nil
 }
 
