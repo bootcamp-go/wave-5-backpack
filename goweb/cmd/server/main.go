@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/cmd/server/handler"
@@ -42,5 +43,8 @@ func main() {
 		userRouter.PATCH("/:Id", u.UpdateAgeLastName)
 		userRouter.DELETE("/:Id", u.Delete)
 	}
-	router.Run()
+	err := router.Run()
+	if err != nil {
+		fmt.Printf("Error al ejecutar el servidor: %v", err)
+	}
 }

@@ -72,11 +72,13 @@ func TestServiceIntegrationDelete(t *testing.T) {
 	repo := NewRepository(db)
 	service := NewService(repo)
 
-	service.Delete(1)
+	err := service.Delete(1)
+	//Test de error nulo
+	assert.Nil(t, err)
 	//Test de borrado en base de datos
 	assert.Equal(t, []domain.User{}, db.DataMock)
 
-	err := service.Delete(2)
+	err = service.Delete(2)
 	//Test de error en el borrado
 	assert.ErrorContains(t, err, "usuario no encontrado")
 }
