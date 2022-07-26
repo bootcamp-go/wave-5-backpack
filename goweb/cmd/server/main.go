@@ -1,14 +1,14 @@
 package main
 
 import (
-	"encoding/json"
+	//"encoding/json"
 	"fmt"
 	"goweb/cmd/server/handler"
 	"goweb/internal/products"
 	"goweb/pkg/store"
 	"goweb/pkg/web"
 	"log"
-	"net/http"
+	//"net/http"
 	"os"
 
 	"goweb/docs"
@@ -43,7 +43,7 @@ type request struct{
 	Publisher bool `json:"publisher"`
 	CreatedAt string`json:"created_at" binding:"required"`
 }
-
+/*
 var lastId int
 func save() gin.HandlerFunc {
 
@@ -192,7 +192,7 @@ func filterProducts(ctx *gin.Context)  {
 
 	ctx.JSON(http.StatusOK, productsFilter)
 
-}
+}*/
 
 // @title MELI Bootcamp API
 // @version 1.0
@@ -226,7 +226,7 @@ func main() {
 	//  “/productos”
 	pr.Use(TokenAuthMiddleware())
 	pr.GET("/", productHandler.GetAll())
-	pr.GET("/filtrar", filterProducts)
+	//pr.GET("/filtrar", filterProducts)
 	pr.POST("/", productHandler.Create())
 	pr.PUT("/:id", productHandler.Update())
 	pr.PATCH("/:idgit", productHandler.ParcialUpdate())

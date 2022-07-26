@@ -11,7 +11,11 @@ func TestDividir(t *testing.T)  {
     num2 := 2
     
 
-	_ , resultado := Dividir(num1, num2)
+	resultado, err := Dividir(num1, num2)
 
-	assert.Nil(t, resultado)
+	assert.Nil(t, err)
+
+	esperado := num1 / num2
+
+	assert.Equal(t, esperado, resultado)
 }
