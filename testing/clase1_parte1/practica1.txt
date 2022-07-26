@@ -1,0 +1,21 @@
+Ejercicio 1 
+¿Cuáles son las diferencias entre White Box y Black Box? 
+White Box Test se aplica en los casos en los que se tiene conocimiento del codigo fuente y su funcionamiento y prueba cada una de las partes del codigo (funciones, flujo de datos, etc)
+para verificar que su funcionamiento se ejecute de manera correcta, por lo general estos tests son realizados por la persona que escribio el codigo. Por otro lado el Black Box Test no tiene conocimiento del codigo fuente, solo se encarga de probar que cumpla con todo 
+lo requerido y que la aplicacion funcione de la manera que se espera que lo haga.
+
+Ejercicio 2
+¿Qué es un test funcional?.
+Validan que los resultados que se muestran en cada escenario sean los esperados y validan el comportamiento del software.
+
+Ejercicio 3
+¿Qué es un Test de Integración?
+Valida la interaccion en dos o mas elementos. Son aquellos donde se prueba el correcto funcionamiento entre la comunicacion de las capas y el enlace de las diferentes partes que conforman la aplicacion donde se puedan obtener los resultados esperados.
+
+Ejercicio 4
+Indicar las dimensiones de calidad prioritarias en MELI.
+- Funcionalidad (Functionality)
+- Rendimiento (Performance)
+- Fiabilidad (Reliability)
+- Seguridad (Security)
+- Mantenibilidad (Maintainability)
