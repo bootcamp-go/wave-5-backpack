@@ -28,13 +28,13 @@ func (s *StubStore) Ping() error {
 
 // Test
 
-func TestGetAll(t *testing.T) {
+func TestRepositoryGetAll(t *testing.T) {
 	// -------------------------------------------------------
 	// Se inicializan los datos a usar en el test (input y output)
 	// -------------------------------------------------------
 
 	myStubStore := StubStore{}
-	myRepository := NewRepositoryJsonCorrDB(&myStubStore)
+	myRepository := NewRepository(&myStubStore)
 	resultadoEsperado := []domain.Product{
 		{Id: 1, Nombre: "producto 1", Color: "rojo", Precio: 10, Stock: 10, Codigo: "123", Publicado: true, FechaCreacion: "2020-01-01"},
 		{Id: 2, Nombre: "producto 2", Color: "rojo", Precio: 10, Stock: 10, Codigo: "123", Publicado: true, FechaCreacion: "2020-01-01"},

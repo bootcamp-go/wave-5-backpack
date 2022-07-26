@@ -40,7 +40,7 @@ func main() {
 
 	//repository := products.NewRepositoryMemoria()
 	//repository := products.NewRepositoryJsonDB()
-	repository := products.NewRepositoryJsonCorrDB(db)
+	repository := products.NewRepository(db)
 	service := products.NewService(repository)
 	p := handler.NewProduct(service)
 
@@ -65,5 +65,8 @@ func main() {
 		ctx.JSON(200, gin.H{"message": "Hola " + "Juan Pablo Ortiz"})
 	})
 
-	router.Run(os.Getenv("PORT"))
+	err = router.Run(os.Getenv("PORT"))
+	if err != nil {
+		log.Fatal("error al iniciar el servidor")
+	}
 }

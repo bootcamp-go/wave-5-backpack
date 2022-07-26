@@ -20,7 +20,7 @@ type repositoryJsonCorrDB struct {
 	db store.Store
 }
 
-func NewRepositoryJsonCorrDB(db store.Store) Repository {
+func NewRepository(db store.Store) Repository {
 	return &repositoryJsonCorrDB{db: db}
 }
 
