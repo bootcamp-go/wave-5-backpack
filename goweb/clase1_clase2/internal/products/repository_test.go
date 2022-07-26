@@ -15,11 +15,6 @@ type MockStorage struct {
 	errRead       string
 }
 
-var products = []domain.Product{
-	{Id: 1, Nombre: "Before Update", Color: "Blanco", Precio: 600, Stock: 4, Codigo: "B453", Publicado: true, Fecha: "05-05-2022"},
-	{Id: 2, Nombre: "Televisor", Color: "Verde", Precio: 100, Stock: 4, Codigo: "V479", Publicado: false, Fecha: "17-06-2022"},
-}
-
 func (m *MockStorage) Write(data interface{}) error {
 	if m.errWrite != "" {
 		return fmt.Errorf(m.errWrite)
