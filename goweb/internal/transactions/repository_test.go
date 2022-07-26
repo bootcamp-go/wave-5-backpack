@@ -2,6 +2,7 @@ package transactions
 
 import (
 	"goweb/internal/domain"
+	"goweb/pkg/store"
 	"testing"
 	"time"
 
@@ -9,26 +10,6 @@ import (
 )
 
 var timeNow, _ = time.Parse("2006-01-02T15:04:05-07:00", "2020-11-02T10:44:48+01:00")
-
-type Store struct {
-	ReadFlag bool
-	Db       *[]domain.Transaction
-}
-
-func (s *Store) Ping() error {
-	return nil
-}
-func (s *Store) Read(data interface{}) error {
-	s.ReadFlag = true
-	listProducts := data.(*[]domain.Transaction)
-	*listProducts = *s.Db
-	return nil
-}
-func (s *Store) Write(data interface{}) error {
-	listProducts := data.([]domain.Transaction)
-	*s.Db = listProducts
-	return nil
-}
 
 func TestGetAll(t *testing.T) {
 	var dataTransaction = []domain.Transaction{
@@ -51,7 +32,7 @@ func TestGetAll(t *testing.T) {
 			TransactionDate: timeNow,
 		},
 	}
-	mockStore := Store{
+	mockStore := store.Mock{
 		ReadFlag: false,
 		Db:       &dataTransaction,
 	}
@@ -74,7 +55,7 @@ func TestUpdate(t *testing.T) {
 			TransactionDate: timeNow,
 		},
 	}
-	mockStore := Store{
+	mockStore := store.Mock{
 		ReadFlag: false,
 		Db:       &transactions,
 	}
