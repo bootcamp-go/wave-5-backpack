@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	UsuarioNotFound = "producto %d not found"
+	UsuarioNotFound = "usuario %d not found"
 	FailReading     = "error al leer la bd"
 	FailWriting     = "error al escribir la bd"
 )
@@ -116,7 +116,7 @@ func (r *repository) Delete(id int) error {
 			return nil
 		}
 	}
-	return nil
+	return fmt.Errorf(UsuarioNotFound, id)
 }
 
 func (r *repository) GetAll() ([]domain.Usuarios, error) {
