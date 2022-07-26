@@ -3,6 +3,7 @@ package transactions
 import (
 	"errors"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/models"
@@ -198,14 +199,6 @@ func (r repository) Delete(id int) (int, error) {
 
 	for i, t := range tr {
 		if t.ID == id {
-			if i == len(tr)-1 {
-
-				tr = tr[:i]
-				r.storage.Write(tr)
-
-				return id, nil
-			}
-
 			tr = append(tr[:i], tr[i+1:]...)
 			r.storage.Write(tr)
 

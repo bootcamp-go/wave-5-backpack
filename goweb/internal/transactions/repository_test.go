@@ -1,6 +1,7 @@
 package transactions
 
 import (
+	"log"
 	"testing"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/models"
@@ -28,7 +29,7 @@ func (s *MockStorage) Write(data interface{}) error {
 	s.WriteCalled = true
 
 	p := data.([]models.Transaction)
-	s.Data = append(s.Data, p...)
+	s.Data = p
 
 	return nil
 }
@@ -62,6 +63,43 @@ func TestUpdateStorage(t *testing.T) {
 
 	//Assert
 	assert.Equal(t, expected, transaction)
+	assert.Nil(t, err)
+}
+
+func TestDeleteStorage(t *testing.T) {
+	//Arrange
+	data := []models.Transaction{
+		{
+			ID:       1,
+			Monto:    1000.5,
+			Cod:      "aaa111",
+			Moneda:   "ARS",
+			Emisor:   "Mercado Pago",
+			Receptor: "BBVA",
+			Fecha:    "2020-25-07",
+		},
+		{
+			ID:       2,
+			Monto:    500,
+			Cod:      "aaa112",
+			Moneda:   "ARS",
+			Emisor:   "BBVA",
+			Receptor: "Mercado Pago",
+			Fecha:    "2020-25-07",
+		},
+	}
+
+	//Act
+	storage := MockStorage{Data: data}
+	repo := NewRepository(&storage)
+	id, err := repo.Delete(2)
+	log.Println(storage.Data)
+
+	//Assert
+	assert.True(t, storage.ReadCalled)
+	assert.True(t, storage.WriteCalled)
+	assert.Equal(t, 2, id)
+	assert.Len(t, storage.Data, 1)
 	assert.Nil(t, err)
 }
 
