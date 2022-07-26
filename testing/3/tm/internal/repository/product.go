@@ -9,7 +9,7 @@ var products []domain.Product
 
 func (r *repository) ReadAll() ([]domain.Product, error) {
 	if err := r.db.Read(&products); err != nil {
-		return []domain.Product{}, nil
+		return []domain.Product{}, err
 	}
 
 	return products, nil
