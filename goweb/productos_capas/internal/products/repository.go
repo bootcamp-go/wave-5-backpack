@@ -6,7 +6,6 @@ import (
 	"goweb/productos_capas/internal/domain"
 	"goweb/productos_capas/pkg/store"
 	"reflect"
-	"strconv"
 )
 
 const (
@@ -98,7 +97,7 @@ func (r *repository) Update(id int, nombre, color string, precio, stock int, cod
 	}
 
 	if !updated {
-		return domain.Product{}, errors.New("Producto con id " + strconv.Itoa(id) + " no encontrado")
+		return domain.Product{}, fmt.Errorf(ProductNotFound, id)
 	}
 
 	if err := r.db.Write(ps); err != nil {
@@ -126,7 +125,7 @@ func (r *repository) UpdateNamePrice(id int, nombre string, precio int) (domain.
 	}
 
 	if !updated {
-		return domain.Product{}, errors.New("Producto con id " + strconv.Itoa(id) + " no encontrado")
+		return domain.Product{}, fmt.Errorf(ProductNotFound, id)
 	}
 
 	if err := r.db.Write(ps); err != nil {
@@ -153,7 +152,7 @@ func (r *repository) Delete(id int) (domain.Product, error) {
 	}
 
 	if !deleted {
-		return domain.Product{}, errors.New("Producto con id" + strconv.Itoa(id) + "no encontrado")
+		return domain.Product{}, fmt.Errorf(ProductNotFound, id)
 	}
 
 	if err := r.db.Write(ps); err != nil {
