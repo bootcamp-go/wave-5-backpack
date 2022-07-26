@@ -76,7 +76,7 @@ func TestIntegrationUpdate(t *testing.T) {
 	// assert
 	assert.Nil(t, err)
 	assert.Equal(t, mockInte.dataMock[0], user)
-	assert.Equal(t, mockInte.dataMock[0].Id, 1)
+	assert.Equal(t, mockInte.dataMock[0].Id, user.Id)
 	assert.True(t, mockInte.readWasCalled)
 }
 
@@ -91,9 +91,9 @@ func TestIntegrationUpdateFailRead(t *testing.T) {
 	// act
 	repo := NewRepository(&mockInte)
 	service := NewService(repo)
-	user, error := service.Update(1, "", "", "", 0, 0, true, "")
+	user, err := service.Update(1, "", "", "", 0, 0, true, "")
 	// accert
-	assert.Equal(t, expectedError, error)
+	assert.Equal(t, expectedError, err)
 	assert.Equal(t, user.Id, 0)
 }
 
@@ -113,9 +113,9 @@ func TestIntegrationUpdateFailWrite(t *testing.T) {
 	// act
 	repo := NewRepository(&mockInte)
 	service := NewService(repo)
-	user, error := service.Update(1, "F", "F", "F", 3, 2, true, "F")
+	user, err := service.Update(1, "F", "F", "F", 3, 2, true, "F")
 	// accert
-	assert.Equal(t, expectedError, error)
+	assert.Equal(t, expectedError, err)
 	assert.Equal(t, user.Id, 0)
 }
 
