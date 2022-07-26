@@ -1,30 +1,12 @@
 package users
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/internal/domain"
+	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/pkg/store"
 	"github.com/stretchr/testify/assert"
 )
-
-type fileMockStore struct {
-	db            interface{}
-	readWasCalled bool
-}
-
-func (fs *fileMockStore) Write(data interface{}) error {
-	fs.db = data
-	return nil
-}
-
-func (fs *fileMockStore) Read(data interface{}) error {
-	rv := reflect.ValueOf(data)
-	rv = reflect.Indirect(rv)
-	rv.Set(reflect.ValueOf(fs.db))
-	fs.readWasCalled = true
-	return nil
-}
 
 func TestUpdateAgeLastName(t *testing.T) {
 	testUsers := []domain.User{
@@ -69,15 +51,15 @@ func TestUpdateAgeLastName(t *testing.T) {
 		},
 	}
 
-	db := &fileMockStore{
-		db:            testUsers,
-		readWasCalled: false,
+	db := &store.MockStorage{
+		DataMock:      testUsers,
+		ReadWasCalled: false,
 	}
 	repo := NewRepository(db)
 
 	resultado, _ := repo.UpdateAgeLastName(1, 10, "Flores")
 
-	assert.Equal(t, usersAfterUpdate, db.db)
+	assert.Equal(t, usersAfterUpdate, db.DataMock)
 	assert.Equal(t, usersAfterUpdate[0], resultado)
-	assert.True(t, db.readWasCalled)
+	assert.True(t, db.ReadWasCalled)
 }

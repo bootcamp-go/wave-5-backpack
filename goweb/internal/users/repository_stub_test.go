@@ -2,28 +2,12 @@ package users
 
 import (
 	"fmt"
-	"reflect"
 	"testing"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/internal/domain"
+	"github.com/bootcamp-go/wave-5-backpack/tree/flood_patricio/goweb/pkg/store"
 	"github.com/stretchr/testify/assert"
 )
-
-type fileStubStore struct {
-	db interface{}
-}
-
-func (fs *fileStubStore) Write(data interface{}) error {
-	fs.db = data
-	return nil
-}
-
-func (fs *fileStubStore) Read(data interface{}) error {
-	rv := reflect.ValueOf(data)
-	rv = reflect.Indirect(rv)
-	rv.Set(reflect.ValueOf(fs.db))
-	return nil
-}
 
 func TestGetAll(t *testing.T) {
 	testUsers := []domain.User{
@@ -47,10 +31,10 @@ func TestGetAll(t *testing.T) {
 		},
 	}
 
-	db := &fileStubStore{
-		db: testUsers,
+	db := &store.MockStorage{
+		DataMock: testUsers,
 	}
-	fmt.Println(db.db)
+	fmt.Println(db.DataMock)
 	repo := NewRepository(db)
 
 	emptyFilter := make(map[string]interface{})
