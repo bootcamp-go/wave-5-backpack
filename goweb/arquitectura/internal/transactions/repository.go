@@ -9,7 +9,7 @@ import (
 const (
 	FailReading         = "can`t read database"
 	FailWriting         = "can`t write database, error: %w"
-	TransactionNotFound = "transaction with id %d douesn`t exists en database"
+	TransactionNotFound = "transaction with id %d doesn`t exists en database"
 )
 
 type Repository interface {
@@ -90,7 +90,7 @@ func (r *repository) Update(id int, tranCode, currency string, amount float64, t
 		Amount:      amount,
 		Transmitter: transmitter,
 		Reciever:    receiver,
-		TranDate:    tranCode,
+		TranDate:    tranDate,
 	}
 	updated := false
 	for i := range lista {
