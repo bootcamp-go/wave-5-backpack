@@ -53,5 +53,8 @@ func main() {
 	pr.PUT("/:id", p.Update())
 	pr.PATCH("/:id", p.UpdateNamePrice())
 	pr.DELETE("/:id", p.Delete())
-	router.Run()
+	err = router.Run()
+	if err != nil {
+		panic(err)
+	}
 }

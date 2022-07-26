@@ -177,3 +177,44 @@ func TestServiceIntegrationDeleteFail(t *testing.T) {
 	assert.Equal(t, domain.Product{}, result)
 	assert.True(t, mockStorage.ReadWasCalled)
 }
+
+func TestServiceIntegrationGetById(t *testing.T) {
+	//arrange
+	database := []domain.Product{
+		{Id: 1, Nombre: "Before Update", Color: "Negro", Precio: 100, Stock: 10, Codigo: "000", Publicado: true, FechaCreacion: "02-11-1999"},
+		{Id: 2, Nombre: "Televisor", Color: "Azul", Precio: 200, Stock: 5, Codigo: "111", Publicado: false, FechaCreacion: "12-04-1989"},
+	}
+	mockStorage := MockStorage{
+		dataMock: database,
+		errWrite: "",
+		errRead:  "",
+	}
+
+	//act
+	repository := NewRepository(&mockStorage)
+	service := NewService(repository)
+	resultado, err := service.GetByID(1)
+
+	//assert
+	assert.Equal(t, mockStorage.dataMock[0], resultado, "deben ser iguales")
+	assert.Equal(t, nil, err, "deben ser iguales")
+}
+
+func TestServiceIntegrationGetByIdFail(t *testing.T) {
+	//arrange
+	mockStorage := MockStorage{
+		dataMock: nil,
+		errWrite: "",
+		errRead:  "cant read database",
+	}
+	expectedError := fmt.Errorf("cant read database")
+
+	//act
+	repository := NewRepository(&mockStorage)
+	service := NewService(repository)
+	resultado, err := service.GetByID(1)
+
+	//assert
+	assert.Equal(t, expectedError, err, "deben ser iguales")
+	assert.Equal(t, domain.Product{}, resultado, "deben ser iguales")
+}
