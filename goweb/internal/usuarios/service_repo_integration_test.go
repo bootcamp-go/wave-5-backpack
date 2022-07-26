@@ -49,6 +49,7 @@ func TestIntegrationUpdate(t *testing.T) {
 			Id: 2, Nombre: "Titan", Apellido: "Pintos", Altura: 1, FechaCreacion: "2019",
 		},
 	}
+
 	newUser := domain.Usuarios{
 		Id: 1, Nombre: "New", Apellido: "New", Email: "yvop", Edad: 10, Altura: 3, Activo: true, FechaCreacion: "1992",
 	}

@@ -67,7 +67,10 @@ func main() {
 		us.DELETE("/:id", u.Delete())
 		us.PATCH("/:id", u.UpdateNameAndLastName())
 	}
-	router.Run()
+	err := router.Run()
+	if err != nil {
+		panic("Router error")
+	}
 }
 
 func tokenAuthMiddleware() gin.HandlerFunc {
