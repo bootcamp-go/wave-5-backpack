@@ -54,7 +54,10 @@ func main() {
 	rProductos.PATCH("/:id", p.UpdatePrecio())
 	rProductos.DELETE("/:id", p.Delete())
 
-	router.Run()
+	if err := router.Run(); err != nil {
+		log.Panic(err)
+	}
+
 }
 
 func TokenAuthMiddleware() gin.HandlerFunc {
