@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -56,5 +57,9 @@ func main() {
 	users.PATCH("/:id", u.PatchLastNameAge())
 	users.DELETE("/:id", u.Delete())
 
-	r.Run()
+	errServer := r.Run()
+
+	if errServer != nil {
+		fmt.Println("error running server")
+	}
 }

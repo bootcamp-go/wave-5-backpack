@@ -115,8 +115,7 @@ func (c *Usuario) Update() gin.HandlerFunc {
 			return
 		}
 		var req domain.Usuario
-		idParam := ctx.Param("id")
-		id, err := strconv.Atoi(idParam)
+		id, _ := strconv.Atoi(ctx.Param("id"))
 
 		if err := ctx.Bind(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, web.ERR_BAD_REQUEST))
@@ -154,8 +153,7 @@ func (c *Usuario) PatchLastNameAge() gin.HandlerFunc {
 			return
 		}
 		var req LastNameAgePatchRequest
-		idParam := ctx.Param("id")
-		id, err := strconv.Atoi(idParam)
+		id, _ := strconv.Atoi(ctx.Param("id"))
 
 		if err := ctx.Bind(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(400, nil, web.ERR_BAD_REQUEST))
