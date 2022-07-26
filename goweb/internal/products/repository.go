@@ -78,6 +78,10 @@ func (r *repository) CreateProduct(id int, nombre, color string, precio float64,
 }
 
 func (r *repository) Update(id int, nombre, color string, precio float64, stock int, código string, publicado bool, fecha_de_creación string) (domain.Products, error) {
+	var ps2 []domain.Products
+	if err := r.db.Read(&ps2); err != nil {
+		return domain.Products{}, fmt.Errorf(FailReading)
+	}
 	p := domain.Products{
 		Id:            id,
 		Nombre:        nombre,
@@ -89,24 +93,31 @@ func (r *repository) Update(id int, nombre, color string, precio float64, stock 
 		FechaCreacion: fecha_de_creación,
 	}
 	updated := false
-	for i := range ps {
-		if ps[i].Id == id {
+	for i := range ps2 {
+		if ps2[i].Id == id {
 			p.Id = id
-			ps[i] = p
+			ps2[i] = p
 			updated = true
 		}
 	}
 	if !updated {
 		return domain.Products{}, fmt.Errorf("Producto %d no encontrado", id)
 	}
+	if err := r.db.Write(ps2); err != nil {
+		return domain.Products{}, fmt.Errorf(FailWriting, err)
+	}
 	return p, nil
 }
 
 func (r *repository) Delete(id int) error {
+	var ps2 []domain.Products
+	if err := r.db.Read(&ps2); err != nil {
+		return fmt.Errorf(FailReading)
+	}
 	deleted := false
 	var index int
-	for i := range ps {
-		if ps[i].Id == id {
+	for i := range ps2 {
+		if ps2[i].Id == id {
 			index = i
 			deleted = true
 		}
@@ -114,7 +125,10 @@ func (r *repository) Delete(id int) error {
 	if !deleted {
 		return fmt.Errorf("Producto %d no encontrado", id)
 	}
-	ps = append(ps[:index], ps[index+1:]...)
+	ps2 = append(ps2[:index], ps2[index+1:]...)
+	if err := r.db.Write(ps2); err != nil {
+		return fmt.Errorf(FailWriting, err)
+	}
 	return nil
 
 }

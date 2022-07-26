@@ -1,22 +1,22 @@
 [
     {
         "id": 1,
-        "nombre": "aguacate",
-        "color": "verde",
-        "precio": 30000,
-        "stock": 5,
-        "código": "23fe2",
+        "nombre": "Sandia",
+        "color": "verdoso",
+        "precio": 2132222,
+        "stock": 2,
+        "código": "sdw11",
         "publicado": true,
-        "fecha_de_creación": "23/10/2022"
+        "fecha_de_creación": "23/11/2022"
     },
     {
         "id": 2,
-        "nombre": "Banana",
+        "nombre": "Tamarindo",
         "color": "Amarillo",
-        "precio": 60000,
-        "stock": 13,
-        "código": "d7fe2",
+        "precio": 323000,
+        "stock": 4,
+        "código": "21fe2",
         "publicado": true,
-        "fecha_de_creación": "30/11/2022"
+        "fecha_de_creación": "23/10/2022"
     }
 ]
