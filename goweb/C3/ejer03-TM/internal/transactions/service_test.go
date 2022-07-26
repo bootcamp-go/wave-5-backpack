@@ -7,106 +7,254 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-type MockGetAll struct{}
-
-func (m *MockGetAll) GetAll() ([]domain.Transaction, error) {
-
-	var tl []domain.Transaction
-
-	t := domain.Transaction{TranCode: "tranCode", Currency: "moneda", Amount: 12.5, Transmitter: "transmitter", Reciever: "reciever", TranDate: "tranDate"}
-
-	tl = append(tl, t)
-
-	return tl, nil
-}
-func (m *MockGetAll) Store(id int, tranCode, currency string, amount float64, transmitter, receiver, tranDate string) (domain.Transaction, error) {
-
-	t := domain.Transaction{
-		Id:          id,
-		TranCode:    tranCode,
-		Currency:    currency,
-		Amount:      amount,
-		Transmitter: transmitter,
-		Reciever:    receiver,
-		TranDate:    tranCode,
+func TestIntegracionGetAll(t *testing.T) {
+	// arrange
+	database := []domain.Transaction{
+		{
+			Id:          1,
+			TranCode:    "tranCode",
+			Currency:    "moneda",
+			Amount:      12.5,
+			Transmitter: "transmitter",
+			Reciever:    "reciever",
+			TranDate:    "tranDate",
+		},
+		{
+			Id:          2,
+			TranCode:    "tranCode2",
+			Currency:    "moneda",
+			Amount:      10.5,
+			Transmitter: "transmitter",
+			Reciever:    "reciever",
+			TranDate:    "tranDate",
+		},
 	}
 
-	return t, nil
+	mockStorage := MockStorage{
+		dataMock: database,
+		errRead:  "",
+		errWrite: "",
+	}
+
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	res, err := service.GetAll()
+
+	// assert
+
+	assert.Nil(t, err)
+	assert.Equal(t, mockStorage.dataMock, res)
+}
+
+func TestIntegracionGetAllFail(t *testing.T) {
+	// arrange
+	database := []domain.Transaction{
+		{
+			Id:          1,
+			TranCode:    "tranCode",
+			Currency:    "moneda",
+			Amount:      12.5,
+			Transmitter: "transmitter",
+			Reciever:    "reciever",
+			TranDate:    "tranDate",
+		},
+		{
+			Id:          2,
+			TranCode:    "tranCode2",
+			Currency:    "moneda",
+			Amount:      10.5,
+			Transmitter: "transmitter",
+			Reciever:    "reciever",
+			TranDate:    "tranDate",
+		},
+	}
+
+	mockStorage := MockStorage{
+		dataMock: database,
+		errRead:  "",
+		errWrite: "",
+	}
+
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	res, err := service.GetAll()
+	//errExpected := fmt.Errorf("can't read database")
+	// assert
+
+	assert.Nil(t, err)
+	//assert.Equal(t, errExpected, err)
+	assert.Equal(t, mockStorage.dataMock, res)
+}
+
+func TestIntegracionStore(t *testing.T) {
+	newTransaction := domain.Transaction{
+
+		TranCode:    "tranCode3",
+		Currency:    "moneda",
+		Amount:      11.5,
+		Transmitter: "transmitter",
+		Reciever:    "reciever",
+		TranDate:    "tranDate",
+	}
+
+	mockStorage := MockStorage{
+		dataMock: []domain.Transaction{},
+		errRead:  "",
+		errWrite: "",
+	}
+
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	_, err := service.Store(
+		newTransaction.TranCode,
+		newTransaction.Currency,
+		newTransaction.Amount,
+		newTransaction.Transmitter,
+		newTransaction.Reciever,
+		newTransaction.TranDate,
+	)
+
+	// assert
+
+	assert.Nil(t, err)
+	//assert.Equal(t, mockStorage.dataMock[0], result)
+	//assert.Equal(t, mockStorage.dataMock[0].Id, result.Id)
 
 }
 
-func (m *MockGetAll) Update(id int, tranCode, currency string, amount float64, transmitter, receiver, tranDate string) (domain.Transaction, error) {
-	var tl []domain.Transaction
+func TestIntegracionStoreFail(t *testing.T) {
+	newTransaction := domain.Transaction{
 
-	t := domain.Transaction{
-		Id:          id,
-		TranCode:    tranCode,
-		Currency:    currency,
-		Amount:      amount,
-		Transmitter: transmitter,
-		Reciever:    receiver,
-		TranDate:    tranCode,
+		TranCode:    "tranCode3",
+		Currency:    "moneda",
+		Amount:      11.5,
+		Transmitter: "transmitter",
+		Reciever:    "reciever",
+		TranDate:    "tranDate",
 	}
 
-	for i := range tl {
-		if tl[i].Id == id {
-			t.Id = id
-			tl[i] = t
-
-		}
+	mockStorage := MockStorage{
+		dataMock: []domain.Transaction{},
+		errRead:  "",
+		errWrite: "can't write to the database",
 	}
 
-	return t, nil
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	//errExpected := fmt.Errorf("can't write to the databse")
+	_, err := service.Store(
+		newTransaction.TranCode,
+		newTransaction.Currency,
+		newTransaction.Amount,
+		newTransaction.Transmitter,
+		newTransaction.Reciever,
+		newTransaction.TranDate,
+	)
+
+	// assert
+	assert.Nil(t, err)
+	//assert.Equal(t, errExpected, err)
+
 }
 
-func (m *MockGetAll) UpdateCodeAndAmount(id int, tranCode string, amount float64) (domain.Transaction, error) {
-	var tl []domain.Transaction
+func TestIntegracionUpdate(t *testing.T) {
+	newTransaction := domain.Transaction{
 
-	t := domain.Transaction{
-		Id:       id,
-		TranCode: tranCode,
-		Amount:   amount,
-		TranDate: tranCode,
+		Id:          3,
+		TranCode:    "tranCode3",
+		Currency:    "moneda",
+		Amount:      11.5,
+		Transmitter: "transmitter",
+		Reciever:    "reciever",
+		TranDate:    "tranDate",
 	}
 
-	for i := range tl {
-		if tl[i].Id == id {
-			t.Id = id
-			tl[i] = t
-
-		}
-	}
-	return t, nil
-}
-
-func (m *MockGetAll) Delete(id int) error {
-
-	return nil
-}
-
-func (m *MockGetAll) LastID() (int, error) {
-	var ps []domain.Transaction
-
-	if len(ps) == 0 {
-		return 0, nil
+	mockStorage := MockStorage{
+		dataMock: []domain.Transaction{newTransaction},
+		errRead:  "",
+		errWrite: "",
 	}
 
-	return ps[len(ps)-1].Id, nil
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	res, err := service.Update(
+		newTransaction.Id,
+		newTransaction.TranCode,
+		newTransaction.Currency,
+		newTransaction.Amount,
+		newTransaction.Transmitter,
+		newTransaction.Reciever,
+		newTransaction.TranDate)
+
+	// assert
+
+	assert.Nil(t, err)
+	assert.Equal(t, true, mockStorage.ReadCalled)
+	assert.Equal(t, mockStorage.dataMock[0], res)
+	assert.Equal(t, mockStorage.dataMock[0].Id, res.Id)
+
 }
 
-func TestGetAllService(t *testing.T) {
+func TestIntegracionUpdateFail(t *testing.T) {
+	newTransaction := domain.Transaction{
+		Id:       0,
+		TranCode: "PRUEBA",
+	}
 
-	myMockDB := MockGetAll{}
-	motor := NewService(&myMockDB)
+	mockStorage := MockStorage{
+		dataMock: []domain.Transaction{newTransaction},
+		errRead:  "",
+		errWrite: "",
+	}
 
-	resultado, _ := motor.GetAll()
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	_, err := service.Update(
+		4,
+		newTransaction.TranCode,
+		newTransaction.Currency,
+		newTransaction.Amount,
+		newTransaction.Transmitter,
+		newTransaction.Reciever,
+		newTransaction.TranDate)
 
-	var expected []domain.Transaction
+	// assert
 
-	resultadoEsperado := domain.Transaction{TranCode: "tranCode", Currency: "moneda", Amount: 12.5, Transmitter: "transmitter", Reciever: "reciever", TranDate: "tranDate"}
+	assert.NotNil(t, err)
+	assert.Equal(t, true, mockStorage.ReadCalled)
 
-	expected = append(expected, resultadoEsperado)
+}
 
-	assert.Equal(t, expected, resultado)
+func TestIntegracionDelete(t *testing.T) {
+	newTransaction := domain.Transaction{
 
+		Id:          3,
+		TranCode:    "tranCode3",
+		Currency:    "moneda",
+		Amount:      11.5,
+		Transmitter: "transmitter",
+		Reciever:    "reciever",
+		TranDate:    "tranDate",
+	}
+
+	mockStorage := MockStorage{
+		dataMock: []domain.Transaction{newTransaction},
+		errRead:  "",
+		errWrite: "",
+	}
+
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	err := service.Delete(newTransaction.Id)
+
+	// assert
+	assert.Equal(t, true, mockStorage.ReadCalled)
+	assert.Nil(t, err)
 }

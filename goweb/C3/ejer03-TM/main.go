@@ -57,8 +57,11 @@ func main() {
 	tr.PUT("/:id", transactions.Update())
 	tr.PATCH("/:id", transactions.UpdateCodeAndAmount())
 	tr.DELETE("/:id", transactions.Delete())
-	router.Run()
+	err = router.Run()
 
+	if err != nil {
+		log.Fatal("error al correr router")
+	}
 }
 
 func TokenAuthMiddleware() gin.HandlerFunc {
