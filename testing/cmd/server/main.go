@@ -1,61 +1,31 @@
 package main
 
 import (
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
-	"os"
-	"testing/cmd/server/docs"
-	"testing/cmd/server/handler"
-	"testing/internal/products"
-	"testing/pkg/file"
-
+	"github.com/bootcamp-go/go-testing/cmd/server/handler"
+	"github.com/bootcamp-go/go-testing/internal/products"
+	"github.com/bootcamp-go/go-testing/pkg/store"
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
 )
 
-// @title Bootcamp MELI API
-// @version 1.0
-// @description esta api maneja los productos de nuestro proyecto
-// @termsOfService N/A
-
-// @contact.name API Support
-// @contact.url www.com
-
-// @license.name Apache 2.0
-// @license.url www.com
 func main() {
-	fileDB := file.NewFile("/Users/pmelegatti/Documents/wave-5-backpack/goweb/resources/products.json")
-	if err := fileDB.Ping(); err != nil {
+	loadEnv()
+
+	r := gin.Default()
+	db := store.NewFileStore("./products.json")
+	repo := products.NewRepository(db)
+	serv := products.NewService(repo)
+	p := handler.NewProducts(serv)
+
+	pr := r.Group("products")
+	pr.GET("/", p.GetAll())
+
+	r.Run()
+}
+
+func loadEnv() {
+	err := godotenv.Load()
+	if err != nil {
 		panic(err)
 	}
-	repository := products.NewRepository(fileDB)
-	service := products.NewService(repository)
-	p := handler.NewProduct(service)
-
-	router := gin.Default()
-
-	docs.SwaggerInfo.Host = os.Getenv("HOST")
-	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
-	router.GET("/", func(ctx *gin.Context) {
-		name := ctx.Request.URL.Query().Get("name")
-		if name == "" {
-			name = "Anonimo"
-		}
-		ctx.JSON(200, gin.H{
-			"message": "Saludos " + name,
-		})
-
-	})
-
-	productos := router.Group("/products")
-	{
-		productos.GET("/", p.GetAll())
-		productos.GET("/:id", p.GetById())
-		productos.POST("/", p.Store())
-		productos.PUT("/:id", p.UpdateTotal())
-		productos.PATCH("/:id", p.UpdatePartial())
-		productos.DELETE("/:id", p.Delete())
-	}
-
-	router.Run(":8080")
 }

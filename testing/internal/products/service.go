@@ -1,82 +1,32 @@
 package products
 
-import (
-	"errors"
-	"fmt"
-	"testing/internal/domain"
-)
-
 type Service interface {
-	GetAll() ([]domain.Product, error)
-	Store(name string, color string, price float64, stock uint64, code string, published bool, createdAt string) (domain.Product, error)
-	GetById(id uint64) (domain.Product, error)
-	UpdateTotal(id uint64, name string, color string, price float64, stock uint64, code string, published bool, createdAt string) (domain.Product, error)
-	UpdatePartial(id uint64, nombre string, color string, precio float64, stock uint64, codigo string, publicado bool, fechaCreacion string) (domain.Product, error)
-	Delete(id uint64) (domain.Product, error)
+	GetAll() ([]*Product, error)
+	UpdateName(id int, nombre string) (*Product, error)
+	Update(id int, nombre string, stock int, precio float64) (*Product, error)
+	Delete(id int) error
 }
 
 type service struct {
-	repository Repository
+	repo Repository
 }
 
 func NewService(r Repository) Service {
-	return &service{
-		repository: r,
-	}
+	return &service{repo: r}
 }
 
-func (s *service) GetAll() ([]domain.Product, error) {
-	products, err := s.repository.GetAll()
-	if err != nil {
-		return nil, errors.New("no se pudo obtener los productos")
-	}
-	return products, errors.New("no se pudo obtener los productos")
+func (s *service) GetAll() ([]*Product, error) {
+	return s.repo.GetAll()
 }
 
-func (s *service) Store(name string, color string, price float64, stock uint64, code string, published bool, createdAt string) (domain.Product, error) {
-	id, err := s.repository.LastId()
-	if err != nil {
-		return domain.Product{}, errors.New("no se pudo cargar el último id de los productos")
-	}
-
-	id++
-
-	producto, err := s.repository.Store(id, name, color, price, stock, code, published, createdAt)
-	if err != nil {
-		return domain.Product{}, errors.New("no se pudo guardar el producto")
-	}
-
-	return producto, nil
+func (s *service) UpdateName(id int, nombre string) (*Product, error) {
+	return s.repo.UpdateName(id, nombre)
 }
 
-func (s *service) GetById(id uint64) (domain.Product, error) {
-	producto, err := s.repository.GetById(id)
-	if err != nil {
-		return domain.Product{}, fmt.Errorf("no se pudo encontrar el producto con el id: %d", id)
-	}
-	return producto, nil
+func (s *service) Update(id int, nombre string, stock int, precio float64) (*Product, error) {
+	return s.repo.Update(id, nombre, stock, precio)
 }
 
-func (s *service) UpdateTotal(id uint64, name string, color string, price float64, stock uint64, code string, published bool, createdAt string) (domain.Product, error) {
-	producto, err := s.repository.UpdateTotal(id, name, color, price, stock, code, published, createdAt)
-	if err != nil {
-		return domain.Product{}, err
-	}
-	return producto, nil
-}
-
-func (s *service) UpdatePartial(id uint64, name string, color string, price float64, stock uint64, code string, published bool, createdAt string) (domain.Product, error) {
-	producto, err := s.repository.UpdatePartial(id, name, color, price, stock, code, published, createdAt)
-	if err != nil {
-		return domain.Product{}, err
-	}
-	return producto, nil
-}
-
-func (s *service) Delete(id uint64) (domain.Product, error) {
-	producto, err := s.repository.Delete(id)
-	if err != nil {
-		return domain.Product{}, fmt.Errorf("no se pudo encontrar el producto con el id: %d", id)
-	}
-	return producto, nil
+func (s *service) Delete(id int) error {
+	return s.repo.Delete(id)
 }

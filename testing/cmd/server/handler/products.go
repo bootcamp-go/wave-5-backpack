@@ -1,188 +1,97 @@
 package handler
 
 import (
-	"fmt"
-	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
 	"strconv"
-	"testing/internal/products"
-	"testing/pkg/web"
-)
 
-type Request struct {
-	Name       string  `json:"name"`
-	Color      string  `json:"color"`
-	Price      float64 `json:"price"`
-	Stock      uint64  `json:"stock"`
-	Code       string  `json:"code"`
-	Published  bool    `json:"published"`
-	Created_at string  `json:"created_at"`
-}
+	"github.com/bootcamp-go/go-testing/internal/products"
+	"github.com/bootcamp-go/go-testing/pkg/web"
+	"github.com/gin-gonic/gin"
+)
 
 type Product struct {
 	service products.Service
 }
 
-const (
-	FIELD_EMPTY = "el campo %s no puede estar vacio"
-)
+type request struct {
+	Nombre string  `json:"nombre"`
+	Stock  int     `json:"stock"`
+	Precio float64 `json:"precio"`
+}
 
-func NewProduct(s products.Service) *Product {
+func NewProducts(s products.Service) *Product {
 	return &Product{service: s}
 }
 
-// ProductList godoc
-// @Summary product List
-// @Tags Products
-// @Description get Products
-// @Accept json
-// @Produce json
-// @Param token header string true "token"
-// @Success 200
-// @Router /product [get]
 func (p *Product) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		token := ctx.Request.Header.Get("token")
+		if token != os.Getenv("TOKEN") {
+			ctx.JSON(http.StatusUnauthorized, web.NewResponse(401, nil, ""))
+			return
+		}
+
 		products, err := p.service.GetAll()
 		if err != nil {
-			ctx.JSON(500, web.NewRespose(500, nil, "error consultando los datos"))
+			ctx.JSON(http.StatusNotFound, web.NewResponse(404, nil, ""))
 			return
 		}
-		ctx.JSON(200, web.NewRespose(200, products, ""))
+
+		ctx.JSON(http.StatusOK, web.NewResponse(200, products, ""))
 	}
 }
 
-func (p *Product) GetById() gin.HandlerFunc {
+func (p *Product) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		idInt, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
+		token := ctx.Request.Header.Get("token")
+		if token != os.Getenv("TOKEN") {
+			ctx.JSON(http.StatusUnauthorized, web.NewResponse(401, nil, ""))
+			return
+		}
+
+		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
-			ctx.JSON(500, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(400, nil, ""))
+			return
 		}
-		producto, err := p.service.GetById(idInt)
+
+		var req request
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(400, nil, ""))
+			return
+		}
+
+		product, err := p.service.Update(int(id), req.Nombre, req.Stock, req.Precio)
 		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(400, nil, ""))
 			return
 		}
-		ctx.JSON(http.StatusOK, producto)
+
+		ctx.JSON(http.StatusOK, product)
 	}
-}
-
-func (p *Product) Store() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		var pr Request
-
-		if err := ctx.ShouldBindJSON(&pr); err != nil {
-			ctx.JSON(400, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-		errs := validate(pr)
-		if len(errs) > 0 {
-			ctx.JSON(400, gin.H{
-				"errors": errs,
-			})
-			return
-		}
-
-		created, err := p.service.Store(pr.Name, pr.Color, pr.Price, pr.Stock, pr.Code, pr.Published, pr.Created_at)
-		if err != nil {
-			ctx.JSON(400, err)
-			return
-		}
-		ctx.JSON(http.StatusOK, created)
-	}
-}
-
-func (p *Product) UpdateTotal() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		var pr Request
-		idInt, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
-		if err != nil {
-			ctx.JSON(500, gin.H{"error": err.Error()})
-			return
-		}
-		if err := ctx.ShouldBindJSON(&pr); err != nil {
-			ctx.JSON(400, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-		errs := validate(pr)
-		if len(errs) > 0 {
-			ctx.JSON(400, gin.H{
-				"errors": errs,
-			})
-			return
-		}
-
-		updated, err := p.service.UpdateTotal(idInt, pr.Name, pr.Color, pr.Price, pr.Stock, pr.Code, pr.Published, pr.Created_at)
-		if err != nil {
-			ctx.JSON(400, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-		ctx.JSON(http.StatusOK, updated)
-	}
-}
-
-func (p *Product) UpdatePartial() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		var pr Request
-		idInt, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
-		if err != nil {
-			ctx.JSON(500, gin.H{"error": err.Error()})
-			return
-		}
-		if err := ctx.ShouldBindJSON(&pr); err != nil {
-			ctx.JSON(400, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-		fmt.Println(pr)
-		updated, err := p.service.UpdatePartial(idInt, pr.Name, pr.Color, pr.Price, pr.Stock, pr.Code, pr.Published, pr.Created_at)
-		if err != nil {
-			ctx.JSON(400, gin.H{
-				"error": err.Error(),
-			})
-			return
-		}
-		ctx.JSON(http.StatusOK, updated)
-	}
-}
-
-func validate(product Request) []string {
-	var errors []string
-	if product.Name == "" {
-		errors = append(errors, fmt.Errorf(FIELD_EMPTY, "nombre").Error())
-	}
-
-	if product.Color == "" {
-		errors = append(errors, fmt.Errorf(FIELD_EMPTY, "color").Error())
-	}
-
-	if product.Price == 0 {
-		errors = append(errors, fmt.Errorf(FIELD_EMPTY, "precio").Error())
-	}
-
-	if product.Code == "" {
-		errors = append(errors, fmt.Errorf(FIELD_EMPTY, "stock").Error())
-	}
-	return errors
 }
 
 func (p *Product) Delete() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		idInt, err := strconv.ParseUint(ctx.Param("id"), 10, 64)
-		if err != nil {
-			ctx.JSON(500, gin.H{"error": err.Error()})
-		}
-		producto, err := p.service.Delete(idInt)
-		if err != nil {
-			ctx.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+	return func(c *gin.Context) {
+		token := c.Request.Header.Get("token")
+		if token != os.Getenv("TOKEN") {
+			c.JSON(http.StatusUnauthorized, web.NewResponse(401, nil, "token inválido")) //401
 			return
 		}
-		ctx.JSON(http.StatusOK, producto)
+
+		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, web.NewResponse(400, nil, err.Error())) //400
+			return
+		}
+
+		err = p.service.Delete(int(id))
+		if err != nil {
+			c.JSON(http.StatusNotFound, web.NewResponse(404, nil, err.Error())) //404
+			return
+		}
+
+		c.JSON(http.StatusNoContent, web.NewResponse(204, nil, ""))
 	}
 }
