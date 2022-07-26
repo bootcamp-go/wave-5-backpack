@@ -90,5 +90,8 @@ func main() {
 	transactionsRoute.PUT("/:id", transactions.Update())
 	transactionsRoute.PATCH("/:id", transactions.UpdateCurrencyAndAmount())
 	transactionsRoute.DELETE("/:id", transactions.Delete())
-	router.Run()
+	if err := router.Run(); err != nil {
+		fmt.Println(err.Error())
+	}
+
 }

@@ -4,16 +4,9 @@ import (
 	"errors"
 	"fmt"
 	"goweb/internal/domain"
-	"math/rand"
+	"goweb/pkg/utils"
 	"time"
 )
-
-func randomString(length int) string {
-	rand.Seed(time.Now().UnixNano())
-	b := make([]byte, length)
-	rand.Read(b)
-	return fmt.Sprintf("%x", b)[:length]
-}
 
 type Service interface {
 	GetAll() ([]domain.Transaction, error)
@@ -51,9 +44,10 @@ func (s *service) Store(Currency string, Amount float64, Sender string, Reciever
 	if err != nil {
 		return domain.Transaction{}, errors.New("error: cannot generate ID")
 	}
+
 	Id := lastId + 1
 	TransactionDate := time.Now()
-	TransactionCode := randomString(30)
+	TransactionCode := utils.RandomString(30)
 	if isAmountZeroOrNegative(Amount) {
 		return domain.Transaction{}, &NotAllowedAmountZeroOrNegative{}
 	}
