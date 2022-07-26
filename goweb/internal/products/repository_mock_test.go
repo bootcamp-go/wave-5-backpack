@@ -32,7 +32,10 @@ func (s *MockStore) Ping() error {
 // Test
 
 func TestUpdateName(t *testing.T) {
+	// -------------------------------------------------------
 	// Se inicializan los datos a usar en el test (input y output)
+	// -------------------------------------------------------
+
 	myMockStore := MockStore{}
 	myRepository := NewRepositoryJsonCorrDB(&myMockStore)
 	resultadoEsperado := domain.Product{
@@ -46,10 +49,16 @@ func TestUpdateName(t *testing.T) {
 		FechaCreacion: "2020-01-01",
 	}
 
+	// -------------------------------------------------------
 	// Se ejecuta el test
+	// -------------------------------------------------------
+
 	resultadoObtenido, err := myRepository.UpdateNombre(1, "After Update")
 
+	// -------------------------------------------------------
 	// Se compara el resultado obtenido con el resultado esperado
+	// -------------------------------------------------------
+
 	assert.Nil(t, err)
 	assert.Equal(t, resultadoEsperado, resultadoObtenido)
 	assert.True(t, myMockStore.ReadWasCalled)
