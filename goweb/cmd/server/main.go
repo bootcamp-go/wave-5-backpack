@@ -46,7 +46,9 @@ func main() {
 	usersGroup.PUT("/:id", userHandler.Update())
 	usersGroup.PATCH("/:id", userHandler.UpdateLastNameAndAge())
 	usersGroup.DELETE("/:id", userHandler.Delete())
-	router.Run()
+	if err := router.Run(); err != nil {
+		panic(err)
+	}
 }
 
 func tokenAuthMiddleware() gin.HandlerFunc {
