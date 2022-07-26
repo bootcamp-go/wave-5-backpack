@@ -9,8 +9,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestServiceIntegrationGetAll(t *testing.T) {
-db := []domain.Product{
+var dbs = []domain.Product{
 	{Id: 1, 
 	Name: "Update Before", 
 	Color: "azul",
@@ -29,8 +28,10 @@ db := []domain.Product{
 	CreatedAt: "2006-01-02T15:04:05Z07:00"},
 }
 
+func TestServiceIntegrationGetAll(t *testing.T) {
+
 mockStorage := store.MockStorage{
-	DataMock: db,
+	DataMock: dbs,
 	ErrWrite: "",
 	ErrRead: "",
 }
@@ -62,28 +63,9 @@ func TestServiceIntegrationGetAllFail(t *testing.T) {
 	assert.Nil(t, result)
  }
 
- func TestServiceIntegrationUpdate(t *testing.T) {
-	db := []domain.Product{
-		{Id: 1, 
-		Name: "Update Before", 
-		Color: "azul",
-		Price: 1500, 
-		Stock: 100, 
-		Code: "AFN123", 
-		Publisher: true, 
-		CreatedAt: "2006-01-02T15:04:05Z07:00"},
-		{Id: 2, 
-		Name: "product2", 
-		Color: "blanco",
-		Price: 1200, 
-		Stock: 50, 
-		Code: "BFN123", 
-		Publisher: false, 
-		CreatedAt: "2006-01-02T15:04:05Z07:00"},
-	}
-	
+ func TestServiceIntegrationUpdate(t *testing.T) {	
 	mockStorage := store.MockStorage{
-		DataMock: db,
+		DataMock: dbs,
 		ErrWrite: "",
 		ErrRead: "",
 	}
@@ -107,27 +89,8 @@ func TestServiceIntegrationGetAllFail(t *testing.T) {
 }
 
 func TestServiceIntegrationDelete(t *testing.T) {
-	db := []domain.Product{
-		{Id: 1, 
-		Name: "Update Before", 
-		Color: "azul",
-		Price: 1500, 
-		Stock: 100, 
-		Code: "AFN123", 
-		Publisher: true, 
-		CreatedAt: "2006-01-02T15:04:05Z07:00"},
-		{Id: 2, 
-		Name: "product2", 
-		Color: "blanco",
-		Price: 1200, 
-		Stock: 50, 
-		Code: "BFN123", 
-		Publisher: false, 
-		CreatedAt: "2006-01-02T15:04:05Z07:00"},
-	}
-	
 	mockStorage := store.MockStorage{
-		DataMock: db,
+		DataMock: dbs,
 		ErrWrite: "",
 		ErrRead: "",
 	}

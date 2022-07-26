@@ -67,8 +67,5 @@ func TestStubGetAll(t *testing.T) {
 	resultado, err := repo.GetAll()
 	assert.Nil(t, err)
 	assert.Equal(t, esperado, resultado)
-	
-
-
 
 }

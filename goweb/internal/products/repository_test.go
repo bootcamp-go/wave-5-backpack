@@ -7,9 +7,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 )
-
-func TestGetAll(t *testing.T) {
-db := []domain.Product{
+var db = []domain.Product{
 	{Id: 1, 
 	Name: "Update Before", 
 	Color: "azul",
@@ -28,6 +26,8 @@ db := []domain.Product{
 	CreatedAt: "2006-01-02T15:04:05Z07:00"},
 }
 
+func TestGetAll(t *testing.T) {
+
 mockStorage := store.MockStorage{
 	DataMock: db,
 	ErrWrite: "",
@@ -44,25 +44,6 @@ assert.True(t, mockStorage.ReadFile)
 }
 
 func TestUpdate(t *testing.T) {
-	db := []domain.Product{
-		{Id: 1, 
-		Name: "Update Before", 
-		Color: "azul",
-		Price: 1500, 
-		Stock: 100, 
-		Code: "AFN123", 
-		Publisher: true, 
-		CreatedAt: "2006-01-02T15:04:05Z07:00"},
-		{Id: 2, 
-		Name: "product2", 
-		Color: "blanco",
-		Price: 1200, 
-		Stock: 50, 
-		Code: "BFN123", 
-		Publisher: false, 
-		CreatedAt: "2006-01-02T15:04:05Z07:00"},
-	}
-	
 	mockStorage := store.MockStorage{
 		DataMock: db,
 		ErrWrite: "",
@@ -87,25 +68,6 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	db := []domain.Product{
-		{Id: 1, 
-		Name: "Update Before", 
-		Color: "azul",
-		Price: 1500, 
-		Stock: 100, 
-		Code: "AFN123", 
-		Publisher: true, 
-		CreatedAt: "2006-01-02T15:04:05Z07:00"},
-		{Id: 2, 
-		Name: "product2", 
-		Color: "blanco",
-		Price: 1200, 
-		Stock: 50, 
-		Code: "BFN123", 
-		Publisher: false, 
-		CreatedAt: "2006-01-02T15:04:05Z07:00"},
-	}
-	
 	mockStorage := store.MockStorage{
 		DataMock: db,
 		ErrWrite: "",
