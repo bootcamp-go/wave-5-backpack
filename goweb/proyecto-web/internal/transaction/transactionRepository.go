@@ -128,6 +128,7 @@ func (r *repository) Delete(id int) error {
 			indexBuscado = index
 		}
 	}
+
 	if indexBuscado < 0 {
 		return fmt.Errorf(TransactionNotFound, id)
 	}

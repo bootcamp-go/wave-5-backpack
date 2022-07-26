@@ -1,7 +1,6 @@
 package transaction
 
 import (
-	"fmt"
 	"proyecto-web/internal/domain"
 	"testing"
 
@@ -9,9 +8,6 @@ import (
 )
 
 // Ejercicio 1 - Crear un stub del storage para probar el método GetAll()
-
-type StubStorage struct{}
-
 func TestGetAll(t *testing.T) {
 	// arrange
 	stub := StubStorage{}
@@ -47,44 +43,7 @@ func TestGetAll(t *testing.T) {
 	assert.Equal(t, result[1], expected[1])
 }
 
-func (s *StubStorage) Read(data interface{}) error {
-	dataCasteada := data.(*[]domain.Transaction)
-
-	*dataCasteada = []domain.Transaction{
-		{
-			Id:                0,
-			CodigoTransaccion: "A1",
-			Moneda:            "PESOS",
-			Monto:             5.0,
-			Emisor:            "ARCOR",
-			Receptor:          "AFIP",
-			FechaTransaccion:  "12-01-2022",
-		},
-		{
-			Id:                1,
-			CodigoTransaccion: "A2",
-			Moneda:            "DOLARES",
-			Monto:             20.0,
-			Emisor:            "TOYOTA",
-			Receptor:          "AFIP",
-			FechaTransaccion:  "22-06-2022",
-		},
-	}
-	return nil
-}
-func (s *StubStorage) Write(data interface{}) error {
-	return nil
-}
-
 // Ejercicio 2: Crear un mock del Storage para probar el métood UpdateName (UpdateParcial para este proyecto). Verificar la invocación del método Read
-
-type MockStorage struct {
-	dataMock      []domain.Transaction
-	readWasCalled bool
-	errWrite      string
-	errRead       string
-}
-
 func TestUpdateParcial(t *testing.T) {
 	//arrange
 	transaction := []domain.Transaction{
@@ -111,27 +70,4 @@ func TestUpdateParcial(t *testing.T) {
 	assert.Equal(t, true, StorageMock.readWasCalled)
 	assert.Equal(t, "BEFORE UPDATE", previusCodigo)
 	assert.Equal(t, "AFTER UPDATE", updatedData.CodigoTransaccion)
-}
-
-func (m *MockStorage) Read(data interface{}) error {
-	m.readWasCalled = true
-	if m.errRead != "" {
-		return fmt.Errorf(m.errRead)
-	}
-
-	dataCasteada := data.(*[]domain.Transaction)
-	*dataCasteada = m.dataMock
-	return nil
-}
-
-func (m *MockStorage) Write(data interface{}) error {
-	if m.errWrite != "" {
-		return fmt.Errorf(m.errWrite)
-	}
-
-	dataCasteada := data.([]domain.Transaction)
-
-	last := dataCasteada[len(dataCasteada)-1]
-	m.dataMock = append(m.dataMock, last)
-	return nil
 }

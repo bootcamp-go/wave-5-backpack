@@ -1,6 +1,8 @@
 package transaction
 
-import "proyecto-web/internal/domain"
+import (
+	"proyecto-web/internal/domain"
+)
 
 type ITransactionService interface {
 	GetAll() []domain.Transaction
