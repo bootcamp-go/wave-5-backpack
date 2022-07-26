@@ -1,4 +1,4 @@
-module clase2-testing-prt1
+module clase3-testing-prt1
 
 go 1.18
 
