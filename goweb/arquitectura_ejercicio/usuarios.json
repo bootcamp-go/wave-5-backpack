@@ -1,0 +1,132 @@
+[
+    {
+        "id": 1,
+        "nombre": "Gabriela",
+        "apellido": "Rueda",
+        "edad": 23,
+        "fechaCreacion": "16(07/2016",
+        "altura": 1.55,
+        "email": "gr132@hotmail.com",
+        "activo": true
+    },
+    {
+        "id": 2,
+        "nombre": "Adrian",
+        "apellido": "Allard",
+        "edad": 17,
+        "fechaCreacion": "21/09/2015",
+        "altura": 1.75,
+        "email": "achatnoir@gmail.com",
+        "activo": true
+    },
+    {
+        "id": 3,
+        "nombre": "Maria",
+        "apellido": "Dufont",
+        "edad": 16,
+        "fechaCreacion": "18/12/2016",
+        "altura": 1.62,
+        "email": "mdufon18@hotmail.com",
+        "activo": false
+    },
+    {
+        "id": 4,
+        "nombre": "Karime",
+        "apellido": "Lopez",
+        "edad": 25,
+        "fechaCreacion": "12/02/2021",
+        "altura": 1.69,
+        "email": "klopez@upemor.edu.mx",
+        "activo": true
+    },
+    {
+        "id": 5,
+        "nombre": "Julieta",
+        "apellido": "Brooke",
+        "edad": 16,
+        "fechaCreacion": "14/02/2022",
+        "altura": 1.6,
+        "email": "julsbroo@yahoo.com",
+        "activo": true
+    },
+    {
+        "id": 6,
+        "nombre": "Adiel",
+        "apellido": "Cervantes",
+        "edad": 25,
+        "fechaCreacion": "01/09/2015",
+        "altura": 1.68,
+        "email": "adiel09@hotmail.com",
+        "activo": true
+    },
+    {
+        "id": 7,
+        "nombre": "Lively",
+        "apellido": "Bronach",
+        "edad": 24,
+        "fechaCreacion": "22/12/2020",
+        "altura": 1.73,
+        "email": "livysun@gmail.com.mx",
+        "activo": true
+    },
+    {
+        "id": 8,
+        "nombre": "Alberto",
+        "apellido": "Morales",
+        "edad": 34,
+        "fechaCreacion": "19/05/2011",
+        "altura": 1.62,
+        "email": "ab10@gmail.com",
+        "activo": false
+    },
+    {
+        "id": 9,
+        "nombre": "Chloé",
+        "apellido": "Bourgeois",
+        "edad": 23,
+        "fechaCreacion": "09/08/2019",
+        "altura": 1.65,
+        "email": "xoxo14@outlook.com",
+        "activo": false
+    },
+    {
+        "id": 10,
+        "nombre": "Luke",
+        "apellido": "Roberts",
+        "edad": 25,
+        "fechaCreacion": "06/04/2021",
+        "altura": 1.82,
+        "email": "lukerobertsss@gmail.com",
+        "activo": true
+    },
+    {
+        "id": 11,
+        "nombre": "Ashton",
+        "apellido": "Brooke",
+        "edad": 25,
+        "fechaCreacion": "05/07/2022",
+        "altura": 1.78,
+        "email": "drummsticks@gmail.com",
+        "activo": true
+    },
+    {
+        "id": 12,
+        "nombre": "aaaaaa",
+        "apellido": "1",
+        "edad": 25,
+        "fechaCreacion": "7 JUL 2022",
+        "altura": 0,
+        "email": "an@gmail.com",
+        "activo": true
+    },
+    {
+        "id": 13,
+        "nombre": "GABRIELA",
+        "apellido": "RUEDA",
+        "edad": 28,
+        "fechaCreacion": "8 JUL 2022",
+        "altura": 0,
+        "email": "andy@gmail.com",
+        "activo": true
+    }
+]
