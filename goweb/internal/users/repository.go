@@ -26,7 +26,7 @@ type repository struct {
 	db store.Store
 }
 
-func NewRepositoy(db store.Store) Repository {
+func NewRepository(db store.Store) Repository {
 	return &repository{
 		db: db,
 	}

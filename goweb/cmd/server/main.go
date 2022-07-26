@@ -32,7 +32,7 @@ func main() {
 	if err := db.Ping(); err != nil {
 		log.Fatal("error al intentar cargar archivo")
 	}
-	repo := users.NewRepositoy(db)
+	repo := users.NewRepository(db)
 	service := users.NewService(repo)
 	u := handler.NewUser(service)
 
