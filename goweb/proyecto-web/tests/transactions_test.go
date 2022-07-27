@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"proyecto-web/cmd/handlers"
 	"proyecto-web/internal/domain"
 	"proyecto-web/internal/transaction"
@@ -14,12 +15,11 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"github.com/stretchr/testify/assert"
 )
 
 func createServer() *gin.Engine {
-	err := godotenv.Load("../.env")
+	err := os.Setenv("TOKEN", "123456")
 	if err != nil {
 		log.Fatal("error al intentar cargar archivo .env")
 	}
@@ -80,8 +80,8 @@ func TestUpdate(t *testing.T) {
 }
 
 func TestDelete(t *testing.T) {
-	transactionToDelete := BeforeEachTestDelete(16)
-	defer AfterEachTestDelete(transactionToDelete)
+	transactionToDelete := BeforeTestDelete(16)
+	defer AfterTestDelete(transactionToDelete)
 	//arrange
 	server := createServer()
 	request, response := createRequestTest(http.MethodDelete, "/transacciones/16", "")
@@ -101,14 +101,14 @@ func TestDelete(t *testing.T) {
 	assert.Equal(t, "Delete exitoso", transactionResponse)
 }
 
-func AfterEachTestDelete(transacaction domain.Transaction) {
+func AfterTestDelete(transacaction domain.Transaction) {
 	server := createServer()
 	body, _ := json.Marshal(transacaction)
 	request, response := createRequestTest(http.MethodPost, "/transacciones/", string(body))
 	server.ServeHTTP(response, request)
 }
 
-func BeforeEachTestDelete(id int) domain.Transaction {
+func BeforeTestDelete(id int) domain.Transaction {
 	server := createServer()
 	request, response := createRequestTest(http.MethodGet, fmt.Sprintf("/transacciones/%d", id), "")
 	server.ServeHTTP(response, request)
