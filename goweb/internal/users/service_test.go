@@ -1,7 +1,6 @@
 package users
 
 import (
-	"errors"
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"goweb/internal/domain"
@@ -10,13 +9,14 @@ import (
 
 type mockService struct {
 	data     []domain.User
-	Err      error
+	ErrRead  error
+	ErrWrite error
 	isCalled bool
 }
 
 func (m *mockService) Read(data interface{}) error {
-	if m.Err != nil {
-		return m.Err
+	if m.ErrRead != nil {
+		return m.ErrRead
 	}
 	user := data.(*[]domain.User)
 	*user = m.data
@@ -25,11 +25,11 @@ func (m *mockService) Read(data interface{}) error {
 }
 
 func (m *mockService) Write(data interface{}) error {
-	if m.Err != nil {
-		return m.Err
+	if m.ErrWrite != nil {
+		return m.ErrWrite
 	}
 	user := data.([]domain.User)
-	m.data = append(m.data, user...)
+	m.data = append(m.data, user[len(user)-1])
 	return nil
 }
 
@@ -111,16 +111,15 @@ func TestUpdateFailedRead(t *testing.T) {
 	}
 
 	mock := mockService{
-		data: users,
-		Err:  errors.New("Error: "),
+		data:    users,
+		ErrRead: fmt.Errorf("error al leer el archivo"),
 	}
 
 	repo := NewRepository(&mock)
 	service := NewService(repo)
 	_, err := service.Update(6, "Update", "Update", "bedoya@gmail.com", 21, 1.61, true, "2021-10-02T04:44:12 +05:00")
 
-	expectError := fmt.Errorf("error al actualizar el usuario %d", 6)
-	assert.EqualError(t, err, expectError.Error())
+	assert.EqualError(t, err, mock.ErrRead.Error())
 }
 
 func TestDelete(t *testing.T) {
@@ -145,18 +144,27 @@ func TestDelete(t *testing.T) {
 			Activo:        true,
 			FechaCreacion: "2021-10-02T04:44:12 +05:00",
 		},
+		{
+			Id:            3,
+			Nombre:        "Daniela",
+			Apellido:      "After Update",
+			Email:         "bedoya@gmail.com",
+			Edad:          21,
+			Altura:        1.61,
+			Activo:        true,
+			FechaCreacion: "2021-10-02T04:44:12 +05:00",
+		},
 	}
 
 	mock := mockService{
 		data: users,
-		Err:  nil,
 	}
 
 	repo := NewRepository(&mock)
 	service := NewService(repo)
 	err := service.Delete(1)
 
-	assert.Nil(t, err.Error())
+	assert.Nil(t, err)
 }
 
 func TestDeleteNotFound(t *testing.T) {
@@ -185,7 +193,6 @@ func TestDeleteNotFound(t *testing.T) {
 
 	mock := mockService{
 		data: users,
-		Err:  nil,
 	}
 
 	repo := NewRepository(&mock)

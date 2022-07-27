@@ -61,7 +61,7 @@ func (s *service) GetById(id int) (domain.User, error) {
 func (s *service) Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error) {
 	user, err := s.repository.Update(id, nombre, apellido, email, edad, altura, activo, fechaCreacion)
 	if err != nil {
-		return domain.User{}, fmt.Errorf("error al actualizar el usuario %d", id)
+		return domain.User{}, err
 	}
 
 	return user, nil

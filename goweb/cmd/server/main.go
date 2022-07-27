@@ -51,7 +51,9 @@ func main() {
 		users.PATCH("/:id", u.Patch())
 	}
 
-	router.Run(":8080")
+	if err := router.Run(); err != nil {
+		return
+	}
 }
 
 func validateToken() gin.HandlerFunc {

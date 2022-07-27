@@ -8,8 +8,6 @@ import (
 	"strconv"
 )
 
-var users []domain.User
-
 type Repository interface {
 	GetAll() ([]domain.User, error)
 	Store(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error)
@@ -29,12 +27,12 @@ func NewRepository(db store.Store) Repository {
 }
 
 func (r *repository) GetAll() ([]domain.User, error) {
+	var users []domain.User
 	if err := r.db.Read(&users); err != nil {
 		return nil, fmt.Errorf("error al leer el archivo")
 	}
 	return users, nil
 }
-
 
 func (r *repository) Store(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error) {
 	var user []domain.User
@@ -54,6 +52,7 @@ func (r *repository) Store(id int, nombre, apellido, email string, edad int, alt
 }
 
 func (r *repository) GetById(id int) (domain.User, error) {
+	var users []domain.User
 	for _, user := range users {
 		if user.Id == id {
 			return user, nil
@@ -76,34 +75,29 @@ func (r *repository) LastId() (int, error) {
 }
 
 func (r *repository) Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fechaCreacion string) (domain.User, error) {
+	var users []domain.User
 	if err := r.db.Read(&users); err != nil {
 		return domain.User{}, fmt.Errorf("error al leer el archivo")
 	}
 
 	user := domain.User{Id: id, Nombre: nombre, Apellido: apellido, Email: email, Edad: edad, Altura: altura, Activo: activo, FechaCreacion: fechaCreacion}
 
-	update := false
-
 	for index, v := range users {
 		if v.Id == id {
 			user.Id = id
 			users[index] = user
-			update = true
+			if err := r.db.Write(users); err != nil {
+				return domain.User{}, fmt.Errorf("error al escribir en el archivo, error: %w", err)
+			}
+			return user, nil
 		}
 	}
+	return domain.User{}, fmt.Errorf("no se encontró el usuario con el ID %d", id)
 
-	if !update {
-		return domain.User{}, fmt.Errorf("no se encontró el usuario con el ID %d", id)
-	}
-
-	if err := r.db.Write(users); err != nil {
-		return domain.User{}, fmt.Errorf("error al escribir en el archivo, error: %w", err)
-	}
-
-	return user, nil
 }
 
 func (r *repository) Delete(id int) error {
+	var users []domain.User
 	if err := r.db.Read(&users); err != nil {
 		return fmt.Errorf("error al leer el archivo")
 	}
@@ -130,6 +124,7 @@ func (r *repository) Delete(id int) error {
 }
 
 func (r *repository) Patch(id int, apellido string, edad int) (domain.User, error) {
+	var users []domain.User
 	var user domain.User
 
 	if err := r.db.Read(&users); err != nil {
