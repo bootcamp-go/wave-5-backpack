@@ -141,12 +141,12 @@
     },
     {
         "id": 15,
-        "nombre": "test",
-        "apellido": "tes",
-        "edad": 28,
-        "fechaCreacion": "27 JUL 2022",
-        "altura": 0,
-        "email": "testing@gmail.com",
+        "nombre": "testing",
+        "apellido": "funcional",
+        "edad": 32,
+        "fechaCreacion": "7 JUL 2022",
+        "altura": 1.53,
+        "email": "testfun@gsjk.com",
         "activo": true
     }
 ]
