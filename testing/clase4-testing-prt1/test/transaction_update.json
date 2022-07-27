@@ -1,0 +1,56 @@
+[
+  {
+    "id": 1,
+    "codigo de transaccion": "kasjdfl34k3",
+    "moneda": "JPY ",
+    "monto": 1012.76,
+    "emisor": "Saundra",
+    "receptor": "Patty",
+    "fecha de transaccion": "2018-06-24"
+  },
+  {
+    "id": 2,
+    "codigo de transaccion": "klnl35l25nk",
+    "moneda": "EUR",
+    "monto": 983.07,
+    "emisor": "Robinson",
+    "receptor": "Clarice",
+    "fecha de transaccion": "2019-05-11"
+  },
+  {
+    "id": 4,
+    "codigo de transaccion": "m3m2lknfk2",
+    "moneda": "EUR",
+    "monto": 1108.98,
+    "emisor": "Melissa",
+    "receptor": "Hammond",
+    "fecha de transaccion": "2019-05-09"
+  },
+  {
+    "id": 5,
+    "codigo de transaccion": "kasjdfl34k3",
+    "moneda": "CHF",
+    "monto": 1012.76,
+    "emisor": "Jackie",
+    "receptor": "Baxter",
+    "fecha de transaccion": "04-07-2016"
+  },
+  {
+    "id": 6,
+    "codigo de transaccion": "acxf2x3fx",
+    "moneda": "MXN",
+    "monto": 6374.53,
+    "emisor": "Max",
+    "receptor": "Sandra",
+    "fecha de transaccion": "2018-12-12"
+  },
+  {
+    "id": 7,
+    "codigo de transaccion": "klamn3b7ah",
+    "moneda": "KPW",
+    "monto": 10000.5,
+    "emisor": "Loui",
+    "receptor": "Linda",
+    "fecha de transaccion": "2015-07-23"
+  }
+]
