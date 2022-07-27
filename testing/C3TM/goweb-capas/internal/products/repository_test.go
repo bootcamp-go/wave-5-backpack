@@ -1,39 +1,33 @@
 package products
 
-import (
-	"testing"
+import "fmt"
 
-	"github.com/stretchr/testify/assert"
-)
-
-type StubStore struct {
+type MockStorage struct {
+	ReadWasCalled bool
+	dataMock      []Product
+	errWrite      string
+	errRead       string
 }
 
-func (fs *StubStore) Read(data interface{}) error {
-	all := data.(*[]Product)
-	*all = []Product{
-		{ID: 1, Name: "Cama", Type: "Madera", Count: 2, Price: 270000.0},
-		{ID: 2, Name: "Silla", Type: "Madera", Count: 2, Price: 27000.0},
+func (m *MockStorage) Write(data interface{}) error {
+	if m.errWrite != "" {
+		return fmt.Errorf(m.errWrite)
 	}
+	a := data.([]Product)
+	m.dataMock = a
 	return nil
 }
 
-func (fs *StubStore) Write(data interface{}) error {
-	return nil
-}
-
-func (fs *StubStore) Ping() error {
-	return nil
-}
-
-func TestGetAll(t *testing.T) {
-	stub := StubStore{}
-	repo := NewRepository(&stub)
-	expected := []Product{
-		{ID: 1, Name: "Cama", Type: "Madera", Count: 2, Price: 270000.0},
-		{ID: 2, Name: "Silla", Type: "Madera", Count: 2, Price: 27000.0},
+func (m *MockStorage) Read(data interface{}) error {
+	m.ReadWasCalled = true
+	if m.errRead != "" {
+		return fmt.Errorf(m.errRead)
 	}
-	all, err := repo.GetAll()
-	assert.Nil(t, err)
-	assert.Equal(t, expected, all, "No coincide la información de usuario esperada con la obtenida")
+	a := data.(*[]Product)
+	*a = m.dataMock
+	return nil
+}
+
+func (m *MockStorage) Ping() error {
+	return nil
 }
