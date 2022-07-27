@@ -2,25 +2,19 @@ package users
 
 import (
 	"clase2_2/internal/domain"
-	"fmt"
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type MuckStore struct {
-	dataMock     []domain.User
-	errWrite     string
-	errRead      string
 	isReadCalled bool
 }
 
 func (f *MuckStore) Read(data interface{}) error {
-	if f.errRead != "" {
-		return fmt.Errorf(f.errRead)
-	}
-	a := data.(*[]domain.User)
-	*a = f.dataMock
-
+	users := []domain.User{{Id: 1, Name: "nombre1", LastName: "apellido1", Mail: "mail1", Years: 25, Tall: 1, Enable: true, CreateDate: "0/0/0"},
+		{Id: 2, Name: "nombre2", LastName: "apellido2", Mail: "mail2", Years: 20, Tall: 2, Enable: false, CreateDate: "0/0/0"}}
+	(*data.(*[]domain.User)) = users
 	f.isReadCalled = true
 	return nil
 }
@@ -30,7 +24,7 @@ func (f *MuckStore) Write(data interface{}) error {
 }
 
 //Ejercicio 2
-func TestMuckGetAll(t *testing.T) {
+func TestMuckUpdate(t *testing.T) {
 	db := &MuckStore{}
 	repository := NewRepository(db)
 	esperado := domain.User{Id: 1, Name: "nombre10", LastName: "apellido10", Mail: "mail10", Years: 20, Tall: 10, Enable: false, CreateDate: "1/1/1"}

@@ -1,6 +1,9 @@
 package users
 
-import "clase2_2/internal/domain"
+import (
+	"clase2_2/internal/domain"
+	"errors"
+)
 
 type Service interface {
 	GetAll() ([]domain.User, error)
@@ -58,7 +61,7 @@ func (s *service) Delete(id int) error {
 func (s *service) UpdateUserName(name string, id int) (domain.User, error) {
 	user, err := s.rep.UpdateUserName(name, id)
 	if err != nil {
-		return domain.User{}, err
+		return domain.User{}, errors.New("no se encontró el producto de id 2")
 	}
 
 	return user, nil
