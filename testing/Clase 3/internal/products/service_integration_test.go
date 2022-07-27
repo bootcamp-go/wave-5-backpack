@@ -129,3 +129,35 @@ func TestDelete(t *testing.T) {
 	assert.Nil(t, errGetAll)
 	assert.Equal(t, expected, newList)
 }
+
+func TestDeleteNonExistant(t *testing.T) {
+	expected := "no se pudo encontrar el producto con el id: 3"
+	mock := MockFileService{
+		mockData: []domain.Product{
+			{
+				Id:         1,
+				Name:       "Laptop",
+				Color:      "black",
+				Price:      999.99,
+				Stock:      100,
+				Code:       "SJD23RFG",
+				Published:  false,
+				Created_at: "2022-06-30",
+			},
+			{
+				Id:         2,
+				Name:       "3090",
+				Color:      "green",
+				Price:      2000,
+				Stock:      10,
+				Code:       "QBH76BC",
+				Published:  true,
+				Created_at: "2022-01-24",
+			},
+		},
+	}
+	r := NewRepository(&mock)
+	s := NewService(r)
+	_, errUpdate := s.Delete(3)
+	assert.Equal(t, expected, errUpdate.Error())
+}
