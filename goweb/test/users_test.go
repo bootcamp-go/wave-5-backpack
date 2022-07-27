@@ -53,7 +53,7 @@ func TestUpdateUserOK(t *testing.T) {
 func TestDeleteUserOK(t *testing.T) {
 	r := createServer("users.json")
 
-	req, rr := createRequestTest(http.MethodDelete, "/users/2", "")
+	req, rr := createRequestTest(http.MethodDelete, "/users/1", "")
 
 	r.ServeHTTP(rr, req)
 

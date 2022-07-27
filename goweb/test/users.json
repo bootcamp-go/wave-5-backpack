@@ -1,12 +1,1 @@
-[
-	{
-		"id": 1,
-		"nombre": "Daniela",
-		"apellido": "Bedoya",
-		"email": "djfsj@gmail.com",
-		"edad": 20,
-		"altura": 1.45,
-		"activo": true,
-		"fechaCreacion": "2021-10-02T04:44:12 +05:00"
-	}
-]
+[]
