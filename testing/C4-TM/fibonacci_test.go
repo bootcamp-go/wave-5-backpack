@@ -13,6 +13,10 @@ func TestFibonacci(t *testing.T) {
 	}{
 		{1, 1},
 		{2, 1},
+		{3, 2},
+		{7, 13},
+		{12, 144},
+		{17, 1597},
 	}
 
 	for _, d := range tests {
