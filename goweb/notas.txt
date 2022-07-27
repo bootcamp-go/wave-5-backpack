@@ -1,0 +1,14 @@
+clase 2 TM goweb
+validador de campos con el validador de gin
+agregar el import 
+"github.com/go-playground/validator/v10"
+codigo de validacion
+errs := err.(validator.ValidationErrors)
+		for _, valError := range errs {
+			if valError.Tag() == "required" {
+				ctx.JSON(400, gin.H{
+					"error": fmt.Sprintf("el campo '%s' es requerido", valError.Field()),
+				})
+				return
+			}
+		}

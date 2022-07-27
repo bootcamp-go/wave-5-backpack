@@ -68,7 +68,7 @@ func (r *repository) Create(id, codigoTransaccion int, moneda string, monto floa
 	tr = append(tr, t)
 
 	if err := r.db.Write(tr); err != nil {
-		return Transaction{}, fmt.Errorf("FailWriting", err)
+		return Transaction{}, fmt.Errorf("FailWriting %w", err)
 	}
 
 	return t, nil
@@ -92,7 +92,7 @@ func (r *repository) Update(id, codigoTransaccion int, moneda string, monto floa
 		return Transaction{}, errors.New("id not found")
 	}
 	if err := r.db.Write(tr); err != nil {
-		return Transaction{}, fmt.Errorf("FailWriting", err)
+		return Transaction{}, fmt.Errorf("FailWriting %w", err)
 	}
 	return t, nil
 }
@@ -115,7 +115,7 @@ func (r *repository) UpdatePartial(id, codigoTransaccion int, monto float64) (Tr
 		return Transaction{}, errors.New("id not found")
 	}
 	if err := r.db.Write(tr); err != nil {
-		return Transaction{}, fmt.Errorf("FailWriting", err)
+		return Transaction{}, fmt.Errorf("FailWriting %w", err)
 	}
 
 	return tr_i, nil
@@ -140,7 +140,7 @@ func (r *repository) Delete(id int) (Transaction, error) {
 		return Transaction{}, errors.New("id not found")
 	}
 	if err := r.db.Write(tr); err != nil {
-		return Transaction{}, fmt.Errorf("FailWriting", err)
+		return Transaction{}, fmt.Errorf("FailWriting %w", err)
 	}
 	return deleteTransaction, nil
 }

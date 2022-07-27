@@ -43,6 +43,8 @@ func main() {
 	router.GET("/transactions", GetAll)
 	router.GET("/transactions/:id", FindTransactionbyID)
 	router.GET("/transactions/field", FindTransactionbyField) // waiting a GET petition with query
+
+	router.POST("/transactions", postEntity)
 	router.Run()
 }
 
@@ -78,7 +80,13 @@ func FindTransactionbyField(ctx *gin.Context) {
 
 }
 
-// func FindId(id string, t []Transactions) Transactions{
+func postEntity(ctx *gin.Context) {
+	token := ctx.GetHeader("token")
+	if token != "123456" {
+		ctx.JSON(401, gin.H{
+			"error": "no estas autorizado para esta operacion",
+		})
+		return
+	}
 
-// 	return t[1]
-// }
+}

@@ -10,6 +10,8 @@ Son test aplicados a la aplicacion en general para validar que cumpla los requer
 luego de que esta ya alla pasado por procesos de test mas especificos sobre fracgmentos
 funcionales de la aplicacion , (test funcional --> black box)
 
+sobre una funcionalidad (1 caracteristica del requerimiento)
+
 Ejercicio 3
 ¿Qué es un Test de Integración?
 este test es aplicado en la union de varias piezas de codigo que interactuan en la aplicacion general , despues de que estos ya han sido validados 
@@ -17,9 +19,9 @@ individualmente , permite validar si la integracion , "union de capas" interactu
 
 Ejercicio 4
 Indicar las dimensiones de calidad prioritarias en MELI.
-funcionalidad: es relacionado a el cumplimiento de los requisitos para el cial fue diseñado
-rendimeinto: el uso de recursos , eficacia + eficiencia
-fiabilidad: que se pueda confiar en el codigo operando en diferentes escenarios y tiempos
-seguridad: que tenga depurado el uso de codigo de 3ros para minimizar vulneravilidades
+funcionalidad:  es relacionado a el cumplimiento de los requisitos para el cual fue diseñado el software
+rendimiento:    el uso de recursos , eficacia + eficiencia
+fiabilidad:     que se pueda confiar en el codigo operando en diferentes escenarios y tiempos
+seguridad:      que tenga depurado el uso de codigo de 3ros para minimizar vulneravilidades
 mantenibilidad: buenas practicas de desarrollo para poder escalarlo y entenderlo por mas desarrolladores 
 
