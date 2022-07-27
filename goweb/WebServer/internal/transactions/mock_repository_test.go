@@ -21,6 +21,15 @@ var Tr = []Transaction{
 		Receptor:          "MeLi",
 		FechaTransaccion:  "26-07-2022",
 	},
+	{
+		Id:                2,
+		CodigoTransaccion: 100,
+		Moneda:            "USD",
+		Monto:             34.3,
+		Emisor:            "Buyer",
+		Receptor:          "MePa",
+		FechaTransaccion:  "26-07-2022",
+	},
 }
 
 func (fs *mockStore) Write(data interface{}) error {
@@ -39,7 +48,7 @@ func (fs *mockStore) Ping() error {
 	return nil
 }
 
-func TestUpdate(t *testing.T) {
+func TestUpdateRepository(t *testing.T) {
 	//arrange
 	mockDB := mockStore{}
 	repo := NewRepository(&mockDB)
@@ -63,6 +72,6 @@ func TestUpdate(t *testing.T) {
 
 	//assert
 	assert.True(t, mockDB.MockReadUsed)
-	assert.Nil(t, err)
+	assert.Nil(t, err, "have an error %w", err)
 	assert.Equal(t, afterUpdate, tr)
 }
