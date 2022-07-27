@@ -15,7 +15,7 @@ func TestGetAll(t *testing.T) {
 
 	expected := []domain.Transaction{
 		{
-			Id:                0,
+			Id:                1,
 			CodigoTransaccion: "A1",
 			Moneda:            "PESOS",
 			Monto:             5.0,
@@ -24,7 +24,7 @@ func TestGetAll(t *testing.T) {
 			FechaTransaccion:  "12-01-2022",
 		},
 		{
-			Id:                1,
+			Id:                2,
 			CodigoTransaccion: "A2",
 			Moneda:            "DOLARES",
 			Monto:             20.0,
@@ -48,7 +48,7 @@ func TestUpdateParcial(t *testing.T) {
 	//arrange
 	transaction := []domain.Transaction{
 		{
-			Id:                0,
+			Id:                1,
 			CodigoTransaccion: "BEFORE UPDATE",
 			Moneda:            "PESOS",
 			Monto:             5.0,
@@ -62,12 +62,13 @@ func TestUpdateParcial(t *testing.T) {
 	repo := NewRepository(StorageMock)
 
 	// act
-	previusData, _ := repo.GetById(0)
+	previusData, _ := repo.GetById(1)
 	previusCodigo := previusData.CodigoTransaccion
-	updatedData, _ := repo.UpdateParcial(0, "AFTER UPDATE", 5.0)
+	updatedData, err := repo.UpdateParcial(1, "AFTER UPDATE", 5.0)
 
 	// assert
 	assert.Equal(t, true, StorageMock.readWasCalled)
+	assert.Nil(t, err)
 	assert.Equal(t, "BEFORE UPDATE", previusCodigo)
 	assert.Equal(t, "AFTER UPDATE", updatedData.CodigoTransaccion)
 }

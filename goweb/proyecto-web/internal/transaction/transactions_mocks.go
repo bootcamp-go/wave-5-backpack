@@ -20,7 +20,7 @@ func (s *StubStorage) Read(data interface{}) error {
 
 	*dataCasteada = []domain.Transaction{
 		{
-			Id:                0,
+			Id:                1,
 			CodigoTransaccion: "A1",
 			Moneda:            "PESOS",
 			Monto:             5.0,
@@ -29,7 +29,7 @@ func (s *StubStorage) Read(data interface{}) error {
 			FechaTransaccion:  "12-01-2022",
 		},
 		{
-			Id:                1,
+			Id:                2,
 			CodigoTransaccion: "A2",
 			Moneda:            "DOLARES",
 			Monto:             20.0,

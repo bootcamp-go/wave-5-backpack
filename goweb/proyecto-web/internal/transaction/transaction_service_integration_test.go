@@ -205,3 +205,281 @@ func TestDeleteFailRead(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.ErrorContains(t, err, "cant read database")
 }
+
+// Ejercicio aumentar coverage
+func TestGetById(t *testing.T) {
+	dbFake := []domain.Transaction{
+		{
+			Id:                1,
+			CodigoTransaccion: "TRANSACCION ID UNO",
+			Moneda:            "PESOS",
+			Monto:             5.3,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-03-2021",
+		}, {
+			Id:                2,
+			CodigoTransaccion: "TRANSACCION ID DOS",
+			Moneda:            "DOLAR",
+			Monto:             5.3,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-03-2021",
+		}, {
+			Id:                3,
+			CodigoTransaccion: "TRANSACCION ID TRES",
+			Moneda:            "EURO",
+			Monto:             5.3,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-03-2021",
+		},
+	}
+
+	mockStorage := MockStorage{dataMock: dbFake}
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+
+	result, err := service.GetById(3)
+
+	assert.Nil(t, err)
+	assert.Equal(t, "TRANSACCION ID TRES", result.CodigoTransaccion)
+}
+
+func TestGetByIdNotFound(t *testing.T) {
+	dbFake := []domain.Transaction{
+		{
+			Id:                1,
+			CodigoTransaccion: "TRANSACCION ID UNO",
+			Moneda:            "PESOS",
+			Monto:             5.3,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-03-2021",
+		}, {
+			Id:                2,
+			CodigoTransaccion: "TRANSACCION ID DOS",
+			Moneda:            "DOLAR",
+			Monto:             5.3,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-03-2021",
+		}, {
+			Id:                3,
+			CodigoTransaccion: "TRANSACCION ID TRES",
+			Moneda:            "EURO",
+			Monto:             5.3,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-03-2021",
+		},
+	}
+
+	mockStorage := MockStorage{dataMock: dbFake}
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+
+	_, err := service.GetById(59)
+
+	assert.NotNil(t, err)
+	assert.ErrorContains(t, err, "not found")
+}
+
+func TestGetByIdErrorRead(t *testing.T) {
+	dbFake := []domain.Transaction{
+		{
+			Id:                1,
+			CodigoTransaccion: "TRANSACCION ID UNO",
+			Moneda:            "PESOS",
+			Monto:             5.3,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-03-2021",
+		}, {
+			Id:                2,
+			CodigoTransaccion: "TRANSACCION ID DOS",
+			Moneda:            "DOLAR",
+			Monto:             5.3,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-03-2021",
+		}, {
+			Id:                3,
+			CodigoTransaccion: "TRANSACCION ID TRES",
+			Moneda:            "EURO",
+			Monto:             5.3,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-03-2021",
+		},
+	}
+
+	mockStorage := MockStorage{dataMock: dbFake, errRead: "cant read database"}
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+
+	_, err := service.GetById(1)
+
+	assert.NotNil(t, err)
+	assert.ErrorContains(t, err, "cant read database")
+}
+
+// Ejercicio - Aumentar coverage
+
+func TestUpdateParcialFailNotFound(t *testing.T) {
+	//arrange
+	transaction := []domain.Transaction{
+		{
+			Id:                0,
+			CodigoTransaccion: "BEFORE UPDATE",
+			Moneda:            "PESOS",
+			Monto:             5.0,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-01-2022",
+		},
+	}
+
+	StorageMock := &MockStorage{dataMock: transaction}
+	repo := NewRepository(StorageMock)
+	servicio := NewService(repo)
+
+	// act
+	_, err := servicio.UpdateParcial(5, "AFTER UPDATE", 5.0)
+
+	// assert
+	assert.Equal(t, true, StorageMock.readWasCalled)
+	assert.NotNil(t, err)
+}
+
+func TestUpdateParcialFailWrite(t *testing.T) {
+	//arrange
+	transaction := []domain.Transaction{
+		{
+			Id:                1,
+			CodigoTransaccion: "BEFORE UPDATE",
+			Moneda:            "PESOS",
+			Monto:             5.0,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-01-2022",
+		},
+	}
+
+	StorageMock := &MockStorage{dataMock: transaction, errWrite: "cannot write database"}
+	repo := NewRepository(StorageMock)
+	servicio := NewService(repo)
+
+	// act
+	_, err := servicio.UpdateParcial(1, "AFTER UPDATE", 5.0)
+
+	// assert
+	assert.Equal(t, true, StorageMock.readWasCalled)
+	assert.NotNil(t, err)
+	assert.ErrorContains(t, err, "cant write database")
+}
+
+func TestUpdateParcialFailRead(t *testing.T) {
+	//arrange
+	transaction := []domain.Transaction{
+		{
+			Id:                1,
+			CodigoTransaccion: "BEFORE UPDATE",
+			Moneda:            "PESOS",
+			Monto:             5.0,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-01-2022",
+		},
+	}
+
+	StorageMock := &MockStorage{dataMock: transaction, errRead: "cannot read database"}
+	repo := NewRepository(StorageMock)
+	servicio := NewService(repo)
+
+	// act
+	_, err := servicio.UpdateParcial(1, "AFTER UPDATE", 5.0)
+
+	// assert
+	assert.Equal(t, true, StorageMock.readWasCalled)
+	assert.NotNil(t, err)
+	assert.ErrorContains(t, err, "cant read database")
+}
+
+func TestCreate(t *testing.T) {
+	dbFake := []domain.Transaction{
+		{
+			Id:                1,
+			CodigoTransaccion: "TRANSACCION ID UNO",
+			Moneda:            "PESOS",
+			Monto:             5.3,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-03-2021",
+		}, {
+			Id:                2,
+			CodigoTransaccion: "TRANSACCION ID DOS",
+			Moneda:            "DOLAR",
+			Monto:             5.3,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-03-2021",
+		}, {
+			Id:                3,
+			CodigoTransaccion: "TRANSACCION ID TRES",
+			Moneda:            "EURO",
+			Monto:             5.3,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-03-2021",
+		},
+	}
+
+	mockStorage := MockStorage{dataMock: dbFake}
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+
+	result, err := service.Create(0, "NUEVA TRANSACCION", "LIBRA", 2.3, "FORD", "BNA", "21-07-2022")
+
+	assert.Nil(t, err)
+	assert.Equal(t, "NUEVA TRANSACCION", result.CodigoTransaccion)
+}
+
+func TestCreateFailWrite(t *testing.T) {
+	dbFake := []domain.Transaction{
+		{
+			Id:                1,
+			CodigoTransaccion: "TRANSACCION ID UNO",
+			Moneda:            "PESOS",
+			Monto:             5.3,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-03-2021",
+		}, {
+			Id:                2,
+			CodigoTransaccion: "TRANSACCION ID DOS",
+			Moneda:            "DOLAR",
+			Monto:             5.3,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-03-2021",
+		}, {
+			Id:                3,
+			CodigoTransaccion: "TRANSACCION ID TRES",
+			Moneda:            "EURO",
+			Monto:             5.3,
+			Emisor:            "ARCOR",
+			Receptor:          "AFIP",
+			FechaTransaccion:  "12-03-2021",
+		},
+	}
+
+	mockStorage := MockStorage{dataMock: dbFake, errWrite: "cant write database"}
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+
+	_, err := service.Create(0, "NUEVA TRANSACCION", "LIBRA", 2.3, "FORD", "BNA", "21-07-2022")
+
+	assert.NotNil(t, err)
+	assert.ErrorContains(t, err, "cant write database")
+}

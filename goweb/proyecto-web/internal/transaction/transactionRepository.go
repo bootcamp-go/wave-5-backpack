@@ -14,7 +14,7 @@ const (
 
 type IRepository interface {
 	GetAll() ([]domain.Transaction, error)
-	Create(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) domain.Transaction
+	Create(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error)
 	GetById(id int) (domain.Transaction, error)
 	Update(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error)
 	UpdateParcial(id int, codigoTransaccion string, monto float64) (domain.Transaction, error)
@@ -54,7 +54,7 @@ func (r *repository) GetById(id int) (domain.Transaction, error) {
 	return domain.Transaction{}, fmt.Errorf(TransactionNotFound, id)
 }
 
-func (r *repository) Create(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) domain.Transaction {
+func (r *repository) Create(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error) {
 
 	var nuevaTransaccion = domain.Transaction{
 		Id:                r.generateId(),
@@ -68,8 +68,11 @@ func (r *repository) Create(id int, codigoTransaccion string, moneda string, mon
 	transacciones, _ := r.GetAll()
 
 	var nuevasTransaciones = append(transacciones, nuevaTransaccion)
-	r.bd.Write(nuevasTransaciones)
-	return nuevaTransaccion
+
+	if err := r.bd.Write(nuevasTransaciones); err != nil {
+		return domain.Transaction{}, fmt.Errorf(FailWriting)
+	}
+	return nuevaTransaccion, nil
 }
 
 func (r *repository) Update(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error) {

@@ -6,7 +6,7 @@ import (
 
 type ITransactionService interface {
 	GetAll() []domain.Transaction
-	Create(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) domain.Transaction
+	Create(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error)
 	GetById(id int) (domain.Transaction, error)
 	Update(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error)
 	UpdateParcial(id int, codigoTransaccion string, monto float64) (domain.Transaction, error)
@@ -28,7 +28,7 @@ func (s *transactionService) GetAll() []domain.Transaction {
 	return transactions
 }
 
-func (s *transactionService) Create(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) domain.Transaction {
+func (s *transactionService) Create(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error) {
 	return s.repository.Create(id, codigoTransaccion, moneda, monto, emisor, receptor, fecha)
 }
 

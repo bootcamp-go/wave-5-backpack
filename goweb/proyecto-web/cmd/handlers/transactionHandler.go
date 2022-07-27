@@ -95,7 +95,10 @@ func (t *TransactionHandler) Create() gin.HandlerFunc {
 			return
 		}
 
-		var newTransaction = t.service.Create(request.Id, request.CodigoTransaccion, request.Moneda, request.Monto, request.Emisor, request.Receptor, request.FechaTransaccion)
+		newTransaction, err := t.service.Create(request.Id, request.CodigoTransaccion, request.Moneda, request.Monto, request.Emisor, request.Receptor, request.FechaTransaccion)
+		if err != nil {
+			ctx.JSON(http.StatusOK, web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
+		}
 
 		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, newTransaction, ""))
 	}
@@ -127,6 +130,10 @@ func (t *TransactionHandler) Update() gin.HandlerFunc {
 
 		var request domain.Transaction
 		err := ctx.ShouldBindJSON(&request)
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
+			return
+		}
 
 		updatedTransaction, err := t.service.Update(id, request.CodigoTransaccion, request.Moneda, request.Monto, request.Emisor, request.Receptor, request.FechaTransaccion)
 
@@ -164,6 +171,10 @@ func (t *TransactionHandler) UpdateParcial() gin.HandlerFunc {
 
 		var request domain.Transaction
 		err := ctx.ShouldBindJSON(&request)
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
+			return
+		}
 
 		updatedTransaction, err := t.service.UpdateParcial(id, request.CodigoTransaccion, request.Monto)
 
@@ -204,7 +215,6 @@ func (t *TransactionHandler) Delete() gin.HandlerFunc {
 		}
 
 		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, "Delete exitoso", ""))
-		return
 	}
 }
 

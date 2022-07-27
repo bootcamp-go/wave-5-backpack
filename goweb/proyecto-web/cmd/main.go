@@ -50,5 +50,9 @@ func main() {
 		gr.DELETE("/:id", handler.Delete())
 	}
 
-	servidor.Run()
+	err = servidor.Run()
+	if err != nil {
+		panic("cannot create server")
+	}
+
 }
