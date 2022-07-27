@@ -2,7 +2,9 @@ package transactions
 
 import (
 	"fmt"
+	"log"
 	"testing"
+	"time"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/models"
 	"github.com/stretchr/testify/assert"
@@ -32,6 +34,40 @@ func (s *MockStorage) Write(data interface{}) error {
 	s.Data = p
 
 	return nil
+}
+
+func TestStoreStorage(t *testing.T) {
+	//Arrange
+	tr := models.Transaction{
+		ID:       0,
+		Monto:    1000.5,
+		Cod:      "aaa111",
+		Moneda:   "ARS",
+		Emisor:   "Mercado Pago",
+		Receptor: "BBVA",
+	}
+	trExpected := models.Transaction{
+		ID:       1,
+		Monto:    1000.5,
+		Cod:      "aaa111",
+		Moneda:   "ARS",
+		Emisor:   "Mercado Pago",
+		Receptor: "BBVA",
+		Fecha:    time.Local.String(),
+	}
+
+	//Act
+	mockStorage := MockStorage{Data: []models.Transaction{}}
+	repo := NewRepository(&mockStorage)
+	transaction, err := repo.Store(tr.Monto, tr.Cod, tr.Moneda, tr.Emisor, tr.Receptor)
+
+	log.Println(trExpected.Fecha)
+
+	//Assert
+	assert.Equal(t, trExpected, transaction)
+	assert.Nil(t, err)
+	assert.True(t, mockStorage.ReadCalled)
+	assert.True(t, mockStorage.WriteCalled)
 }
 
 func TestUpdateStorage(t *testing.T) {

@@ -33,7 +33,13 @@ func (r repository) Store(monto float64, cod, moneda, emisor, receptor string) (
 		return models.Transaction{}, fmt.Errorf("error: al leer el archivo %v", err)
 	}
 
-	newID := (tr[len(tr)-1].ID) + 1
+	var newID int
+	if len(tr) != 0 {
+		newID = (tr[len(tr)-1].ID) + 1
+	} else {
+		newID = 1
+	}
+
 	t := models.Transaction{
 		ID:       newID,
 		Monto:    monto,
@@ -41,7 +47,7 @@ func (r repository) Store(monto float64, cod, moneda, emisor, receptor string) (
 		Moneda:   moneda,
 		Emisor:   emisor,
 		Receptor: receptor,
-		Fecha:    time.Now().Local().String(),
+		Fecha:    time.Local.String(),
 	}
 
 	// Actualiza memoria
