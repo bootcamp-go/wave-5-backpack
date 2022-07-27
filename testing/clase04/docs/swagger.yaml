@@ -1,0 +1,233 @@
+definitions:
+  handler.request:
+    properties:
+      active:
+        type: boolean
+      age:
+        type: integer
+      createdat:
+        type: string
+      email:
+        type: string
+      height:
+        type: number
+      id:
+        type: integer
+      lastname:
+        type: string
+      name:
+        type: string
+    type: object
+  web.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      error:
+        type: string
+    type: object
+info:
+  contact:
+    name: API Support
+    url: https://developers.mercadolibre.com.ar/support
+  description: This API Handle MELI Users. You can get info about the users of the
+    platform, store new users in the database, edit existing users and more!
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
+  title: Franco Visintini API
+  version: "1.0"
+paths:
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: get all platform users that exist on the platform
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: List of all platform users
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: store users
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: User to store
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handler.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Store new users in the database
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: You can delete any user in the database
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User to delete
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handler.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Delete any User by Id
+      tags:
+      - Users
+    get:
+      consumes:
+      - application/json
+      description: Get one user by Id
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Get one user by Id
+      tags:
+      - Users
+    patch:
+      consumes:
+      - application/json
+      description: You can change user's age or lastname
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User to update
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handler.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Edit user's age or lastname
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: You can change any user's information but it is necessary to complete
+        all the fields
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User to update
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handler.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Edit all the fields of an User by Id
+      tags:
+      - Users
+swagger: "2.0"
