@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"strconv"
@@ -233,7 +234,9 @@ func (u *Usuarios) Store() gin.HandlerFunc {
 		}
 
 		var req request
+
 		if err := c.ShouldBindJSON(&req); err != nil {
+			log.Println(err, req)
 			c.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}

@@ -142,7 +142,11 @@ func (r *repository) Delete(id int) error {
 
 	us = append(us[:index], us[index+1:]...)
 
-	if err := r.db.Write(us); err != nil {
+	/* if err := r.db.Write(us); err != nil {
+		return fmt.Errorf(FailWriting, err)
+	} */
+
+	if err := r.db.Write(&us); err != nil {
 		return fmt.Errorf(FailWriting, err)
 	}
 	return nil

@@ -52,9 +52,9 @@
   {
     "id": 6,
     "nombre": "Stiven",
-    "apellido": "Pinzón",
+    "apellido": "Pizón",
     "email": "stiven@hotmail.com",
-    "edad": 31,
+    "edad": 25,
     "altura": 1.85,
     "activo": true,
     "fecha": "2022-07-11T18:25:47.237541-05:00"

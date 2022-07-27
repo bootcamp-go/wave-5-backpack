@@ -38,15 +38,35 @@
     "altura": 1.6,
     "activo": false,
     "fecha": "2022-07-06T16:41:51.17558-05:00"
-  }
-]  {
-    "id": 5,
-    "nombre": "Pepita",
-    "apellido": "Lozano",
-    "email": "pepita.perez@hotmail.com",
-    "edad": 24,
+  },
+  {
+    "id": 7,
+    "nombre": "Angela",
+    "apellido": "algun apellido",
+    "email": "angela@gmail.es",
+    "edad": 34,
     "altura": 1.6,
     "activo": true,
-    "fecha": "2022-07-07T17:56:34.434338-05:00"
+    "fecha": "2022-07-27T15:31:07.472606638-03:00"
+  },
+  {
+    "id": 9,
+    "nombre": "Angela",
+    "apellido": "algun apellido",
+    "email": "angela@gmail.es",
+    "edad": 34,
+    "altura": 1.6,
+    "activo": true,
+    "fecha": "2022-07-27T15:39:10.561515449-03:00"
+  },
+  {
+    "id": 10,
+    "nombre": "Angela",
+    "apellido": "algun apellido",
+    "email": "angela@gmail.es",
+    "edad": 34,
+    "altura": 1.6,
+    "activo": true,
+    "fecha": "2022-07-27T15:39:25.115141515-03:00"
   }
 ]

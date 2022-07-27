@@ -20,20 +20,22 @@ type FileStore struct {
 	FileName string
 }
 
+/*Modificando minimamente el write para que funcione*/
 func (fs *FileStore) Write(data interface{}) error {
 	fileData, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
 		return err
 	}
-	f, err := os.OpenFile(fs.FileName, os.O_CREATE|os.O_WRONLY, 0644)
+	/* f, err := os.OpenFile(fs.FileName, os.O_CREATE|os.O_WRONLY, 0644)
 	if err != nil {
 		return err
 	}
 	_, err = f.Write(fileData)
 	if err != nil {
 		return err
-	}
-	return nil
+	} */
+
+	return os.WriteFile(fs.FileName, fileData, 0644)
 }
 
 func (fs *FileStore) Read(data interface{}) error {
