@@ -2,7 +2,7 @@ package tickets
 
 import (
 	"context"
-	"github.com/bootcamp-go/wave-5-backpack/internal/domain"
+	"desafio-go-web/internal/domain"
 	"fmt"
 )
 

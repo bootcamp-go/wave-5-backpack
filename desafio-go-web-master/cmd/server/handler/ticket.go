@@ -21,7 +21,7 @@ func (s *Service) GetTicketsByCountry() gin.HandlerFunc {
 
 		destination := c.Param("dest")
 
-		tickets, err := s.service.GetTotalTickets(c, destination)
+		tickets, err := s.service.GetTicketByDestination(c, destination)
 		if err != nil {
 			c.String(http.StatusInternalServerError, err.Error(), nil)
 			return
