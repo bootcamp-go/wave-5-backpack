@@ -44,7 +44,10 @@ func main() {
 	router := gin.Default()
 
 	// Se deshabilita la advertencia de que la api confia en todos los proxies
-	router.SetTrustedProxies(nil)
+	errProxies := router.SetTrustedProxies(nil)
+	if errProxies != nil {
+		panic(err)
+	}
 
 	// Definimos Swagger
 	docs.SwaggerInfo.Host = os.Getenv("HOST")
@@ -65,5 +68,8 @@ func main() {
 		pr.DELETE("/:id", hand.Delete())
 	}
 
-	router.Run(":8080")
+	errRun := router.Run(":8080")
+	if errRun != nil {
+		panic(errRun)
+	}
 }
