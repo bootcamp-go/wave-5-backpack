@@ -11,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type request struct {
+type RequestUser struct {
 	Name     string  `json:"nombre"`
 	LastName string  `json:"apellido"`
 	Email    string  `json:"email"`
@@ -81,7 +81,7 @@ func (c *Usuario) Store() gin.HandlerFunc {
 			ctx.JSON(http.StatusUnauthorized, web.NewResponse(401, nil, web.ERR_TOKEN_INVALID))
 			return
 		}
-		var req request
+		var req RequestUser
 		if err := ctx.Bind(&req); err != nil {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(400, nil, web.ERR_BAD_REQUEST))
 			return

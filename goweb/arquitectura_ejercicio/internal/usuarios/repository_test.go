@@ -21,8 +21,8 @@ func (m *MockStorage) Read(data interface{}) error {
 		return fmt.Errorf(m.errRead)
 	}
 
-	a := data.(*[]domain.Usuario)
-	*a = m.dataMock
+	user := data.(*[]domain.Usuario)
+	*user = m.dataMock
 
 	m.hadCalledRead = true
 	return nil
