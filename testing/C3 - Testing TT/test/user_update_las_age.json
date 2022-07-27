@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "nombre": "Luz",
+    "apellido": "Lucumi",
+    "email": "luz.lucumi@hotmail.com",
+    "edad": 26,
+    "altura": 1.65,
+    "activo": true,
+    "fecha": "2022-07-06T16:41:51.17558-05:00"
+  },
+  {
+    "id": 2,
+    "nombre": "Luber",
+    "apellido": "Lucumi",
+    "email": "luber.lucumi@hotmail.com",
+    "edad": 61,
+    "altura": 1.82,
+    "activo": true,
+    "fecha": "2022-07-06T16:41:51.175581-05:00"
+  },
+  {
+    "id": 3,
+    "nombre": "Martha",
+    "apellido": "Martinez",
+    "email": "martha@hotmail.com",
+    "edad": 24,
+    "altura": 1.6,
+    "activo": true,
+    "fecha": "2022-07-06T16:41:51.175581-05:00"
+  },
+  {
+    "id": 4,
+    "nombre": "Luz",
+    "apellido": "Martinez",
+    "email": "luz.martinez@hotmail.com",
+    "edad": 26,
+    "altura": 1.6,
+    "activo": false,
+    "fecha": "2022-07-06T16:41:51.17558-05:00"
+  },
+  {
+    "id": 5,
+    "nombre": "Pepita",
+    "apellido": "Lozano",
+    "email": "pepita.perez@hotmail.com",
+    "edad": 24,
+    "altura": 1.6,
+    "activo": true,
+    "fecha": "2022-07-07T17:56:34.434338-05:00"
+  },
+  {
+    "id": 6,
+    "nombre": "Stiven",
+    "apellido": "Pinzón",
+    "email": "stiven@hotmail.com",
+    "edad": 31,
+    "altura": 1.85,
+    "activo": true,
+    "fecha": "2022-07-11T18:25:47.237541-05:00"
+  }
+]
