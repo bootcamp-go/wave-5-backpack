@@ -10,7 +10,7 @@ import (
 const (
 	TransNotFound = "La transacción %d no fue encontrada"
 	FailReading   = "No se puede leer la base de datos"
-	FailWriting   = "No se pudo escribir en la base de datos, error: %w"
+	FailWriting   = "No se pudo escribir en la base de datos"
 )
 
 type Repository interface {
@@ -68,7 +68,7 @@ func (r *repository) Store(id int, codigo string, moneda string, monto int, emis
 	}
 	transactions = append(transactions, trans)
 	if err := r.db.Write(transactions); err != nil {
-		return domain.Transaction{}, fmt.Errorf(FailWriting, err)
+		return domain.Transaction{}, fmt.Errorf(FailWriting)
 	}
 	return trans, nil
 }
@@ -95,7 +95,7 @@ func (r *repository) Update(id int, codigo string, moneda string, monto int, emi
 		}
 	}
 	if !updated {
-		return domain.Transaction{}, fmt.Errorf("Producto %d no encontrado", id)
+		return domain.Transaction{}, fmt.Errorf("Transacción %d no encontrada", id)
 	}
 	return trans, nil
 }
@@ -116,7 +116,7 @@ func (r *repository) Delete(id int) error {
 		}
 	}
 	if !deleted {
-		return fmt.Errorf("Producto %d no encontrado", id)
+		return fmt.Errorf("Transacción %d no encontrada", id)
 	}
 	transactions = append(transactions[:index], transactions[index+1:]...)
 	return nil
