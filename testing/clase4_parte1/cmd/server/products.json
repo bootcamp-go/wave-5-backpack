@@ -1,0 +1,30 @@
+[
+    {
+      "id": 1,
+      "nombre": "Pan",
+      "tipo": "Alimentos",
+      "cantidad": 10,
+      "precio": 50
+    },
+    {
+      "id": 2,
+      "nombre": "Desodorante",
+      "tipo": "Limpieza",
+      "cantidad": 5,
+      "precio": 100
+    },
+    {
+      "id": 3,
+      "nombre": "Leche",
+      "tipo": "Alimento",
+      "cantidad": 10,
+      "precio": 60
+    },
+    {
+      "id": 4,
+      "nombre": "Leche",
+      "tipo": "Alimento",
+      "cantidad": 10,
+      "precio": 60
+    }
+  ]

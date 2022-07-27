@@ -1,0 +1,135 @@
+[
+  {
+    "id": 1,
+    "nombre": "Pan",
+    "tipo": "Alimentos",
+    "cantidad": 10,
+    "precio": 50
+  },
+  {
+    "id": 2,
+    "nombre": "Desodorante",
+    "tipo": "Limpieza",
+    "cantidad": 5,
+    "precio": 100
+  },
+  {
+    "id": 3,
+    "nombre": "Leche",
+    "tipo": "Alimento",
+    "cantidad": 10,
+    "precio": 60
+  },
+  {
+    "id": 4,
+    "nombre": "Tester",
+    "tipo": "Funcional",
+    "cantidad": 10,
+    "precio": 9
+  },
+  {
+    "id": 5,
+    "nombre": "Tester",
+    "tipo": "Funcional",
+    "cantidad": 10,
+    "precio": 9
+  },
+  {
+    "id": 6,
+    "nombre": "Tester",
+    "tipo": "Funcional",
+    "cantidad": 10,
+    "precio": 9
+  },
+  {
+    "id": 7,
+    "nombre": "Tester",
+    "tipo": "Funcional",
+    "cantidad": 10,
+    "precio": 9
+  },
+  {
+    "id": 8,
+    "nombre": "Tester",
+    "tipo": "Funcional",
+    "cantidad": 10,
+    "precio": 9
+  },
+  {
+    "id": 9,
+    "nombre": "Tester",
+    "tipo": "Funcional",
+    "cantidad": 10,
+    "precio": 9
+  },
+  {
+    "id": 10,
+    "nombre": "Tester",
+    "tipo": "Funcional",
+    "cantidad": 10,
+    "precio": 9
+  },
+  {
+    "id": 11,
+    "nombre": "Tester",
+    "tipo": "Funcional",
+    "cantidad": 10,
+    "precio": 9
+  },
+  {
+    "id": 12,
+    "nombre": "Tester",
+    "tipo": "Funcional",
+    "cantidad": 10,
+    "precio": 9
+  },
+  {
+    "id": 13,
+    "nombre": "Tester",
+    "tipo": "Funcional",
+    "cantidad": 10,
+    "precio": 9
+  },
+  {
+    "id": 14,
+    "nombre": "Tester",
+    "tipo": "Funcional",
+    "cantidad": 10,
+    "precio": 9
+  },
+  {
+    "id": 15,
+    "nombre": "Tester",
+    "tipo": "Funcional",
+    "cantidad": 10,
+    "precio": 9
+  },
+  {
+    "id": 16,
+    "nombre": "Tester",
+    "tipo": "Funcional",
+    "cantidad": 10,
+    "precio": 9
+  },
+  {
+    "id": 17,
+    "nombre": "Tester",
+    "tipo": "Funcional",
+    "cantidad": 10,
+    "precio": 9
+  },
+  {
+    "id": 18,
+    "nombre": "Tester",
+    "tipo": "Funcional",
+    "cantidad": 10,
+    "precio": 9
+  },
+  {
+    "id": 19,
+    "nombre": "Tester",
+    "tipo": "Funcional",
+    "cantidad": 10,
+    "precio": 9
+  }
+]
