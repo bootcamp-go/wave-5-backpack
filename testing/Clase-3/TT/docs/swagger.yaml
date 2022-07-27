@@ -1,0 +1,173 @@
+definitions:
+  handler.request:
+    properties:
+      amount:
+        type: number
+      currency:
+        type: string
+      receiver:
+        type: string
+      tranCode:
+        type: string
+      tranDate:
+        type: string
+      transmitter:
+        type: string
+    required:
+    - amount
+    - currency
+    - receiver
+    - tranCode
+    - tranDate
+    - transmitter
+    type: object
+  web.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      error:
+        type: string
+    type: object
+info:
+  contact:
+    name: API Support
+  description: This API is about Transactions
+  license:
+    name: FRP
+    url: https://example.com
+  title: Go Web API
+  version: "1.0"
+paths:
+  /transactions:
+    get:
+      consumes:
+      - application/json
+      description: Get all transactions.
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Obtain list of transactions.
+      tags:
+      - Transactions
+    post:
+      consumes:
+      - application/json
+      description: Store transactions indicating its parameters.
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Product to store
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/handler.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Store transaction in the list of them
+      tags:
+      - Transactions
+  /transactions/{id}:
+    delete:
+      description: Delete transaction typing the id of transaction to eliminate.
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: transanction id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Delete one transaction by id.
+      tags:
+      - Transactions
+    patch:
+      consumes:
+      - application/json
+      description: Update transaction modifying only code and amount parameters.
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Transaction to uptdate Code and Amount
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/handler.request'
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Update transaction with Patch by id
+      tags:
+      - Transactions
+    put:
+      consumes:
+      - application/json
+      description: Update transaction modifying the parameters.
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Product to store
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/handler.request'
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Update of transaction by id
+      tags:
+      - Transactions
+swagger: "2.0"
