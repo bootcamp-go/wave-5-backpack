@@ -31,9 +31,6 @@ func NewRepository(db store.Store) Repository {
 	}
 }
 
-var ts []domain.Transaccion
-var lastID int = 3
-
 func (r *repository) GetAll() ([]domain.Transaccion, error) {
 
 	var ts []domain.Transaccion

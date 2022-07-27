@@ -61,7 +61,7 @@ func (s *service) UpdateCTandMonto(id int, codigo_transaccion string, monto floa
 
 func (s *service) Delete(id int) error {
 	if err := s.repo.Delete(id); err != nil {
-		return fmt.Errorf("error al eleminar la transaccion %w", err)
+		return fmt.Errorf("error al eleminar la transaccion %v", id)
 	}
 	return nil
 }
