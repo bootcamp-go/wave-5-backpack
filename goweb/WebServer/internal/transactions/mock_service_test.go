@@ -1,6 +1,7 @@
 package transactions
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 
@@ -40,12 +41,30 @@ func TestDeleteService(t *testing.T) {
 	mockDB := mockStore{}
 	repo := NewRepository(&mockDB)
 	serv := NewService(repo)
-	//act
-	_, err := serv.Delete(1)
-	tr, _ := serv.GetAll()
 
-	//assert
+	delIdExist := 1
+	delIdNoExist := 4
+
+	expectedError := errors.New("id not found")
+	//act delete correct
+
+	_, err := serv.Delete(delIdExist)
+	tr, _ := serv.GetAll()
+	for _, v := range tr {
+		if v.Id == delIdExist {
+			err = errors.New("id still exist")
+		}
+	}
+
+	//assert delete correct
 	fmt.Println(tr)
 	assert.True(t, mockDB.MockReadUsed)
-	assert.Nil(t, err, "have an error %w", err)
+	assert.Nil(t, err, "have an error: %w", err)
+
+	//act delete wrong
+
+	_, err = serv.Delete(delIdNoExist)
+	//assert delete correct
+	fmt.Println(tr)
+	assert.EqualError(t, expectedError, err.Error(), "have an error %w", err)
 }
