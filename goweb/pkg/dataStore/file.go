@@ -11,33 +11,43 @@ type DataStore interface {
 	Ping() error
 }
 
-func NewStore(fileName string) DataStore {
-	return &fileStore{fileName}
+type Type string
+
+const (
+	FileType Type = "filestorage"
+)
+
+func NewStore(store Type, fileName string) DataStore {
+	switch store {
+	case FileType:
+		return &FileStore{fileName}
+	}
+	return nil
 }
 
-type fileStore struct {
-	FilePath string
+type FileStore struct {
+	FileName string
 }
 
-func (fs *fileStore) Ping() error {
-	if _, err := os.ReadFile(fs.FilePath); err != nil {
+func (fs *FileStore) Ping() error {
+	if _, err := os.ReadFile(fs.FileName); err != nil {
 		return err
 	}
 	return nil
 }
 
-func (fs *fileStore) Write(data interface{}) error {
+func (fs *FileStore) Write(data interface{}) error {
 	fileData, err := json.Marshal(data)
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(fs.FilePath, fileData, 0644)
+	return os.WriteFile(fs.FileName, fileData, 0644)
 }
 
-func (fs *fileStore) Read(data interface{}) error {
-	file, err := os.ReadFile(fs.FilePath)
+func (fs *FileStore) Read(data interface{}) error {
+	file, err := os.ReadFile(fs.FileName)
 	if err != nil {
 		return err
 	}
-	return json.Unmarshal(file, &data)
+	return json.Unmarshal(file, data)
 }

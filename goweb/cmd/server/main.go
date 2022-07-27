@@ -17,7 +17,7 @@ import (
 
 // @title MELI Bootcamp API
 // @version 1.0
-// @description This API Handle MELI Products.
+// @description This API Handle MELI Users.
 // @termsOfService https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
 
 // @contact.name API Support
@@ -31,7 +31,7 @@ func main() {
 		log.Fatal("error al intentar cargar archivo .env")
 	}
 
-	db := dataStore.NewStore("users.json")
+	db := dataStore.NewStore(dataStore.FileType, "users.json")
 	if err := db.Ping(); err != nil {
 		log.Fatal("error al intentar cargar archivo")
 	}
@@ -44,7 +44,7 @@ func main() {
 	docs.SwaggerInfo.Host = os.Getenv("HOST")
 	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	us := r.Group("/products")
+	us := r.Group("/users")
 	us.Use(TokenAuthMiddleware())
 	us.POST("/", u.NewUser())
 	us.GET("/", u.GetAll())

@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "name": "Alexis",
+        "lastname": "Esteban",
+        "email": "testUpdate@gmail.com",
+        "age": 30,
+        "height": 1.7,
+        "active": false,
+        "creation-date": "10-10-2010"
+    },
+    {
+        "id": 2,
+        "name": "Camilo",
+        "lastname": "Pinzon",
+        "email": "test1@gmail.com",
+        "age": 30,
+        "height": 1.78,
+        "active": false,
+        "creation-date": "01-09-2021"
+    },
+    {
+        "id": 3,
+        "name": "Camilo2",
+        "lastname": "Pinzon2",
+        "email": "test2@gmail.com",
+        "age": 30,
+        "height": 1.78,
+        "active": false,
+        "creation-date": "01-09-2021"
+    }
+]

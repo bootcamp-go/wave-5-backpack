@@ -244,7 +244,7 @@ var SwaggerInfo = &swag.Spec{
 	BasePath:         "",
 	Schemes:          []string{},
 	Title:            "MELI Bootcamp API",
-	Description:      "This API Handle MELI Products.",
+	Description:      "This API Handle MELI Users.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }
