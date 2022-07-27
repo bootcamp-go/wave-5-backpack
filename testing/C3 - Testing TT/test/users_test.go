@@ -19,6 +19,9 @@ import (
 func createServer(pathDB string) *gin.Engine {
 	_ = os.Setenv("TOKEN", "123456")
 
+	if _, err := os.ReadFile(pathDB); err != nil {
+		panic("no me lee el archivo!! ")
+	}
 	db := store.New(store.FileType, pathDB)
 	repo := users.NewRepository(db)
 	service := users.NewService(repo)
@@ -98,8 +101,10 @@ func TestUpdateLatAgeUser(t *testing.T) {
 }
 
 func TestDeleteUser(t *testing.T) {
-	r := createServer()
-	req, rr := createRequestTest(http.MethodDelete, "usuarios/6", "")
+	r := createServer("users.json")
+	req, rr := createRequestTest(http.MethodDelete, "/usuarios/5", "")
+
 	r.ServeHTTP(rr, req)
-	assert.Equal(t, 200, rrCode)
+	t.Log(rr)
+	assert.Equal(t, 200, rr.Code)
 }
