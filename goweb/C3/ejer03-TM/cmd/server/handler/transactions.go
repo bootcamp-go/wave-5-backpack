@@ -48,7 +48,7 @@ func (t *Transaction) GetAll() gin.HandlerFunc {
 			return
 		}
 		if len(t) == 0 {
-			ctx.JSON(404, web.NewResponse(404, nil, "No hay transacciones"))
+			ctx.JSON(404, web.NewResponse(200, nil, "No hay transacciones"))
 		}
 		ctx.JSON(200, web.NewResponse(200, t, ""))
 	}

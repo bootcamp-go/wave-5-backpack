@@ -5,10 +5,12 @@ import (
 	"ejer02-TT/cmd/server/handler"
 	"ejer02-TT/internal/transactions"
 	"ejer02-TT/pkg/store"
+	"ejer02-TT/pkg/web"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"reflect"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -16,19 +18,19 @@ import (
 )
 
 func createServer(pathDB string) *gin.Engine {
-	_ = os.Setenv("TOKEN", "123456")
+	_ = os.Setenv("TOKEN", "12345")
 
 	db := store.NewStore("transacciones.json")
 	repo := transactions.NewRepository(db)
 	service := transactions.NewService(repo)
-	p := handler.NewTransaction(service)
+	t := handler.NewTransaction(service)
 
 	r := gin.Default()
 
-	pr := r.Group("/transactions")
-	pr.POST("/", p.Store())
-	pr.GET("/", p.GetAll())
-	pr.PATCH("/:id", p.UpdateCodeAndAmount())
+	tr := r.Group("/transactions")
+	tr.POST("/", t.Store())
+	tr.GET("/", t.GetAll())
+	tr.PATCH("/:id", t.UpdateCodeAndAmount())
 	//pr.DELETE("/:id", p.Delete())
 
 	return r
@@ -42,24 +44,14 @@ func createRequestTest(method string, url string, body string) (*http.Request, *
 	return req, httptest.NewRecorder()
 }
 
-func TestGetAllProducts(t *testing.T) {
-
-	type transaccion struct {
-		Id          int     `json:"id"`
-		TranCode    string  `json:"tranCode"`
-		Currency    string  `json:"currency"`
-		Amount      float64 `json:"amount"`
-		Transmitter string  `json:"transmitter"`
-		Reciever    string  `json:"reciever"`
-		TranDate    string  `json:"tranDate"`
-	}
+func TestGetAllTransactions(t *testing.T) {
 
 	// crear el Server y definir las Rutas
 	r := createServer("transacciones.json")
 	// crear Request del tipo GET y Response para obtener el resultado
 	req, rr := createRequestTest(http.MethodGet, "/transactions/", "")
 
-	var objRes []transaccion
+	var objRes web.Response
 
 	// indicar al servidor que pueda atender la solicitud
 	r.ServeHTTP(rr, req)
@@ -67,10 +59,10 @@ func TestGetAllProducts(t *testing.T) {
 	assert.Equal(t, http.StatusOK, rr.Code)
 	err := json.Unmarshal(rr.Body.Bytes(), &objRes)
 	assert.Nil(t, err)
-	assert.True(t, len(objRes) > 0)
+	assert.True(t, reflect.ValueOf(objRes.Data).Len() > 0)
 }
 
-func TestSaveProduct(t *testing.T) {
+func TestSaveTransaction(t *testing.T) {
 	// crear el Server y definir las Rutas
 	r := createServer("transacciones.json")
 	// crear Request del tipo POST y Response para obtener el resultado
