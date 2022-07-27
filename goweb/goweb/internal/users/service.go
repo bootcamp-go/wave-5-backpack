@@ -9,7 +9,7 @@ type Service interface {
 	GetById(id int) (domain.ModelUser, error)
 	Store(nombre string, apellido string, email string, edad int, altura float64) (domain.ModelUser, error)
 	Update(id int, nombre string, apellido string, email string, edad int, altura float64) (domain.ModelUser, error)
-	UpdateApellidoEdad(id int, nombre string, edad int) (*domain.ModelUser, error)
+	UpdateApellidoEdad(id int, nombre string, edad int) (domain.ModelUser, error)
 	Delete(id int) error
 	SearchUser(nombreQuery string, apellidoQuery string, emailQuery string, edadQuery string, alturaQuery string, activoQuery string, fechaCreacionQuery string) ([]domain.ModelUser, error)
 }
@@ -54,7 +54,7 @@ func (s *service) Update(id int, nombre string, apellido string, email string, e
 }
 
 // Función para actualizar 2 campos de una entidad
-func (s *service) UpdateApellidoEdad(id int, apellido string, edad int) (*domain.ModelUser, error) {
+func (s *service) UpdateApellidoEdad(id int, apellido string, edad int) (domain.ModelUser, error) {
 	return s.repository.UpdateApellidoEdad(id, apellido, edad)
 }
 

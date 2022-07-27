@@ -51,8 +51,8 @@ func (r *StubRepository) Update(id int, nombre string, apellido string, email st
 	return domain.ModelUser{}, nil
 }
 
-func (r *StubRepository) UpdateApellidoEdad(id int, apellido string, edad int) (*domain.ModelUser, error) {
-	return nil, nil
+func (r *StubRepository) UpdateApellidoEdad(id int, apellido string, edad int) (domain.ModelUser, error) {
+	return domain.ModelUser{}, nil
 }
 
 func (r *StubRepository) Delete(id int) error {

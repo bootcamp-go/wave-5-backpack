@@ -10,8 +10,6 @@ import (
 	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/store"
 )
 
-//var usersLocal []domain.ModelUser
-//var lastId int
 const (
 	errorLectura   = "no se puede leer la db, error: %s"
 	errorEscritura = "no se puede escribir en la db, error: %s"
@@ -22,7 +20,7 @@ type Repository interface {
 	GetById(id int) (domain.ModelUser, error)
 	Store(nombre string, apellido string, email string, edad int, altura float64) (domain.ModelUser, error)
 	Update(id int, nombre string, apellido string, email string, edad int, altura float64) (domain.ModelUser, error)
-	UpdateApellidoEdad(id int, nombre string, edad int) (*domain.ModelUser, error)
+	UpdateApellidoEdad(id int, nombre string, edad int) (domain.ModelUser, error)
 	Delete(id int) error
 	SearchUser(nombreQuery string, apellidoQuery string, emailQuery string, edadQuery string, alturaQuery string, activoQuery string, fechaCreacionQuery string) ([]domain.ModelUser, error)
 }
@@ -128,14 +126,16 @@ func (r *repository) Update(id int, nombre string, apellido string, email string
 		return domain.ModelUser{}, fmt.Errorf(errorLectura, err)
 	}
 
-	user := domain.ModelUser{Nombre: nombre, Apellido: apellido, Email: email, Edad: edad, Altura: altura}
+	var user domain.ModelUser
 	found := false
 	for i := range users {
 		if users[i].Id == id && !users[i].Borrado && !found {
-			user.Id = id
-			user.FechaCreacion = users[i].FechaCreacion
-			user.Activo = users[i].Activo
-			users[i] = user
+			users[i].Nombre = nombre
+			users[i].Apellido = apellido
+			users[i].Email = email
+			users[i].Edad = edad
+			users[i].Altura = altura
+			user = users[i]
 			found = true
 		}
 	}
@@ -155,32 +155,32 @@ func (r *repository) Update(id int, nombre string, apellido string, email string
 }
 
 // Función para actualizar 2 campos de una entidad
-func (r *repository) UpdateApellidoEdad(id int, apellido string, edad int) (*domain.ModelUser, error) {
+func (r *repository) UpdateApellidoEdad(id int, apellido string, edad int) (domain.ModelUser, error) {
 	// Leemos los usuarios del JSON
-	var users []*domain.ModelUser
+	var users []domain.ModelUser
 	if err := r.db.Read(&users); err != nil {
-		return nil, fmt.Errorf(errorLectura, err)
+		return domain.ModelUser{}, fmt.Errorf(errorLectura, err)
 	}
 
-	var user *domain.ModelUser
+	var user domain.ModelUser
 	found := false
-	for _, value := range users {
-		if value.Id == id && !value.Borrado && !found {
-			value.Apellido = apellido
-			value.Edad = edad
-			user = value
+	for i := range users {
+		if users[i].Id == id && !users[i].Borrado && !found {
+			users[i].Apellido = apellido
+			users[i].Edad = edad
+			user = users[i]
 			found = true
 		}
 	}
 
 	// Verificamos que haya existido el usuario a actualizar su Apellido y Edad
 	if !found {
-		return nil, fmt.Errorf("usuario %d no encontrado", id)
+		return domain.ModelUser{}, fmt.Errorf("usuario %d no encontrado", id)
 	}
 
 	// Se guarda la información y se verifica que no haya ocurrido un error
 	if err := r.db.Write(&users); err != nil {
-		return nil, fmt.Errorf(errorEscritura, err)
+		return domain.ModelUser{}, fmt.Errorf(errorEscritura, err)
 	}
 
 	// Se devuelve el usuario actualizado del Apellido y Edad
