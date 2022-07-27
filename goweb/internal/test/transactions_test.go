@@ -91,3 +91,15 @@ func TestFunctionalUpdate(t *testing.T) {
 	//Assert
 	assert.Equal(t, http.StatusOK, rr.Code)
 }
+
+func TestFunctionalDelete(t *testing.T) {
+	//Arrange
+	server := createServer(t)
+	req, rr := createRequest(http.MethodDelete, "/transactions/2", nil)
+
+	//Act
+	server.ServeHTTP(rr, req)
+
+	//Assert
+	assert.Equal(t, http.StatusOK, rr.Code)
+}
