@@ -27,8 +27,6 @@ type repository struct {
 	db store.Store
 }
 
-var usersList []domain.Usuario
-
 func (r *repository) GetAll() ([]domain.Usuario, error) {
 	var localUserList []domain.Usuario
 
@@ -103,6 +101,12 @@ func (r *repository) Update(id, age int, names, lastname, email, dateCreated str
 }
 
 func (r *repository) UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error) {
+	var usersList []domain.Usuario
+
+	if err := r.db.Read(&usersList); err != nil {
+		return domain.Usuario{}, errors.New(ERROR_READING)
+	}
+
 	upUsuario := domain.Usuario{}
 	update := false
 
@@ -135,6 +139,12 @@ func (r *repository) LastID() (int, error) {
 }
 
 func (r *repository) Delete(id int) error {
+	var usersList []domain.Usuario
+
+	if err := r.db.Read(&usersList); err != nil {
+		return errors.New(ERROR_READING)
+	}
+
 	deleted := false
 	var indexAux int
 
@@ -146,10 +156,15 @@ func (r *repository) Delete(id int) error {
 	}
 
 	if !deleted {
-		return errors.New("No se encontró el usuario a actualizar.")
+		return errors.New("No se encontró el usuario a eliminar.")
 	}
 
 	usersList = append(usersList[:indexAux], usersList[indexAux+1:]...)
+
+	if err := r.db.Write(usersList); err != nil {
+		return errors.New(ERR_WRITING)
+	}
+
 	return nil
 }
 func NewRepository(db store.Store) Repository {

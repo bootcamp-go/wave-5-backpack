@@ -1,6 +1,7 @@
 package usuarios
 
 import (
+	"errors"
 	"fmt"
 	"testing"
 
@@ -236,4 +237,104 @@ func TestIntegracionDelete(t *testing.T) {
 	// assert
 	assert.Equal(t, true, mockStorage.hadCalledRead)
 	assert.Nil(t, err)
+}
+
+func TestIntegracionDeleteFails(t *testing.T) {
+	newUser := domain.Usuario{
+		Id:          0,
+		Names:       "ASH",
+		Email:       "ash2@gmail.com",
+		Estatura:    1.83,
+		DateCreated: "26-07-2022",
+	}
+
+	mockStorage := MockStorage{
+		dataMock: []domain.Usuario{newUser},
+		errRead:  "",
+		errWrite: "",
+	}
+
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	errExpected := errors.New("No se encontró el usuario a eliminar.")
+	err := service.Delete(100)
+
+	// assert
+	assert.Equal(t, true, mockStorage.hadCalledRead)
+	assert.NotNil(t, err)
+	assert.Equal(t, errExpected, err)
+}
+
+func TestIntegracionPatch(t *testing.T) {
+	user := domain.Usuario{
+		Id:          0,
+		Names:       "Ashton",
+		LastName:    "Irwin",
+		Email:       "ash2@gmail.com",
+		Age:         34,
+		Estatura:    1.88,
+		DateCreated: "26-07-2022",
+		IsActivo:    true,
+	}
+
+	dataUserToUpd := domain.Usuario{
+		Id:       0,
+		LastName: "Brooke",
+		Age:      34,
+	}
+	mockStorage := MockStorage{
+		dataMock: []domain.Usuario{user},
+		errRead:  "",
+		errWrite: "",
+	}
+
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	res, err := service.UpdateLastNameAndAge(dataUserToUpd.Id, dataUserToUpd.Age, dataUserToUpd.LastName)
+	// assert
+
+	assert.Nil(t, err)
+	assert.Equal(t, true, mockStorage.hadCalledRead)
+	assert.Equal(t, mockStorage.dataMock[0].Age, res.Age)
+	assert.Equal(t, mockStorage.dataMock[0].LastName, res.LastName)
+	assert.Equal(t, mockStorage.dataMock[0].Id, res.Id)
+
+}
+
+func TestIntegracionPatchFails(t *testing.T) {
+	user := domain.Usuario{
+		Id:          0,
+		Names:       "Ashton",
+		LastName:    "Irwin",
+		Email:       "ash2@gmail.com",
+		Age:         34,
+		Estatura:    1.88,
+		DateCreated: "26-07-2022",
+		IsActivo:    true,
+	}
+
+	dataUserToUpd := domain.Usuario{
+		Id:       0,
+		LastName: "Brooke",
+		Age:      34,
+	}
+	mockStorage := MockStorage{
+		dataMock: []domain.Usuario{user},
+		errRead:  "",
+		errWrite: "",
+	}
+
+	// act
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	errExpected := errors.New("No se encontró el usuario a actualizar.")
+	_, err := service.UpdateLastNameAndAge(600, dataUserToUpd.Age, dataUserToUpd.LastName)
+
+	// assert
+	assert.Equal(t, true, mockStorage.hadCalledRead)
+	assert.NotNil(t, err)
+	assert.Equal(t, errExpected, err)
+
 }
