@@ -2,14 +2,17 @@ package test
 
 import (
 	"bytes"
+	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"reflect"
 	"testing"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/cmd/server/handler"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/usuarios"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/store"
+	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/web"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
@@ -47,36 +50,27 @@ func TestUpdateUser(t *testing.T) {
 	assert.Equal(t, 200, rr.Code)
 }
 
-//Esta funcion no anda, por el tipo de retorno supongo sera DATA
-// func TestGetAllUsuarios(t *testing.T) {
-// 	type usuarios struct {
-// 		Nombre        string  `json:"nombre" binding:"required"`
-// 		Apellido      string  `json:"apellido" binding:"required"`
-// 		Email         string  `json:"email" binding:"required"`
-// 		Edad          int     `json:"edad" binding:"required"`
-// 		Altura        float64 `json:"altura" binding:"required"`
-// 		Activo        bool    `json:"activo" binding:"required"`
-// 		FechaCreacion string  `json:"fecha_de_creacion" binding:"required"`
-// 	}
+func TestGetAllUsuarios(t *testing.T) {
 
-// 	r := createServer()
+	r := createServer()
 
-// 	req, rr := createRequestTest(http.MethodGet, "/usuarios", "")
+	req, rr := createRequestTest(http.MethodGet, "/usuarios/", "")
 
-// 	var respOB []usuarios
+	var resp web.Response
 
-// 	r.ServeHTTP(rr, req)
-// 	t.Log(rr)
-// 	assert.Equal(t, http.StatusOK, rr.Code)
-// 	err := json.Unmarshal(rr.Body.Bytes(), &respOB)
-// 	assert.Nil(t, err)
-// 	assert.True(t, len(respOB) > 0)
-// }
+	r.ServeHTTP(rr, req)
+	assert.Equal(t, http.StatusOK, rr.Code)
+	err := json.Unmarshal(rr.Body.Bytes(), &resp)
+	assert.Nil(t, err)
+	assert.True(t, reflect.ValueOf(resp.Data).Len() > 0)
+	//valor := reflect.ValueOf(resp.Data)
+	//fmt.Println(valor)
+}
 
 func TestDeleteUser(t *testing.T) {
 	r := createServer()
 
-	req, rr := createRequestTest(http.MethodDelete, "/usuarios/12", "")
+	req, rr := createRequestTest(http.MethodDelete, "/usuarios/5", "")
 
 	r.ServeHTTP(rr, req)
 	assert.Equal(t, 200, rr.Code)
