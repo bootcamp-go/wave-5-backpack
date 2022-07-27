@@ -2,6 +2,7 @@ package products
 
 import (
 	"errors"
+	"fmt"
 	"goweb/internal/domain"
 	"goweb/pkg/store"
 	"testing"
@@ -97,10 +98,28 @@ func TestServiceIntegrationDelete(t *testing.T) {
 
 	repo := NewRepository(&mockStorage)
 	service := NewService(repo)
-
+	
 	err := service.Delete(1)
 
 	assert.Nil(t, err)
 	assert.True(t, mockStorage.ReadFile)
+}
+
+func TestServiceIntegrationDeleteFail(t *testing.T) {
+	mockStorage := store.MockStorage{
+		DataMock: dbs,
+		ErrWrite: "",
+		ErrRead: "",
+	}
+	
+	id := 3
+	expetErr := fmt.Errorf("producto %d no encontrado", id)
+	repo := NewRepository(&mockStorage)
+	service := NewService(repo)
+	
+
+	err := service.Delete(id)
+	assert.NotNil(t, err)
+	assert.ErrorContains(t, err, expetErr.Error())
 }
  

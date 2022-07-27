@@ -81,3 +81,28 @@ func TestDelete(t *testing.T) {
 	assert.Nil(t, err)
 	assert.True(t, mockStorage.ReadFile)
 }
+
+func TestCreate(t *testing.T) {
+	mockStorage := store.MockStorage{
+		DataMock: db,
+		ErrWrite: "",
+		ErrRead: "",
+	}
+	
+	repo := NewRepository(&mockStorage)
+	product := domain.Product{
+							  Name: "Update After",
+							  Color: "Blanco",
+							  Price: 1000,
+							  Stock: 25,
+							  Code: "NXV321",
+							  Publisher: false,
+							  CreatedAt: "2006-01-02T15:04:05Z07:00"}
+
+	response, err := repo.Create(product.Name, product.Color, product.Price, product.Stock, product.Code, product.Publisher)
+
+ 	assert.Nil(t, err)
+	assert.Equal(t, response.Code, product.Code)
+	assert.True(t, mockStorage.ReadFile)
+
+}

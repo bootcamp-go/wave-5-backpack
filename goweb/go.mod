@@ -12,7 +12,7 @@ require (
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/pelletier/go-toml/v2 v2.0.2 // indirect
-	github.com/stretchr/testify v1.8.0 // indirect
+	github.com/stretchr/testify v1.8.0
 	github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe
 	github.com/swaggo/gin-swagger v1.5.1
 	github.com/swaggo/swag v1.8.3

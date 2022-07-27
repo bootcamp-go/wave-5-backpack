@@ -1,11 +1,14 @@
 package products
 
 import (
+	"fmt"
 	"goweb/internal/domain"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
+
+
 
 
 type MockStore struct {
@@ -51,11 +54,33 @@ func TestParcialUpdate(t *testing.T)  {
 	mock := MockStore{}
 
 	repo := NewRepository(&mock)
-
-	update, err := repo.ParcialUpdate(1, "Update After", 0)
+	id,name, price := 1, "aaaaa", 2888.00
+	update, err := repo.ParcialUpdate(id, name, price)
 
 	assert.Nil(t, err)
-	assert.Equal(t,"Update After", update.Name)
+	if name != "" {
+		assert.Equal(t,name, update.Name)
+	}
+	if price > 0 {
+		assert.Equal(t, price, update.Price)
+	}
+	if name != "" && price > 0 {
+		assert.Equal(t,name, update.Name)
+		assert.Equal(t, price, update.Price)
+	}
+	
 	assert.True(t, mock.ReadStore)
+}
+
+func TestParcialUpdateFail(t *testing.T) {
+	mock := MockStore{}
+
+	repo := NewRepository(&mock)
+	id,name, price := 3, "aaaa", 12220.00
+	_, err := repo.ParcialUpdate(id, name, price)
+	errs := fmt.Errorf("producto %d no encontrado", id)
+	assert.NotNil(t, err)
+	assert.ErrorContains(t, err, errs.Error())
+
 }
 

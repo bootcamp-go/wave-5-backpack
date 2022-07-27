@@ -22,7 +22,7 @@ import (
 )
 
 
-type product struct{
+/*type product struct{
 	Id int `form:"id" json:"id"`
 	Name string `form:"name" json:"name"`
 	Color string `form:"color" json:"color"`
@@ -42,7 +42,7 @@ type request struct{
 	Code string `json:"code" binding:"required"`
 	Publisher bool `json:"publisher"`
 	CreatedAt string`json:"created_at" binding:"required"`
-}
+}*/
 /*
 var lastId int
 func save() gin.HandlerFunc {
@@ -232,7 +232,10 @@ func main() {
 	pr.PATCH("/:idgit", productHandler.ParcialUpdate())
 	pr.DELETE("/:id", productHandler.Delete())
 	
-	router.Run()// Corremos nuestro servidor sobre el puerto 8080
+	if err := router.Run(); err != nil{
+		fmt.Println("error:", err)
+	}
+	// Corremos nuestro servidor sobre el puerto 8080
 
 }
 
