@@ -19,6 +19,7 @@ type fileStore struct {
 	FilePath string
 }
 
+
 func (fs *fileStore) Ping() error {
 	if _, err := os.ReadFile(fs.FilePath); err != nil {
 		return err
