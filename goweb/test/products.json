@@ -1,0 +1,32 @@
+[
+    {
+        "id": 1,
+        "nombre": "Guayaba",
+        "color": "Amarillo",
+        "precio": 123142,
+        "stock": 20,
+        "código": "asde12",
+        "publicado": false,
+        "fecha_de_creación": "22/06/2022"
+    },
+    {
+        "id": 2,
+        "nombre": "Tamarindo",
+        "color": "Amarillo",
+        "precio": 323000,
+        "stock": 4,
+        "código": "21fe2",
+        "publicado": true,
+        "fecha_de_creación": "23/10/2022"
+    },
+    {
+        "id": 3,
+        "nombre": "Maracuya",
+        "color": "Amarillo",
+        "precio": 1233142,
+        "stock": 30,
+        "código": "asde312",
+        "publicado": true,
+        "fecha_de_creación": "22/06/2022"
+    }
+]
