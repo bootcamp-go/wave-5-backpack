@@ -1,0 +1,47 @@
+[
+	{
+		"id": 2,
+		"tranCode": "nuevo",
+		"currency": "USD",
+		"amount": 155.2,
+		"transmitter": "cristian",
+		"reciever": "camila",
+		"tranDate": "03-10-2021"
+	},
+	{
+		"id": 3,
+		"tranCode": "tran3",
+		"currency": "CLP",
+		"amount": 21,
+		"transmitter": "predo",
+		"reciever": "magdalena",
+		"tranDate": "10-06-2022"
+	},
+	{
+		"id": 4,
+		"tranCode": "tran4",
+		"currency": "USD",
+		"amount": 100,
+		"transmitter": "juan",
+		"reciever": "pedro",
+		"tranDate": "10-05-2022"
+	},
+	{
+		"id": 5,
+		"tranCode": "trn5",
+		"currency": "CLP",
+		"amount": 15000,
+		"transmitter": "camila",
+		"reciever": "pedro",
+		"tranDate": "08-07-2022"
+	},
+	{
+		"id": 6,
+		"tranCode": "12345",
+		"currency": "CLP",
+		"amount": 12.2,
+		"transmitter": "juan",
+		"reciever": "pedro",
+		"tranDate": "12345"
+	}
+]
