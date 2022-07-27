@@ -2,13 +2,19 @@ package products
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/store"
 )
 
-var idLast int
+const (
+	ERROR_GET_ALL      = "no fue posible obtener los productos"
+	ERROR_UPDATE       = "no fue posible actualizar el producto"
+	ERROR_DELETE       = "no fue posible eliminar el producto"
+	ERROR_ID_NOT_EXIST = "el id ingresado no existe"
+)
 
 type Repository interface {
 	GetAll() ([]domain.Product, error)
@@ -33,7 +39,7 @@ func NewRepository(db store.Store) Repository {
 func (r repository) GetAll() ([]domain.Product, error) {
 	var products []domain.Product
 	if err := r.db.Read(&products); err != nil {
-		return nil, err
+		return nil, errors.New(fmt.Sprintf("%s: %s", err, ERROR_GET_ALL))
 	}
 
 	return products, nil
@@ -56,7 +62,9 @@ func (r repository) GetProduct(id int) (domain.Product, error) {
 
 func (r repository) Store(id int, nombre string, color string, precio float64, stock int, codigo string, publicado bool) (domain.Product, error) {
 	var products []domain.Product
-	r.db.Read(&products)
+	if err := r.db.Read(&products); err != nil {
+		return domain.Product{}, err
+	}
 
 	product := domain.Product{
 		ID:            id,
@@ -111,7 +119,9 @@ func (r repository) UpdateAll(id int, nombre string, color string, precio float6
 			product.ID = id
 			product.FechaCreacion = p.FechaCreacion
 			products[i] = product
-			r.db.Write(&products)
+			if err := r.db.Write(&products); err != nil {
+				return domain.Product{}, err
+			}
 			return product, nil
 		}
 	}
@@ -123,23 +133,25 @@ func (r repository) UpdateAll(id int, nombre string, color string, precio float6
 func (r repository) Delete(id int) error {
 	var products []domain.Product
 	if err := r.db.Read(&products); err != nil {
-		return err
+		return errors.New(fmt.Sprintf("%s: %s", err, ERROR_DELETE))
 	}
 
 	for i, p := range products {
 		if p.ID == id {
 			products = append(products[:i], products[i+1:]...)
-			r.db.Write(&products)
+			if err := r.db.Write(&products); err != nil {
+				return errors.New(fmt.Sprintf("%s: %s", err, ERROR_DELETE))
+			}
 			return nil
 		}
 	}
-	return errors.New("no fue posible encontrar el producto a modificar")
+	return errors.New(ERROR_ID_NOT_EXIST)
 }
 
 func (r repository) Update(id int, nombre string, precio float64) (domain.Product, error) {
 	var products []domain.Product
 	if err := r.db.Read(&products); err != nil {
-		return domain.Product{}, err
+		return domain.Product{}, errors.New(fmt.Sprintf("%s: %s", err, ERROR_UPDATE))
 	}
 
 	for i, p := range products {
@@ -147,10 +159,12 @@ func (r repository) Update(id int, nombre string, precio float64) (domain.Produc
 			p.Nombre = nombre
 			p.Precio = precio
 			products[i] = p
-			r.db.Write(&products)
+			if err := r.db.Write(&products); err != nil {
+				return domain.Product{}, errors.New(fmt.Sprintf("%s: %s", err, ERROR_UPDATE))
+			}
 			return p, nil
 		}
 	}
 
-	return domain.Product{}, errors.New("no fue posible encontrar el producto a modificar")
+	return domain.Product{}, errors.New(ERROR_ID_NOT_EXIST)
 }

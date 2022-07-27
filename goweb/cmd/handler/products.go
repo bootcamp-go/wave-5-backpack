@@ -90,7 +90,6 @@ func (p Product) GetProduct() gin.HandlerFunc {
 		}
 
 		ctx.JSON(http.StatusOK, web.NewResponse(200, product, ""))
-		return
 	}
 }
 

@@ -53,16 +53,15 @@ func TestIntegrationUpdate(t *testing.T) {
 
 func TestIntegrationDelete(t *testing.T) {
 	mock := &mockStore{
-		errID: "no fue posible encontrar el producto a modificar",
+		errID: ERROR_ID_NOT_EXIST,
 	}
 	repository := NewRepository(mock)
 	service := NewService(repository)
 
-	notErr := service.Delete(1)
 	err := service.Delete(3)
+	notErr := service.Delete(1)
 
 	assert.Nil(t, notErr)
 	assert.ErrorContains(t, err, mock.errID)
 	assert.Equal(t, len(mock.products), 1)
-
 }
