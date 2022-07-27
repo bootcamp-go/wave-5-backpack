@@ -23,7 +23,7 @@ type repository struct {
 func (r *repository) GetAll() ([]domain.Usuario, error) {
 	var ListUsuarios []domain.Usuario
 	if err := r.db.Read(&ListUsuarios); err != nil {
-		// return ListUsuarios, err
+		return ListUsuarios, err
 	}
 	if len(ListUsuarios) == 0 {
 		return ListUsuarios, fmt.Errorf("lista vacia perdone usted")
@@ -34,9 +34,9 @@ func (r *repository) GetAll() ([]domain.Usuario, error) {
 func (r *repository) Save(Nombre, Apellido, Email, Fecha_creacion string, Id, Edad, Altura int, Activo bool) (domain.Usuario, error) {
 	var ListUsuarios []domain.Usuario
 	if err := r.db.Read(&ListUsuarios); err != nil {
-		// usuarioNulo := domain.Usuario{}
-		// fmt.Println(err)
-		// return usuarioNulo, err
+		usuarioNulo := domain.Usuario{}
+		fmt.Println(err)
+		return usuarioNulo, err
 	}
 	if Nombre == "" || Apellido == "" || Email == "" || Fecha_creacion == "" || Id <= 0 || Edad < 0 || Altura <= 0 {
 		usuarioNulo := domain.Usuario{}
@@ -94,7 +94,9 @@ func (r *repository) UpdateUsuario(Nombre, Apellido, Email, Fecha_creacion strin
 		if Id == ListUsuarios[i].Id {
 			usuario.Id = Id
 			ListUsuarios[i] = usuario
-			r.db.Write(ListUsuarios)
+			if err := r.db.Write(ListUsuarios); err != nil {
+				return domain.Usuario{}, err
+			}
 			return usuario, nil
 		}
 	}
@@ -119,7 +121,9 @@ func (r *repository) UpdateAtributos(Nombre, Apellido, Email, Fecha_creacion str
 			r.changeInt(&ListUsuarios[i].Altura, Altura)
 			//Activo *bool
 			r.changeBool(&ListUsuarios[i].Activo, Activo)
-			r.db.Write(ListUsuarios)
+			if err := r.db.Write(ListUsuarios); err != nil {
+				return domain.Usuario{}, err
+			}
 			return ListUsuarios[i], nil
 		}
 	}
@@ -135,7 +139,9 @@ func (r *repository) DeleteUsuario(Id int) error {
 	for i := 0; i < len(ListUsuarios); i++ {
 		if ListUsuarios[i].Id == Id {
 			ListUsuarios = append(ListUsuarios[:i], ListUsuarios[i+1:]...)
-			r.db.Write(ListUsuarios)
+			if err := r.db.Write(ListUsuarios); err != nil {
+				return fmt.Errorf("problemas al intentar escribir para borrar el elemento de id %d: %e", Id, err)
+			}
 			return nil
 		}
 	}

@@ -47,6 +47,7 @@ func main() {
 	// usuarioRoute.PUT("/:id", controladorUsuarios.ActualizarUsuario())
 	// usuarioRoute.PATCH("/:id", controladorUsuarios.ActualizarAtribUsuario())
 	// usuarioRoute.DELETE("/:id", controladorUsuarios.BorrarUsuario())
-	router.Run()
-
+	if err := router.Run(); err != nil {
+		panic("no se pudo correr la aplicacion")
+	}
 }
