@@ -51,7 +51,7 @@ func createRequestTest(method string, url string, body string) (*http.Request, *
 }
 
 /*
-	Esta roto tu archivo users.json por eso no leia el la data []domains.User y db.Read siempre retornaba el error.
+	lee el la data []domains.Usuarios y db.Read siempre retornaba el error.
 */
 func TestGetAllUsers(t *testing.T) {
 
@@ -84,14 +84,14 @@ func TestGetAllUsers(t *testing.T) {
 	assert.True(t, reflect.ValueOf(objRes.Data).Len() > 0)
 }
 
-// Luz este te devolvia 400 porque no se le pasaba el apellido que es requerido por lo que siempre retornaba 400 bad request
+//Guardo la info del user
 func TestSaveUser(t *testing.T) {
 	// crear el Server y definir las Rutas
 	r := createServer("users.json")
 
 	user := domain.Usuarios{
 		Nombre:   "Angela",
-		Apellido: "algun apellido",
+		Apellido: "Lucumí",
 		Email:    "angela@gmail.es",
 		Edad:     34,
 		Altura:   1.60,
@@ -114,7 +114,7 @@ func TestSaveUser(t *testing.T) {
 }
 
 func TestUpdateLatAgeUser(t *testing.T) {
-	r := createServer("user_update_las_age.json") // este archivo estaba roto en el .json
+	r := createServer("user_update_las_age.json")
 	req, rr := createRequestTest(http.MethodPatch, "/usuarios/6",
 		`{"apellido": "Pizón","edad":25}`)
 
