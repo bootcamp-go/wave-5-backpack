@@ -2,10 +2,13 @@ package test
 
 import (
 	"arquitectura/cmd/server/handler"
+	"arquitectura/internal/domain"
 	"arquitectura/internal/transactions"
 	"arquitectura/pkg/store"
 	"arquitectura/pkg/web"
 	"bytes"
+	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"net/http/httptest"
@@ -15,16 +18,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
-
-type responseStruct struct {
-	Id          int     `json:"id"`
-	TranCode    string  `json:"tranCode" binding:"required"`
-	Currency    string  `json:"currency" binding:"required"`
-	Amount      float64 `json:"amount" binding:"required"`
-	Transmitter string  `json:"transmitter" binding:"required"`
-	Reciever    string  `json:"reciever" binding:"required"`
-	TranDate    string  `json:"tranDate" binding:"required"`
-}
 
 func createServer(pathDB string) *gin.Engine {
 	_ = os.Setenv("TOKEN", "12345")
@@ -76,8 +69,8 @@ func TokenAuthMiddleWare() gin.HandlerFunc {
 func TestUpdate(t *testing.T) {
 	r := createServer("transactions.json")
 	req, rr := createRequest(http.MethodPut, "/transactions/2", `{
-		"tranCode": "actualizado2",
-		"currency": "CLP",
+		"tranCode": "actualizado3",
+		"currency": "USD",
 		"amount": 140.2,
 		"transmitter": "carlos",
 		"reciever": "catalina",
@@ -86,14 +79,32 @@ func TestUpdate(t *testing.T) {
 
 	r.ServeHTTP(rr, req)
 
+	tes := domain.Transaction{
+		Id:          2,
+		TranCode:    "actualizado3",
+		Currency:    "USD",
+		Amount:      140.2,
+		Transmitter: "carlos",
+		Reciever:    "catalina",
+		TranDate:    "03-09-2021",
+	}
+
+	expectedResponse, err := json.Marshal(web.NewResponse(200, tes, ""))
+
 	assert.Equal(t, 200, rr.Code)
+	assert.Nil(t, err)
+	assert.Equal(t, expectedResponse, rr.Body.Bytes())
 }
 
 func TestDelete(t *testing.T) {
 	r := createServer("transactions.json")
-	req, rr := createRequest(http.MethodDelete, "/transactions/3", ``)
+	req, rr := createRequest(http.MethodDelete, "/transactions/2", ``)
 
 	r.ServeHTTP(rr, req)
 
+	expectedResponse, err := json.Marshal(web.NewResponse(200, fmt.Sprintf("la transaccion con id %d ha sido eliminada", 2), ""))
+
 	assert.Equal(t, 200, rr.Code)
+	assert.Nil(t, err)
+	assert.Equal(t, expectedResponse, rr.Body.Bytes())
 }
