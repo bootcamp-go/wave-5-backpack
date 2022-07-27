@@ -27,6 +27,12 @@ func (fs *MockStorage) Read(data interface{}) error {
 }
 
 func (fs *MockStorage) Write(data interface{}) error {
+	if fs.errWrite != "" {
+		return fmt.Errorf(fs.errWrite)
+	}
+
+	a := data.([]domain.Transaction)
+	fs.dataMock = append(fs.dataMock, a...)
 	return nil
 }
 
@@ -86,7 +92,7 @@ func TestStore(t *testing.T) {
 	fmt.Printf("\n%+v", mockStorage.dataMock)
 	assert.Nil(t, err)
 	assert.Equal(t, newTransaction, result)
-	//assert.Equal(t, mockStorage.dataMock[len(mockStorage.dataMock)-1], newTransaction)
+	assert.Equal(t, mockStorage.dataMock[len(mockStorage.dataMock)-1], newTransaction)
 }
 
 func TestGetAll(t *testing.T) {
@@ -162,5 +168,5 @@ func TestUpdate(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Equal(t, expected, a)
-	//assert.True(t, stub.ReadCalled)
+	assert.True(t, mockStorage.ReadCalled)
 }

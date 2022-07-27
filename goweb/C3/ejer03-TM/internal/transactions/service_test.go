@@ -2,6 +2,7 @@ package transactions
 
 import (
 	"ejer02-TT/internal/domain"
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -72,20 +73,20 @@ func TestIntegracionGetAllFail(t *testing.T) {
 
 	mockStorage := MockStorage{
 		dataMock: database,
-		errRead:  "",
+		errRead:  "can't read database",
 		errWrite: "",
 	}
 
 	// act
 	repo := NewRepository(&mockStorage)
 	service := NewService(repo)
-	res, err := service.GetAll()
-	//errExpected := fmt.Errorf("can't read database")
+	_, err := service.GetAll()
+	errExpected := fmt.Errorf("can't read database")
 	// assert
 
-	assert.Nil(t, err)
-	//assert.Equal(t, errExpected, err)
-	assert.Equal(t, mockStorage.dataMock, res)
+	assert.NotNil(t, err)
+	assert.Equal(t, errExpected, err)
+	//assert.Equal(t, mockStorage.dataMock, res)
 }
 
 func TestIntegracionStore(t *testing.T) {
@@ -108,7 +109,7 @@ func TestIntegracionStore(t *testing.T) {
 	// act
 	repo := NewRepository(&mockStorage)
 	service := NewService(repo)
-	_, err := service.Store(
+	result, err := service.Store(
 		newTransaction.TranCode,
 		newTransaction.Currency,
 		newTransaction.Amount,
@@ -120,8 +121,8 @@ func TestIntegracionStore(t *testing.T) {
 	// assert
 
 	assert.Nil(t, err)
-	//assert.Equal(t, mockStorage.dataMock[0], result)
-	//assert.Equal(t, mockStorage.dataMock[0].Id, result.Id)
+	assert.Equal(t, mockStorage.dataMock[0], result)
+	assert.Equal(t, mockStorage.dataMock[0].Id, result.Id)
 
 }
 
@@ -145,7 +146,7 @@ func TestIntegracionStoreFail(t *testing.T) {
 	// act
 	repo := NewRepository(&mockStorage)
 	service := NewService(repo)
-	//errExpected := fmt.Errorf("can't write to the databse")
+	errExpected := fmt.Errorf("can't write to the database")
 	_, err := service.Store(
 		newTransaction.TranCode,
 		newTransaction.Currency,
@@ -156,8 +157,8 @@ func TestIntegracionStoreFail(t *testing.T) {
 	)
 
 	// assert
-	assert.Nil(t, err)
-	//assert.Equal(t, errExpected, err)
+	assert.NotNil(t, err)
+	assert.Equal(t, errExpected, err)
 
 }
 
