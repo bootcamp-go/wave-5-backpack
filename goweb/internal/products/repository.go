@@ -134,18 +134,25 @@ func (r *repository) Delete(id int) error {
 }
 
 func (r *repository) UpdateOne(id int, nombre string, precio float64) (domain.Products, error) {
+	var ps2 []domain.Products
+	if err := r.db.Read(&ps2); err != nil {
+		return domain.Products{}, fmt.Errorf(FailReading)
+	}
 	var p domain.Products
 	updated := false
-	for i := range ps {
-		if ps[i].Id == id {
-			ps[i].Nombre = nombre
-			ps[i].Precio = precio
+	for i := range ps2 {
+		if ps2[i].Id == id {
+			ps2[i].Nombre = nombre
+			ps2[i].Precio = precio
 			updated = true
-			p = ps[i]
+			p = ps2[i]
 		}
 	}
 	if !updated {
 		return domain.Products{}, fmt.Errorf("Producto %d no encontrado", id)
+	}
+	if err := r.db.Write(ps2); err != nil {
+		return domain.Products{}, fmt.Errorf(FailWriting, err)
 	}
 	return p, nil
 }

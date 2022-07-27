@@ -128,6 +128,8 @@ func main() {
 		products.POST("/create", createProduct())
 	}
 
-	server.Run()
-
+	if err := server.Run(); err != nil {
+		fmt.Println("error: ", err.Error())
+		return
+	}
 }

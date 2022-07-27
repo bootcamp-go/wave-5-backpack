@@ -207,3 +207,31 @@ func TestDelete(t *testing.T) {
 	assert.Equal(t, nil, result)
 
 }
+
+func TestUpadeOne(t *testing.T) {
+
+	updateData := []domain.Products{
+		{
+			Id:            1,
+			Nombre:        "Papaya",
+			Color:         "verde",
+			Precio:        231522,
+			Stock:         13,
+			Codigo:        "asd7sd",
+			Publicado:     true,
+			FechaCreacion: "12/02/2022",
+		},
+	}
+
+	mockUpdate := MockStorage{
+		dataMock: updateData,
+		errWrite: "",
+		errRead:  "",
+	}
+
+	repo := InitRepository(&mockUpdate)
+	result, err := repo.UpdateOne(updateData[0].Id, updateData[0].Nombre, updateData[0].Precio)
+	assert.Nil(t, err)
+	assert.Equal(t, mockUpdate.dataMock[0], result)
+
+}

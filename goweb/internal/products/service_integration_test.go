@@ -1,6 +1,7 @@
 package products
 
 import (
+	"fmt"
 	"goweb/internal/domain"
 	"testing"
 
@@ -95,6 +96,7 @@ func TestDeleteIntegration(t *testing.T) {
 	repo := InitRepository(&mockUpdate)
 	service := InitService(repo)
 	result := service.Delete(1)
+	assert.Nil(t, result)
 	assert.Equal(t, nil, result)
 
 }
@@ -116,9 +118,41 @@ func TestDeleteFailIntegration(t *testing.T) {
 		errRead:  "",
 	}
 
+	errTest := fmt.Errorf("Producto %d no encontrado", 1)
+
 	repo := InitRepository(&mockUpdate)
 	service := InitService(repo)
 	err := service.Delete(1)
 	assert.ErrorContains(t, err, err.Error())
+	assert.Equal(t, errTest, err)
+
+}
+
+func TestUpadeOneIntegration(t *testing.T) {
+
+	updateData := []domain.Products{
+		{
+			Id:            1,
+			Nombre:        "Papaya",
+			Color:         "verde",
+			Precio:        231522,
+			Stock:         13,
+			Codigo:        "asd7sd",
+			Publicado:     true,
+			FechaCreacion: "12/02/2022",
+		},
+	}
+
+	mockUpdate := MockStorage{
+		dataMock: updateData,
+		errWrite: "",
+		errRead:  "",
+	}
+
+	repo := InitRepository(&mockUpdate)
+	service := InitService(repo)
+	result, err := service.UpdateOne(updateData[0].Id, updateData[0].Nombre, updateData[0].Precio)
+	assert.Nil(t, err)
+	assert.Equal(t, mockUpdate.dataMock[0], result)
 
 }

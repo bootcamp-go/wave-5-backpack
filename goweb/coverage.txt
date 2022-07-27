@@ -1,0 +1,7 @@
+COVERAGE 1
+
+file:///private/var/folders/31/181rglnj47q72xf8t15whhy4c45071/T/cover162809100/coverage.html#file1
+
+COVERAGE 2
+
+file:///private/var/folders/31/181rglnj47q72xf8t15whhy4c45071/T/cover1541490965/coverage.html#file0

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"goweb/cmd/server/handler"
 	"goweb/internal/products"
 	"goweb/pkg/store"
@@ -46,7 +47,10 @@ func main() {
 	pr.PUT("/:id", p.Update())
 	pr.DELETE("/:id", p.Delete())
 	pr.PATCH("/:id", p.UpdateOne())
-	r.Run()
+	if err := r.Run(); err != nil {
+		fmt.Println("error: ", err.Error())
+		return
+	}
 }
 
 func TokenAuthMiddleware() gin.HandlerFunc {
