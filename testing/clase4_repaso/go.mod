@@ -1,4 +1,4 @@
-module clase3_parte1
+module clase4_repaso
 
 go 1.18
 
