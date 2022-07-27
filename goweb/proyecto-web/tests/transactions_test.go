@@ -12,6 +12,7 @@ import (
 	"proyecto-web/internal/domain"
 	"proyecto-web/internal/transaction"
 	"proyecto-web/pkg/store"
+	"proyecto-web/pkg/web"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -88,10 +89,7 @@ func TestDelete(t *testing.T) {
 
 	// act
 	server.ServeHTTP(response, request)
-	var responseStruct struct {
-		Code int    `json:"code"`
-		Data string `json:"data"`
-	}
+	var responseStruct web.Response
 	err := json.Unmarshal(response.Body.Bytes(), &responseStruct)
 	transactionResponse := responseStruct.Data
 
