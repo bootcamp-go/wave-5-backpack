@@ -26,6 +26,7 @@ func createServer(pathDB string) *gin.Engine {
 	u := router.Group("/users")
 	{
 		u.PUT("/:id", user.Update())
+		u.DELETE("/:id", user.Delete())
 	}
 	return router
 }
@@ -38,8 +39,8 @@ func createRequestTest(method string, url string, body string) (*http.Request, *
 	return req, httptest.NewRecorder()
 }
 
-func Test_UpdateUser_OK(t *testing.T) {
-	r := createServer("users_test.json")
+func TestUpdateUserOK(t *testing.T) {
+	r := createServer("users.json")
 
 	req, rr := createRequestTest(http.MethodPut, "/users/1",
 		`{"nombre": "Daniela", "apellido": "Bedoya", "email": "djfsj@gmail.com", "edad": 20, "altura": 1.45, "activo": true, "fechaCreacion": "2021-10-02T04:44:12 +05:00" }`)
@@ -47,4 +48,24 @@ func Test_UpdateUser_OK(t *testing.T) {
 	r.ServeHTTP(rr, req)
 
 	assert.Equal(t, 200, rr.Code)
+}
+
+func TestDeleteUserOK(t *testing.T) {
+	r := createServer("users.json")
+
+	req, rr := createRequestTest(http.MethodDelete, "/users/2", "")
+
+	r.ServeHTTP(rr, req)
+
+	assert.Equal(t, 200, rr.Code)
+}
+
+func TestDeleteUserNotFound(t *testing.T) {
+	r := createServer("users.json")
+
+	req, rr := createRequestTest(http.MethodDelete, "/users/543", "")
+
+	r.ServeHTTP(rr, req)
+
+	assert.Equal(t, 404, rr.Code)
 }
