@@ -9,8 +9,8 @@ import (
 
 type StubStore struct{}
 
-func (s *StubStore) GetAll() ([]*domain.User, error) {
-	return []*domain.User{
+func (s *StubStore) GetAll() (*[]domain.User, error) {
+	return &[]domain.User{
 		{
 			Id:      0,
 			Name:    "Nahuel",
@@ -36,8 +36,8 @@ func (s *StubStore) LastId() (int, error) {
 	return 2, nil
 }
 
-func (s *StubStore) Store(id, age int, name, surname, email, created string, active bool) (*domain.User, error) {
-	return &domain.User{
+func (s *StubStore) Store(age int, name, surname, email, created string, active bool) (domain.User, error) {
+	return domain.User{
 		Id:      0,
 		Name:    "Nahuel",
 		Surname: "Monserrat",
@@ -48,8 +48,8 @@ func (s *StubStore) Store(id, age int, name, surname, email, created string, act
 	}, nil
 }
 
-func (s *StubStore) Update(id, age int, name, surname, email, created string, active bool) (*domain.User, error) {
-	return &domain.User{
+func (s *StubStore) Update(id, age int, name, surname, email, created string, active bool) (domain.User, error) {
+	return domain.User{
 		Id:      0,
 		Name:    "Nahuel",
 		Surname: "Monserrat",
@@ -67,7 +67,7 @@ func (s *StubStore) Delete(id int) error {
 func TestGetAll(t *testing.T) {
 	// Arrange
 	service := NewService(&StubStore{})
-	us := []*domain.User{
+	us := &[]domain.User{
 		{
 			Id:      0,
 			Name:    "Nahuel",

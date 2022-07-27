@@ -113,10 +113,6 @@ func (u *User) GetAll() gin.HandlerFunc {
 			c.JSON(http.StatusInternalServerError, web.NewResponse(400, nil, err.Error()))
 			return
 		}
-		if len(users) <= 0 {
-			c.JSON(http.StatusOK, gin.H{
-				"message": "no se encontraron usuarios"})
-		}
 		c.JSON(200, web.NewResponse(200, users, ""))
 	}
 }

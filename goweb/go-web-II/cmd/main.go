@@ -5,7 +5,6 @@ import (
 	"goweb/go-web-II/docs"
 	"goweb/go-web-II/internal/products"
 	"goweb/go-web-II/pkg/store"
-	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
@@ -28,9 +27,6 @@ import (
 func main() {
 	_ = godotenv.Load()
 	db := store.NewStore("/Users/namonserrat/Desktop/wave-5-backpack/goweb/go-web-II/usuarios.json")
-	if err := db.Ping(); err != nil {
-		log.Fatal("error al intentar cargar archivo")
-	}
 	router := gin.Default()
 	repository := products.NewRepository(db)
 	service := products.NewService(repository)

@@ -8,7 +8,6 @@ import (
 type Store interface {
 	Read(data interface{}) error
 	Write(data interface{}) error
-	Ping() error
 }
 
 func NewStore(fileName string) Store {
