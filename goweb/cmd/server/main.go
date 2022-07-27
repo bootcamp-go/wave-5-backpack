@@ -51,7 +51,9 @@ func main() {
 	us.PUT("/:id", u.Update())
 	us.PATCH("/:id", u.UpdateName())
 	us.DELETE("/:id", u.Delete())
-	r.Run()
+	if err := r.Run(); err != nil {
+		panic(err)
+	}
 }
 
 func TokenAuthMiddleware() gin.HandlerFunc {

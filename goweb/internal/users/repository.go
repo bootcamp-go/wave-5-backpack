@@ -1,6 +1,7 @@
 package users
 
 import (
+	"errors"
 	"fmt"
 	"goweb/internal/domain"
 	"goweb/pkg/dataStore"
@@ -124,7 +125,7 @@ func (r *repository) Delete(id int) error {
 	}
 
 	if !deleted {
-		return fmt.Errorf("usuario %d no encontrado", id)
+		return errors.New("usuario no encontrado")
 	}
 
 	us = append(us[:index], us[index+1:]...)

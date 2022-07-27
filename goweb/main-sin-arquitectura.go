@@ -50,7 +50,7 @@ func GetUserList() ([]User, error) {
 	return userList, nil
 }
 
-func GetAllUsers(ctx *gin.Context) {
+/*func GetAllUsers(ctx *gin.Context) {
 	users, err := GetUserList()
 	if err != nil {
 		ctx.JSON(500, gin.H{
@@ -60,7 +60,7 @@ func GetAllUsers(ctx *gin.Context) {
 	}
 
 	ctx.JSON(200, gin.H{"message": &users})
-}
+}*/
 
 // EJERCICIO 1 T
 func FilterList(users *[]User, params url.Values) error {
@@ -221,6 +221,8 @@ func main() {
 	rt := router.Group("/users")
 	rt.POST("/", NewEntity())
 
-	router.Run(":8080")
+	if err := router.Run(); err != nil {
+		panic(err)
+	}
 
 }
