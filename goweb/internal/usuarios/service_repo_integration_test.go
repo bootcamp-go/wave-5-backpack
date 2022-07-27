@@ -93,7 +93,7 @@ func TestIntegrationUpdateFailRead(t *testing.T) {
 	repo := NewRepository(&mockInte)
 	service := NewService(repo)
 	user, err := service.Update(1, "", "", "", 0, 0, true, "")
-	// accert
+	// assert
 	assert.Equal(t, expectedError, err)
 	assert.Equal(t, user.Id, 0)
 }
@@ -115,7 +115,7 @@ func TestIntegrationUpdateFailWrite(t *testing.T) {
 	repo := NewRepository(&mockInte)
 	service := NewService(repo)
 	user, err := service.Update(1, "F", "F", "F", 3, 2, true, "F")
-	// accert
+	// assert
 	assert.Equal(t, expectedError, err)
 	assert.Equal(t, user.Id, 0)
 }
