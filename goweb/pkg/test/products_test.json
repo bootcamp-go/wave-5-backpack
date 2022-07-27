@@ -1,0 +1,52 @@
+[
+  {
+    "id": 1,
+    "nombre": "Producto 100",
+    "color": "rojo",
+    "precio": 100,
+    "stock": 10,
+    "codigo": "123",
+    "publicado": true,
+    "fechaCreacion": "2020-01-01"
+  },
+  {
+    "id": 3,
+    "nombre": "Tablet",
+    "color": "rojo",
+    "precio": 350000,
+    "stock": 30,
+    "codigo": "T001",
+    "publicado": true,
+    "fechaCreacion": "2020-01-01"
+  },
+  {
+    "id": 4,
+    "nombre": "Smartphone",
+    "color": "azul",
+    "precio": 450000,
+    "stock": 40,
+    "codigo": "S001",
+    "publicado": true,
+    "fechaCreacion": "2020-01-01"
+  },
+  {
+    "id": 5,
+    "nombre": "Producto 1",
+    "color": "rojo",
+    "precio": 10,
+    "stock": 10,
+    "codigo": "12345",
+    "publicado": true,
+    "fechaCreacion": "2020-01-01"
+  },
+  {
+    "id": 6,
+    "nombre": "Producto 3",
+    "color": "verde",
+    "precio": 100,
+    "stock": 5,
+    "codigo": "123",
+    "publicado": true,
+    "fechaCreacion": "2020-01-01"
+  }
+]
