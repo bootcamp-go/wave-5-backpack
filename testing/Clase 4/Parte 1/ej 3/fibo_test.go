@@ -12,6 +12,8 @@ func TestFibo(t *testing.T) {
 		expected int
 	}{
 		{0, 0},
+		{1, 1},
+		{2, 1},
 	}
 	for _, test := range tests {
 		res := Fibonacci(test.given)
