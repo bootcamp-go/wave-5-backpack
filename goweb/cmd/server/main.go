@@ -10,6 +10,8 @@ import (
 	"os"
 )
 
+var variableNoUsada string
+
 func main() {
 
 	err := godotenv.Load()
