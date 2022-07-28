@@ -14,7 +14,7 @@ type Servicio interface {
 	GetAll() ([]domain.Usuario, error)
 	Save(Nombre, Apellido, Email string, Edad, Altura int, Activo bool) (domain.Usuario, error)
 	UpdateUsuario(Nombre, Apellido, Email, Fecha_creacion string, Id, Edad, Altura int, Activo bool) (domain.Usuario, error)
-	// UpdateAtributos(Nombre, Apellido, Email, Fecha_creacion string, Id, Edad, Altura int, Activo *bool) (domain.Usuario, error)
+	UpdateAtributos(Nombre, Apellido, Email, Fecha_creacion string, Id, Edad, Altura int, Activo *bool) (domain.Usuario, error)
 	DeleteUsuario(id int) error
 }
 
@@ -58,11 +58,11 @@ func (s *servicio) UpdateUsuario(Nombre, Apellido, Email, Fecha_creacion string,
 	)
 }
 
-// func (s *servicio) UpdateAtributos(Nombre, Apellido, Email, Fecha_creacion string, Id, Edad, Altura int, Activo *bool) (domain.Usuario, error) {
-// 	return s.repo.UpdateAtributos(
-// 		Nombre, Apellido, Email, Fecha_creacion, Id, Edad, Altura, Activo,
-// 	)
-// }
+func (s *servicio) UpdateAtributos(Nombre, Apellido, Email, Fecha_creacion string, Id, Edad, Altura int, Activo *bool) (domain.Usuario, error) {
+	return s.repo.UpdateAtributos(
+		Nombre, Apellido, Email, Fecha_creacion, Id, Edad, Altura, Activo,
+	)
+}
 func (s *servicio) DeleteUsuario(id int) error {
 	return s.repo.DeleteUsuario(id)
 }

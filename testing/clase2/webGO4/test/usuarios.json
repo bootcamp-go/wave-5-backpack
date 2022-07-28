@@ -1,0 +1,12 @@
+[
+  {
+    "id": 2,
+    "nombre": "test.9876",
+    "apellido": "del guerrero",
+    "email": "dg@gmail.com",
+    "edad": 13,
+    "altura": 170,
+    "activo": false,
+    "fecha_creacion": "2022-07-12 02:35:37.410751 -0400 -04 m=+11.067846501"
+  }
+]

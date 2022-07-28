@@ -1,8 +1,10 @@
 package controlador
 
 import (
+	"fmt"
 	"log"
 	"os"
+	"strconv"
 
 	"github.com/del_rio/web-server/internal/usuarios"
 	"github.com/del_rio/web-server/pkg/web"
@@ -64,6 +66,7 @@ func (u *Usuario) VerUsuarios() gin.HandlerFunc {
 			return
 		}
 		ctx.JSON(200, web.NewResponse(200, usuarios, ""))
+		return
 	}
 }
 
@@ -91,86 +94,94 @@ func (u *Usuario) AgregarUsuarios() gin.HandlerFunc {
 			return
 		}
 		ctx.JSON(200, web.NewResponse(200, usuario, ""))
+		return
 	}
 }
 
-// func (u *Usuario) ActualizarUsuario() gin.HandlerFunc {
-// 	return func(ctx *gin.Context) {
-// 		token := ctx.Request.Header.Get("token")
-// 		if token != os.Getenv("TOKEN") {
-// 			ctx.JSON(401, gin.H{
-// 				"error": "token inválido",
-// 			})
-// 			return
-// 		}
-// 		id, err := strconv.Atoi(ctx.Param("id"))
-// 		if err != nil {
-// 			ctx.JSON(404, "invalid id")
-// 			return
-// 		}
-// 		var req request
-// 		if err := ctx.Bind(&req); err != nil {
-// 			ctx.JSON(404, gin.H{
-// 				"error": err.Error(),
-// 			})
-// 			return
-// 		}
-// 		usuario, err := u.service.UpdateUsuario(req.Nombre, req.Apellido, req.Email, req.Fecha_creacion, id, req.Edad, req.Altura, *req.Activo)
-// 		if err != nil {
-// 			ctx.JSON(404, err)
-// 		}
-// 		ctx.JSON(200, usuario)
+func (u *Usuario) ActualizarUsuario() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.Request.Header.Get("token")
+		if token != os.Getenv("TOKEN") {
+			ctx.JSON(401, gin.H{
+				"error": "token inválido",
+			})
+			return
+		}
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(404, "invalid id")
+			return
+		}
+		var req request
+		if err := ctx.Bind(&req); err != nil {
+			ctx.JSON(404, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		usuario, err := u.service.UpdateUsuario(req.Nombre, req.Apellido, req.Email, req.Fecha_creacion, id, req.Edad, req.Altura, *req.Activo)
+		if err != nil {
+			ctx.JSON(404, err.Error())
+			return
+		}
+		ctx.JSON(200, usuario)
+		return
+	}
+}
 
-// 	}
-// }
+func (u *Usuario) ActualizarAtribUsuario() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.Request.Header.Get("token")
+		if token != os.Getenv("TOKEN") {
+			ctx.JSON(401, gin.H{
+				"error": "token inválido",
+			})
+			return
+		}
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(404, "invalid id")
+			return
+		}
+		var req request
+		if err := ctx.Bind(&req); err != nil {
+			ctx.JSON(404, gin.H{
+				"error": err.Error(),
+			})
+			return
+		}
+		usuario, err := u.service.UpdateAtributos(req.Nombre, req.Apellido, req.Email, req.Fecha_creacion, id, req.Edad, req.Altura, req.Activo)
+		if err != nil {
+			ctx.JSON(404, err.Error())
+			return
+		}
+		ctx.JSON(200, usuario)
+	}
+}
 
-// func (u *Usuario) ActualizarAtribUsuario() gin.HandlerFunc {
-// 	return func(ctx *gin.Context) {
-// 		token := ctx.Request.Header.Get("token")
-// 		if token != os.Getenv("TOKEN") {
-// 			ctx.JSON(401, gin.H{
-// 				"error": "token inválido",
-// 			})
-// 			return
-// 		}
-// 		id, err := strconv.Atoi(ctx.Param("id"))
-// 		if err != nil {
-// 			ctx.JSON(404, "invalid id")
-// 			return
-// 		}
-// 		var req request
-// 		if err := ctx.Bind(&req); err != nil {
-// 			ctx.JSON(404, gin.H{
-// 				"error": err.Error(),
-// 			})
-// 			return
-// 		}
-// 		usuario, err := u.service.UpdateAtributos(req.Nombre, req.Apellido, req.Email, req.Fecha_creacion, id, req.Edad, req.Altura, req.Activo)
-// 		if err != nil {
-// 			ctx.JSON(404, err)
-// 		}
-// 		ctx.JSON(200, usuario)
-// 	}
-// }
+func (u *Usuario) BorrarUsuario() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := ctx.Request.Header.Get("token")
+		if token != os.Getenv("TOKEN") {
+			ctx.JSON(401, gin.H{
+				"error": "token inválido",
+			})
+			return
+		}
+		id, err := strconv.Atoi(ctx.Param("id"))
+		if err != nil {
+			ctx.JSON(404, "invalid id")
+			return
+		}
+		err = u.service.DeleteUsuario(id)
+		if err != nil {
+			fmt.Println("aqui paso algo " + err.Error())
+			ctx.JSON(404, err.Error())
+			return
+		} else {
+			ctx.JSON(200, fmt.Sprint("se borro el usuario de id ", id))
+			return
+		}
 
-// func (u *Usuario) BorrarUsuario() gin.HandlerFunc {
-// 	return func(ctx *gin.Context) {
-// 		token := ctx.Request.Header.Get("token")
-// 		if token != os.Getenv("TOKEN") {
-// 			ctx.JSON(401, gin.H{
-// 				"error": "token inválido",
-// 			})
-// 			return
-// 		}
-// 		id, err := strconv.Atoi(ctx.Param("id"))
-// 		if err != nil {
-// 			ctx.JSON(404, "invalid id")
-// 			return
-// 		}
-// 		err = u.service.DeleteUsuario(id)
-// 		if err != nil {
-// 			ctx.JSON(404, err)
-// 		}
-// 		ctx.JSON(200, fmt.Sprint("se borro el usuario de id ", id))
-// 	}
-// }
+	}
+}
