@@ -11,7 +11,7 @@ func TestFibonacci(t *testing.T) {
 	for i, d := range tests {
         got := Fibonacci(d.arg)
         if got != d.want {
-            t.Errorf("Test[%d]: factorial(%d) returned %d, want %d",
+            t.Errorf("Test[%d]: fibonacci(%d) returned %d, want %d",
                 i, d.arg, got, d.want)
         }
     }
