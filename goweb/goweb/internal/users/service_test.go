@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
-	"github.com/go-playground/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 type StubRepository struct{}
