@@ -7,7 +7,7 @@ import (
 
 type Service interface {
 	GetAll() ([]*domain.User, error)
-	Update(id int, firstName string, lastName string, email string, age int, height float64, activo bool, createdAt string) (domain.User, error)
+	Update(id int, firstName string, lastName string, email string, age int, height float64, activo bool, createdAt string) (*domain.User, error)
 	UpdateLastNameAge(id int, lastName string, age int) (domain.User, error)
 	Delete(id int) error
 	Store(firstName string, lastName string, email string, age int, height float64, activo bool, createdAt string) (domain.User, error)
@@ -45,7 +45,7 @@ func (s *service) Store(firstName string, lastName string, email string, age int
 	return user, nil
 }
 
-func (s *service) Update(id int, firstName string, lastName string, email string, age int, height float64, activo bool, createdAt string) (domain.User, error) {
+func (s *service) Update(id int, firstName string, lastName string, email string, age int, height float64, activo bool, createdAt string) (*domain.User, error) {
 
 	return s.repository.Update(id, firstName, lastName, email, age, height, activo, createdAt)
 }

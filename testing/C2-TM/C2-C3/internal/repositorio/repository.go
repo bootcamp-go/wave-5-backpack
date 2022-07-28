@@ -23,7 +23,7 @@ type Repository interface {
 	GetAll() ([]*domain.User, error)
 	Store(id int, firstName string, lastName string, email string, age int, height float64, activo bool, createdAt string) (domain.User, error)
 	LastID() (int, error)
-	Update(id int, firstName string, lastName string, email string, age int, height float64, activo bool, createdAt string) (domain.User, error)
+	Update(id int, firstName string, lastName string, email string, age int, height float64, activo bool, createdAt string) (*domain.User, error)
 	UpdateLastNameAge(id int, lastName string, age int) (domain.User, error)
 	Delete(id int) error
 }
@@ -67,22 +67,22 @@ func (r *repository) Store(id int, firstName string, lastName string, email stri
 	return p, nil
 }
 
-func (r *repository) Update(id int, firstName string, lastName string, email string, age int, height float64, activo bool, createdAt string) (domain.User, error) {
-	var ps []domain.User
+func (r *repository) Update(id int, firstName string, lastName string, email string, age int, height float64, activo bool, createdAt string) (*domain.User, error) {
+	var ps []*domain.User
 	r.db.Read(&ps)
-	u := domain.User{Id: id, FirstName: firstName, LastName: lastName, Email: email, Age: age, Height: height, Activo: activo, CreatedAt: createdAt}
+	user := domain.User{Id: id, FirstName: firstName, LastName: lastName, Email: email, Age: age, Height: height, Activo: activo, CreatedAt: createdAt}
 	var update bool = false
 	for k, v := range ps {
-		if u.Id == v.Id {
-			ps[k] = u
+		if user.Id == v.Id {
+			ps[k] = &user
 			update = true
 		}
 	}
 	if update != true {
-		return domain.User{}, fmt.Errorf("No se pudo actualizar el usuario")
+		return &domain.User{}, fmt.Errorf("No se pudo actualizar el usuario")
 	}
 
-	return u, nil
+	return &user, nil
 }
 
 func (r *repository) UpdateLastNameAge(id int, lastName string, age int) (domain.User, error) {

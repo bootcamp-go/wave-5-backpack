@@ -97,18 +97,51 @@ func (fs *MockStore) Write(data interface{}) error {
 	return nil
 }
 
+func (fs *MockStore) Open(data interface{}) error {
+	return nil
+}
+
 /* Test with Mock */
 func TestUpdateName(t *testing.T) {
-	id, nombre := 1, "Update After"
-	products := *[]*domain.User{{Id: 1, Nombre: "Update Before", Stock: 1, Precio: 12}} //aki le movi
+	type UserT struct {
+		Id           int     `json:"-"`
+		FirstName    string  `json:"firstName" binding:"required"`
+		LastName     string  `json:"lastName" binding:"required"`
+		Email        string  `json:"email" binding:"required"`
+		Age          int     `json:"age" binding:"required"`
+		Height       float64 `json:"height" binding:"required"`
+		Active       bool    `json:"active" binding:"required"`
+		CreationDate string  `json:"creationDate" binding:"required"`
+	}
 
-	mock := MockStore{Data: products}
+	userAfterUpdate := domain.User{
+		Id:        1,
+		FirstName: "AfterUpdate",
+		LastName:  "AfterUpdate",
+		Email:     "AfterUpdate",
+		Age:       5,
+		Height:    1.83,
+		Activo:    true,
+		CreatedAt: "AfterUpdate",
+	}
+	users := []*domain.User{{
+		Id:        1,
+		FirstName: "BeforeUpdate",
+		LastName:  "BeforeUpdate",
+		Email:     "BeforeUpdate",
+		Age:       5,
+		Height:    1.83,
+		Activo:    true,
+		CreatedAt: "BeforeUpdate",
+	}} //aki le movi
+
+	mock := MockStore{Data: users}
 
 	r := repositorio.NewRepository(&mock)
-	productUpdated, err := r.UpdateName(id, nombre)
+	userBeforeUpdated, err := r.Update(userAfterUpdate.Id, userAfterUpdate.FirstName, userAfterUpdate.LastName, userAfterUpdate.Email, userAfterUpdate.Age, userAfterUpdate.Height, userAfterUpdate.Activo, userAfterUpdate.CreatedAt)
 	assert.Nil(t, err)
 
-	assert.Equal(t, id, productUpdated.Id)
-	assert.Equal(t, nombre, productUpdated.Nombre)
+	assert.Equal(t, userAfterUpdate.Id, userBeforeUpdated.Id)
+	assert.Equal(t, userAfterUpdate.FirstName, userBeforeUpdated.FirstName)
 	assert.True(t, true, mock.ReadInvoked)
 }
