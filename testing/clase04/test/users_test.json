@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "name": "Jorge",
+        "lastname": "Gonzalez",
+        "email": "jorge@mail.com",
+        "age": 30,
+        "height": 2.02,
+        "active": true,
+        "createdat": "21/06/21"
+    },
+    {
+        "id": 2,
+        "name": "Pepe",
+        "lastname": "Messi",
+        "email": "pepe@mail.com",
+        "age": 33,
+        "height": 1.7,
+        "active": true,
+        "createdat": "24/06/1987"
+    },
+    {
+        "id": 4,
+        "name": "Gabriela",
+        "lastname": "Sabbatini",
+        "email": "gabi@mail.com",
+        "age": 40,
+        "height": 1.74,
+        "active": true,
+        "createdat": "22/04/22"
+    },
+    {
+        "id": 5,
+        "name": "Emanuel",
+        "lastname": "Ginobili",
+        "email": "manu@mail.com",
+        "age": 41,
+        "height": 1.98,
+        "active": false,
+        "createdat": "18/05/19"
+    },
+    {
+        "id": 6,
+        "name": "Claudio",
+        "lastname": "Bieler",
+        "email": "taca@bieler.com",
+        "age": 38,
+        "height": 1.75,
+        "active": true,
+        "createdat": "11/07/2022"
+    },
+    {
+        "id": 7,
+        "name": "Emanuel",
+        "lastname": "Martinez",
+        "email": "dibu@martinez.com",
+        "age": 28,
+        "height": 1.87,
+        "active": true,
+        "createdat": "24/06/1987"
+    }
+]
