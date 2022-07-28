@@ -6,6 +6,6 @@ type Transaction struct {
 	Currency    string  `json:"currency"`
 	Amount      float64 `json:"amount"`
 	Transmitter string  `json:"transmitter"`
-	Reciever    string  `json:"reciever"`
+	Receiver    string  `json:"receiver"`
 	TranDate    string  `json:"tranDate"`
 }

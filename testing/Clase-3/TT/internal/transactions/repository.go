@@ -69,8 +69,8 @@ func (r *repository) Store(id int, tranCode, currency string, amount float64, tr
 		Currency:    currency,
 		Amount:      amount,
 		Transmitter: transmitter,
-		Reciever:    receiver,
-		TranDate:    tranCode,
+		Receiver:    receiver,
+		TranDate:    tranDate,
 	}
 
 	if err := r.db.Read(&lista); err != nil {
@@ -105,7 +105,7 @@ func (r *repository) Update(id int, tranCode, currency string, amount float64, t
 		Currency:    currency,
 		Amount:      amount,
 		Transmitter: transmitter,
-		Reciever:    receiver,
+		Receiver:    receiver,
 		TranDate:    tranDate,
 	}
 

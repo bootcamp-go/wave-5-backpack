@@ -51,7 +51,7 @@ func TestGetAll(t *testing.T) {
 			Currency:    "USD",
 			Amount:      200.0,
 			Transmitter: "MERCADOPAGO",
-			Reciever:    "JOSE",
+			Receiver:    "JOSE",
 			TranDate:    "05-07-22",
 		},
 		{
@@ -60,7 +60,7 @@ func TestGetAll(t *testing.T) {
 			Currency:    "CLP",
 			Amount:      1500000.0,
 			Transmitter: "MELI",
-			Reciever:    "JUAN",
+			Receiver:    "JUAN",
 			TranDate:    "12-02-22",
 		},
 	}
@@ -90,7 +90,7 @@ func TestUpdate(t *testing.T) {
 			Currency:    "USD",
 			Amount:      200.0,
 			Transmitter: "MERCADOPAGO",
-			Reciever:    "JOSE",
+			Receiver:    "JOSE",
 			TranDate:    "05-07-22",
 		},
 		{
@@ -99,7 +99,7 @@ func TestUpdate(t *testing.T) {
 			Currency:    "CLP",
 			Amount:      1500000.0,
 			Transmitter: "MELI",
-			Reciever:    "JUAN",
+			Receiver:    "JUAN",
 			TranDate:    "12-02-22",
 		},
 		{
@@ -108,7 +108,7 @@ func TestUpdate(t *testing.T) {
 			Currency:    "USD",
 			Amount:      500.00,
 			Transmitter: "BANCO",
-			Reciever:    "JUAN",
+			Receiver:    "JUAN",
 			TranDate:    "26-07-22",
 		},
 	}
@@ -138,7 +138,7 @@ func TestDelete(t *testing.T) {
 			Currency:    "USD",
 			Amount:      200.0,
 			Transmitter: "MERCADOPAGO",
-			Reciever:    "JOSE",
+			Receiver:    "JOSE",
 			TranDate:    "05-07-22",
 		},
 		{
@@ -147,7 +147,7 @@ func TestDelete(t *testing.T) {
 			Currency:    "CLP",
 			Amount:      1500000.0,
 			Transmitter: "MELI",
-			Reciever:    "JUAN",
+			Receiver:    "JUAN",
 			TranDate:    "12-02-22",
 		},
 		{
@@ -156,7 +156,7 @@ func TestDelete(t *testing.T) {
 			Currency:    "USD",
 			Amount:      500.00,
 			Transmitter: "BANCO",
-			Reciever:    "JUAN",
+			Receiver:    "JUAN",
 			TranDate:    "26-07-22",
 		},
 	}
