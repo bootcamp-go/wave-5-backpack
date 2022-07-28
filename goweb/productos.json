@@ -7,7 +7,7 @@
   "stock": 100,
   "code": "AFN123",
   "publisher": true,
-  "created_at": "2006-01-02T15:04:05Z07:00"
+  "created_at": "2006-01-02"
  },
  {
   "id": 2,
@@ -17,7 +17,7 @@
   "stock": 50,
   "code": "BFN123",
   "publisher": false,
-  "created_at": "2006-01-02T15:04:05Z07:00"
+  "created_at": "2006-01-02"
  },
  {
   "id": 3,
@@ -27,7 +27,7 @@
   "stock": 75,
   "code": "CFN123",
   "publisher": true,
-  "created_at": "2006-01-02T15:04:05Z07:00"
+  "created_at": "2006-01-02"
  },
  {
   "id": 4,
@@ -37,7 +37,7 @@
   "stock": 150,
   "code": "DFN123",
   "publisher": true,
-  "created_at": "2006-01-02T15:04:05Z07:00"
+  "created_at": "2006-01-02"
  },
  {
   "id": 5,
@@ -47,7 +47,7 @@
   "stock": 125,
   "code": "FFN123",
   "publisher": false,
-  "created_at": "2006-01-02T15:04:05Z07:00"
+  "created_at": "2006-01-02"
  },
  {
   "id": 6,
@@ -57,7 +57,7 @@
   "stock": 10,
   "code": "GFN123",
   "publisher": true,
-  "created_at": "2006-01-02T15:04:05Z07:00"
+  "created_at": "2006-01-02"
  },
  {
   "id": 7,
@@ -67,7 +67,7 @@
   "stock": 85,
   "code": "HFN123",
   "publisher": true,
-  "created_at": "2006-01-02T15:04:05Z07:00"
+  "created_at": "2006-01-02"
  },
  {
   "id": 8,
@@ -77,7 +77,7 @@
   "stock": 110,
   "code": "IFN123",
   "publisher": true,
-  "created_at": "2006-01-02T15:04:05Z07:00"
+  "created_at": "2006-01-02"
  },
  {
   "id": 9,
@@ -87,7 +87,7 @@
   "stock": 25,
   "code": "JFN123",
   "publisher": true,
-  "created_at": "2006-01-02T15:04:05Z07:00"
+  "created_at": "2006-01-02"
  },
  {
   "id": 10,
@@ -97,7 +97,7 @@
   "stock": 115,
   "code": "KFN123",
   "publisher": false,
-  "created_at": "2006-01-02T15:04:05Z07:00"
+  "created_at": "2006-01-02"
  },
  {
   "id": 11,
@@ -107,7 +107,7 @@
   "stock": 50,
   "code": "BFN123",
   "publisher": false,
-  "created_at": "2006-01-02T15:04:05Z07:00"
+  "created_at": "2006-01-02"
  },
  {
   "id": 12,
@@ -117,7 +117,7 @@
   "stock": 50,
   "code": "BFN123",
   "publisher": false,
-  "created_at": "2006-01-02T15:04:05Z07:00"
+  "created_at": "2006-01-02"
  },
  {
   "id": 13,
@@ -127,7 +127,7 @@
   "stock": 100,
   "code": "BFN123",
   "publisher": false,
-  "created_at": "2006-01-02T15:04:05Z07:00"
+  "created_at": "2006-01-02"
  },
  {
   "id": 14,
@@ -137,7 +137,7 @@
   "stock": 100,
   "code": "BFN123",
   "publisher": false,
-  "created_at": "2006-01-02T15:04:05Z07:00"
+  "created_at": "2006-01-02"
  },
  {
   "id": 15,
@@ -147,16 +147,186 @@
   "stock": 100,
   "code": "BFO123",
   "publisher": false,
-  "created_at": "2022-07-08 12:38:26"
+  "created_at": "2022-07-08"
  },
  {
   "id": 16,
-  "name": "product16",
-  "color": "verde",
-  "price": 1200,
-  "stock": 70,
-  "code": "ZFO123",
+  "name": "Tester Update",
+  "color": "prueba update",
+  "price": 1021,
+  "stock": 11,
+  "code": "BBB333",
   "publisher": false,
-  "created_at": "2022-07-08 12:42:35"
+  "created_at": "2022-07-27"
+ },
+ {
+  "id": 18,
+  "name": "Tester",
+  "color": "prueba",
+  "price": 1020,
+  "stock": 10,
+  "code": "AAA333",
+  "publisher": true,
+  "created_at": "2022-07-27"
+ },
+ {
+  "id": 19,
+  "name": "Tester",
+  "color": "prueba",
+  "price": 1020,
+  "stock": 10,
+  "code": "AAA333",
+  "publisher": true,
+  "created_at": "2022-07-27"
+ },
+ {
+  "id": 20,
+  "name": "Tester",
+  "color": "prueba",
+  "price": 1020,
+  "stock": 10,
+  "code": "AAA333",
+  "publisher": true,
+  "created_at": "2022-07-27"
+ },
+ {
+  "id": 21,
+  "name": "Tester",
+  "color": "prueba",
+  "price": 1020,
+  "stock": 10,
+  "code": "AAA333",
+  "publisher": true,
+  "created_at": "2022-07-27"
+ },
+ {
+  "id": 22,
+  "name": "Tester",
+  "color": "prueba",
+  "price": 1020,
+  "stock": 10,
+  "code": "AAA333",
+  "publisher": true,
+  "created_at": "2022-07-27"
+ },
+ {
+  "id": 23,
+  "name": "Tester",
+  "color": "prueba",
+  "price": 1020,
+  "stock": 10,
+  "code": "AAA333",
+  "publisher": true,
+  "created_at": "2022-07-27"
+ },
+ {
+  "id": 24,
+  "name": "Tester",
+  "color": "prueba",
+  "price": 1020,
+  "stock": 10,
+  "code": "AAA333",
+  "publisher": true,
+  "created_at": "2022-07-27"
+ },
+ {
+  "id": 25,
+  "name": "Tester",
+  "color": "prueba",
+  "price": 1020,
+  "stock": 10,
+  "code": "AAA333",
+  "publisher": true,
+  "created_at": "2022-07-27"
+ },
+ {
+  "id": 26,
+  "name": "Tester",
+  "color": "prueba",
+  "price": 1020,
+  "stock": 10,
+  "code": "AAA333",
+  "publisher": true,
+  "created_at": "2022-07-27"
+ },
+ {
+  "id": 27,
+  "name": "Tester",
+  "color": "prueba",
+  "price": 1020,
+  "stock": 10,
+  "code": "AAA333",
+  "publisher": true,
+  "created_at": "2022-07-27"
+ },
+ {
+  "id": 28,
+  "name": "Tester",
+  "color": "prueba",
+  "price": 1020,
+  "stock": 10,
+  "code": "AAA333",
+  "publisher": true,
+  "created_at": "2022-07-27"
+ },
+ {
+  "id": 29,
+  "name": "Tester",
+  "color": "prueba",
+  "price": 1020,
+  "stock": 10,
+  "code": "AAA333",
+  "publisher": true,
+  "created_at": "2022-07-27"
+ },
+ {
+  "id": 30,
+  "name": "Tester",
+  "color": "prueba",
+  "price": 1020,
+  "stock": 10,
+  "code": "AAA333",
+  "publisher": true,
+  "created_at": "2022-07-27"
+ },
+ {
+  "id": 31,
+  "name": "Tester",
+  "color": "prueba",
+  "price": 1020,
+  "stock": 10,
+  "code": "AAA333",
+  "publisher": true,
+  "created_at": "2022-07-27"
+ },
+ {
+  "id": 32,
+  "name": "Tester",
+  "color": "prueba",
+  "price": 1020,
+  "stock": 10,
+  "code": "AAA333",
+  "publisher": true,
+  "created_at": "2022-07-27"
+ },
+ {
+  "id": 33,
+  "name": "Tester",
+  "color": "prueba",
+  "price": 1020,
+  "stock": 10,
+  "code": "AAA333",
+  "publisher": true,
+  "created_at": "2022-07-27"
+ },
+ {
+  "id": 34,
+  "name": "Tester",
+  "color": "prueba",
+  "price": 1020,
+  "stock": 10,
+  "code": "AAA333",
+  "publisher": true,
+  "created_at": "2022-07-27"
  }
 ]

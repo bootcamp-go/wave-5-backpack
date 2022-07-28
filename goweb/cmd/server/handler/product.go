@@ -116,7 +116,7 @@ func (p *Product) Create() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(200, web.NewResponse(200, productServ, ""))
+		c.JSON(201, web.NewResponse(201, productServ, ""))
 	}
 }
 
@@ -270,6 +270,6 @@ func (p *Product) Delete() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(200, web.NewResponse(200,fmt.Sprintf("El producto %d ha sido eliminado", id), ""))
+		c.JSON(204, web.NewResponse(204,fmt.Sprintf("El producto %d ha sido eliminado", id), ""))
 	}
 }

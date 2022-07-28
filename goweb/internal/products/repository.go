@@ -139,7 +139,7 @@ func (r *repository) Update(id int, name string, color string, price float64, st
 func (r *repository) Create(name string, color string, price float64, stock int, code string, publisher bool) (domain.Product, error) {
 
 	var t time.Time = time.Now()
-	created := t.Format("2006-01-02 15:04:05")
+	created := t.Format("2006-01-02")
 
 	err := r.db.Read(&ps)
 	if err != nil {
