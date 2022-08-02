@@ -1,6 +1,6 @@
-CREATE DATABASE emple-dep;
+CREATE DATABASE emple_dep;
 
-USE emple-dep;
+USE emple_dep;
 
 CREATE TABLE empleado(
 	legajo int not null auto_increment,
