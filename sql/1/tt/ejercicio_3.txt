@@ -19,6 +19,6 @@ CREATE TABLE empleado(
 CREATE TABLE departamento(
     id int not null auto_increment,
     nombre varchar(50),
-    direccion varchar(100)
+    direccion varchar(100),
     PRIMARY KEY (id)
 );
