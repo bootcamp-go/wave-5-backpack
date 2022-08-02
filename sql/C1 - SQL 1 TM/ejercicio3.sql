@@ -1,17 +1,22 @@
+-- Creación de base de datos
 CREATE DATABASE emple_dep;
+
+-- Colocando la base de datos a disposición para su uso
 USE emple_dep;
 
+-- Tabla de departamentos
 CREATE TABLE departamentos (
-	id int NOT NULL auto_increment,
-	nombre varchar(50),
+    id int NOT NULL auto_increment,
+    nombre varchar(50),
     direccion varchar(50),
     PRIMARY KEY(id)
 );
 
+-- Tabla de empleados
 CREATE TABLE empleados (
-	legajo int NOT NULL auto_increment,
-	dni int NOT NULL,
-	depto_id int,
+    legajo int NOT NULL auto_increment,
+    dni int NOT NULL,
+    depto_id int,
     apellido varchar(50),
     nombre varchar(50),
     fecha_nacimiento date,
@@ -22,15 +27,17 @@ CREATE TABLE empleados (
     FOREIGN KEY(depto_id) REFERENCES departamentos(id)
 );
 
+-- Insertando información a tabla departamentos
 INSERT INTO departamentos(id, nombre, direccion) VALUES
-	(1, 'Finanzas', 'Bogotá'),
-	(2, 'Recursos Humanos', 'Cali'),
-	(3, 'IT', 'Buenos Aires'),
-	(4, 'IT', 'Medellín'),
-	(5, 'Shipping', 'Bogotá');
+    (1, 'Finanzas', 'Bogotá'),
+    (2, 'Recursos Humanos', 'Cali'),
+    (3, 'IT', 'Buenos Aires'),
+    (4, 'IT', 'Medellín'),
+    (5, 'Shipping', 'Bogotá');
 
+-- Insertando información a tabla empleados
 INSERT INTO empleados(dni, depto_id, apellido, nombre, fecha_nacimiento, fecha_incorporacion, cargo, sueldo_neto) VALUES 
-	(1,3,'Lucumi','Luz','1960-06-22','2010-05-23', 'Developer' ,2200000),
+    (1,3,'Lucumi','Luz','1960-06-22','2010-05-23', 'Developer' ,2200000),
     (2,2,'Perez','Maria','1961-06-23','2012-06-30', 'Manager' ,3500000),
     (3,3,'Martinez','Pablo','1962-07-28','2016-09-26', 'Senior Developer' ,5500000),
     (4,4,'Hernandez','Martha','1963-09-30','2014-05-28', 'Endpoint Designer' ,23000000),
