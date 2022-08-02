@@ -43,7 +43,7 @@ func createRequestTest(method string, url string, body string) (*http.Request, *
 
 func TestUpdateUser(t *testing.T) {
 	r := createServer()
-	req, rr := createRequestTest(http.MethodPut, "/usuarios/4", `{
+	req, rr := createRequestTest(http.MethodPut, "/usuarios/6", `{
 		"nombre": "YvoNew","apellido": "PintNew","email": "yvonew","edad":30,"altura":2,"activo":true,"fecha_de_creacion":"2020"
 	}`)
 	r.ServeHTTP(rr, req)
