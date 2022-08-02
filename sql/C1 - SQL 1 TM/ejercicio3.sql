@@ -28,12 +28,12 @@ CREATE TABLE empleados (
 );
 
 -- Insertando información a tabla departamentos
-INSERT INTO departamentos(id, nombre, direccion) VALUES
-    (1, 'Finanzas', 'Bogotá'),
-    (2, 'Recursos Humanos', 'Cali'),
-    (3, 'IT', 'Buenos Aires'),
-    (4, 'IT', 'Medellín'),
-    (5, 'Shipping', 'Bogotá');
+INSERT INTO departamentos(nombre, direccion) VALUES
+    ('Finanzas', 'Bogotá'),
+    ('Recursos Humanos', 'Cali'),
+    ('IT', 'Buenos Aires'),
+    ('IT', 'Medellín'),
+    ('Shipping', 'Bogotá');
 
 -- Insertando información a tabla empleados
 INSERT INTO empleados(dni, depto_id, apellido, nombre, fecha_nacimiento, fecha_incorporacion, cargo, sueldo_neto) VALUES 
