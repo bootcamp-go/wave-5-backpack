@@ -2,6 +2,13 @@ CREATE DATABASE emple_dep;
 
 USE emple_dep;
 
+CREATE TABLE departamento(
+    id int not null auto_increment,
+    nombre varchar(50),
+    direccion varchar(100),
+    PRIMARY KEY (id)
+);
+
 CREATE TABLE empleado(
 	legajo int not null auto_increment,
     dni int,
@@ -14,11 +21,4 @@ CREATE TABLE empleado(
     id_departamento int,
     PRIMARY KEY (legajo),
     FOREIGN KEY (id_departamento) REFERENCES departamento (id)
-);
-
-CREATE TABLE departamento(
-    id int not null auto_increment,
-    nombre varchar(50),
-    direccion varchar(100),
-    PRIMARY KEY (id)
 );
