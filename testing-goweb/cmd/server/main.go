@@ -16,6 +16,16 @@ import (
 	"testing-goweb/pkg/web"
 )
 
+// @title MELI Bootcamp API
+// @version 1.0
+// @description This API Handle MELI Users.
+// @termsOfService https://developers.mercadolibre.com.ar/es_ar/terminos_y_condiciones
+
+// @contact.name API Support
+// @contact.url https://developers.mercadolibre.com.ar/support
+
+// @licence.name Apache 2.0
+// @licence.url http://www.apache.org/licences/LICENCE-2.0.html
 func main() {
 	err := godotenv.Load()
 	if err != nil {
