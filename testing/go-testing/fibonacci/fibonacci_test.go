@@ -10,13 +10,13 @@ import (
 
 func TestFibonnac(t *testing.T) {
 	n := 1
-	res := Fibonacci(n)
-
 	if n == 0 {
-		assert.Equal(t, 0, res)
+		assert.Equal(t, 0, Fibonacci(n))
 	} else if n == 1 {
-		assert.Equal(t, 1, res)
+		assert.Equal(t, 1, Fibonacci(n))
+
 	} else if n > 1 {
+		res := Fibonacci(n-1) - Fibonacci(n-2)
 
 	}
 }
