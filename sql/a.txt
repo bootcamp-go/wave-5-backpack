@@ -1,0 +1,4 @@
+class#1 ejercicio 2
+a: primary key para empleados seria legajo, ya que es un identificador unico por empleado en la empresa
+    (podria ser DNI tambien es uico, pero legajo puede contenter infromacion segmentada del empleado o codificada)
+b: primary key de departamentos ed el id del departamento
