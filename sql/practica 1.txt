@@ -1,0 +1,32 @@
+EJERCICIO 2
+a. ¿Cuál es la primary key para la tabla empleados? Justificar la respuesta.
+    La primary key de la tabla empleados sera el DNI, ya que es la identificacion unica del empleado, 
+    la cual es unica y con la cual se encuentyra registrado el empleado 
+
+b. ¿Cuál es la primary key para la tabla departamentos? Justificar la respuesta.
+    La primary key de la tabla departamentos sera el id_departamento, ya que es el atributo el cual es propio del departamento,
+    es unico y no se puede repetir 
+
+c. ¿Qué relación/es existirían entre las tablas? ¿En qué tabla debería haber foreign key? ¿A qué campo de qué tabla hace referencia dicha foreign key? Justificar la respuesta.
+    Sera una relacion de 1 a muchos, ya que un departamento puede tener muchos empleados, pero un empleado
+    no puede estar en muchos departmanetos
+    
+EJERCICIO 3
+create table empleados(
+	DNI varchar(50) not null primary key unique,
+    num_legajo varchar(50),
+    nombre varchar(50),
+    apellido varchar(50),
+    fecha_nacimiento date,
+    fecha_incorporacion date,
+    cargo varchar(50),
+    sueldo_neto float 
+);
+
+create table departamentos (
+	id_departamento int not null primary key auto_increment,
+    nombre varchar(50),
+    direccion varchar(50),
+    DNI varchar(50) not null unique,
+    foreign key (DNI) references empleados(DNI)
+);
