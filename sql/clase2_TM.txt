@@ -1,0 +1,116 @@
+##C2 - SQL 2 TM
+
+##Primer Parte
+
+## 1.¿A qué se denomina JOIN en una base de datos?
+
+#Consiste en combinar datos de una tabla con datos de la otra tabla a partir de una o varias condiciones en comun.
+
+## 2.Nombre y explique 2 tipos de JOIN.
+
+#INNER JOIN Interseccioni entre A y B
+#FULL JOIN Union entre A y B
+#LEFT JOIN Diferencia (A-B)
+#RIGHT JOIN Diferencia (B-A)
+
+##3.¿Para qué se utiliza el GROUP BY?
+##Agrupa los resultados segun las columnas indicadas, genera un solo registro por cada grupo de filas que compartan las columnas indicadas. Reduce la cantidad de filas de las columnas.
+
+##4.¿Para qué se utiliza el GROUP BY?
+
+##Es muy similar a la clausula WHERE, pero en lugar de afectar a las filas de la tabla, afecta a los grupos obtenidos por el GROUP ID.
+
+
+##5.Dado los siguientes diagramas indique a qué tipo de JOIN corresponde cada uno:
+
+#Tabla A: inner Join
+#Tabla B:  Left Join
+
+##6. Escriba una consulta genérica por cada uno de los diagramas a continuación:
+
+##Right Join
+SELECT * FROM movies mo RIGHT JOIN actor_movie ac ON ac.movie_id = mo.id;
+
+##Full Join
+SELECT title FROM movies UNION ALL SELECT first_name FROM actors;
+
+
+##SEGUNDA PARTE
+
+##1. Mostrar el titulo y el nombre del genero de todas las series.
+SELECT se.title, ge.name  FROM series se JOIN genres ge ON se.genre_id = ge.id;
++---------------------+----------+
+| title               | name     |
++---------------------+----------+
+| Game of Thrones     | Fantasia |
+| Supernatural        | Suspenso |
+| The Walking Dead    | Terror   |
+| Person of Interest  | Accion   |
+| The Big Bang Theory | Comedia  |
+| Breaking Bad        | Drama    |
++---------------------+----------+
+
+##2. Mostrar el título de los episodios, el nombre y apellido de los actores que trabajan en cada uno de ellos.
+
+SELECT ep.title, ac.first_name, ac.last_name FROM actors ac JOIN actor_episode ae JOIN episodes ep ON ae.actor_id = ac.id AND ae.episode_id = ep.id;
+
+-------------------------------------+------------+-----------+
+| title                               | first_name | last_name |
++-------------------------------------+------------+-----------+
+| Winter Is Coming                    | Emilia     | Clarke    |
+| Winter Is Coming                    | Peter      | Dinklage  |
+| Winter Is Coming                    | Kit        | Harington |
+| The North Remembers                 | Emilia     | Clarke    |
+| The North Remembers                 | Peter      | Dinklage  |
+...
+
+
+##3.Mostrar el título de todas las series y el total de temporadas que tiene cada una de ellas.
+
+SELECT ser.title, COUNT(sea.title) AS season FROM seasons sea JOIN series ser ON sea.serie_id = ser.id  GROUP BY ser.title;
+
++---------------------+--------+
+| title               | season |
++---------------------+--------+
+| Game of Thrones     |      7 |
+| Supernatural        |     12 |
+| The Walking Dead    |      7 |
+| Person of Interest  |      5 |
+| The Big Bang Theory |     10 |
+| Breaking Bad        |      5 |
++---------------------+--------+
+
+##4. Mostrar el nombre de todos los géneros y la cantidad total de películas por cada uno, siempre que sea mayor o igual a 3.
+
+SELECT ge.name, COUNT(mo.title) AS total_gen FROM genres ge JOIN movies mo ON mo.genre_id = ge.id GROUP BY ge.name HAVING total_gen >= 3;
++-----------------+-----------+
+| name            | total_gen |
++-----------------+-----------+
+| Ciencia Ficcion |         5 |
+| Drama           |         3 |
+| Aventuras       |         3 |
+| Animacion       |         4 |
++-----------------+-----------+
+
+##5.Mostrar sólo el nombre y apellido de los actores que trabajan en todas las películas de la guerra de las galaxias y que estos no se repitan.
+
+SELECT ac.first_name, ac.last_name, mo.title FROM actors ac JOIN movies mo ON ac.favorite_movie_id = mo.id WHERE mo.title LIKE '%La Guerra%';
++------------+-----------+-----------------------------------------+
+| first_name | last_name | title                                   |
++------------+-----------+-----------------------------------------+
+| Albert     | Brooks    | La Guerra de las galaxias: Episodio VI  |
+| Jim        | Parsons   | La Guerra de las galaxias: Episodio VI  |
+| Leonardo   | Di Caprio | La Guerra de las galaxias: Episodio VII |
+| Ellen      | DeGeneres | La Guerra de las galaxias: Episodio VII |
+| Kaley      | Cuoco     | La Guerra de las galaxias: Episodio VII |
++------------+-----------+-----------------------------------------+
+
+
+
+
+
+
+
+
+
+
