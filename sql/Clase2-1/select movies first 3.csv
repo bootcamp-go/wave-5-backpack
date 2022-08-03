@@ -1,0 +1,4 @@
+id,created_at,updated_at,title,rating,awards,release_date,length,genre_id
+1,NULL,NULL,Avatar,7.9,3,"2010-10-04 00:00:00",120,5
+2,NULL,NULL,Titanic,7.7,11,"1997-09-04 00:00:00",320,3
+3,NULL,NULL,"La Guerra de las galaxias: Episodio VI",9.1,7,"2004-07-04 00:00:00",NULL,5

@@ -1,0 +1,10 @@
+id,created_at,updated_at,first_name,last_name,rating,favorite_movie_id
+41,NULL,NULL,Jim,Caviezel,1.9,20
+42,NULL,NULL,Taraji,Henson,5.9,21
+43,NULL,NULL,Kevin,Chapman,2.9,1
+44,NULL,NULL,Johnny,Galecki,2.3,2
+45,NULL,NULL,Jim,Parsons,6.9,3
+46,NULL,NULL,Kaley,Cuoco,2.3,4
+47,NULL,NULL,Bryan,Cranston,7.9,NULL
+48,NULL,NULL,Aaron,Paul,5.9,6
+49,NULL,NULL,Anna,Gunn,3.1,7

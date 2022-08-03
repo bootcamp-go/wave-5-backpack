@@ -1,0 +1,3 @@
+id,created_at,updated_at,first_name,last_name,rating,favorite_movie_id
+1,NULL,NULL,Sam,Worthington,7.5,1
+10,NULL,NULL,Sam,Neill,2.5,10
