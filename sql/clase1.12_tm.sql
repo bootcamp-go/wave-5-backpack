@@ -1,0 +1,2 @@
+USE movies_db;
+SELECT * FROM actors LIMIT 10 OFFSET 20;
