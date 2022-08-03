@@ -1,0 +1,20 @@
+a. ¿Cuál es la primary key para la tabla empleados? Justificar la respuesta.
+
+R:El numero de legajo seria la PK porque identifica de manera única al empleado y no pude haber 2 iguales.
+
+b. ¿Cuál es la primary key para la tabla departamentos? Justificar la respuesta.
+
+R:El PK seria el ID ya que usualmente se utiliza este campo como identificador de los elementos en un tabla.
+
+c.  ¿Qué relación/es existirían entre las tablas? 
+
+    R: Existiría una relación 1 a 1 debido a que no puede existir el mismo empleado contratado em diferentes departamento.
+
+    ¿En qué tabla debería haber foreign key? 
+
+    R: En la tabla de empleados que haga referencia a al departamento ya que esta cumple la función de un catalogo en 
+       el cual se identificara a que departamento pertenece cada empleado.
+
+    ¿A qué campo de qué tabla hace referencia dicha foreign key? 
+
+    R: En la tabla empleados se creara un nuevo cam,po que llevará por nombre IDDeparatamento.
