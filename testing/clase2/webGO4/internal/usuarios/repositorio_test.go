@@ -9,15 +9,22 @@ import (
 )
 
 type StubStore struct {
-	db       []domain.Usuario
-	readUsed bool
+	db         []domain.Usuario
+	readUsed   bool
+	forceError error
 }
 
 func (fs *StubStore) Write(data interface{}) error {
+	if fs.forceError != nil {
+		return fs.forceError
+	}
 	fs.db = data.([]domain.Usuario)
 	return nil
 }
 func (fs *StubStore) Read(data interface{}) error {
+	if fs.forceError != nil {
+		return fs.forceError
+	}
 	testInfo := []domain.Usuario{
 		{
 			Id:             1,
