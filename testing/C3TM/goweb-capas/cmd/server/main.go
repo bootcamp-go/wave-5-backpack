@@ -53,5 +53,8 @@ func main() {
 	pr.PUT("/:id", p.Update())
 	pr.PATCH("/:id", p.Patch())
 	pr.DELETE("/:id", p.Delete())
-	r.Run()
+	errRun := r.Run()
+	if errRun != nil {
+		log.Fatal("error al intentar cargar la API")
+	}
 }

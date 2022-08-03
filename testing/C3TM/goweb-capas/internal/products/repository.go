@@ -13,7 +13,7 @@ type Product struct {
 	Price float64 `json:"precio"`
 }
 
-var lastID int
+// var lastID int
 
 const (
 	ProductNotFound = "product %d not found"
