@@ -29,10 +29,10 @@ SELECT * FROM movies ORDER BY rating DESC LIMIT 5 OFFSET 6;
 SELECT * FROM actors LIMIT 10;
 
 /*Luego usar offset para traer la página 3*/
-SELECT * FROM actors LIMIT 10 OFFSET 3;
+SELECT * FROM actors LIMIT 10 OFFSET 20;
 
 /*Hacer lo mismo para la página 5*/
-SELECT * FROM actors LIMIT 10 OFFSET 5;
+SELECT * FROM actors LIMIT 10 OFFSET 40;
 
 /*Mostrar el título y rating de todas las películas cuyo título sea de Toy Story.*/
 SELECT title, rating FROM movies WHERE title LIKE 'Toy Story%';
