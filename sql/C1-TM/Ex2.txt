@@ -1,0 +1,9 @@
+Una vez modelada y planteada la base de datos, responder a las siguientes preguntas:
+
+a. ¿Cuál es la primary key para la tabla empleados? Justificar la respuesta.
+    Para los empleados su primary Key es su ~DNI~ pues es una clave unica de identificacion para individuos.
+b. ¿Cuál es la primary key para la tabla departamentos? Justificar la respuesta.
+    Para los Departamentos su ~ID~ es su primary key puesto que es una clave unica de identificacion.
+c. ¿Qué relación/es existirían entre las tablas? ¿En qué tabla debería haber foreign key? ¿A qué campo de qué tabla hace referencia dicha foreign key? Justificar la respuesta.
+    La relación que existe entre los empleados y los departamentos es que el empleado ~HABITA~ un departamento,
+    y la foreign key debería ser el ~N de Legajo~  puesto que es un numero de identificacion del personal que labora dentro de la empresa y que puede ser exportado a los Departamentos de la empresa.

@@ -1,0 +1,178 @@
+basePath: /api/v1
+definitions:
+  handler.User:
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: rodrigo.vazquez@mercadolibre.com.mx
+    name: API Support
+    url: https://developers.mercadolibre.com.ar/support
+  description: This API Handle MELI Products.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
+  title: MELI Bootcamp API
+  version: "1.0"
+paths:
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: get all users
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            type: object
+      summary: List users
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Create user
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: User to add
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handler.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.User'
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Create user
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete user
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.User'
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Delete user
+      tags:
+      - Users
+    patch:
+      consumes:
+      - application/json
+      description: Update Last Name User
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Last Name and user to update
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/handler.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.User'
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Update Last Name User
+      tags:
+      - Products
+    put:
+      consumes:
+      - application/json
+      description: Update user
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: User to add
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/handler.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.User'
+        "404":
+          description: Not Found
+          schema:
+            type: string
+      summary: Update user
+      tags:
+      - Users
+swagger: "2.0"
