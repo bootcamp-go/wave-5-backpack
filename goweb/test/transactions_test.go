@@ -48,6 +48,7 @@ func TestUpdateTransactionOK(t *testing.T) {
 	err := json.Unmarshal(rr.Body.Bytes(), &resData)
 
 	assert.Nil(t, err)
+	assert.Equal(t, resData.Data.Id, 2)
 	assert.Equal(t, resData.Data.Amount, 15000.00)
 	assert.Equal(t, resData.Data.Currency, "ARG")
 	assert.Equal(t, resData.Data.Sender, "Anonimo")
