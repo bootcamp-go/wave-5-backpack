@@ -38,14 +38,7 @@ func (s *service) GetAll() (*[]domain.User, error) {
 }
 
 func (s *service) Store(age int, name, surname, email, created string, active bool) (domain.User, error) {
-	lastId, err := s.repository.LastId()
-	if err != nil {
-		return domain.User{}, err
-	}
-
-	lastId++
 	user, err := s.repository.Store(age, name, surname, email, created, active)
-
 	if err != nil {
 		return domain.User{}, err
 	}

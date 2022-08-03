@@ -43,7 +43,7 @@ func main() {
 	rUser.POST("/", handler.Store())
 	rUser.PUT("/:id", handler.Update())
 	rUser.DELETE("/id", handler.Delete())
-	router.Run()
+	_ = router.Run()
 
 }
 
