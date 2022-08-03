@@ -12,6 +12,13 @@ const (
 	FailWriting     = "cant write database, error: %w"
 )
 
+type Product struct {
+	Id     int     `json:"id"`
+	Nombre string  `json:"nombre"`
+	Stock  int     `json:"stock"`
+	Precio float64 `json:"precio"`
+}
+
 type Repository interface {
 	LastID() (int, error)
 	GetAll() ([]domain.Product, error)

@@ -1,0 +1,10 @@
+[
+ {
+  "Id": 1,
+  "Codigo": "abc123",
+  "Moneda": "peso",
+  "Emisor": "Juan Manuel",
+  "Receptor": "Gissel Rivas",
+  "Monto": 129.99
+ }
+]

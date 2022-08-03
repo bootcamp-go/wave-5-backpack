@@ -1,0 +1,164 @@
+definitions:
+  handler.request:
+    properties:
+      codigo:
+        type: string
+      emisor:
+        type: string
+      moneda:
+        type: string
+      monto:
+        type: number
+      receptor:
+        type: string
+    type: object
+  web.Response:
+    properties:
+      code:
+        type: string
+      data: {}
+      error:
+        type: string
+    type: object
+info:
+  contact:
+    name: API Support
+    url: https://developers.mercadolibre.com.ar/support
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
+  title: Bootcamp Go
+  version: "1.0"
+paths:
+  /transactions:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: List Transactions
+      tags:
+      - Transactions
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Transaction to store
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/handler.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Store Transactions
+      tags:
+      - Transactions
+  /transactions/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Transaction id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Delete Transactions
+      tags:
+      - Transactions
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Transaction id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Transaction to update receptor and monto
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/handler.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Update Receptor and Monto Transactions
+      tags:
+      - Transactions
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Transaction id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Transaction to store
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/handler.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Update Transactions
+      tags:
+      - Transactions
+swagger: "2.0"
