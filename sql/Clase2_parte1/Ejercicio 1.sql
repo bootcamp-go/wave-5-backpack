@@ -50,6 +50,3 @@ SELECT title as titulo FROM movies WHERE rating > 3 AND awards > 1 AND release_d
 
 # EJERCICIO 18
 SELECT title as titulo FROM movies WHERE rating > 3 AND awards > 1 AND release_date BETWEEN "1988-01-01" AND "2009-12-31" ORDER BY rating DESC LIMIT 3 OFFSET 10;
-
-select * from movies order by rating desc;
-SELECT * FROM movies WHERE rating > 3 AND awards > 1 AND release_date BETWEEN "1988-01-01" AND "2009-12-31" ORDER BY rating DESC;
