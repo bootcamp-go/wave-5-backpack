@@ -1,0 +1,12 @@
+a. ¿Cuál es la primary key para la tabla empleados? Justificar la respuesta.
+
+Es el campo DNI ya que va a ser único y no puede ser null.
+
+
+b. ¿Cuál es la primary key para la tabla departamentos? Justificar la respuesta.
+
+Es el campo ID departamento ya que es irrepetible para cada departamento.
+
+c. ¿Qué relación/es existirían entre las tablas? ¿En qué tabla debería haber foreign key? ¿A qué campo de qué tabla hace referencia dicha foreign key? Justificar la respuesta.
+
+La foreign key debe ir en la table de empleados. La relación entre tablas será de uno a muchos. Lo anterior haciendo referencia a que 1 o mas empleador pueden vivir en un mismo departamento.
