@@ -22,6 +22,7 @@ from genres gnr
 join movies mv
 on mv.genre_id = gnr.id
 group by gnr.name
+having Movies > 2
 ; 
 
 select act.first_name Nombre, act.last_name
