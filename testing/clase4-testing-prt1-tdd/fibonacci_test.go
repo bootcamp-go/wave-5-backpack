@@ -7,6 +7,7 @@ func TestFibonacci(t *testing.T) {
 		arg  int
 		want int
 	}{{1, 1}, {2, 1}, {3, 2}, {5, 5}, {8, 21}, {13, 233}}
+
 	for i, d := range tests {
 		got := FibonacciRecursion(d.arg)
 		if got != d.want {
