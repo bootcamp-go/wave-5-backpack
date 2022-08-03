@@ -30,8 +30,10 @@ Es similar a WHERE, en tanto que ambos eliminan datos no deseados de un informe,
   </tr>
  </table>
  </p>
+
+### Escriba una consulta genérica por cada uno de los diagramas a continuación:
  
- <p align="center">
+<p align="center">
 <table>
   <tr>
     <td> <b> Diferencia (B-A) </b> </td>
@@ -43,3 +45,17 @@ Es similar a WHERE, en tanto que ambos eliminan datos no deseados de un informe,
   </tr>
  </table>
  </p>
+
+### Consultas genéricas
+### Unión (AUB)
+SELECT  genre_id mo
+FROM movies mo
+UNION
+SELECT id gen
+FROM genres gen;
+
+### Diferencia (B-A)
+SELECT  *
+FROM movies mo
+RIGHT JOIN actors ac
+ON mo.id = ac.favorite_movie_id;
