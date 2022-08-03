@@ -1,0 +1,31 @@
+1. ¿A qué se denomina JOIN en una base de datos?
+Se demomina JOIN a la union de dos tablas que se relacionan entre si
+
+2. Nombre y explique 2 tipos de JOIN.
+
+A. Left JOIN: me permite relacionar los datos de mi tabla principal
+con la coincidencia de la tabla resultando, completando campos deseados.
+B. full JOIN: trae todos los datos que coincidan y que no, lo que consigna campos nulos (null)
+
+3. ¿Para qué se utiliza el GROUP BY?
+Permite agrupar datos en forma de resumen teniendo en cuenta resultados numericos asociados a la varibale agrupada.
+Ejm: Agrupo por fecha el total de compras de un cliente.
+
+4. ¿Para qué se utiliza el HAVING?
+HAVING me permite tener una condicion extra al WHERE, y se utiliza con GROUP BY
+
+5. Dado los siguientes diagramas indique a qué tipo de JOIN corresponde cada uno:
+
+El primero corresponde a un INNER JOIN, el segundo a LEFT JOIN
+
+6. Escriba una consulta genérica por cada uno de los diagramas a continuación:
+
+A: 
+SELECT *,tb.first_name
+FROM tablaA ta
+RIGHT JOIN tablab tb ON ta.ID = tb.ID
+
+B: 
+SELECT *,tb.first_name
+FROM tablaA ta
+FULL JOIN tablab tb ON ta.ID = tb.ID
