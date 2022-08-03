@@ -6,7 +6,7 @@ func TestFibonacci(t *testing.T) {
 	tests := []struct {
         arg  int
         want int
-    }{{0, 0}, {1, 1}, {2, 1}, {3, 2}, {4, 3}, {5, 5}, {6, 8}, {7, 13}}
+    }{{0, 0}, {1, 1}, {2, 1}, {3, 2}, {4, 3}, {5, 5}, {11, 89}, {14, 377}}
 
 	for i, d := range tests {
         got := Fibonacci(d.arg)

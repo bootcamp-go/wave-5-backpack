@@ -150,16 +150,6 @@
   "created_at": "2022-07-08"
  },
  {
-  "id": 16,
-  "name": "Tester Update",
-  "color": "prueba update",
-  "price": 1021,
-  "stock": 11,
-  "code": "BBB333",
-  "publisher": false,
-  "created_at": "2022-07-27"
- },
- {
   "id": 18,
   "name": "Tester",
   "color": "prueba",
