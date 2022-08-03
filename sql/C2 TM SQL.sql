@@ -47,12 +47,6 @@ FROM movies_db.series ser, movies_db.seasons seas
 WHERE ser.id = seas.serie_id
 GROUP BY ser.title ;
 
-/*Mostrar el nombre de todos los géneros y la cantidad total de películas por cada uno, 
-SELECT gen.name, COUNT(mov.genre_id) cantPelisGenero
-FROM movies_db.genres gen, movies_db.movies mov
-WHERE gen.id = mov.genre_id
-GROUP BY mov.genre_id
-HAVING COUNT(mov.genre_id) >= 3
 
 /*Mostrar el nombre de todos los géneros y la cantidad total de películas por cada uno,siempre que sea mayor o igual a 3.*/
 SELECT gen.name, COUNT(mov.genre_id) cantPelis
