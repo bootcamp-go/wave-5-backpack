@@ -1,0 +1,33 @@
+PRIMERA PARTE
+
+1. ¿A qué se denomina JOIN en una base de datos?
+    Se denomina Join a la union de 2 tablas
+
+2. Nombre y explique 2 tipos de JOIN.
+    Inner Join: Es el resultado de la intersección entre 2 tablas
+    Full Join: Es la union total entre 2 tablas. Tengan o no datos en común
+
+3. ¿Para qué se utiliza el GROUP BY?
+    Para agrupar resultados según las columnas indicadas y generar un único registro por cada grupo de filas que compartan las columnas indicadas.
+
+4. ¿Para qué se utiliza el HAVING?
+    Para filtrar resultados obtenidos a partir de un Group By. Es similar a WHERE pero para grupos
+
+5. Dado los siguientes diagramas indique a qué tipo de JOIN corresponde cada uno:
+    Inner Join y Left Join
+
+6. Escriba una consulta genérica por cada uno de los diagramas a continuación:
+
+    RIGHT JOIN
+
+        SELECT  *
+        FROM table_B b
+        RIGHT JOIN table_A a
+        ON b.id = a.b_id;
+
+    FULL JOIN / UNION
+
+        SELECT column_name(s) FROM tableA
+        UNION
+        SELECT column_name(s) FROM tableB;
+
