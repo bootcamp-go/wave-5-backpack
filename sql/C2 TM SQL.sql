@@ -58,9 +58,20 @@ HAVING cantPelis >= 3 ;
 /*Mostrar sólo el nombre y apellido de los actores que trabajan en todas 
 las películas de la guerra de las galaxias y que estos no se repitan.*/
 SELECT DISTINCT act.first_name, act.last_name
-FROM  movies_db.actors act,  movies_db.actor_movie act_mov, movies_db.movies mov
+FROM  movies_db.actors act, movies_db.actor_movie act_mov, movies_db.movies mov
 WHERE act.id = act_mov.actor_id
 AND act_mov.movie_id = mov.id
-AND mov.title LIKE 'La Guerra de las galaxias%'
+AND mov.title LIKE 'La Guerra de las galaxias%' ;
+
+
+/*CON SUBQUERY*/
+SELECT DISTINCT act.first_name, act.last_name
+FROM  movies_db.actors act, movies_db.actor_movie act_mov
+WHERE act.id = act_mov.actor_id
+AND act.id IN (SELECT act_mov.actor_id FROM movies_db.actor_movie act_mov, movies_db.movies mov
+WHERE 1 = 1
+AND act_mov.movie_id = mov.id
+AND mov.title LIKE 'La Guerra de las galaxias%')
+
 
 
