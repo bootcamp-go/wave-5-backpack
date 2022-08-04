@@ -1,0 +1,40 @@
+-- ¿A qué se denomina JOIN en una base de datos?
+JOIN es la combinacion de tablas para realizar una consulta
+
+-- Nombre y explique 2 tipos de JOIN.
+Inner JOIN - es el mas utilizado. Tomas los datos segun la condicion en comun y realiza una nueva tabla con el resultado
+Left JOIN - ademas de presentar los datos en comun, presenta todo los datos de la tabla de la izquierda.
+
+
+-- ¿Para qué se utiliza el GROUP BY?
+Para agrupar datos por una condicion
+
+-- ¿Para qué se utiliza el HAVING?
+Para filtrar datos de acuerdo a lo solicitado.
+
+-- Dado los siguientes diagramas indique a qué tipo de JOIN corresponde cada uno:
+Inner
+Right
+
+
+
+-- Escriba una consulta genérica por cada uno de los diagramas a continuación:
+Left:
+SELECT name
+FROM table1
+LEFT JOIN table2
+ON table1.name = table2.name;
+
+Full: 
+SELECT name
+FROM table1
+FULL OUTER JOIN table2
+ON table1.name = table2.name
+WHERE name = "Juan";
+
+Explicar el concepto de normalización y para que se utiliza.
+La normalizacion se utiliza para que la tabla quede lo mas consistente posible, evitando repeticiones y manteniendo la tabla
+facil de interpretar.
+
+¿Qué son los índices? ¿Para qué sirven?
+Son un mecanismo para optimizar consultas. Es una ruta mas directa a los registros, mejorando la respuesta de queries.
