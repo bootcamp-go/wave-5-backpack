@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/bootcamp-go/wave-5-backpack/goweb/desafio-go-web-master/internal/tickets"
+	"github.com/bootcamp-go/wave-5-backpack/desafio-go-web-master/internal/tickets"
 	"github.com/gin-gonic/gin"
 )
 

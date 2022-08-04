@@ -6,9 +6,9 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/bootcamp-go/wave-5-backpack/goweb/desafio-go-web-master/cmd/handler"
-	"github.com/bootcamp-go/wave-5-backpack/goweb/desafio-go-web-master/internal/domain"
-	"github.com/bootcamp-go/wave-5-backpack/goweb/desafio-go-web-master/internal/tickets"
+	"github.com/bootcamp-go/wave-5-backpack/desafio-go-web-master/cmd/handler"
+	"github.com/bootcamp-go/wave-5-backpack/desafio-go-web-master/internal/domain"
+	"github.com/bootcamp-go/wave-5-backpack/desafio-go-web-master/internal/tickets"
 	"github.com/gin-gonic/gin"
 )
 
