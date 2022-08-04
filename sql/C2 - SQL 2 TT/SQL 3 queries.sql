@@ -53,25 +53,19 @@ SELECT * FROM temporary_movies;
 DELETE * FROM temporary_movies WHERE awards < 5;
 
 -- 8. Obtener la lista de todos los géneros que tengan al menos una película.
-CREATE TEMPORARY TABLE temporary_gen
 SELECT gen.name, COUNT(*) as cantidad_peliculas FROM genres gen
 INNER JOIN movies mo
 ON gen.id = mo.genre_id
 GROUP BY gen.name
 HAVING cantidad_peliculas >= 1;
 
-SELECT * FROM temporary_gen;
-
 -- 9. Obtener la lista de actores cuya película favorita haya ganado más de 3
 -- awards.
-CREATE TEMPORARY TABLE temporary_act
 SELECT DISTINCT(ac.first_name), ac.last_name
 FROM actors ac
 INNER JOIN actor_movie ac_mo ON ac.id = ac_mo.actor_id
 INNER JOIN movies mo ON ac_mo.movie_id = mo.id
 WHERE mo.awards > 3;
-
-SELECT * FROM temporary_act;
 
 -- 10. Utilizar el explain plan para analizar las consultas del Ej.6 y 7.
 --Respuesta en documento "SQL 3 answers.md"
