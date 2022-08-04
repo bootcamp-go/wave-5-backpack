@@ -17,4 +17,4 @@ Dado los siguientes diagramas indique a qué tipo de JOIN corresponde cada uno:
 
 Escriba una consulta genérica por cada uno de los diagramas a continuación:
 1. SELECT table_a.name, table_a.table_b FROM table_a RIGHT JOIN table_b ON table_a.table_b = table_b.id
-1. SELECT table_a.name, table_a.table_b FROM table_a LEFT JOIN table_b ON table_a.table_b = table_b.id UNION SELECT table_a.name, table_a.table_b FROM table_a RIGHT JOIN table_b ON table_a.table_b = table_b.id
+2. SELECT table_a.name, table_a.table_b FROM table_a LEFT JOIN table_b ON table_a.table_b = table_b.id UNION SELECT table_a.name, table_a.table_b FROM table_a RIGHT JOIN table_b ON table_a.table_b = table_b.id
