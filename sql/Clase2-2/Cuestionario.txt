@@ -1,0 +1,31 @@
+1.- ¿A qué se denomina JOIN en una base de datos?
+    R: A la intersección producida por la conciencia de datos entre 2 o mas tablas
+2.-Nombre y explique 2 tipos de JOIN.
+    INNER JOIN: Se obtienen las intersección de 2 tablas
+    LEFT JOIN: Se obtienen las intersección de 2 tablas ademas de los registros de los registros de la tabla la izquierda 
+3.-¿Para qué se utiliza el GROUP BY?
+    R: Para agrupar registros de una tabla según una columna 
+4.-¿Para qué se utiliza el HAVING?
+    R: Es una sentencia parecida al where que afecta a los groups
+5.-Dado los siguientes diagramas indique a qué tipo de JOIN corresponde cada uno:
+
+Figura 1: INNER JOIN
+
+Figura : LEFT JOIN
+
+6.-Escriba una consulta genérica por cada uno de los diagramas a continuación:
+
+Figura 1
+
+SELECT * 
+FROM TablaA ta
+RIGHT JOIN TablaB tB
+ON ta.TablaBID = tb.ID
+
+Figura 2
+
+SELECT ta.*
+       tb.* 
+FROM TablaA ta
+CROSS JOIN TablaB tB
+ON ta.TablaBID = tb.ID
