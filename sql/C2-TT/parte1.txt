@@ -1,0 +1,39 @@
+PRIMERA PARTE
+
+1- ¿A qué se denomina JOIN en una base de datos?
+Rta: Es una sentencia que consiste en combinar datos de una tabla con datos de otra tabla a partir de una o varias condiciones en común.
+
+2- Nombre y explique 2 tipos de JOIN.
+Rta: 
+    - INNER JOIN: unifica dos tablas a partir de condiciones en comun entre ellas, devolviendo solo los datos que estén presentes en ambas tablas.
+    - LEFT JOIN: similar al INNER JOIN pero devuelve todos los datos de la primera tabla. 
+
+3- ¿Para qué se utiliza el GROUP BY?
+Rta:
+    - Agrupa los resultados según las columnas indicadas.
+    - Genera un solo registro por cada grupo de filas que compartan la columnas indicadas.
+    - Reduce la cantidad de filas de la consulta.
+    - Se suele utilizar en conjunto con funciones de agregación, para obtener datos resumidos y agrupados por las columnas que se necesiten.
+
+
+4- ¿Para qué se utiliza el HAVING?
+Rta:
+    Es muy similar a la cláusula WHERE, pero en lugar de afectar a las filas de la tabla, afecta a los grupos obtenidos por el GROUP BY.
+
+5- Dado los siguientes diagramas indique a qué tipo de JOIN corresponde cada uno:
+Rta:
+    - Grafico uno: INNER JOIN
+    - Grafico dos: LEFT JOIN
+
+6- Escriba una consulta genérica por cada uno de los diagramas a continuación:
+Rta:
+    - Grafico uno:  SELECT COUNT(*), nombre, apellido, empresa
+                    FROM personas per
+                    RIGHT JOIN empresas em ON per.empresa = em.razon_social
+                    GROUP BY per.nombre
+
+    - Grafico dos:  SELECT COUNT(*), nombre, apellido, empresa
+                    FROM personas per
+                    FULL JOIN empresas em ON per.empresa = em.razon_social
+                    GROUP BY per.nombre
+
