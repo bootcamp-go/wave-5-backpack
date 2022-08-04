@@ -1,0 +1,12 @@
+De sus Empleados necesita almacenar: 
+Nº de legajo, dni, apellido, nombre, fecha de nacimiento, fecha de incorporación, cargo, sueldo neto.
+
+De sus Departamentos necesita almacenar: 
+ID departamento, nombre departamento, dirección departamento.
+
+a. ¿Cuál es la primary key para la tabla empleados? Justificar la respuesta.
+dni, ya que es una clave unica he irepetible por definicion del dni de una persona
+b. ¿Cuál es la primary key para la tabla departamentos? Justificar la respuesta.
+id depa, por el mismo argumento que la respuesta de arriba
+c. ¿Qué relación/es existirían entre las tablas? ¿En qué tabla debería haber foreign key? ¿A qué campo de qué tabla hace referencia dicha foreign key? Justificar la respuesta.
+un departamento puede tener asignado varios empleados, cada empleado deveria tener asignado el departamente donde esta asignado y esa seria su foreing key, y esta estaria apuntando al id del departamento, esto ya que es la mejor manera para evitar redundancia, porque es mas facil que cada empleado sepa a que depa ir, que al revez.
