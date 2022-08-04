@@ -1,0 +1,69 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2638
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Light;\f1\fswiss\fcharset0 Helvetica-Bold;}
+{\colortbl;\red255\green255\blue255;\red83\green83\blue83;}
+{\*\expandedcolortbl;;\cssrgb\c40000\c40000\c40000;}
+\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs33\fsmilli16667 \cf2 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 	1. A qu\'e9 se denomina 
+\f1\b JOIN
+\f0\b0  en una base de datos?\
+	
+\f1\b RPTA
+\f0\b0 : Se puede definir como el atributo de una consulta que nos permite unir 2 tablas relacionadas entre s\'ed.\
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 	2. Nombre y explique 2 tipos de 
+\f1\b JOIN
+\f0\b0 .\
+	
+\f1\b\fs33\fsmilli16667 \cf2 \outl0\strokewidth0 RPTA
+\f0\b0 : Inner Join y left Join, el primero nos da la posibilidad de obtener la informaci\'f3n intermedia o intersecci\'f3n entre 2 tablas relacionadas, por otro lado el Left Join nos permite obtener la informaci\'f3n UNICAMENTE del lado izquierdo del JOIN declarado (La primera tabla declara antes del JOIN).\
+
+\fs33\fsmilli16667 \cf2 \outl0\strokewidth0 \strokec2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 	3. \'bfPara qu\'e9 se utiliza el 
+\f1\b GROUP BY
+\f0\b0 ?\
+\pard\pardeftab720\partightenfactor0
+\cf2 	
+\f1\b\fs33\fsmilli16667 \cf2 \outl0\strokewidth0 RPTA
+\f0\b0 : Con esta sentencia se pueden agrupar las filas, esto nos ayuda a identificar grupos por un determinado campo.\
+
+\fs33\fsmilli16667 \cf2 \outl0\strokewidth0 \strokec2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 	4. \'bfPara qu\'e9 se utiliza el 
+\f1\b HAVING
+\f0\b0 ?\
+	
+\f1\b\fs33\fsmilli16667 \cf2 \outl0\strokewidth0 RPTA
+\f0\b0 : Se puede definir como el WHERE de la sentencia GROUP BY, siempre se utiliza con esta, nos permita definir condiciones.\
+
+\fs33\fsmilli16667 \cf2 \outl0\strokewidth0 \strokec2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 	5. Dado los siguientes diagramas indique a qu\'e9 tipo de 
+\f1\b JOIN
+\f0\b0  corresponde cada uno:\
+\pard\pardeftab720\partightenfactor0
+\cf2 	
+\f1\b\fs33\fsmilli16667 \cf2 \outl0\strokewidth0 RPTA:
+\f0\b0\fs33\fsmilli16667 \cf2 \outl0\strokewidth0 \strokec2 \
+\pard\pardeftab720\partightenfactor0
+\cf2 		- El primero se define como INNER JOIN.\
+		- El segundo se define como LEFT JOIN.\
+\
+	6. Escriba una consulta gen\'e9rica por cada uno de los diagramas a continuaci\'f3n:\
+	
+\f1\b\fs33\fsmilli16667 \cf2 \outl0\strokewidth0 RPTA:\
+		
+\f0\b0 - SELECT series.title, actors.first_name \
+			FROM series \
+			INNER JOIN actors\
+			ON series.id = actors.id;\
+		- SELECT series.title, actors.first_name \
+\pard\pardeftab720\partightenfactor0
+\cf2 			FROM series \
+			LEFT JOIN actors\
+			ON series.id = actors.id}
