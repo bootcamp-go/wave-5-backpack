@@ -48,14 +48,18 @@ Es similar a WHERE, en tanto que ambos eliminan datos no deseados de un informe,
 
 ### Consultas genéricas
 ### Unión (AUB)
+```mysql
 SELECT  genre_id mo
 FROM movies mo
 UNION
 SELECT id gen
 FROM genres gen;
+```
 
 ### Diferencia (B-A)
+```mysql
 SELECT  *
 FROM movies mo
 RIGHT JOIN actors ac
 ON mo.id = ac.favorite_movie_id;
+```
