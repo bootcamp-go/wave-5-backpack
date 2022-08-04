@@ -46,11 +46,11 @@ SELECT * FROM actors WHERE first_name LIKE "Sam%";
 SELECT * FROM movies WHERE release_date > "2004-01-01" AND release_date < "2008-12-31";
 
 #17
-SELECT title FROM movies WHERE rating > 3 AND awards > 1 AND release_date > "1988-01-01" AND release_date < "2009-12-31" ORDER BY rating;
+SELECT title FROM movies WHERE rating > 3 AND awards > 1 AND release_date BETWEEN "1988-01-01" AND "2009-12-31" ORDER BY rating;
 
 
 #18
-SELECT title FROM movies WHERE rating > 3 AND awards > 1 AND release_date > "1988-01-01" AND release_date < "2009-12-31" ORDER BY rating LIMIT 3 OFFSET 9;
+SELECT title FROM movies WHERE rating > 3 AND awards > 1 AND release_date BETWEEN "1988-01-01" AND "2009-12-31" ORDER BY rating LIMIT 3 OFFSET 9;
 
 
 
