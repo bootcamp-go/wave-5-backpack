@@ -1,0 +1,152 @@
+##SQL 3 - MOVIES DB
+
+##1.Explicar el concepto de normalización y para que se utiliza.
+
+La normalizacion es un proceso de estandarizacion y validacion de datos que consiste en eliminar las redundacias o inconsistencias, completando datos mediante una serie de reglas que actualizan informacion, protegiendo su integridad y favoreciendo la interpretacion, para que asi sea mas simple de consultar y mas eficiente para quien la gestiona.
+
+##2.Agregar una película a la tabla movies.
+
+INSERT INTO movies (created_at, title, rating, awards, release_date, length, genre_id) VALUES ('2000-05-05', 'Gladiator', 8.5, 15, '2000-05-05', 155, 4);
+
++----+---------------------+------------+-----------+--------+--------+---------------------+--------+----------+
+| id | created_at          | updated_at | title     | rating | awards | release_date        | length | genre_id |
++----+---------------------+------------+-----------+--------+--------+---------------------+--------+----------+
+| 22 | 2000-05-05 00:00:00 | NULL       | Gladiator |    8.5 |     15 | 2000-05-05 00:00:00 |    155 |        4 |
+
+
+##3.Agregar un género a la tabla genres.
+
+INSERT INTO genres (name, ranking, active) VALUES ('Documental Deportivo', 13, 1);
+
+| id | created_at          | updated_at | name                 | ranking | active |
++----+---------------------+------------+----------------------+---------+--------+
+|  1 | 2016-07-03 22:00:00 | NULL       | Comedia              |       1 |      1 |
+| 12 | 2013-07-03 22:00:00 | NULL       | Musical              |      12 |      1 |
+| 13 | 2019-05-16 00:00:00 | NULL       | Documental Deportivo |      13 |      1 |
++----+---------------------+------------+----------------------+---------+--------+
+
+##4.Asociar a la película del Ej 2. con el género creado en el Ej. 3.
+
+UPDATE movies SET genre_id = 13 WHERE id = 22;
+
+ id | created_at          | updated_at | title     | rating | awards | release_date        | length | genre_id |
++----+---------------------+------------+-----------+--------+--------+---------------------+--------+----------+
+| 22 | 2000-05-05 00:00:00 | NULL       | Gladiator |    8.5 |     15 | 2000-05-05 00:00:00 |    155 |       13 |
+
+
+##5.Modificar la tabla actors para que al menos un actor tenga como favorita la película agregada en el Ej.2.
+
+UPDATE actors SET favorite_movie_id = 22 WHERE favorite_movie_id is null;
+
++----+------------+------------+------------+-----------+--------+-------------------+
+| id | created_at | updated_at | first_name | last_name | rating | favorite_movie_id |
++----+------------+------------+------------+-----------+--------+-------------------+
+|  3 | NULL       | NULL       | Sigourney  | Weaver    |    9.7 |                22 |
+| 12 | NULL       | NULL       | Jeff       | Goldblum  |    4.5 |                22 |
+| 34 | NULL       | NULL       | Kit        | Harington |    2.4 |                22 |
+| 39 | NULL       | NULL       | Jon        | Bernthal  |    2.9 |                22 |
+| 47 | NULL       | NULL       | Bryan      | Cranston  |    7.9 |                22 |
++----+------------+------------+------------+-----------+--------+-------------------+
+
+##6.Crear una tabla temporal copia de la tabla actors.
+
+CREATE TEMPORARY TABLE best_actors SELECT * FROM actors WHERE rating > 6 ORDER BY rating DESC LIMIT 5 OFFSET 0;
+
++----+------------+------------+------------+-----------+--------+-------------------+
+| id | created_at | updated_at | first_name | last_name | rating | favorite_movie_id |
++----+------------+------------+------------+-----------+--------+-------------------+
+|  3 | NULL       | NULL       | Sigourney  | Weaver    |    9.7 |                22 |
+| 31 | NULL       | NULL       | Renee      | Zellweger |    9.5 |                10 |
+| 16 | NULL       | NULL       | Shia       | LaBeouf   |    9.5 |                16 |
+| 29 | NULL       | NULL       | Sean       | Penn      |    9.2 |                 8 |
+| 32 | NULL       | NULL       | Emilia     | Clarke    |    8.2 |                11 |
++----+------------+------------+------------+-----------+--------+-------------------+
+
+
+##7.Eliminar de esa tabla temporal todas las películas que hayan ganado menos de 5 awards.
+
+DELETE FROM best_actors WHERE rating < 9;
+
++----+------------+------------+------------+-----------+--------+-------------------+
+| id | created_at | updated_at | first_name | last_name | rating | favorite_movie_id |
++----+------------+------------+------------+-----------+--------+-------------------+
+|  3 | NULL       | NULL       | Sigourney  | Weaver    |    9.7 |                22 |
+| 31 | NULL       | NULL       | Renee      | Zellweger |    9.5 |                10 |
+| 16 | NULL       | NULL       | Shia       | LaBeouf   |    9.5 |                16 |
+| 29 | NULL       | NULL       | Sean       | Penn      |    9.2 |                 8 |
++----+------------+------------+------------+-----------+--------+-------------------+
+
+##8.Obtener la lista de todos los géneros que tengan al menos una película.
+
+SELECT ge.name, COUNT(genre_id) AS Cantidad FROM genres ge JOIN movies mo ON mo.genre_id = ge.id GROUP BY ge.name HAVING Cantidad >= 1;
+
++-----------------+----------+
+| name            | Cantidad |
++-----------------+----------+
+| Ciencia Ficcion |        1 |
+| Drama           |        1 |
+| Pelicula Romana |        1 |
+| Comedia         |        2 |
+| Animacion       |        2 |
++-----------------+----------+
+
+
+##9.Obtener la lista de actores cuya película favorita haya ganado más de 3 awards. 
+
+SELECT ac.first_name, ac.last_name, mo.title, mo.awards FROM actors ac JOIN movies mo ON ac.favorite_movie_id = mo.id  WHERE mo.awards >= 3;
+
++------------+-------------+----------------------------------------+--------+
+| first_name | last_name   | title                                  | awards |
++------------+-------------+----------------------------------------+--------+
+| Sam        | Worthington | Titanic                                |     11 |
+| Zoe        | Saldana     | Titanic                                |     11 |
+| Mia        | Wasikowska  | Titanic                                |     11 |
+| Johnny     | Galecki     | Titanic                                |     11 |
+| Albert     | Brooks      | La Guerra de las galaxias: Episodio VI |      7 |
+| Jim        | Parsons     | La Guerra de las galaxias: Episodio VI |      7 |
+| Leonardo   | Di Caprio   | Son como ninos                         |      8 |
+| Ellen      | DeGeneres   | Son como ninos                         |      8 |
+| Kaley      | Cuoco       | Son como ninos                         |      8 |
+| Kate       | Winslet     | Son como ninos 2                       |      8 |
+| Alexander  | Gould       | Son como ninos 2                       |      8 |
+| Sam        | Neill       | Carrozas de fuego                      |      7 |
+| Matthew    | Broderick   | Carrozas de fuego                      |      7 |
+| Sigourney  | Weaver      | Gladiator                              |     15 |
+| Jeff       | Goldblum    | Gladiator                              |     15 |
+| Kit        | Harington   | Gladiator                              |     15 |
+| Jon        | Bernthal    | Gladiator                              |     15 |
+| Bryan      | Cranston    | Gladiator                              |     15 |
++------------+-------------+----------------------------------------+--------+
+
+
+##10.Utilizar el explain plan para analizar las consultas del Ej.6 y 7.
+
+EXPLAIN SELECT * FROM movies WHERE rating > 3;
++----+-------------+--------+------------+------+---------------+------+---------+------+------+----------+-------------+
+| id | select_type | table  | partitions | type | possible_keys | key  | key_len | ref  | rows | filtered | Extra       |
++----+-------------+--------+------------+------+---------------+------+---------+------+------+----------+-------------+
+|  1 | SIMPLE      | movies | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    8 |    33.33 | Using where |
++----+-------------+--------+------------+------+---------------+------+---------+------+------+----------+-------------+
+
+
+##11.¿Qué son los índices? ¿Para qué sirven?
+Son un mecanismo para optimizar consultas SQL, Mejoran sustancialmente los tiempos de respuesta en Queries Complejas. Mejoran el acceso a los datos al proporcionar una ruta mas directa a los registros, evitan realizar escaneos (Barridas) completas o lineales de los datos de una tabla.
+
+-indice de clave primaria
+-indice ordinario
+-Indice Unico.
+
+##12.Crear un índice sobre el nombre en la tabla movies.
+
+CREATE INDEX movies_id_ok ON movies(title);
+
+##13.Chequee que el índice fue creado correctamente.
+
+SHOW INDEX FROM movies;
++--------+------------+--------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| Table  | Non_unique | Key_name     | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment | Visible | Expression |
++--------+------------+--------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+| movies |          0 | PRIMARY      |            1 | id          | A         |           8 |     NULL | NULL   |      | BTREE      |         |               | YES     | NULL       |
+| movies |          1 | movies_id_ok |            1 | title       | A         |           8 |     NULL | NULL   |      | BTREE      |         |               | YES     | NULL       |
++--------+------------+--------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+---------+------------+
+
