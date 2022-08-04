@@ -12,17 +12,19 @@ Funciona de la misma forma que _WHERE_, con la diferencia de que _HAVING_ se usa
 1. Inner Join
 2. Left Join
 ## 6. Escriba una consulta genérica por cada uno de los diagramas a continuación:
-1. 
-
-    SELECT * FROM TableA 
-    RIGHT JOIN TableB
-    WHERE TableA.B_id = TableB.ID
+1.
+``` sql 
+SELECT * FROM TableA 
+RIGHT JOIN TableB
+WHERE TableA.B_id = TableB.ID
+```
 2. 
-    
-    SELECT * FROM TableA
-    LEFT JOIN TableB
-    WHERE TableA.B_id = TableB.ID
-    UNION 
-    SELECT * FROM TableA 
-    RIGHT JOIN TableB 
-    WHERE TableA.B_id = TableB.ID
+``` sql
+SELECT * FROM TableA
+LEFT JOIN TableB
+WHERE TableA.B_id = TableB.ID
+UNION 
+SELECT * FROM TableA 
+RIGHT JOIN TableB 
+WHERE TableA.B_id = TableB.ID
+```
