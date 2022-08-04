@@ -1,0 +1,9 @@
+Explicar el concepto de normalización y para que se utiliza.
+
+Es la estandarizacion y validacion de datos en una db para elimnar redundancias e inconsistencias.
+
+¿Qué son los índices? ¿Para qué sirven?
+ 
+Son mecanismos que se aplican para optimizar las consultas en nuestras bases de datos que son frecuentes. 
+Proporcionan una ruta más directa a los registros.
+
