@@ -57,8 +57,10 @@
 
 11. ¿Qué son los índices? ¿Para qué sirven?
     Son espacios en memoria que nos permiten acceder a consultas SQL de manera mas rapida y eficiente
+
 12. Crear un índice sobre el nombre en la tabla movies.
     CREATE INDEX movies_title_idx
     ON movies (title)
+    
 13. Chequee que el índice fue creado correctamente. 
     SHOW INDEX FROM movies;
