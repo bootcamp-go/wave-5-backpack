@@ -508,10 +508,9 @@ Usando Mongo Shell. Colección restaurantes se requiere:
     
 3. Contar los restaurantes de comida (tipo_cocina) china (*Chinese*) o tailandesa (*Thai*) del barrio (barrio) Bronx. Consultar [or versus in](https://docs.mongodb.com/manual/reference/operator/query/or/#-or-versus--in).
     
-    `> db.restaurants.find( { $or:[ {tipo_cocina: "Chinese"}, {tipo_cocina: "Thai" }] }).count()`
+    > ```db.restaurants.find( { $or:[ {tipo_cocina: "Chinese"}, {tipo_cocina: "Thai" }] }).count()```
     
     > 2703
-    > 
 
 # **Ejercicio 2: NoSQL**
 
