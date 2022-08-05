@@ -1,0 +1,19 @@
+-- Devolver restaurante_id nombre barrio tipo_cocina pero excluyendo _id para un documento
+db.restaurantes.find({}, {restaurante_id:1, nombre:1, barrio:1, tipo_cocina:1, _id:0}).limit(1)
+
+-- Devolver restaurante_id barrio tipo_cocina para los 3 restaurantes que contengan Bake en alguna parte de su nombre
+db.restaurantes.find({nombre:/Bake/}, {restaurante_id:1, nombre:1, barrio:1, tipo_cocina:1, _id:0}).limit(3)
+
+-- Contar los restaurantes de comida tipo_cocina china o tailandesa del barrio Bronx
+db.restaurantes.count({ tipo_cocina: { $in:["Thai", "Chinese"] }, barrio: "Bronx"})
+
+-- Traer 3 restaurantes que hayan recibido al menos una calificacion de grado A con puntaje mayor a 20.
+-- UNa misma calificacion debe cumplor con ambas condiciones simultaneamente, investigar el operador elemMatch
+db.restaurantes.find({grados: {$elemMatch: {grado:"A", puntaje:{$gte:20}}}}).limit(3)
+
+-- A cuantos documentos les faltan las ordenadas geograficas?
+db.restaurantes.count({"direccion.coord":{$size: 0}})
+
+-- Devolver nombre, barrio, tipo_cocina y grados para los primeros 3 restaurantes; 
+-- De cada documento solo la ultima calificacion
+db.restaurantes.find({}, {nombre:1, barrio:1, tipo_cocina:1, grados: {$slice:-1}, _id:0}).limit(3)
