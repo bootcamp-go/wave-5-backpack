@@ -526,37 +526,37 @@ Usando Mongo Shell. Colección restaurantes se requiere:
     > 
 2. ¿A cuántos documentos les faltan las coordenadas geográficas? En otras palabras, revisar si el tamaño de direccion.coord es 0 y contar.
 
-```bash
-db.restaurants.count(
-   { "direccion.coord": { $size: 0 } }
-)
-```
+    ```bash
+    db.restaurants.count(
+      { "direccion.coord": { $size: 0 } }
+    )
+    ```
 
-> 2
-> 
+    > 2
+
 3. Devolver nombre, barrio, tipo_cocina y grados para los primeros 3 restaurantes; de cada documento **solo la última calificación**. Ver el operador [slice](https://docs.mongodb.com/manual/tutorial/project-fields-from-query-results/#project-specific-array-elements-in-the-returned-array).
 
-```bash
-db.restaurants.find(
-   { },
-   { nombre: 1, barrio: 1, tipo_cocina: 1, grados: { $slice: -1 } }
-).limit(3)
-```
+    ```bash
+    db.restaurants.find(
+      { },
+      { nombre: 1, barrio: 1, tipo_cocina: 1, grados: { $slice: -1 } }
+    ).limit(3)
+    ```
 
-```
-{ _id: ObjectId("5eb3d668b31de5d588f4294f"),
-  barrio: 'Manhattan',
-  tipo_cocina: 'American',
-  grados: [ { date: 2011-09-09T00:00:00.000Z, grado: 'A', puntaje: 13 } ],
-  nombre: 'Cafe Metro' }
-{ _id: ObjectId("5eb3d668b31de5d588f42930"),
-  barrio: 'Queens',
-  tipo_cocina: 'American',
-  grados: [ { date: 2012-02-10T00:00:00.000Z, grado: 'A', puntaje: 13 } ],
-  nombre: 'Brunos On The Boulevard' }
-{ _id: ObjectId("5eb3d668b31de5d588f42955"),
-  barrio: 'Manhattan',
-  tipo_cocina: 'Pizza',
-  grados: [ { date: 2011-09-26T00:00:00.000Z, grado: 'A', puntaje: 0 } ],
-  nombre: 'Domino\'S Pizza' }
-```
+    ```
+    { _id: ObjectId("5eb3d668b31de5d588f4294f"),
+      barrio: 'Manhattan',
+      tipo_cocina: 'American',
+      grados: [ { date: 2011-09-09T00:00:00.000Z, grado: 'A', puntaje: 13 } ],
+      nombre: 'Cafe Metro' }
+    { _id: ObjectId("5eb3d668b31de5d588f42930"),
+      barrio: 'Queens',
+      tipo_cocina: 'American',
+      grados: [ { date: 2012-02-10T00:00:00.000Z, grado: 'A', puntaje: 13 } ],
+      nombre: 'Brunos On The Boulevard' }
+    { _id: ObjectId("5eb3d668b31de5d588f42955"),
+      barrio: 'Manhattan',
+      tipo_cocina: 'Pizza',
+      grados: [ { date: 2011-09-26T00:00:00.000Z, grado: 'A', puntaje: 0 } ],
+      nombre: 'Domino\'S Pizza' }
+    ```
