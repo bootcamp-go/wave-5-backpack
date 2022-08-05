@@ -1,0 +1,22 @@
+1. ¿Cuántas colecciones tiene la base de datos?
+    - La de sample_restaurant tiene una coleccion de restaurants, la local tiene otra 
+nombrada startup_log, juntas serian 2 colecciones en total de 2 bases de datos diferentes
+
+2. ¿Cuántos documentos hay en cada colección? ¿Cuánto pesa cada colección?
+    - Base De Datos  |  Coleccion  | Documentos | Peso
+         admin             ---         ---         --
+        config             ---         ---         --
+         local         startup_log      1         3.13kB
+    sample_restaurant  restaurants    25.359      439 B
+
+3. ¿Cuántos índices en cada colección? ¿Cuánto espacio ocupan los índices de cada colección?
+    - Base De Datos  |   Indices  |  Peso
+         admin             1         ---
+        config             2         ---        
+         local             1         20.48kB
+    sample_restaurant      1         4.10kB
+
+4. Traer un documento de ejemplo de cada colección. db.collection.find(...).pretty() nos da un formato más legible.
+    - Hecho
+5. Para cada colección, listar los campos a nivel raíz (ignorar campos dentro de documentos anidados) y sus tipos de datos.
+    - Hecho

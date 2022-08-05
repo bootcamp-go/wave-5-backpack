@@ -1,0 +1,30 @@
+1. ¿Qué es la Redundancia de datos?
+    - La Redundancia hace referencia cuando en nuestro almacenamiento de datos ya tenemos 
+informacion que suple los requerimientos, y esto se da cuando volvemos a enviar estos datos
+2. ¿Qué es la Inconsistencia de datos?
+    - La inconsistencia de datos se presenta cuando la informacion donde es almacenada, no 
+tiene la ultima version de la misma, esto puede producir que los datos que esten presentes 
+no sean los actualmente vigentes o reales
+3. Nombre al menos 2 bases de datos entre Consistencia y Tolerancia al particionamiento
+    - MongoDB, Redis y BigTable
+4. ¿Qué significa SQL?
+    - Structured Query Language (Lenguaje de consultas estructuradas)
+5. En una tabla de datos que es la Primary Key o Llave primaria
+    - Es el identificador unico que lo diferencia de los demas datos adentro de la misma
+tabla, su papel es cumplir con las relaciones en caso de que existan
+6. En una tabla de datos que es la Foreign Key o Llave foránea
+    - Como anteriormente se menciono es una llave primaria de una tabla que viene a relacionarse
+con otra entidad, esto permite identificar a que entidad y referencia pertenece
+7. ¿Qué significa que una relación entre dos entidades es UNO a UNO?
+    - Que unicamente pueden tanto pertenecer como tener uno, esto permite la relacion de datos
+8. ¿Qué significa que una relación entre dos entidades es UNO a MUCHOS?
+    - Que un identificador de una entidad puede relacionarse con muchos de otra entidad puntualmente
+9. ¿Qué significa que una relación entre dos entidades es MUCHOS a MUCHOS?
+    - Muchos identificadores de una entidad pueden relacionarse con muchos de otra entidad, normalmente
+se crean tablas intermedias que permitan y faciliten el entendimiento de estos
+10. Defina que es una base de datos
+    - Una base de datos se compone de muchos datos que almacenan informacion relevante, esto puede ser mediante
+tablas o por medio de colecciones entre otras
+11. Defina el concepto atributo
+    - Un atributo es algo propio que define a una entidad, pueden ser diferentes tipos de datos
+
