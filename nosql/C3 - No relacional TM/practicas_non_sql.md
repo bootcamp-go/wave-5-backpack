@@ -44,7 +44,7 @@ db.restaurantes.find().pretty()
 #### Para cada colección, listar los campos a nivel raíz (ignorar campos dentro de documentos anidados) y sus tipos de datos.
 
 ```mysql
-Object.keys(db.restaurantes.findOne())
+[db.restaurantes.findOne()].forEach( function(my_doc) { for (var key in my_doc) { print(key + ': ' + typeof my_doc[key]) } } )
 
 [
   '_id',
