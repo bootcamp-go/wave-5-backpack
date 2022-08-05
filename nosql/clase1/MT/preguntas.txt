@@ -1,0 +1,51 @@
+1. ¿Cuántas colecciones tiene la BD?
+ Solo una colección "sample_restaurantes"
+2. ¿Cuántos documentos hay en cada colección? ¿Cuánto pesa c/u?
+    En la colección hay 25359 documentos y en total:
+    Data Size- 11140976 bytes
+    Total Size - 4304896 bytes (data + indexes)
+3. ¿Cuántos índices en cada colección? ¿Cuánto pesan?
+    Total Index Size - 266240 bytes
+    Hay un index en la colección
+4. Traer un documento de ejemplo con document.table.find().pretty()
+    { _id: ObjectId("5eb3d668b31de5d588f42a68"),
+  direccion: 
+   { edificio: '1701',
+     coord: [ -73.96123879999999, 40.635193 ],
+     calle: 'Foster Avenue',
+     codigo_postal: '11230' },
+  barrio: 'Brooklyn',
+  tipo_cocina: 'Italian',
+  grados: 
+   [ { date: 2014-05-13T00:00:00.000Z, grado: 'A', puntaje: 12 },
+     { date: 2013-05-09T00:00:00.000Z, grado: 'A', puntaje: 7 },
+     { date: 2012-10-17T00:00:00.000Z, grado: 'B', puntaje: 27 },
+     { date: 2012-08-28T00:00:00.000Z, grado: 'P', puntaje: 4 },
+     { date: 2012-03-07T00:00:00.000Z, grado: 'A', puntaje: 12 } ],
+  nombre: 'Mama Lucia',
+  restaurante_id: '40370994' }
+5. Para cada colección listar los campos a nivel raíz (ignorar los campos dentro
+de documentos anidados) y sus tipos de datos
+    [
+  '_id',
+  'direccion',
+  'barrio',
+  'tipo_cocina',
+  'grados',
+  'nombre',
+  'restaurante_id'
+    ]
+
+
+
+
+    ###### PRÁCTICA
+6. Devolver restaurante_id, nombre, barrio, tipo_cocina 
+excluyendo _id para un documento (el primero)
+    db.sample_restaurantes.find( {} ,{restaurante_id:1, nombre:1, barrio:1, tipo_cocina:1, _id:0})
+7.
+
+    db.sample_restaurantes.find({nombre:/cake/} ,{restaurante_id:1, nombre:1, barrio:1, tipo_cocina:1, _id:0}).limit(3)
+8.
+    db.sample_restaurantes.find({ barrio:"Bronx", tipo_coina: {$in : ["Chinese", "Thaí"]} } ,).count()
+
