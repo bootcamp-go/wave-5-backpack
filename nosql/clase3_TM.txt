@@ -1,0 +1,218 @@
+##CLASE 3 - NO RELACIONAL TM
+
+
+##1.¿Cuántas colecciones tiene la base de datos?
+Teniendo en cuenta la relacion table - collection
+
+show collections;
+restaurant_nosql
+
+##2..¿Cuántos documentos hay en cada colección? ¿Cuánto pesa cada colección?
+
+db.restaurant_nosql.countDocuments()
+25359
+
+db.restaurant_nosql.dataSize()
+11140976
+
+##3.¿Cuántos índices en cada colección? ¿Cuánto espacio ocupan los índices de cada colección?
+
+db.restaurant_nosql.index.stats()
+{
+  ns: 'restaurant.restaurant_nosql.index',
+  size: 0,
+  count: 0,
+  numOrphanDocs: 0,
+  storageSize: 0,
+  totalSize: 0,
+  nindexes: 0,
+  totalIndexSize: 0,
+  indexSizes: {},
+  scaleFactor: 1,
+  ok: 1
+}
+
+db.restaurant_nosql.stats()
+
+ nindexes: 1,
+  indexBuilds: [],
+  totalIndexSize: 266240,
+  totalSize: 4304896,
+  indexSizes: { _id_: 266240 },
+  scaleFactor: 1,
+  ok: 1
+
+db.restaurant_nosql.totalIndexSize()
+266240
+
+
+##4.Traer un documento de ejemplo de cada colección. db.collection.find(...).pretty() nos da un formato más legible.
+
+db.restaurant_nosql.find({restaurante_id: '40363298'}).pretty()
+[
+  {
+    _id: ObjectId("5eb3d668b31de5d588f4294f"),
+    direccion: {
+      edificio: '625',
+      coord: [ -73.990494, 40.7569545 ],
+      calle: '8 Avenue',
+      codigo_postal: '10018'
+    },
+    barrio: 'Manhattan',
+    tipo_cocina: 'American',
+    grados: [
+      {
+        date: ISODate("2014-06-09T00:00:00.000Z"),
+        grado: 'A',
+        puntaje: 12
+      },
+      {
+        date: ISODate("2014-01-10T00:00:00.000Z"),
+        grado: 'A',
+        puntaje: 9
+      },
+      {
+        date: ISODate("2012-12-07T00:00:00.000Z"),
+        grado: 'A',
+        puntaje: 4
+      },
+      {
+        date: ISODate("2011-12-13T00:00:00.000Z"),
+        grado: 'A',
+        puntaje: 9
+      },
+      {
+        date: ISODate("2011-09-09T00:00:00.000Z"),
+        grado: 'A',
+        puntaje: 13
+      }
+    ],
+    nombre: 'Cafe Metro',
+    restaurante_id: '40363298'
+  }
+]
+
+
+##5.Para cada colección, listar los campos a nivel raíz (ignorar campos dentro de documentos anidados) y sus tipos de datos.
+
+db.restaurant_nosql.find({},{_id:0,barrio:1,tipo_cocina:1,nombre:1,restaurante_id:1}).limit(1)
+[
+  {
+    barrio: 'Manhattan',
+    tipo_cocina: 'American',
+    nombre: 'Cafe Metro',
+    restaurante_id: '40363298'
+  }
+]
+
+##EJERCICIO 1 : SQL
+
+##1.Devolver restaurante_id, nombre, barrio y tipo_cocina pero excluyendo _id para un documento (el primero).
+
+db.restaurant_nosql.find({},{restaurante_id:1,nombre:1,tipo_cocina:1,_id:0}).limit(1)
+[
+  {
+    tipo_cocina: 'American',
+    nombre: 'Cafe Metro',
+    restaurante_id: '40363298'
+  }
+]
+
+
+##2.
+Devolver restaurante_id, nombre, barrio y tipo_cocina para los primeros 3 restaurantes que contengan 'Bake' en alguna parte de su nombre.
+
+
+db.restaurant_nosql.find({nombre:{$regex:/^Bake/}},{_id:0,barrio:1,tipo_cocina:1,nombre:1,restaurante_id:1}).limit(3)
+[
+  {
+    barrio: 'Queens',
+    tipo_cocina: 'Bagels/Pretzels',
+    nombre: "Baker'S Dozen Bagel",
+    restaurante_id: '40425131'
+  },
+  {
+    barrio: 'Brooklyn',
+    tipo_cocina: 'Caribbean',
+    nombre: 'Bake And Things Restaurant',
+    restaurante_id: '40539661'
+  },
+  {
+    barrio: 'Manhattan',
+    tipo_cocina: 'American',
+    nombre: 'Baker Street Pub',
+    restaurante_id: '40803550'
+  }
+]
+
+##3.Contar los restaurantes de comida (tipo_cocina) china (Chinese) o tailandesa (Thai) del barrio (barrio) Bronx. Consultar or versus in.
+
+db.restaurant_nosql.find({barrio:'Bronx'},{$or:[{tipo_cocina:'Chinese'}, {tipo_cocina:'Thai'}]},{_id:0,barrio:1,tipo_cocina:1,nombre:1,restaurante_id:1}).count()
+2338
+
+
+##Ejercicio 2: No SQL
+
+##1. Traer 3 restaurantes que hayan recibido al menos una calificación de grado 'A' con puntaje mayor a 20. Una misma calificación debe cumplir con ambas condiciones simultáneamente; investigar el operador elemMatch.
+
+db.restaurant_nosql.find({grados:{$elemMatch:{grado:"A",puntaje:{$gt:20}}}}, {_id:0, nombre:1 }).count()
+5
+
+[
+  { nombre: "Gemini'S Lounge" },
+  { nombre: 'Feeding Tree Style West Indian Restaurant' },
+  { nombre: 'Remi' }
+]
+
+##2.¿A cuántos documentos les faltan las coordenadas geográficas? En otras palabras, revisar si el tamaño de direccion.coord es 0 y contar.
+
+db.restaurant_nosql.find({"direccion.coord":{$size:0}}, {_id:0, nombre:1 }).count()
+2
+
+##3.Devolver nombre, barrio, tipo_cocina y grados para los primeros 3 restaurantes; de cada documento solo la última calificación. Ver el operador slice.
+
+db.restaurant_nosql.find({},{nombre:1, barrio:1, tipo_cocina:1,grados:{ $slice: -1}}).limit(3)
+[
+  {
+    _id: ObjectId("5eb3d668b31de5d588f4294f"),
+    barrio: 'Manhattan',
+    tipo_cocina: 'American',
+    grados: [
+      {
+        date: ISODate("2011-09-09T00:00:00.000Z"),
+        grado: 'A',
+        puntaje: 13
+      }
+    ],
+    nombre: 'Cafe Metro'
+  },
+  {
+    _id: ObjectId("5eb3d668b31de5d588f42930"),
+    barrio: 'Queens',
+    tipo_cocina: 'American',
+    grados: [
+      {
+        date: ISODate("2012-02-10T00:00:00.000Z"),
+        grado: 'A',
+        puntaje: 13
+      }
+    ],
+    nombre: 'Brunos On The Boulevard'
+  },
+  {
+    _id: ObjectId("5eb3d668b31de5d588f42955"),
+    barrio: 'Manhattan',
+    tipo_cocina: 'Pizza',
+    grados: [
+      {
+        date: ISODate("2011-09-26T00:00:00.000Z"),
+        grado: 'A',
+        puntaje: 0
+      }
+    ],
+    nombre: "Domino'S Pizza"
+  }
+]
+
+
+
