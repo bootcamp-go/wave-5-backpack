@@ -1,0 +1,5 @@
+Ejercicio 2
+
+a. La primary key de la tabla es el DNI, porque representa un número único de los empleados.
+b. La primera key de la tabla es el Id del departamento, pues corresponde a un número único que identifica estos elementos.
+c. La relación que existe, es que muchos empleados pueden estar en 1 departamento, por lo que la Foreing Key debe ir en la tabla de los empleados y debe apuntar al id del departamento.
