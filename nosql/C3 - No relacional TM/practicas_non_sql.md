@@ -46,15 +46,13 @@ db.restaurantes.find().pretty()
 ```mysql
 [db.restaurantes.findOne()].forEach( function(my_doc) { for (var key in my_doc) { print(key + ': ' + typeof my_doc[key]) } } )
 
-[
-  '_id',
-  'direccion',
-  'barrio',
-  'tipo_cocina',
-  'grados',
-  'nombre',
-  'restaurante_id'
-]
+'_id: object'
+'direccion: object'
+'barrio: string'
+'tipo_cocina: string'
+'grados: object'
+'nombre: string'
+'restaurante_id: string'
 ```
 
 ## Ejercicio 1: SQL
