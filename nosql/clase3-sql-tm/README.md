@@ -8,7 +8,7 @@ Estas preguntas fueron respondidas utilizando la interfaz gráfica de **Compass*
     
     >```db.stats()```
     
-    ```json
+    ```
     {
         db: 'sample_restaurants',
         collections: 1,
@@ -380,7 +380,7 @@ Tiene **un** índice y ocupa 4.1 Kb
     
     >```Object.keys(db.restaurants.findOne())```
     
-    ```json
+    ```
     [
       '_id',
       'direccion',
@@ -491,7 +491,7 @@ Usando Mongo Shell. Colección restaurantes se requiere:
 2. Devolver restaurante_id, nombre, barrio y tipo_cocina para los primeros 3 restaurantes que contengan 'Bake' en alguna parte de su nombre.
 `> db.restaurants.find({},{_id: 0, restaurante_id: 1, status: 1, nombre: 1, status: 1, barrio: 1, status :1 ,tipo_cocina: 1, status: 1 }).limit(3)`
     
-    ```json
+    ```
     { barrio: 'Manhattan',
       tipo_cocina: 'American',
       nombre: 'Cafe Metro',
@@ -544,7 +544,7 @@ db.restaurants.find(
 ).limit(3)
 ```
 
-```json
+```
 { _id: ObjectId("5eb3d668b31de5d588f4294f"),
   barrio: 'Manhattan',
   tipo_cocina: 'American',
