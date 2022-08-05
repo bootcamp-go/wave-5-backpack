@@ -57,8 +57,23 @@ db.getCollection('restaurantes').findOne({},{ restaurant_id : 1, nombre : 1, bar
 ```
 db.restaurantes.find({name : /Bake/},{ restaurant_id : 1, name: 1, borough: 1,  cuisine : 1,  _id : 0 }).limit(3)
 ```
+
 Otra opción
 
 ```
 db.getCollection('restaurantes').find({name : /Bake/},{ restaurant_id : 1, name: 1, borough: 1,  cuisine : 1,  _id : 0 }).limit(3)
+```
+
+3. Contar los restaurantes de comida (tipo_cocina) china (Chinese) o tailandesa (Thai) del barrio (barrio) Bronx. 
+
+```
+db.restaurantes.find({$or: [{tipo_cocina: "Chinese"}, {tipo_cocina: "Thai"}]}).count()
+db.getCollection('restaurantes').find({$or :  [{tipo_cocina : "Chinese"}, {tipo_cocina : "Thai"}]}).count()
+```
+
+Otra opción
+
+```
+db.restaurantes.find({tipo_cocina : {$in : ["Chinese", "Thai"]}}).count()
+db.getCollection('restaurantes').find({tipo_cocina : {$in : ["Chinese", "Thai"]}}).count()
 ```
