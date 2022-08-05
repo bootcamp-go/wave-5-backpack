@@ -54,7 +54,7 @@ SELECT * FROM temporary_movies;
 
 #### 7. Eliminar de esa tabla temporal todas las películas que hayan ganado menos de 5 awards.
 ```mysql
-DELETE * FROM temporary_movies WHERE awards < 5;
+DELETE FROM temporary_movies WHERE awards < 5;
 ```
 
 #### 8. Obtener la lista de todos los géneros que tengan al menos una película.
@@ -85,7 +85,7 @@ SELECT * FROM temporary_act;
 
 #### Explain plan Ej.6
 <p align="center">
-  <img width="460" height="300" src=".img/explainPlanEx6.png">
+  <img width="360" height="300" src="img/explainPlanEx6.png">
 </p>
 
 
@@ -126,7 +126,7 @@ SELECT * FROM temporary_act;
 
 #### Explain plan Ej.7
 <p align="center">
-  <img width="460" height="300" src=".img/explainPlanEx7.png">
+  <img width="360" height="300" src="img/explainPlanEx7.png">
 </p>
 
 
