@@ -36,10 +36,9 @@ db.restaurantes.dataSize()
 db.restaurantes.find().pretty()
 ```
 
-### Para cada colección, listar los campos a nivel raíz (ignorar campos dentro de documentos anidados) y sus tipos de datos.
+### Para cada colección, listar los campos a nivel raíz (ignorar campos dentro de documentos anidados) y sus tipos de datos
 
-
-#Ejercicio 1: SQL
+# Ejercicio 1: SQL
 
 1. Devolver restaurante_id, nombre, barrio y tipo_cocina pero excluyendo _id para un documento (el primero).
 
@@ -48,6 +47,18 @@ db.restaurantes.findOne({}, restaurante_id:1, nombre:1, barrio: 1, tipo_cocina:1
 ```
 
 Otra opción
+
 ```
 db.getCollection('restaurantes').findOne({},{ restaurant_id : 1, nombre : 1, barrio : 1,  tipo_cocina : 1,  _id : 0 })
+```
+
+2. Devolver restaurante_id, nombre, barrio y tipo_cocina para los primeros 3 restaurantes que contengan 'Bake' en alguna parte de su nombre.
+
+```
+db.restaurantes.find({name : /Bake/},{ restaurant_id : 1, name: 1, borough: 1,  cuisine : 1,  _id : 0 }).limit(3)
+```
+Otra opción
+
+```
+db.getCollection('restaurantes').find({name : /Bake/},{ restaurant_id : 1, name: 1, borough: 1,  cuisine : 1,  _id : 0 }).limit(3)
 ```
