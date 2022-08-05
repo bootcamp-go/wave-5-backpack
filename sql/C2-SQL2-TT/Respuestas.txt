@@ -1,0 +1,6 @@
+Explicar el concepto de normalización y para que se utiliza.
+La normalización es un proceso de estandarización y validación de datos que consiste en eliminar las redundancias e inconsistencias.
+Esto hace que sea más simple de consultar y más eficiente para quien lo gestiona.
+
+¿Qué son los índices? ¿Para qué sirven?
+Son un mecanismo para optimizar consultas SQL. Mejoran el acceso a los datos reduciendo los costos.
