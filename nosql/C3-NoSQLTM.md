@@ -28,7 +28,7 @@ db.restaurantes.dataSize()
 
 ### ¿Cuántos índices en cada colección?
 
-> 1 index (_id)
+> 1 index (\_id)
 
 ### ¿Cuánto espacio ocupan los índices de cada colección?
 
@@ -102,5 +102,29 @@ db.restaurantes.find().pretty()
 2. ¿Cuáles son los barrios más desarrollados gastronómicamente? Calcular el promedio ($avg) de puntaje (grades.score) por barrio; considerando restaurantes que tengan más de tres reseñas; ordenar barrios con mejor puntaje arriba.
 
    ```sql
+   db.restaurantes.aggregate([
+   {
+      $unwind: {path: "$grados"}
+   },
+   {
+      $match : {'grados.puntaje' :{ $gt : 3 } }
+   },
+   {
+      $group: {
+         _id : "$barrio",
+         promedio : {$avg : "$grados.puntaje"}
+      }
+   },
+   {
+      $sort:{
+         promedio: -1
+      }
+   }
+   ])
 
    ```
+
+3. Una persona con ganas de comer está en longitud -73.93414657 y latitud 40.82302903, ¿qué opciones tiene en 500 metros a la redonda?
+
+
+
