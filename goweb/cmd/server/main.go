@@ -1,15 +1,16 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"os"
 
 	"github.com/bootcamp-go/wave-5-backpack/docs"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/cmd/server/handler"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/users"
-	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/store"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/web"
 	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/joho/godotenv"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -24,8 +25,15 @@ import (
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
-	db := store.NewStore("../../users.json")
-	repo := users.NewRepository(db)
+	// db := store.NewStore("../../users.json")
+
+	dataSource := "root@tcp(localhost:3306)/users_db"
+	storageDB, err := sql.Open("mysql", dataSource)
+	if err != nil {
+		panic(err)
+	}
+
+	repo := users.NewRepositoryDB(storageDB)
 	service := users.NewService(repo)
 	userHandler := handler.NewUser(service)
 
