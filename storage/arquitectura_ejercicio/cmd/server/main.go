@@ -5,14 +5,14 @@ import (
 	"log"
 	"os"
 
-	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/cmd/server/handler"
-	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/internal/usuarios"
-	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/pkg/store"
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 
+	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/cmd/server/handler"
+	db2 "github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/db"
 	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/docs"
-	"github.com/gin-gonic/gin"
-
+	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/internal/usuarios"
+	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/pkg/store"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
@@ -29,7 +29,7 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 	gin.SetMode(gin.ReleaseMode)
-
+	db2.Init()
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("error al intentar cargar archivo .env")
