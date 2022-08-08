@@ -18,9 +18,14 @@ func NewRepository(db *sql.DB) Repository {
 	return &repository{db: db}
 }
 
+const (
+	createProduct    = `INSERT INTO products (name, type, count, price) VALUES (?, ?, ?, ?)`
+	getProductByName = `SELECT * FROM products WHERE name = ?`
+)
+
 func (r *repository) Store(product domain.Product) (domain.Product, error) {
 
-	stmt, err := r.db.Prepare("INSERT INTO products (name, type, count, price) VALUES (?, ?, ?, ?)")
+	stmt, err := r.db.Prepare(createProduct)
 	if err != nil {
 		return domain.Product{}, err
 	}
@@ -38,7 +43,7 @@ func (r *repository) Store(product domain.Product) (domain.Product, error) {
 }
 
 func (r *repository) GetByName(name string) (domain.Product, error) {
-	rows, err := r.db.Query("SELECT * FROM products WHERE name = ?", name)
+	rows, err := r.db.Query(getProductByName, name)
 	if err != nil {
 		return domain.Product{}, err
 	}
