@@ -7,14 +7,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 
-	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/docs"
+	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/docs"
 	"github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
-	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/cmd/handler"
-	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/transactions"
-	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/pkg/storage"
-	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/pkg/web"
+	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/cmd/handler"
+	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/internal/transactions"
+	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/pkg/storage"
+	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/pkg/web"
 )
 
 // @title MELI Bootcamp-go practice API

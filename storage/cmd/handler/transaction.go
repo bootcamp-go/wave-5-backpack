@@ -6,8 +6,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/transactions"
-	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/pkg/web"
+	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/internal/transactions"
+	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/pkg/web"
 	"github.com/gin-gonic/gin"
 )
 
