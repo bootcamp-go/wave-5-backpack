@@ -1,24 +1,74 @@
--- Primera Parte
+-- Ejercicio 1
 
--- 1. Se denomina JOIN a la sentencia que genera una intersección, la cual puede ser de diferentes tipos y bajo ciertas condiciones, entre dos columnas de diferentes tablas.
--- 2.1 INNER JOIN: es aquella sentencia que genera la intersección entre dos columnas que comparten una condición en común.
--- 2.2 LEFT JOIN: es aquella sentencia que trae los datos de la columna izquierda y que por otra parte comparte una condición con la columna derecha. Si la columna izquierda
-	-- no comparte ninguna condición con la columna derecha, entonces se devuelve el valor null.
--- 3. Se utiliza para agrupar datos de una columna, a partir de la verificación y cumplimientos de ciertas condiciones.
--- 4. Se utiliza para hacer una filtración de los datos obtenidos a partir de un Group By.alter
--- 5.1 Corresponde a un inner join.
--- 5.2 Corresponde a un left join.
--- 6.1 
+/* Normalización consiste en estandarizar y validar los datos de una base de dato, de tal manera de evitar las redundancias o errores, protegiendo su
+ integridad y mejorando la interpretación para que resulte más facil hacer las consultas y eficiente.
+*/
+-- Ejercicio 2
 
-SELECT act.* FROM movies_db.actors act;
+SELECT * FROM movies;
+
+INSERT INTO movies
+(title, rating, awards, release_date, length, genre_id)
+VALUES
+("La inventada",9.0,2,'2003-11-04 00:00:00',200,8);
+
+-- Ejercicio 3
+
+SELECT * FROM movies_db.genres;
+
+INSERT INTO genres
+(created_at,name,ranking,active);
+
+-- Ejercicio 4
+
+UPDATE movies SET genre_id=13 WHERE id=22;
+
+-- Ejercicio 5
+
+UPDATE actors SET favorite_movie_id=22 WHERE id=3;
+
+-- Ejercicio 6
+
+CREATE TEMPORARY TABLE copia_movies
+	SELECT * FROM movies;
+
+-- Ejercicio 7
+SELECT * FROM copia_movies;
+
+DELETE FROM copia_movies
+WHERE awards<5;
+
+-- Ejercicio 8
+
+SELECT g.name as 'Género'
+FROM genres g
+INNER JOIN movies m
+ON g.id=m.genre_id
+GROUP BY g.name;
+
+-- Ejercicio 9
+
+SELECT a.first_name, a.last_name
+FROM actors a
+INNER JOIN movies m
+ON a.favorite_movie_id=m.id
+GROUP BY a.first_name, a.last_name, m.awards
+HAVING m.awards>3;
 
 
-SELECT mo.*, ac.first_name, act.last_name
-	FROM movies_db.movies mo
-    INNER JOIN actors act 
-    ON mo.id=ac.favorite_movie_id;
+-- Ejercicio 11
 
+/* Un índice SQL es una tabla de búsqueda rápida para poder encontrar los registros que los usuarios necesitan buscar con mayor frecuencia. 
+Ya que un índice es pequeño, rápido y optimizado para búsquedas rápidas. Además, que son muy útiles para conectar 
+las tablas relacionales y la búsqueda de tablas grandes.
+*/
 
+-- Ejercicio 12
 
+CREATE INDEX movies_title
+	ON movies (title);
+    
+-- Ejercicio 13
 
+SHOW INDEX FROM movies;
 
