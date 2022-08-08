@@ -6,6 +6,7 @@ import (
 
 type ServiceBD interface {
 	GetByName(name string) (domain.Usuarios, error)
+	StoreBD(domain.Usuarios) (domain.Usuarios, error)
 }
 type serviceBD struct {
 	repoBD RepositoryBD
@@ -18,6 +19,14 @@ func NewServiceBD(rB RepositoryBD) ServiceBD {
 }
 func (s *serviceBD) GetByName(name string) (domain.Usuarios, error) {
 	us, err := s.repoBD.GetByName(name)
+	if err != nil {
+		return domain.Usuarios{}, err
+	}
+	return us, nil
+}
+
+func (s *serviceBD) StoreBD(user domain.Usuarios) (domain.Usuarios, error) {
+	us, err := s.repoBD.Store(user)
 	if err != nil {
 		return domain.Usuarios{}, err
 	}

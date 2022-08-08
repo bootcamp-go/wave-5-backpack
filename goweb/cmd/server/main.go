@@ -52,6 +52,7 @@ func main() {
 
 	router := gin.Default()
 	router.GET("/usuarios/:nombre", u.GetByName())
+	router.POST("/usuarios/", u.Save())
 	router.Run()
 
 	//TODO ESTO COMENTADO PARA PODER EJECUTAR LAS QUERYS DE BBDD
