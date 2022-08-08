@@ -111,5 +111,19 @@ func TestStore(t *testing.T) {
 		log.Println("----- ERROR- TEST:", err.Error())
 	}
 
+	assert.Equal(t, 1, userResult.Id)
 	assert.Equal(t, newUser.Names, userResult.Names)
+}
+
+func TestByName(t *testing.T) {
+	db.Init()
+	repo := NewRepository(db.StorageDB)
+	name := "Ashton"
+	userResult, err := repo.GetByName(name)
+
+	if err != nil {
+		log.Println("----- ERROR- TEST:", err.Error())
+	}
+
+	assert.Equal(t, 1, userResult.Id)
 }

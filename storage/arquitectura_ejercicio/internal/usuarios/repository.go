@@ -62,7 +62,7 @@ func (r *repository) GetAll() ([]domain.Usuario, error) {
 func (r *repository) GetOne(id int) (domain.Usuario, error) {
 	var user domain.Usuario
 
-	rows, err := r.db.Query("SELECT * FROM users where id:= ?", id)
+	rows, err := r.db.Query("SELECT * FROM users where id = ?", id)
 
 	if err != nil {
 		return domain.Usuario{}, errors.New(ERROR_READING)
@@ -78,15 +78,16 @@ func (r *repository) GetOne(id int) (domain.Usuario, error) {
 func (r *repository) GetByName(name string) (domain.Usuario, error) {
 	var user domain.Usuario
 
-	rows, err := r.db.Query("SELECT * FROM users where names:= ?", name)
+	rows, err := r.db.Query("SELECT id, names, last_name, email FROM users WHERE names = ?", name)
 
 	if err != nil {
-		return domain.Usuario{}, errors.New(ERROR_READING)
+		return domain.Usuario{}, errors.New(ERROR_READING + err.Error())
 	}
 
 	for rows.Next() {
-		if err := rows.Scan(&user.Id, &user.Names, &user.LastName, &user.Email, &user.Age, &user.Estatura, &user.IsActivo); err != nil {
-			return domain.Usuario{}, errors.New("No se encontró el usuario.")
+		err := rows.Scan(&user.Id, &user.Names, &user.LastName, &user.Email)
+		if err != nil {
+			return domain.Usuario{}, errors.New(err.Error())
 		}
 	}
 	return user, nil

@@ -2,13 +2,13 @@ package domain
 
 type Usuario struct {
 	Id          int     `json:"id"`
-	Names       string  `json:"nombre"`
-	LastName    string  `json:"apellido"`
-	Age         int     `json:"edad"`
-	DateCreated string  `json:"fechaCreacion"`
-	Estatura    float64 `json:"altura"`
+	Names       string  `json:"names"`
+	LastName    string  `json:"last_name"`
+	Age         int     `json:"age"`
+	DateCreated string  `json:"date_created"`
+	Estatura    float64 `json:"height"`
 	Email       string  `json:"email"`
-	IsActivo    bool    `json:"activo"`
+	IsActivo    bool    `json:"is_active"`
 }
 
 type UserResult struct {
