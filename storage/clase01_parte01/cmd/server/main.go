@@ -3,16 +3,14 @@ package main
 import (
 	"goweb/cmd/server/handler"
 	"goweb/internal/users"
-	"goweb/pkg/store"
 	"log"
 	"os"
 
 	"goweb/docs"
 
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
+	"database/sql"
+    _ "github.com/go-sql-driver/mysql"
 )
 
 // @title Franco Visintini API
@@ -25,17 +23,19 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("error al intentar cargar archivo .env")
+	dataSource := "root@tcp(localhost:3306)/storage"
+    // Open inicia un pool de conexiones. Sólo abrir una vez
+    var err error
+    StorageDB, err := sql.Open("mysql", dataSource)
+    if err != nil {
+        log.Fatal(err)
+    }
+    if err = StorageDB.Ping(); err != nil {
+		log.Fatal(err)
 	}
+    log.Println("database Configured")
 
-	db := store.NewStore("users.json")
-	if err := db.Ping(); err != nil {
-		log.Fatal("error al intentar cargar archivo")
-	}
-
-	repo := users.NewRepository(db)
+	repo := users.NewRepository(StorageDB)
 	service := users.NewService(repo)
 	u := handler.NewUser(service)
 
@@ -52,7 +52,7 @@ func main() {
 	userGroup.PATCH("/:id", u.UpdatePartial())
 	userGroup.DELETE("/:id", u.Delete())
 
-	if err := router.Run(); err != nil {// si no especifico ningún puerto, por ej ":3001" toma por defecto el 8080
+	if err := router.Run(); err != nil {
 		panic(err)
 	}
 
