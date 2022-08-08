@@ -11,9 +11,9 @@ import (
 	"github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
+	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/cmd/db"
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/cmd/handler"
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/internal/transactions"
-	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/pkg/storage"
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/pkg/web"
 )
 
@@ -29,15 +29,14 @@ func main() {
 		log.Fatal("error al intentar leer el archivo .env")
 	}
 
-	file, err := os.Open("transactions.json")
+	db, err := db.NewConnection("")
 	if err != nil {
 		log.Panicf("error al abrir el archivo .json %v\n", err)
 	}
-	defer file.Close()
+	defer db.Close()
 
 	// Init capas de transactions
-	storage := storage.NewStorage("transactions.json")
-	repo := transactions.NewRepository(storage)
+	repo := transactions.NewRepository()
 	service := transactions.NewService(repo)
 	tr := handler.NewTransaction(service)
 

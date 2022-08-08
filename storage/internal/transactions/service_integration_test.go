@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/models"
+	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/internal/models"
 	"github.com/stretchr/testify/assert"
 )
 
