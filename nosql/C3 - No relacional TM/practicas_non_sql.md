@@ -33,6 +33,8 @@ db.restaurantes.getIndexes()
 
 db.stats().indexSize
 425984
+
+Peso del índice: 260KB
 ```
 
 #### Traer un documento de ejemplo de cada colección. db.collection.find(...).pretty() nos da un formato más legible.
@@ -231,24 +233,26 @@ db.restaurantes.aggregate([
 #### ¿Cuáles son los barrios más desarrollados gastronómicamente? Calcular el promedio ($avg) de puntaje (grades.score) por barrio; considerando restaurantes que tengan más de tres reseñas; ordenar barrios con mejor puntaje arriba.
 
 ```mysql
-db.restaurantes.aggregate([
-  {
-    $unwind: {
-      path: "$grados"
-    }
-  },
-  {
-    $group: {
-      _id: {
-        date: "$barrio",
-      },
-      avg: {
-        $avg: "$grados.puntaje"
-      }
-    }
-    $sort:{'avg':-1}
-  }
-])
+-- Comentada para dudas, porque considero que debería funcionar.
+
+-- db.restaurantes.aggregate([
+--   {
+--     $unwind: {
+--       path: "$grados"
+--     }
+--   },
+--   {
+--     $group: {
+--       _id: {
+--         date: "$barrio",
+--       },
+--       avg: {
+--         $avg: "$grados.puntaje"
+--       }
+--     }
+--     $sort:{'avg':-1}
+--   }
+-- ])
 ```
 
 #### Una persona con ganas de comer está en longitud -73.93414657 y latitud 40.82302903, ¿qué opciones tiene en 500 metros a la redonda? Consultar geospatial tutorial.
