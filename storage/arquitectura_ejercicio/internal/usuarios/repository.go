@@ -1,172 +1,102 @@
 package usuarios
 
 import (
+	"database/sql"
 	"errors"
+	"log"
 
 	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/internal/domain"
-	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/pkg/store"
 )
 
 const (
 	STRING_HUBO       = "Hubo un error ... "
 	ERROR_READING     = "Hubo un error al leer los datos de la BD."
 	ERR_WRITING       = "Hubo un error al guardar los datos en la BD."
-	ERR_UPDATING_USER = ".. al no encontrar el usuario a actualizar"
+	ERR_UPDATING_USER = ".. al no encontrar el usuario."
 )
 
 type Repository interface {
 	GetAll() ([]domain.Usuario, error)
-	Store(id, age int, names, lastname, email, dateCreated string, estatura float64) (domain.Usuario, error)
-	LastID() (int, error)
-	Update(id, age int, names, lastname, email, dateCreated string, estatura float64, activo bool) (domain.Usuario, error)
+	GetOne(id int) (domain.Usuario, error)
+	Store(user domain.Usuario) (domain.Usuario, error)
+	Update(id int, user domain.Usuario) (domain.Usuario, error)
 	UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error)
 	Delete(id int) error
 }
 
 type repository struct {
-	db store.Store
+	db *sql.DB
+}
+
+func NewRepository(db *sql.DB) Repository {
+	return &repository{db: db}
+}
+
+func (r *repository) Store(user domain.Usuario) (domain.Usuario, error) {
+	stmt, err := r.db.Prepare("INSERT INTO users(name, last_name, email, age, height, is_active, date_created) VALUES(?,?,?,?,?,?,?)")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer stmt.Close()
+	var result sql.Result
+	result, err = stmt.Exec(user.Names, user.LastName, user.Email, user.Age, user.Estatura, user.IsActivo, user.DateCreated)
+
+	if err != nil {
+		return domain.Usuario{}, errors.New(ERR_WRITING)
+	}
+
+	insertId, _ := result.LastInsertId()
+	user.Id = int(insertId)
+
+	return user, nil
 }
 
 func (r *repository) GetAll() ([]domain.Usuario, error) {
-	var localUserList []domain.Usuario
+	return []domain.Usuario{}, nil
 
-	if err := r.db.Read(&localUserList); err != nil {
-		return []domain.Usuario{}, errors.New(ERROR_READING)
-	}
-
-	return localUserList, nil
 }
 
-func (r *repository) Store(id, age int, names, lastname, email, dateCreated string, estatura float64) (domain.Usuario, error) {
-	var localUserList []domain.Usuario
+func (r *repository) GetOne(id int) (domain.Usuario, error) {
+	var user domain.Usuario
 
-	if err := r.db.Read(&localUserList); err != nil {
+	rows, err := r.db.Query("SELECT * FROM users where id:= ?", id)
+
+	if err != nil {
 		return domain.Usuario{}, errors.New(ERROR_READING)
 	}
 
-	nwUsuario := domain.Usuario{
-		Id:          id,
-		Names:       names,
-		LastName:    lastname,
-		Age:         age,
-		DateCreated: dateCreated,
-		Estatura:    estatura,
-		Email:       email,
-		IsActivo:    true,
-	}
-	localUserList = append(localUserList, nwUsuario)
-
-	if err := r.db.Write(localUserList); err != nil {
-		return domain.Usuario{}, errors.New(ERR_WRITING)
-	}
-
-	return nwUsuario, nil
-}
-
-func (r *repository) Update(id, age int, names, lastname, email, dateCreated string, estatura float64, activo bool) (domain.Usuario, error) {
-
-	var localUserList []domain.Usuario
-
-	if err := r.db.Read(&localUserList); err != nil {
-		return domain.Usuario{}, errors.New(ERROR_READING)
-	}
-
-	upUsuario := domain.Usuario{
-		Id:          id,
-		Names:       names,
-		LastName:    lastname,
-		Age:         age,
-		DateCreated: dateCreated,
-		Estatura:    estatura,
-		Email:       email,
-		IsActivo:    activo,
-	}
-
-	update := false
-
-	for i := range localUserList {
-		if localUserList[i].Id == id {
-			update = true
-			localUserList[i] = upUsuario
+	for rows.Next() {
+		if err := rows.Scan(&user.Id, &user.Names, &user.LastName, &user.Email, &user.Age, &user.Estatura, &user.IsActivo); err != nil {
+			return domain.Usuario{}, errors.New("No se encontró el usuario.")
 		}
 	}
-
-	if !update {
-		return domain.Usuario{}, errors.New(STRING_HUBO + ERR_UPDATING_USER)
-	}
-	if err := r.db.Write(localUserList); err != nil {
-		return domain.Usuario{}, errors.New(ERR_WRITING)
-	}
-	return upUsuario, nil
-}
-
-func (r *repository) UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error) {
-	var usersList []domain.Usuario
-
-	if err := r.db.Read(&usersList); err != nil {
-		return domain.Usuario{}, errors.New(ERROR_READING)
-	}
-
-	upUsuario := domain.Usuario{}
-	update := false
-
-	for i := range usersList {
-		if usersList[i].Id == id {
-			update = true
-
-			usersList[i].Age = age
-			usersList[i].LastName = lastname
-			upUsuario = usersList[i]
-		}
-	}
-
-	if !update {
-		return domain.Usuario{}, errors.New("No se encontró el usuario a actualizar.")
-	}
-	return upUsuario, nil
-}
-
-func (r *repository) LastID() (int, error) {
-	var localUserList []domain.Usuario
-	if err := r.db.Read(&localUserList); err != nil {
-		return 0, errors.New(ERROR_READING)
-	}
-	if len(localUserList) == 0 {
-		return 0, nil
-	}
-
-	return localUserList[len(localUserList)-1].Id, nil
+	return user, nil
 }
 
 func (r *repository) Delete(id int) error {
-	var usersList []domain.Usuario
-
-	if err := r.db.Read(&usersList); err != nil {
-		return errors.New(ERROR_READING)
-	}
-
-	deleted := false
-	var indexAux int
-
-	for i := range usersList {
-		if usersList[i].Id == id {
-			deleted = true
-			indexAux = i
-		}
-	}
-
-	if !deleted {
-		return errors.New("No se encontró el usuario a eliminar.")
-	}
-
-	usersList = append(usersList[:indexAux], usersList[indexAux+1:]...)
-
-	if err := r.db.Write(usersList); err != nil {
-		return errors.New(ERR_WRITING)
-	}
-
 	return nil
 }
-func NewRepository(db store.Store) Repository {
-	return &repository{db: db}
+func (r *repository) UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error) {
+	return domain.Usuario{}, nil
+
+}
+func (r *repository) Update(id int, user domain.Usuario) (domain.Usuario, error) {
+	stmt, err := r.db.Prepare("UPDATE products SET name = ?, type = ?, count = ?, price = ? WHERE id = ?") // se prepara la sentencia SQL a ejecutar
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close() // se cierra la sentencia al terminar. Si quedan abiertas se genera consumos de memoria
+	userUpdate := domain.Usuario{
+		Id:       id,
+		Names:    user.Names,
+		LastName: user.LastName,
+		Email:    user.Email,
+	}
+	_, err = stmt.Exec(user.Names, user.LastName, user.Email, user.Age, user.Estatura, user.IsActivo)
+	if err != nil {
+		return domain.Usuario{}, err
+	}
+	return userUpdate, nil
 }
