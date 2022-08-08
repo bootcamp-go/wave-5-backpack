@@ -31,3 +31,8 @@ FROM actors a
 JOIN movies m
 WHERE a.favorite_movie_id = m.id
 AND m.awards > 3;
+-- 12
+ALTER TABLE movies
+ADD INDEX IDX_movies_title (title);
+-- 13
+SHOW INDEX FROM movies;
