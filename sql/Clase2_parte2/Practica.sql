@@ -40,10 +40,8 @@ ON a.favorite_movie_id = m.id
 WHERE m.awards > 3;
 
 -- PUNTO 10
--- EXPLAIN ANALYZE
-CREATE TEMPORARY TABLE movies_tmp AS (SELECT * FROM movies);
-DELETE FROM movies_tmp WHERE awards < 5;
-DROP TABLE movies_tmp;
+EXPLAIN SELECT * FROM movies;
+EXPLAIN DELETE FROM movies_tmp WHERE awards < 5;
 
 -- PUNTO 12
 CREATE INDEX title_idx ON movies(title);
