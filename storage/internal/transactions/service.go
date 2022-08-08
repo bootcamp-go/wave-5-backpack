@@ -3,7 +3,7 @@ package transactions
 import (
 	"fmt"
 
-	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/goweb/internal/models"
+	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/internal/models"
 )
 
 type Service interface {
@@ -26,29 +26,25 @@ type service struct {
 }
 
 func (s service) Store(monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
-	return s.repository.Store(monto, cod, moneda, emisor, receptor)
+	return models.Transaction{}, nil
 }
 
 func (s service) GetAll() ([]models.Transaction, error) {
-	return s.repository.GetAll()
+	return []models.Transaction{}, nil
 }
 
 func (s service) GetByID(id int) (models.Transaction, error) {
-	return s.repository.GetByID(id)
+	return models.Transaction{}, nil
 }
 
 func (s service) Update(id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
-	_, err := s.repository.GetByID(id)
-	if err != nil {
-		return models.Transaction{}, fmt.Errorf("error en repository: %v", err)
-	}
-	return s.repository.Update(id, monto, cod, moneda, emisor, receptor)
+	return models.Transaction{}, nil
 }
 
 func (s service) Patch(id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
-	return s.repository.Patch(id, monto, cod, moneda, emisor, receptor)
+	return models.Transaction{}, nil
 }
 
 func (s service) Delete(id int) (int, error) {
-	return s.repository.Delete(id)
+	return 0, nil
 }
