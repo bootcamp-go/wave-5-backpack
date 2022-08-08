@@ -5,6 +5,7 @@ import (
 	"os"
 	"proyecto-web/cmd/handlers"
 	"proyecto-web/internal/transaction"
+	"proyecto-web/internal/transaction/bdRepository"
 	"proyecto-web/pkg/store"
 
 	"github.com/joho/godotenv"
@@ -31,8 +32,12 @@ func main() {
 	if err != nil {
 		log.Fatal("error al intentar cargar archivo .env")
 	}
-	bd := store.NewStore("transacciones.json")
-	r := transaction.NewRepository(bd)
+	bdPosta := store.NewDb()
+	//bdFileSystem := store.NewStore("transacciones.json")
+
+	//r := transaction.NewRepository(bdFileSystem)
+	r := bdRepository.NewBdRepository(bdPosta)
+
 	service := transaction.NewService(r)
 	handler := handlers.NewTransactionHandler(service)
 	servidor := gin.Default()

@@ -29,7 +29,7 @@ func (s *transactionService) GetAll() []domain.Transaction {
 }
 
 func (s *transactionService) Create(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error) {
-	return s.repository.Create(id, codigoTransaccion, moneda, monto, emisor, receptor, fecha)
+	return s.repository.Create(codigoTransaccion, moneda, monto, emisor, receptor, fecha)
 }
 
 func (s *transactionService) GetById(id int) (domain.Transaction, error) {
