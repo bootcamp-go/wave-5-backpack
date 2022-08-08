@@ -1,6 +1,8 @@
 package usuarios
 
 import (
+	"time"
+
 	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/internal/domain"
 )
 
@@ -26,14 +28,16 @@ func (s *service) GetAll() ([]domain.Usuario, error) {
 }
 
 func (s *service) Store(age int, names, lastname, email string, estatura float64) (domain.Usuario, error) {
-	lastID, err := s.repository.LastID()
-	if err != nil {
-		return domain.Usuario{}, err
+	newUser := domain.Usuario{
+		Names:       names,
+		LastName:    lastname,
+		Email:       email,
+		Age:         age,
+		Estatura:    estatura,
+		IsActivo:    true,
+		DateCreated: time.Now().GoString(),
 	}
-
-	lastID++
-
-	usuario, err := s.repository.Store(lastID, age, names, lastname, email, "7 JUL 2022", estatura)
+	usuario, err := s.repository.Store(newUser)
 	if err != nil {
 		return domain.Usuario{}, err
 	}
@@ -42,7 +46,16 @@ func (s *service) Store(age int, names, lastname, email string, estatura float64
 }
 
 func (s *service) Update(id, age int, names, lastname, email, dateCreated string, estatura float64, activo bool) (domain.Usuario, error) {
-	return s.repository.Update(id, age, names, lastname, email, dateCreated, estatura, activo)
+	user := domain.Usuario{
+		Names:       names,
+		LastName:    lastname,
+		Email:       email,
+		Age:         age,
+		Estatura:    estatura,
+		DateCreated: dateCreated,
+		IsActivo:    activo,
+	}
+	return s.repository.Update(id, user)
 }
 
 func (s *service) UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error) {

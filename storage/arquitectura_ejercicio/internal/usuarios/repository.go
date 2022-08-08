@@ -33,10 +33,10 @@ func NewRepository(db *sql.DB) Repository {
 }
 
 func (r *repository) Store(user domain.Usuario) (domain.Usuario, error) {
-	stmt, err := r.db.Prepare("INSERT INTO users(name, last_name, email, age, height, is_active, date_created) VALUES(?,?,?,?,?,?,?)")
+	stmt, err := r.db.Prepare("INSERT INTO users(names, last_name, email, age, height, is_active, date_created) VALUES(?,?,?,?,?,?,?)")
 
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("err:", err.Error())
 	}
 
 	defer stmt.Close()
@@ -83,7 +83,7 @@ func (r *repository) UpdateLastNameAndAge(id, age int, lastname string) (domain.
 
 }
 func (r *repository) Update(id int, user domain.Usuario) (domain.Usuario, error) {
-	stmt, err := r.db.Prepare("UPDATE products SET name = ?, type = ?, count = ?, price = ? WHERE id = ?") // se prepara la sentencia SQL a ejecutar
+	stmt, err := r.db.Prepare("UPDATE products SET names = ?, last_name = ?, email = ?, age = ?, height = ? WHERE id = ?") // se prepara la sentencia SQL a ejecutar
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -2,8 +2,10 @@ package usuarios
 
 import (
 	"fmt"
+	"log"
 	"testing"
 
+	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/db"
 	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/internal/domain"
 	"github.com/stretchr/testify/assert"
 )
@@ -49,7 +51,7 @@ func (m *MockStorage) Ping() error {
 	return nil
 }
 
-func TestGetall(t *testing.T) {
+/*func TestGetall(t *testing.T) {
 	// arrange
 	database := []domain.Usuario{
 		{
@@ -88,4 +90,26 @@ func TestGetall(t *testing.T) {
 
 	assert.Nil(t, err)
 	assert.Equal(t, mockStorage.dataMock, res)
+}*/
+
+func TestStore(t *testing.T) {
+	db.Init()
+	repo := NewRepository(db.StorageDB)
+	newUser := domain.Usuario{
+		Names:       "Ashton",
+		LastName:    "Brooke",
+		Email:       "ash2@gmail.com",
+		Estatura:    1.80,
+		IsActivo:    true,
+		DateCreated: "2022-08-08",
+		Age:         28,
+	}
+
+	userResult, err := repo.Store(newUser)
+
+	if err != nil {
+		log.Println("----- ERROR- TEST:", err.Error())
+	}
+
+	assert.Equal(t, newUser.Names, userResult.Names)
 }
