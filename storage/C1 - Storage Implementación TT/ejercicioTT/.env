@@ -1,0 +1,2 @@
+TOKEN=123456
+HOST=localhost:8080
