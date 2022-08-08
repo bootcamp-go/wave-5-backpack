@@ -7,7 +7,7 @@ import (
 
 func leerTXT() {
 
-	data, err := os.ReadFile("./custosmesrs.txt")
+	data, err := os.ReadFile("./customerss.txt")
 
 	defer func() {
 		err := recover()
@@ -16,6 +16,8 @@ func leerTXT() {
 		} else {
 			fmt.Println(string(data))
 		}
+		fmt.Println("ejecución finalizada")
+
 	}()
 
 	if err != nil {
@@ -27,6 +29,5 @@ func leerTXT() {
 func main() {
 
 	leerTXT()
-	fmt.Println("Ejecución Finalizada")
 
 }
