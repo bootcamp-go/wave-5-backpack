@@ -18,6 +18,7 @@ const (
 type Repository interface {
 	GetAll() ([]domain.Usuario, error)
 	GetOne(id int) (domain.Usuario, error)
+	GetByName(name string) (domain.Usuario, error)
 	Store(user domain.Usuario) (domain.Usuario, error)
 	Update(id int, user domain.Usuario) (domain.Usuario, error)
 	UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error)
@@ -62,6 +63,22 @@ func (r *repository) GetOne(id int) (domain.Usuario, error) {
 	var user domain.Usuario
 
 	rows, err := r.db.Query("SELECT * FROM users where id:= ?", id)
+
+	if err != nil {
+		return domain.Usuario{}, errors.New(ERROR_READING)
+	}
+
+	for rows.Next() {
+		if err := rows.Scan(&user.Id, &user.Names, &user.LastName, &user.Email, &user.Age, &user.Estatura, &user.IsActivo); err != nil {
+			return domain.Usuario{}, errors.New("No se encontró el usuario.")
+		}
+	}
+	return user, nil
+}
+func (r *repository) GetByName(name string) (domain.Usuario, error) {
+	var user domain.Usuario
+
+	rows, err := r.db.Query("SELECT * FROM users where names:= ?", name)
 
 	if err != nil {
 		return domain.Usuario{}, errors.New(ERROR_READING)
