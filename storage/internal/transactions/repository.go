@@ -15,7 +15,7 @@ func NewRepository() Repository {
 
 type repository struct{}
 
-var getByCod = "SELECT id, monto, cod, moneda, emisor, receptor, fecha FROM transactions WHERE cod = ?;"
+var getByCod = `SELECT id, monto, cod, moneda, emisor, receptor, fecha FROM transactions WHERE cod = ?;`
 
 func (r *repository) GetByCod(cod string) (models.Transaction, error) {
 	db := db.StorageDB
