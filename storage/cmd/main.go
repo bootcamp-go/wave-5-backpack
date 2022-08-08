@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -29,9 +30,12 @@ func main() {
 		log.Fatal("error al intentar leer el archivo .env")
 	}
 
-	db, err := db.NewConnection("")
+	user, dbName := os.Getenv("DB_USER"), os.Getenv("DB_NAME")
+	source := fmt.Sprintf("%s@/%s", user, dbName)
+
+	db, err := db.NewConnection(source)
 	if err != nil {
-		log.Panicf("error al abrir el archivo .json %v\n", err)
+		log.Panicf("error al conectar con la db %v\n", err)
 	}
 	defer db.Close()
 
