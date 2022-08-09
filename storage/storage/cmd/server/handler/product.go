@@ -48,6 +48,10 @@ func (p *Product) Search() gin.HandlerFunc {
 			web.Response(c, 500, err.Error(), nil)
 			return
 		}
+		if response.ID == 0 {
+			web.Response(c, 200, "", nil)
+			return
+		}
 		web.Response(c, 200, "", response)
 	}
 }

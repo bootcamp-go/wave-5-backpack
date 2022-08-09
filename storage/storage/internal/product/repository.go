@@ -3,7 +3,6 @@ package product
 import (
 	"context"
 	"database/sql"
-	"errors"
 	"storage/internal/domain"
 )
 
@@ -63,7 +62,7 @@ func (r *repository) GetByName(ctx context.Context, name string) (domain.Product
 		}
 	}
 	if product.ID == 0 {
-		return domain.Product{}, errors.New("not found")
+		return domain.Product{}, nil
 	}
 	return product, nil
 }
@@ -97,7 +96,12 @@ func (r *repository) Update(ctx context.Context, product domain.Product) (domain
 }
 
 func (r *repository) Delete(ctx context.Context, id int) error {
-	_, err := r.db.QueryContext(ctx, Delete, id)
+	stmt, err := r.db.PrepareContext(ctx, Delete)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	_, err = stmt.ExecContext(ctx, id)
 	if err != nil {
 		return err
 	}
