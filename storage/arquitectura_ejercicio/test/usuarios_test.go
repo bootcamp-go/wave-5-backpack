@@ -9,15 +9,16 @@ import (
 	"testing"
 
 	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/cmd/server/handler"
+	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/db"
 	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/internal/usuarios"
-	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/pkg/store"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
 func createServer() *gin.Engine {
 	_ = os.Setenv("TOKEN", "123456")
-	db := store.NewStore("usuarios.json")
+	//db := store.NewStore("usuarios.json")
+	db := db.StorageDB
 	repo := usuarios.NewRepository(db)
 	service := usuarios.NewService(repo)
 	u := handler.NewUsuario(service)

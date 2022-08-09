@@ -13,6 +13,12 @@ const (
 	ERROR_READING     = "Hubo un error al leer los datos de la BD."
 	ERR_WRITING       = "Hubo un error al guardar los datos en la BD."
 	ERR_UPDATING_USER = ".. al no encontrar el usuario."
+	QUERY_STORE       = "INSERT INTO users(names, last_name, email, age, height, is_active, date_created) VALUES(?,?,?,?,?,?,?)"
+	QUERY_UPDATE      = "UPDATE products SET names = ?, last_name = ?, email = ?, age = ?, height = ? WHERE id = ?"
+	QUERY_GET_ONE     = "SELECT id, names, last_name, email, age, height, height, is_active FROM users where id = ?"
+	QUERY_GET_BYNAME  = "SELECT id, names, last_name, email FROM users WHERE names = ?"
+	QUERY_GET_ALL     = ""
+	QUERY_DELETE      = ""
 )
 
 type Repository interface {
@@ -34,7 +40,7 @@ func NewRepository(db *sql.DB) Repository {
 }
 
 func (r *repository) Store(user domain.Usuario) (domain.Usuario, error) {
-	stmt, err := r.db.Prepare("INSERT INTO users(names, last_name, email, age, height, is_active, date_created) VALUES(?,?,?,?,?,?,?)")
+	stmt, err := r.db.Prepare(QUERY_STORE)
 
 	if err != nil {
 		log.Fatal("err:", err.Error())
@@ -62,7 +68,7 @@ func (r *repository) GetAll() ([]domain.Usuario, error) {
 func (r *repository) GetOne(id int) (domain.Usuario, error) {
 	var user domain.Usuario
 
-	rows, err := r.db.Query("SELECT * FROM users where id = ?", id)
+	rows, err := r.db.Query(QUERY_GET_ONE, id)
 
 	if err != nil {
 		return domain.Usuario{}, errors.New(ERROR_READING)
@@ -78,7 +84,7 @@ func (r *repository) GetOne(id int) (domain.Usuario, error) {
 func (r *repository) GetByName(name string) (domain.Usuario, error) {
 	var user domain.Usuario
 
-	rows, err := r.db.Query("SELECT id, names, last_name, email FROM users WHERE names = ?", name)
+	rows, err := r.db.Query(QUERY_GET_BYNAME, name)
 
 	if err != nil {
 		return domain.Usuario{}, errors.New(ERROR_READING + err.Error())
@@ -101,7 +107,7 @@ func (r *repository) UpdateLastNameAndAge(id, age int, lastname string) (domain.
 
 }
 func (r *repository) Update(id int, user domain.Usuario) (domain.Usuario, error) {
-	stmt, err := r.db.Prepare("UPDATE products SET names = ?, last_name = ?, email = ?, age = ?, height = ? WHERE id = ?") // se prepara la sentencia SQL a ejecutar
+	stmt, err := r.db.Prepare(QUERY_UPDATE) // se prepara la sentencia SQL a ejecutar
 	if err != nil {
 		log.Fatal(err)
 	}
