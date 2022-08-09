@@ -15,6 +15,7 @@ const (
 
 type Repository interface {
 	GetAll() ([]domain.Users, error)
+	GetByName(name string) ([]domain.Users, error)
 	Store(id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error)
 	LastID() (int, error)
 	Update(id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error)
@@ -37,6 +38,11 @@ func (r *repository) GetAll() ([]domain.Users, error) {
 	if err := r.db.Read(&users); err != nil {
 		return nil, fmt.Errorf(FailReading)
 	}
+	return users, nil
+}
+
+func (r *repository) GetByName(name string) ([]domain.Users, error) {
+	var users []domain.Users
 	return users, nil
 }
 

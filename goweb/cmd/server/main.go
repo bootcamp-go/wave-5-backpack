@@ -51,6 +51,7 @@ func main() {
 	usersGroup.Use(tokenAuthMiddleware())
 	usersGroup.POST("/", userHandler.Store())
 	usersGroup.GET("/", userHandler.GetAll())
+	usersGroup.GET("/:nombre", userHandler.GetByName())
 	usersGroup.PUT("/:id", userHandler.Update())
 	usersGroup.PATCH("/:id", userHandler.UpdateLastNameAndAge())
 	usersGroup.DELETE("/:id", userHandler.Delete())

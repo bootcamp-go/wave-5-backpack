@@ -43,6 +43,10 @@ func (s *StubDB) GetAll() ([]domain.Users, error) {
 	return users, nil
 }
 
+func (s *StubDB) GetByName(name string) ([]domain.Users, error) {
+	return []domain.Users{}, nil
+}
+
 func (s *StubDB) Store(id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {
 	if s.errRead != "" {
 		return domain.Users{}, fmt.Errorf("error: %s", s.errRead)

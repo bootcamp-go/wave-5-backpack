@@ -49,6 +49,10 @@ func (s *MockDB) LastID() (int, error) {
 	return 0, nil
 }
 
+func (s *MockDB) GetByName(name string) ([]domain.Users, error) {
+	return []domain.Users{}, nil
+}
+
 func (s *MockDB) UpdateLastNameAndAge(id, age int, lastName string) (domain.Users, error) {
 	beforeUpdate, _ := s.GetAll()
 	s.GetWasCalled = true

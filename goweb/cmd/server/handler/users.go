@@ -54,6 +54,18 @@ func (u *User) GetAll() gin.HandlerFunc {
 	}
 }
 
+func (c *User) GetByName() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		fmt.Println(ctx.Param("nombre"))
+		u, err := c.service.GetByName(ctx.Param("nombre"))
+		if err != nil {
+			ctx.JSON(404, web.NewResponse(404, nil, "no existen registros con el nombre indicado"))
+			return
+		}
+		ctx.JSON(200, web.NewResponse(200, u, ""))
+	}
+}
+
 func (u *User) Store() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var req request

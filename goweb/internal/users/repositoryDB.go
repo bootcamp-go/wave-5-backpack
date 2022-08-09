@@ -23,7 +23,23 @@ func (r *repositoryDB) GetAll() ([]domain.Users, error) {
 }
 
 func (r *repositoryDB) LastID() (int, error) {
-	return 100, nil
+	return 0, nil
+}
+
+func (r *repositoryDB) GetByName(name string) ([]domain.Users, error) {
+	var user domain.Users
+	var listUser []domain.Users
+	rows, err := r.db.Query("SELECT id, name, last_name, email, age, height, active, creation_date FROM users WHERE name = ?", name)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		if err := rows.Scan(&user.Id, &user.Name, &user.LastName, &user.Email, &user.Age, &user.Height, &user.Active, &user.CreationDate); err != nil {
+			return nil, err
+		}
+		listUser = append(listUser, user)
+	}
+	return listUser, nil
 }
 
 func (r *repositoryDB) Store(id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {
