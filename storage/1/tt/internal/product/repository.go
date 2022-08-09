@@ -24,12 +24,12 @@ func NewRepository(db *sql.DB) Repository {
 }
 
 const (
-	StoreProduct   = "INSERT INTO products(name, type, count, price) VALUES (?, ?, ?, ?)"
-	GetAllProducts = "SELECT * FROM products"
-	GetProduct     = "SELECT * FROM products WHERE id = ?"
-	GetByName      = "SELECT * FROM products WHERE name = ?"
-	UpdateProduct  = "UPDATE products SET name = ?, type = ?, count = ?, price = ? WHERE id = ?"
-	DeleteProduct  = "DELETE FROM products WHERE id = ?"
+	StoreProduct     = "INSERT INTO products(name, type, count, price) VALUES (?, ?, ?, ?)"
+	GetAllProducts   = "SELECT * FROM products"
+	GetProduct       = "SELECT * FROM products WHERE id = ?"
+	GetProductByName = "SELECT * FROM products WHERE name = ?"
+	UpdateProduct    = "UPDATE products SET name = ?, type = ?, count = ?, price = ? WHERE id = ?"
+	DeleteProduct    = "DELETE FROM products WHERE id = ?"
 )
 
 func (r *repository) Store(product domain.Product) (domain.Product, error) {
@@ -71,7 +71,7 @@ func (r *repository) GetOne(id int) (domain.Product, error) {
 func (r *repository) GetByName(name string) ([]domain.Product, error) {
 	var product domain.Product
 	var products []domain.Product
-	rows, err := r.db.Query(GetByName, name)
+	rows, err := r.db.Query(GetProductByName, name)
 	if err != nil {
 		log.Println(err)
 		return []domain.Product{}, err
