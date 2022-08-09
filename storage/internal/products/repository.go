@@ -3,6 +3,7 @@ package products
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"log"
 	"storage/internal/domain"
 )
@@ -28,6 +29,7 @@ const (
 	GetOneQuery = "SELECT id, name, color, price, stock, code, publish, creation_date FROM products WHERE id = ?"
 	CreateQuery = "INSERT INTO products(name, color, price, stock, code, publish, creation_date) VALUES(?, ?, ?, ?, ?, ?, ?)"
 	UpdateQuery = "UPDATE products SET name=?, color=?, price=?, stock=?, publish=?  WHERE id=?"
+	DeleteQuery = "DELETE FROM products WHERE id = ?"
 )
 
 type repository struct {
@@ -103,6 +105,24 @@ func (r *repository) Update(ctx context.Context, p domain.Products) error {
 }
 
 func (r *repository) Delete(id int) error {
+	stmt, err := r.db.Prepare(DeleteQuery)
+	if err != nil {
+		return err
+	}
+	res, err := stmt.Exec(id)
+	if err != nil {
+		return err
+	}
+
+	affect, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if affect < 1 {
+		return fmt.Errorf("protucto con Id %v no encontrado", id)
+
+	}
 
 	return nil
 

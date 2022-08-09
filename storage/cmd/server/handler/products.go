@@ -134,13 +134,6 @@ func (c *Product) Update() gin.HandlerFunc {
 
 func (c *Product) Delete() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		/* token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "token inválido",
-			})
-			return
-		} */
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "Id inválido"))
