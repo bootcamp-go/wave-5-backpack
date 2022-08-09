@@ -19,8 +19,27 @@ func NewRepositoryBD(dbb *sql.DB) Repository {
 func (r *repositoryBD) GetAll() ([]domain.Usuarios, error) {
 	return nil, nil
 }
-func (r *repositoryBD) Guardar(id int, nombre string, apellido string, email string, edad int, altura float64, actico bool, fecha string) (domain.Usuarios, error) {
-	return domain.Usuarios{}, nil
+func (r *repositoryBD) Guardar(id int, nombre string, apellido string, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error) {
+	stmt, err := r.dbBD.Prepare("INSERT INTO storage.users(nombre,apellido,email,edad,altura,activo,fechaCreacion) VALUES(?,?,?,?,?,?,?)")
+	if err != nil {
+		return domain.Usuarios{}, nil
+	}
+	defer stmt.Close()
+	result, err2 := stmt.Exec(nombre, apellido, email, edad, altura, activo, fecha)
+	if err2 != nil {
+		return domain.Usuarios{}, err2
+	}
+	insertId, _ := result.LastInsertId()
+	var userD domain.Usuarios
+	userD.Nombre = nombre
+	userD.Apellido = apellido
+	userD.Email = email
+	userD.Edad = edad
+	userD.Altura = altura
+	userD.Activo = activo
+	userD.FechaCreacion = fecha
+	userD.Id = int(insertId)
+	return userD, nil
 }
 func (r *repositoryBD) LastId() (int, error) {
 	return 0, nil
@@ -53,19 +72,4 @@ func (r *repositoryBD) GetByName(name string) (domain.Usuarios, error) {
 	}
 	fmt.Println(user)
 	return user, nil
-}
-
-func (r *repositoryBD) Store(userD domain.Usuarios) (domain.Usuarios, error) {
-	stmt, err := r.dbBD.Prepare("INSERT INTO storage.users(nombre,apellido,email,edad,altura,activo,fechaCreacion) VALUES(?,?,?,?,?,?,?)")
-	if err != nil {
-		return domain.Usuarios{}, nil
-	}
-	defer stmt.Close()
-	result, err2 := stmt.Exec(userD.Nombre, userD.Apellido, userD.Email, userD.Edad, userD.Altura, userD.Activo, userD.FechaCreacion)
-	if err2 != nil {
-		return domain.Usuarios{}, err2
-	}
-	insertId, _ := result.LastInsertId()
-	userD.Id = int(insertId)
-	return userD, nil
 }

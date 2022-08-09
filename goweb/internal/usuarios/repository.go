@@ -29,7 +29,6 @@ type Repository interface {
 	Delete(id int) error
 	UpdateNameAndLastName(id int, name string, apellido string) (domain.Usuarios, error)
 	GetById(id int) (domain.Usuarios, error)
-	Store(userD domain.Usuarios) (domain.Usuarios, error)
 	GetByName(name string) (domain.Usuarios, error)
 }
 
@@ -155,9 +154,5 @@ func (r *repository) LastId() (int, error) {
 }
 
 func (r *repository) GetByName(name string) (domain.Usuarios, error) {
-	return domain.Usuarios{}, nil
-}
-
-func (r *repository) Store(userD domain.Usuarios) (domain.Usuarios, error) {
 	return domain.Usuarios{}, nil
 }

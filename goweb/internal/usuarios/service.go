@@ -21,7 +21,6 @@ type Service interface {
 	UpdateNameAndLastName(id int, name string, apellido string) (domain.Usuarios, error)
 	GetById(id int) (domain.Usuarios, error)
 	GetByName(name string) (domain.Usuarios, error)
-	Store(user domain.Usuarios) (domain.Usuarios, error)
 }
 
 type service struct {
@@ -79,14 +78,6 @@ func (s *service) Guardar(nombre string, apellido string, email string, edad int
 func (s *service) GetByName(name string) (domain.Usuarios, error) {
 	fmt.Print("llegamos aqui")
 	us, err := s.repository.GetByName(name)
-	if err != nil {
-		return domain.Usuarios{}, err
-	}
-	return us, nil
-}
-
-func (s *service) Store(user domain.Usuarios) (domain.Usuarios, error) {
-	us, err := s.repository.Store(user)
 	if err != nil {
 		return domain.Usuarios{}, err
 	}

@@ -76,11 +76,10 @@ func main() {
 	{
 		///////////////BBDD/////////////////
 		us.GET("/:nombre", u.GetByName())
-		us.POST("/", u.Save())
 		///////////////BBDD/////////////////
 		us.PUT("/:id", u.Update())
 		//us.GET("/:id", u.GetById())
-		//us.POST("/", u.Guardar())
+		us.POST("/", u.Guardar())
 		us.GET("/", u.GetAll())
 		us.DELETE("/:id", u.Delete())
 		us.PATCH("/:id", u.UpdateNameAndLastName())
