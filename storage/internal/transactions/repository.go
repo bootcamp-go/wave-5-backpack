@@ -22,7 +22,11 @@ type repository struct {
 	db *sql.DB
 }
 
-var queryStore string = "INSERT INTO transactions (monto, cod, moneda, emisor, receptor, fecha) VALUES (?, ?, ?, ?, ?, ?)"
+const (
+	queryStore = `INSERT INTO transactions (monto, cod, moneda, emisor, receptor, fecha) VALUES (?, ?, ?, ?, ?, ?);`
+	getByCod   = `SELECT id, monto, cod, moneda, emisor, receptor, fecha FROM transactions WHERE cod = ?;`
+	getByID    = `SELECT id, monto, cod, moneda, emisor, receptor, fecha FROM transactions WHERE id = ?;`
+)
 
 func (r *repository) Store(monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
 	stmt, err := r.db.Prepare(queryStore)
@@ -53,8 +57,6 @@ func (r *repository) Store(monto float64, cod, moneda, emisor, receptor string) 
 	return transaction, nil
 }
 
-var getByCod = `SELECT id, monto, cod, moneda, emisor, receptor, fecha FROM transactions WHERE cod = ?;`
-
 func (r *repository) GetByCod(cod string) (models.Transaction, error) {
 	rows, err := r.db.Query(getByCod, cod)
 	if err != nil {
@@ -70,8 +72,6 @@ func (r *repository) GetByCod(cod string) (models.Transaction, error) {
 
 	return transaction, nil
 }
-
-var getByID = `SELECT id, monto, cod, moneda, emisor, receptor, fecha FROM transactions WHERE id = ?;`
 
 func (r *repository) GetByID(id int) (models.Transaction, error) {
 	rows, err := r.db.Query(getByID, id)
