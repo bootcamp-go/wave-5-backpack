@@ -90,6 +90,25 @@ func (c *User) GetUserById() gin.HandlerFunc {
 	}
 }
 
+func (c *User) GetUserByName() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		// valido token
+		/* token := ctx.GetHeader("token")
+		if token != os.Getenv("TOKEN") {
+			ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "Token inválido"))
+			return
+		} */
+
+		name := ctx.Param("name")
+		u, err := c.service.GetUserByName(name)
+		if err != nil {
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
+			return
+		}
+		ctx.JSON(200, web.NewResponse(200, u, ""))
+	}
+}
+
 
 // StoreUsers
 // @Summary Store new users in the database
@@ -108,11 +127,11 @@ func (c *User) StoreUser() gin.HandlerFunc {
 	return func(ctx *gin.Context){
 
 		// valido token
-		token := ctx.GetHeader("token")
+		/* token := ctx.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "Token inválido"))
 			return
-		}
+		} */
 
 		// traigo los datos del post y los guardo en una variable del tipo struct request que generé arriba
 		var req request
@@ -153,12 +172,12 @@ func (c *User) StoreUser() gin.HandlerFunc {
 func (c *User) UpdateTotal() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		// valido token
-		token := ctx.GetHeader("token")
+		/* token := ctx.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
 			ctx.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "Token inválido"))
 			return
 		}
-		
+		 */
 		//var errores []string
 		
 		id,err := strconv.Atoi(ctx.Param("id"))
@@ -179,7 +198,7 @@ func (c *User) UpdateTotal() gin.HandlerFunc {
 			return
 		}
 
-		userUpdated, err:=	 c.service.UpdateTotal(id, req.Name, req.LastName, req.Email, req.Age, req.Height, req.Active, req.CreatedAt)
+		userUpdated, err:= c.service.UpdateTotal(id, req.Name, req.LastName, req.Email, req.Age, req.Height, req.Active, req.CreatedAt)
 
 		if err !=nil {
 			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))

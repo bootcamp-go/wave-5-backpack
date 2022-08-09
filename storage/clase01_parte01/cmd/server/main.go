@@ -4,10 +4,6 @@ import (
 	"goweb/cmd/server/handler"
 	"goweb/internal/users"
 	"log"
-	"os"
-
-	"goweb/docs"
-
 	"github.com/gin-gonic/gin"
 	"database/sql"
     _ "github.com/go-sql-driver/mysql"
@@ -23,7 +19,7 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
 
-	dataSource := "root@tcp(localhost:3306)/storage"
+	dataSource := "root:rootpass@tcp(localhost:3306)/storage"
     // Open inicia un pool de conexiones. Sólo abrir una vez
     var err error
     StorageDB, err := sql.Open("mysql", dataSource)
@@ -41,12 +37,10 @@ func main() {
 
 	router := gin.Default()
 
-	docs.SwaggerInfo.Host = os.Getenv("HOST")
-	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-
 	userGroup := router.Group("/users")
 	userGroup.GET("/", u.GetAllUsers())
 	userGroup.GET("/:id", u.GetUserById())
+	userGroup.GET("/name/:name", u.GetUserByName())
 	userGroup.POST("/", u.StoreUser())
 	userGroup.PUT("/:id", u.UpdateTotal())
 	userGroup.PATCH("/:id", u.UpdatePartial())

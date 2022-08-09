@@ -1,14 +1,14 @@
 package users
 
 import (
+	"database/sql"
 	"fmt"
+	//"fmt"
 	"goweb/internal/domain"
-	"goweb/pkg/store"
+	"log"
 )
 
-
 //var lastID int
-
 const (
 	UserNotFound = "user %d not found"
 	FailReading     = "cant read database"
@@ -17,169 +17,154 @@ const (
 
 
 type Repository interface {
+	// métodos viejos
 	GetAllUsers() ([]domain.User, error)
 	GetUserById(id int) (domain.User, error)
-	StoreUser(id int, name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error)
-	LastID() (int,error)
 	UpdateTotal(id int, name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error)
 	UpdatePartial(id int, lastname string, age int) (domain.User, error)
 	Delete(id int) error
+	
+	// métodos nuevos o modificados
+	GetUserByName(name string) (domain.User, error)
+	StoreUser(name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error)
 }
 
+//modifico el tipo de db porque ya no es más un json
 type repository struct{
-	db store.Store
+	db *sql.DB
 }
 
-func NewRepository(db store.Store) Repository {
+func NewRepository(db *sql.DB) Repository {
 	return &repository{
 		db: db,
 	}
 }
 
-func (r *repository) GetAllUsers() ([]domain.User, error) {
-	var users []domain.User
-	if err := r.db.Read(&users); err != nil {
-		return nil, fmt.Errorf(FailReading)
+const (
+    GetUserByName    = "SELECT * FROM users WHERE name = ?"
+    GetUserById    = "SELECT * FROM users WHERE id = ?"
+)
+
+func (r *repository) GetUserByName(name string) (domain.User, error) {
+	
+	var user domain.User
+    rows, err := r.db.Query(GetUserByName, name)
+    if err != nil {
+        log.Println(err)
+        return domain.User{},err
+    }
+    for rows.Next() {
+        err := rows.Scan(&user.Id, &user.Name, &user.LastName, &user.Email, &user.Age, &user.Height, &user.Active, &user.CreatedAt)
+        if err != nil {
+            log.Fatal(err)
+            return domain.User{},err
+        }
 	}
-	return users, nil
+
+    return user, nil
 }
 
 
 func (r *repository) GetUserById(id int) (domain.User, error) {
-	var users []domain.User
-	if err := r.db.Read(&users); err != nil {
-		return domain.User{}, fmt.Errorf(FailReading)
+	var user domain.User
+    rows, err := r.db.Query(GetUserById, id)
+    if err != nil {
+        log.Println(err)
+        return domain.User{},err
+    }
+    for rows.Next() {
+        err := rows.Scan(&user.Id, &user.Name, &user.LastName, &user.Email, &user.Age, &user.Height, &user.Active, &user.CreatedAt)
+        if err != nil {
+            log.Fatal(err)
+            return domain.User{},err
+        }
 	}
 
-	var userFounded domain.User
-	find := false
-	for _,u :=range users{
-		if u.Id == id{
-			userFounded = u
-			find = true
-			break
-		}
-	}
-	if !find{
-		return domain.User{}, fmt.Errorf("no existe el usuario con id %d", id)
-	}
-	return userFounded, nil
+    return user, nil
 }
 
-func (r *repository) LastID() (int, error) {
-	var users []domain.User
-	if err := r.db.Read(&users); err != nil {
-		return 0, fmt.Errorf(FailReading)
+func (r *repository) StoreUser(name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error) {
+	
+	var user = domain.User{
+		Name: name,
+		LastName: lastname,	
+		Email: email, 
+		Age: age,
+		Height: height,
+		Active: active,
+		CreatedAt: createdat,
 	}
-	if len(users) == 0 {
-		return 0, nil
-	}
-
-	return users[len(users)-1].Id, nil
-}
-
-
-func (r *repository) StoreUser(id int, name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error) {
-	var users []domain.User
-
-	if err := r.db.Read(&users); err != nil {
-		return domain.User{}, fmt.Errorf(FailReading)
-	}
-
-	user := domain.User{Id: id, Name:name, LastName: lastname, Email: email, Age: age, Height: height, Active: active, CreatedAt: createdat}
-	users = append(users, user)
-
-	if err := r.db.Write(users); err != nil {
-		return domain.User{}, fmt.Errorf(FailWriting)
-	}
-
+	
+    stmt, err := r.db.Prepare("INSERT INTO users(name, lastname, email, age, height, active, createdat) VALUES( ?, ?, ?, ?, ?, ?, ? )") // se prepara el SQL
+    if err != nil {
+		log.Fatal(err)
+    }
+    defer stmt.Close() // se cierra la sentencia al terminar. Si quedan abiertas se genera consumos de memoria
+    var result sql.Result
+    result, err = stmt.Exec(name, lastname, email, age, height, active, createdat) // retorna un sql.Result y un error
+    if err != nil {
+		return domain.User{}, err
+    }
+    insertedId, _ := result.LastInsertId() // del sql.Resul devuelto en la ejecución obtenemos el Id insertado
+    user.Id = int(insertedId)
+	
 	return user, nil
 }
 
-
 func(r *repository) UpdateTotal(id int, name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error) {
+	// esta parte la agrego yo porque si el usuario no existe no me duelve error, lo tengo que forzar.
+	userExist, err := r.GetUserById(id)
+	if err!=nil{
+		return domain.User{}, err
+	}else if userExist.Id == 0{
+		return domain.User{}, fmt.Errorf("user not found")
+	}
+	//--------------------------------------------------------------
 
-	var users []domain.User
-	if err := r.db.Read(&users); err != nil {
-		return domain.User{}, fmt.Errorf(FailReading)
-	}
-	
-	userToUpdate := domain.User{Name: name, LastName: lastname, Email: email, Age: age, Height: height, Active: active, CreatedAt: createdat}
-	updated := false
-	
-	for i:= range users {
-		if users[i].Id == id{
-			userToUpdate.Id = id
-			users[i] = userToUpdate
-			updated = true
-			break
-		}
-	}
-	if !updated{
-		return domain.User{}, fmt.Errorf(UserNotFound, id)
-	}
 
-	if err := r.db.Write(users); err != nil {
-		return domain.User{}, fmt.Errorf(FailWriting)
+	var user = domain.User{
+		Id:id,
+		Name: name,
+		LastName: lastname,	
+		Email: email, 
+		Age: age,
+		Height: height,
+		Active: active,
+		CreatedAt: createdat,
 	}
 
-	return userToUpdate, nil
+	stmt, err := r.db.Prepare("UPDATE users SET name = ?, lastname = ?, email = ?, age = ?, height = ?, active = ?, createdat = ? WHERE id = ?") // se prepara la sentencia SQL a ejecutar
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer stmt.Close()     // se cierra la sentencia al terminar. Si quedan abiertas se genera consumos de memoria
+    aaa, err := stmt.Exec(user.Name, user.LastName, user.Email, user.Age, user.Height, user.Active, user.CreatedAt, user.Id)
+    if err != nil {
+        return domain.User{}, err
+    }
+	fmt.Println(&aaa)
+    return user, nil
 }
 
+
+
+
+
+
+
+
+func (r *repository) GetAllUsers() ([]domain.User, error) {
+	return nil, nil
+}
+
+
+
+
 func(r *repository) UpdatePartial(id int, lastname string, age int) (domain.User, error) {
-
-	var users []domain.User
-	if err := r.db.Read(&users); err != nil {
-		return domain.User{}, fmt.Errorf(FailReading)
-	}
-
-	updated := false
-	var userUpdated domain.User 
-	for i:= range users {
-		if users[i].Id == id{
-			users[i].LastName = lastname
-			users[i].Age = age
-			updated = true
-			userUpdated = users[i]
-			break
-		}
-	}
-	if !updated{
-		return domain.User{}, fmt.Errorf(UserNotFound, id)
-	}
-
-	if err := r.db.Write(users); err != nil {
-		return domain.User{}, fmt.Errorf(FailWriting)
-	}
-
-	return userUpdated, nil
+	return domain.User{}, nil
 }
 
 
 func (r *repository) Delete(id int) error {
-   
-    var users []domain.User
-    if err := r.db.Read(&users); err != nil {
-        return fmt.Errorf(FailReading)
-    }
-
-    var indexToDelete int
-    find := false
-    for i :=range users{
-        if users[i].Id == id{
-            indexToDelete = i
-            find = true
-            break
-        }
-    }
-    if !find{
-        return fmt.Errorf(UserNotFound, id)
-    }
-    users = append(users[:indexToDelete],users[indexToDelete+1:]... )
-
-    if err := r.db.Write(users); err != nil {
-        return fmt.Errorf(FailWriting)
-    }
-    
     return nil
 }

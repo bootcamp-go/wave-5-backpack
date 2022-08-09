@@ -6,12 +6,16 @@ import (
 )
 
 type Service interface{
+	// metodos viejos
 	GetAllUsers() ([]domain.User, error)
 	GetUserById(id int) (domain.User, error)
-	StoreUser(name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error)
 	UpdateTotal(id int, name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error)
 	UpdatePartial(id int, lastname string, age int) (domain.User, error)
 	Delete(id int) error
+	
+	//métodos nuevos o actualizados
+	GetUserByName(name string) (domain.User, error)
+	StoreUser(name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error)
 }
 
 type service struct {
@@ -24,62 +28,69 @@ func NewService(r Repository) Service {
 	}
 }
 
-func (s *service) GetAllUsers() ([]domain.User, error) {
-	users, err := s.repository.GetAllUsers()
-	if err != nil {
-		return nil, err
+func (s *service) GetUserByName(name string) (domain.User, error){
+	user, err := s.repository.GetUserByName(name)
+	if err!= nil{
+		return domain.User{}, fmt.Errorf("error searching user: %w", err)
 	}
-
-	return users, nil
+	// esta modificación la hago porque si la DB no encuentra el usuario, devuelve un vacío pero no un error
+	if user.Id == 0{
+		return domain.User{}, fmt.Errorf("user not found")
+	}
+	
+	return user, nil
+	
 }
 
 func (s *service) GetUserById(id int) (domain.User, error) {
-	user, err := s.repository.GetUserById(id)
-	if err != nil {
-		return domain.User{}, err
-	}
 
+	user, err := s.repository.GetUserById(id)
+	if err!= nil{
+		return domain.User{}, fmt.Errorf("error searching user: %w", err)
+	}
+	// esta modificación la hago porque si la DB no encuentra el usuario, devuelve un vacío pero no un error
+	if user.Id == 0{
+		return domain.User{}, fmt.Errorf("user not found")
+	}
+	
 	return user, nil
 }
 
 func (s *service) StoreUser(name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error){
-	//lo primero que hago es generar un ID. Lo unico que cambió respecto a la versión anterior es agregar un msj para identificar mejor el error
-	lastID, err := s.repository.LastID()
-	if err != nil {
-		return domain.User{}, fmt.Errorf("error getting product last id: %w", err)
-	}
-
-	lastID++
-
-	newUser, err := s.repository.StoreUser(lastID, name, lastname, email, age, height, active, createdat)
+	
+	newUser, err := s.repository.StoreUser(name, lastname, email, age, height, active, createdat)
 	if err!= nil{
 		return domain.User{}, fmt.Errorf("error creating user: %w", err)
 	}
-
+	
 	return newUser, nil
 }
 
 func (s *service) UpdateTotal(id int, name, lastname, email string, age int, height float32, active bool, createdat string) (domain.User, error) {
-	user, err := s.repository.UpdateTotal(id, name, lastname, email, age, height, active, createdat)
-	if err != nil {
+	userUpdated, err := s.repository.UpdateTotal(id, name, lastname, email, age, height, active, createdat)
+	if err!= nil{
 		return domain.User{}, fmt.Errorf("error updating user: %w", err)
 	}
-	return user, nil
+	
+	return userUpdated, nil
 }
 
+
+
+
+
+
+func (s *service) GetAllUsers() ([]domain.User, error) {
+	return []domain.User{}, nil
+}
+
+
+
 func (s *service) UpdatePartial(id int, lastname string, age int) (domain.User, error){
-	user, err := s.repository.UpdatePartial(id, lastname, age)
-	if err != nil {
-		return domain.User{}, fmt.Errorf("error updating user: %w", err)
-	}
-	return user, nil
+	return domain.User{}, nil
 }
 
 func (s *service) Delete(id int) error {
-	err := s.repository.Delete(id)
-	if err != nil {
-		return fmt.Errorf("error deleting user: %w", err)
-	}
 	return nil
 }
 
