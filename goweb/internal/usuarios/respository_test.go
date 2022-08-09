@@ -4,11 +4,14 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+	"fmt"
 	"testing"
 	"time"
 
+	"github.com/DATA-DOG/go-txdb"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -64,6 +67,44 @@ func TestGetAllWithContextTO(t *testing.T) {
 	if err != nil {
 		t.Errorf("el error deberia ser nulo %v", err)
 	}
+}
+
+func TestSaveAndGetWithContext(t *testing.T) {
+	txdb.Register("txdb", "mysql", "root@tcp(localhost:3306)/storage")
+	db, err := sql.Open("txdb", uuid.New().String())
+	assert.NoError(t, err)
+
+	repo := NewRepositoryBD(db)
+	user := []domain.Usuarios{{
+		Id:            26,
+		Nombre:        "TayronaT",
+		Apellido:      "Fante",
+		Email:         "titi",
+		Edad:          30,
+		Altura:        20,
+		Activo:        false,
+		FechaCreacion: "2020",
+	},
+	}
+	userO, er2 := repo.Guardar(24, "TayronaT", "Fante", "titi", 30, 20, false, "2020")
+	users, er := repo.GetByName("TayronaT")
+	assert.NoError(t, er)
+	assert.NoError(t, er2)
+	fmt.Println(userO)
+	assert.NotZero(t, userO)
+	assert.NotEmpty(t, users)
+	assert.Equal(t, user, users)
+}
+
+func TestGetOneInexist(t *testing.T) {
+	txdb.Register("txdb", "mysql", "root@tcp(localhost:3306)/storage")
+	db, err := sql.Open("txdb", uuid.New().String())
+	assert.NoError(t, err)
+
+	repo := NewRepositoryBD(db)
+	user, er := repo.GetByName("XXX")
+	assert.Zero(t, user)
+	assert.Nil(t, er)
 }
 
 func TestGetAllRepoErrRead(t *testing.T) {
