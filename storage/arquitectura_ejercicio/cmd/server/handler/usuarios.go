@@ -159,7 +159,7 @@ func (c *Usuario) PatchLastNameAge() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(400, nil, web.ERR_BAD_REQUEST))
 			return
 		}
-		user, err := c.service.UpdateLastNameAndAge(id, req.Age, req.LastName)
+		user, err := c.service.UpdateLastNameAndAge(ctx, id, req.Age, req.LastName)
 		if err != nil {
 			ctx.JSON(404, web.NewResponse(500, nil, web.ERR_BAD_INTERNAL))
 			return

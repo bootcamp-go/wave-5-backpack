@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"log"
 	"testing"
+	"time"
 
 	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/db"
 	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/internal/domain"
 	"github.com/stretchr/testify/assert"
+	"golang.org/x/net/context"
 )
 
 type MockStorage struct {
@@ -126,4 +128,34 @@ func TestByName(t *testing.T) {
 	}
 
 	assert.Equal(t, 1, userResult.Id)
+}
+
+func TestGetAll(t *testing.T) {
+	db.Init()
+	repo := NewRepository(db.StorageDB)
+	totalOfUsers := 4
+	userResult, err := repo.GetAll()
+
+	if err != nil {
+		log.Println("----- ERROR- TEST:", err.Error())
+	}
+
+	assert.Equal(t, totalOfUsers, len(userResult))
+}
+
+func TestUpdateLASTAGE(t *testing.T) {
+	db.Init()
+	repo := NewRepository(db.StorageDB)
+	id, lastName, age := 1, "Irwin", 26
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	userResult, err := repo.UpdateLastNameAndAge(ctx, id, age, lastName)
+
+	if err != nil {
+		log.Println("----- ERROR- TEST:", err.Error())
+	}
+
+	assert.Equal(t, age, userResult.Age)
+	assert.Equal(t, lastName, userResult.LastName)
+
 }

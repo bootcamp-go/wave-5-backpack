@@ -1,6 +1,7 @@
 package usuarios
 
 import (
+	"context"
 	"database/sql"
 	"errors"
 	"log"
@@ -9,16 +10,17 @@ import (
 )
 
 const (
-	STRING_HUBO       = "Hubo un error ... "
-	ERROR_READING     = "Hubo un error al leer los datos de la BD."
-	ERR_WRITING       = "Hubo un error al guardar los datos en la BD."
-	ERR_UPDATING_USER = ".. al no encontrar el usuario."
-	QUERY_STORE       = "INSERT INTO users(names, last_name, email, age, height, is_active, date_created) VALUES(?,?,?,?,?,?,?)"
-	QUERY_UPDATE      = "UPDATE products SET names = ?, last_name = ?, email = ?, age = ?, height = ? WHERE id = ?"
-	QUERY_GET_ONE     = "SELECT id, names, last_name, email, age, height, height, is_active FROM users where id = ?"
-	QUERY_GET_BYNAME  = "SELECT id, names, last_name, email FROM users WHERE names = ?"
-	QUERY_GET_ALL     = ""
-	QUERY_DELETE      = ""
+	STRING_HUBO          = "Hubo un error ... "
+	ERROR_READING        = "Hubo un error al leer los datos de la BD."
+	ERR_WRITING          = "Hubo un error al guardar los datos en la BD."
+	ERR_UPDATING_USER    = ".. al no encontrar el usuario."
+	QUERY_STORE          = "INSERT INTO users(names, last_name, email, age, height, is_active, date_created) VALUES(?,?,?,?,?,?,?)"
+	QUERY_UPDATE         = "UPDATE users SET names = ?, last_name = ?, email = ?, age = ?, height = ? WHERE id = ?"
+	QUERY_UPDATE_LASTAGE = "UPDATE users SET last_name = ?, age = ? WHERE id = ?"
+	QUERY_GET_ONE        = "SELECT id, names, last_name, email, age, height, is_active FROM users where id = ?"
+	QUERY_GET_BYNAME     = "SELECT id, names, last_name, email FROM users WHERE names = ?"
+	QUERY_GET_ALL        = "SELECT id, names, last_name, email, age,height, is_active FROM users"
+	QUERY_DELETE         = "DELETE FROM users WHERE id = ?"
 )
 
 type Repository interface {
@@ -27,7 +29,7 @@ type Repository interface {
 	GetByName(name string) (domain.Usuario, error)
 	Store(user domain.Usuario) (domain.Usuario, error)
 	Update(id int, user domain.Usuario) (domain.Usuario, error)
-	UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error)
+	UpdateLastNameAndAge(ctx context.Context, id, age int, lastname string) (domain.Usuario, error)
 	Delete(id int) error
 }
 
@@ -61,8 +63,31 @@ func (r *repository) Store(user domain.Usuario) (domain.Usuario, error) {
 }
 
 func (r *repository) GetAll() ([]domain.Usuario, error) {
-	return []domain.Usuario{}, nil
+	var users []domain.Usuario
+	rows, err := r.db.Query(QUERY_GET_ALL)
 
+	if err != nil {
+		log.Println(err)
+		return nil, err
+	}
+
+	for rows.Next() {
+		var user domain.Usuario
+		err := rows.Scan(&user.Id,
+			&user.Names,
+			&user.LastName,
+			&user.Email,
+			&user.Age,
+			&user.Estatura,
+			&user.IsActivo)
+		if err != nil {
+			log.Fatal(err)
+			return nil, err
+		}
+		users = append(users, user)
+	}
+
+	return users, nil
 }
 
 func (r *repository) GetOne(id int) (domain.Usuario, error) {
@@ -75,7 +100,13 @@ func (r *repository) GetOne(id int) (domain.Usuario, error) {
 	}
 
 	for rows.Next() {
-		if err := rows.Scan(&user.Id, &user.Names, &user.LastName, &user.Email, &user.Age, &user.Estatura, &user.IsActivo); err != nil {
+		if err := rows.Scan(&user.Id,
+			&user.Names,
+			&user.LastName,
+			&user.Email,
+			&user.Age,
+			&user.Estatura,
+			&user.IsActivo); err != nil {
 			return domain.Usuario{}, errors.New("No se encontró el usuario.")
 		}
 	}
@@ -100,10 +131,37 @@ func (r *repository) GetByName(name string) (domain.Usuario, error) {
 }
 
 func (r *repository) Delete(id int) error {
+	stmt, err := r.db.Prepare(QUERY_DELETE)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(id)
+
+	if err != nil {
+		return err
+	}
 	return nil
 }
-func (r *repository) UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error) {
-	return domain.Usuario{}, nil
+func (r *repository) UpdateLastNameAndAge(ctx context.Context, id, age int, lastname string) (domain.Usuario, error) {
+	stmt, err := r.db.Prepare(QUERY_UPDATE_LASTAGE) // se prepara la sentencia SQL a ejecutar
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close() // se cierra la sentencia al terminar. Si quedan abiertas se genera consumos de memoria
+	userUpdate := domain.Usuario{
+		Id:       id,
+		LastName: lastname,
+		Age:      age,
+	}
+	_, err = stmt.ExecContext(ctx, userUpdate.LastName, userUpdate.Age, id)
+	if err != nil {
+		log.Fatal(err)
+		return domain.Usuario{}, err
+	}
+	return userUpdate, nil
 
 }
 func (r *repository) Update(id int, user domain.Usuario) (domain.Usuario, error) {
@@ -117,8 +175,10 @@ func (r *repository) Update(id int, user domain.Usuario) (domain.Usuario, error)
 		Names:    user.Names,
 		LastName: user.LastName,
 		Email:    user.Email,
+		Estatura: user.Estatura,
+		Age:      user.Age,
 	}
-	_, err = stmt.Exec(user.Names, user.LastName, user.Email, user.Age, user.Estatura, user.IsActivo)
+	_, err = stmt.Exec(user.Names, user.LastName, user.Email, user.Age, user.Estatura, user.IsActivo, id)
 	if err != nil {
 		return domain.Usuario{}, err
 	}

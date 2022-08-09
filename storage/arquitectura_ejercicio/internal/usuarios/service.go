@@ -1,6 +1,7 @@
 package usuarios
 
 import (
+	"context"
 	"time"
 
 	"github.com/anesquivel/wave-5-backpack/storage/arquitectura_ejercicio/internal/domain"
@@ -10,7 +11,7 @@ type Service interface {
 	GetAll() ([]domain.Usuario, error)
 	Store(age int, names, lastname, email string, estatura float64) (domain.Usuario, error)
 	Update(id, age int, names, lastname, email, dateCreated string, estatura float64, activo bool) (domain.Usuario, error)
-	UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error)
+	UpdateLastNameAndAge(ctx context.Context, id, age int, lastname string) (domain.Usuario, error)
 	Delete(id int) error
 }
 
@@ -58,8 +59,8 @@ func (s *service) Update(id, age int, names, lastname, email, dateCreated string
 	return s.repository.Update(id, user)
 }
 
-func (s *service) UpdateLastNameAndAge(id, age int, lastname string) (domain.Usuario, error) {
-	return s.repository.UpdateLastNameAndAge(id, age, lastname)
+func (s *service) UpdateLastNameAndAge(ctx context.Context, id, age int, lastname string) (domain.Usuario, error) {
+	return s.repository.UpdateLastNameAndAge(ctx, id, age, lastname)
 }
 func (s *service) Delete(id int) error {
 	return s.repository.Delete(id)
