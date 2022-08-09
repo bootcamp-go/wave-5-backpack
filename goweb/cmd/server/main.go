@@ -1,13 +1,13 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"os"
-
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/bootcamp-go/wave-5-backpack/cmd/server/handler"
 	"github.com/bootcamp-go/wave-5-backpack/docs"
 	"github.com/bootcamp-go/wave-5-backpack/internal/users"
-	"github.com/bootcamp-go/wave-5-backpack/pkg/store"
 	"github.com/bootcamp-go/wave-5-backpack/pkg/web"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -24,18 +24,21 @@ import (
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 func main() {
+	// db := store.NewStore("../../users.json")
 
+	dataSource := "root@tcp(localhost:3306)/users_db"
+	storageDB, err := sql.Open("mysql", dataSource)
+	if err != nil {
+		panic(err)
+	}
+
+	repo := users.NewRepositoryDB(storageDB)
+	service := users.NewService(repo)
+	
+	u := handler.NewUser(service)
 	if err := godotenv.Load(); err != nil {
 		log.Fatal("error archivo .env")
 	}
-	db := store.NewStore("users.json")
-	if err := db.Ping(); err != nil {
-		log.Fatal("error al intentar cargar archivo")
-	}
-	repo := users.NewRepository(db)
-	service := users.NewService(repo)
-	u := handler.NewUser(service)
-
 	server := gin.Default()
 
 	docs.SwaggerInfo.Host = os.Getenv("HOST")

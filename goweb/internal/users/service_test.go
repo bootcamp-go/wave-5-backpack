@@ -3,9 +3,9 @@ package users
 import (
 	"errors"
 	"fmt"
-	"testing"
 	"github.com/bootcamp-go/wave-5-backpack/internal/domain"
 	"github.com/stretchr/testify/assert"
+	"testing"
 )
 
 type MockStorage struct {
@@ -69,7 +69,7 @@ func TestDeleteIntegration(t *testing.T) {
 	repo := NewRepository(&mock)
 	serv := NewService(repo)
 
-	 err := serv.DeleteUser(id)
+	err := serv.DeleteUser(id)
 
 	//assert
 	assert.Nil(t, err)
@@ -236,6 +236,9 @@ func (st *StubDataBase) UpdateUser(id int, name, lastname, email string, age int
 }
 func (st *StubDataBase) DeleteUser(id int) error {
 	return nil
+}
+func (st *StubDataBase) GetByName(name string) ([]domain.User, error) {
+	return []domain.User{}, nil
 }
 func (st *StubDataBase) UpdateLastnameAndAge(id int, lastname string, age int) (*domain.User, error) {
 	return &domain.User{}, nil

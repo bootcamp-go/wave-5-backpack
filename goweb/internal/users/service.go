@@ -13,6 +13,7 @@ type Service interface {
 	UpdateUser(id int, name, lastname, email string, age int, height float32, active bool, doCreation string) (domain.User, error)
 	DeleteUser(id int) error
 	UpdateLastnameAndAge(id int, lastname string, age int) (*domain.User, error)
+	GetByName(name string) ([]domain.User, error)
 }
 
 type service struct {
@@ -83,4 +84,8 @@ func(s *service) UpdateLastnameAndAge(id int, lastname string, age int) (*domain
 		return nil, fmt.Errorf("error deleting user %w", err)
 	}
 	return updatedUser, nil
+}
+
+func (s *service) GetByName(name string) ([]domain.User, error) {
+	return s.repository.GetByName(name)
 }

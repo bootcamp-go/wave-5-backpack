@@ -11,13 +11,13 @@ import (
 )
 
 type request struct {
-	Name       string  `json: "name"`
-	Lastname   string  `json: "lastname"`
-	Email      string  `json: "email"`
-	Age        int     `json: "age"`
-	Height     float32 `json: "height"`
-	Active     bool    `json: "active"`
-	DoCreation string  `json: "doCreation"`
+	Name       string  `json:"name"`
+	Lastname   string  `json:"lastname"`
+	Email      string  `json:"email"`
+	Age        int     `json:"age"`
+	Height     float32 `json:"height"`
+	Active     bool    `json:"active"`
+	DoCreation string  `json:"doCreation"`
 }
 
 type User struct {
@@ -210,7 +210,19 @@ func (c *User) DeleteUser() gin.HandlerFunc {
 			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		ctx.JSON(200, web.NewResponse(200, fmt.Sprintf("El producto %d ha sido eliminado",
+		ctx.JSON(200, web.NewResponse(200, fmt.Sprintf("El producto %v ha sido eliminado",
 			id), ""))
+	}
+}
+
+
+func (c *User) GetByName() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		u, err := c.service.GetByName(ctx.Param("nombre"))
+		if err != nil {
+			ctx.JSON(404, web.NewResponse(404, nil, "no existen registros con el nombre indicado"))
+			return
+		}
+		ctx.JSON(200, web.NewResponse(200, u, ""))
 	}
 }
