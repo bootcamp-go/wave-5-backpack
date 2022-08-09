@@ -30,9 +30,6 @@ const (
 	UpdateProduct          = "UPDATE products SET nombre = ?, color = ?, precio = ?, stock = ?, codigo = ?, publicado = ?, fecha_creacion = ? WHERE id = ?"
 	UpdateProductNamePrice = "UPDATE products SET nombre = ?, precio = ? WHERE id = ?"
 	DeleteProduct          = "DELETE FROM products WHERE id = ?"
-	GetFullData            = `SELECT p.id, p.name, p.type, p.count, p.price, w.id, w.name, w.address
-	FROM products AS p INNER JOIN warehouses AS w ON p.warehouse_id = w.id WHERE p.id = ?`
-	GetProductSleep = "SELECT sleep(10) FROM DUAL where 0 < ?"
 )
 
 type repository struct {
@@ -48,7 +45,7 @@ func NewRepository(db *sql.DB) Repository {
 func (r *repository) GetAll(ctx context.Context) ([]domain.Product, error) {
 	var products []domain.Product
 	db := r.db
-	rows, err := db.Query(GetAllProducts)
+	rows, err := db.QueryContext(ctx, GetAllProducts)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +67,7 @@ func (r *repository) Store(ctx context.Context, nombre, color string, precio, st
 	}
 	defer stmt.Close()
 	var result sql.Result
-	result, err = stmt.Exec(nombre, color, precio, stock, codigo, publicado, fechaCreacion)
+	result, err = stmt.ExecContext(ctx, nombre, color, precio, stock, codigo, publicado, fechaCreacion)
 	if err != nil {
 		return domain.Product{}, err
 	}
@@ -91,7 +88,7 @@ func (r *repository) Store(ctx context.Context, nombre, color string, precio, st
 func (r *repository) GetByID(ctx context.Context, id int) (domain.Product, error) {
 	var product domain.Product
 	db := r.db
-	rows, err := db.Query(GetProdyctByID, id)
+	rows, err := db.QueryContext(ctx, GetProdyctByID, id)
 	if err != nil {
 		return product, err
 	}
@@ -106,7 +103,7 @@ func (r *repository) GetByID(ctx context.Context, id int) (domain.Product, error
 func (r *repository) GetByName(ctx context.Context, nombre string) ([]domain.Product, error) {
 	var products []domain.Product
 	db := r.db
-	rows, err := db.Query(GetProductByName, nombre)
+	rows, err := db.QueryContext(ctx, GetProductByName, nombre)
 	if err != nil {
 		return nil, err
 	}
@@ -151,7 +148,7 @@ func (r *repository) UpdateNamePrice(ctx context.Context, id int, nombre string,
 		return domain.Product{}, err
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(nombre, precio, id)
+	_, err = stmt.ExecContext(ctx, nombre, precio, id)
 	if err != nil {
 		return domain.Product{}, err
 	}
@@ -173,7 +170,7 @@ func (r *repository) Delete(ctx context.Context, id int) (domain.Product, error)
 	if err != nil {
 		return domain.Product{}, err
 	}
-	_, err = stmt.Exec(id)
+	_, err = stmt.ExecContext(ctx, id)
 	if err != nil {
 		return domain.Product{}, err
 	}
