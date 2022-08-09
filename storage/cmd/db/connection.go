@@ -7,20 +7,19 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-var (
-	StorageDB *sql.DB
-)
-
-func NewConnection(source string) (*sql.DB, error) {
-	StorageDB, err := sql.Open("mysql", source)
+func NewConnection() (*sql.DB, error) {
+	source := "root@/storage_bootcamp"
+	dbConnection, err := sql.Open("mysql", source)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := StorageDB.Ping(); err != nil {
+	if err := dbConnection.Ping(); err != nil {
 		return nil, err
 	}
-	log.Println("Open DB")
 
-	return StorageDB, nil
+	pool := dbConnection.Stats().OpenConnections
+	log.Printf("Open DB, pools: %v\n", pool)
+
+	return dbConnection, nil
 }

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 
@@ -30,20 +29,17 @@ func main() {
 		log.Fatal("error al intentar leer el archivo .env")
 	}
 
-	user, dbName := os.Getenv("DB_USER"), os.Getenv("DB_NAME")
-	source := fmt.Sprintf("%s@/%s", user, dbName)
-
-	db, err := db.NewConnection(source)
+	db, err := db.NewConnection()
 	if err != nil {
-		log.Panicf("error al conectar con la db %v\n", err)
+		log.Fatalf("error al conectar a la db: %v\n", err)
 	}
-	defer db.Close()
 
 	// Init capas de transactions
-	repo := transactions.NewRepository()
+	repo := transactions.NewRepository(db)
 	service := transactions.NewService(repo)
 	tr := handler.NewTransaction(service)
 
+	gin.SetMode("test")
 	router := gin.Default()
 
 	// Router docu
