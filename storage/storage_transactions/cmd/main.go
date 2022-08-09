@@ -13,15 +13,18 @@ func main() {
 	loadEnv()
 
 	db := cnn.MySQLConnection()
-	repo := products.NewRepository(db)
+	repo := products.NewRepo(db)
 	serv := products.NewService(repo)
 	p := handler.NewProduct(serv)
 
 	r := gin.Default()
-	pr := r.Group("/api/v1/products")
-
-	pr.POST("/", p.Store())
-	pr.GET("/", p.GetByName())
+	rg := r.Group(("/products"))
+	rg.GET("/", p.GetAll())
+	rg.GET("/:id", p.Get())
+	rg.GET("/getFullData/:id", p.GetFullData())
+	rg.GET("/withContext/:id", p.GetOneWithContext())
+	rg.POST("/", p.Store())
+	rg.DELETE("/:id", p.Delete())
 
 	r.Run()
 }

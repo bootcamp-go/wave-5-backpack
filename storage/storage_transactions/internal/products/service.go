@@ -1,24 +1,88 @@
 package products
 
-import "bootcamp/wave-5-backpack/storage/internal/domain"
+import (
+	"bootcamp/wave-5-backpack/storage/internal/domain"
+	"context"
+)
 
 type Service interface {
-	Store(domain.Product) (int, error)
-	GetByName(name string) (domain.Product, error)
+	Store(p domain.Product) (domain.Product, error)
+	GetOne(id int) (domain.Product, error)
+	Update(product domain.Product) (domain.Product, error)
+	GetAll() ([]domain.Product, error)
+	GetFullData(id int) ([]domain.ProductAndWarehouse, error)
+	Delete(id int) error
+	GetOneWithcontext(ctx context.Context, id int) (domain.Product, error)
 }
 
 type service struct {
-	repository Repository
+	product Repository
 }
 
-func NewService(r Repository) Service {
-	return &service{repository: r}
+func NewService(product Repository) Service {
+	return &service{
+		product: product,
+	}
 }
 
-func (s *service) Store(p domain.Product) (int, error) {
-	return s.repository.Store(p)
+func (s *service) Store(p domain.Product) (domain.Product, error) {
+	product, err := s.product.Store(p)
+	if err != nil {
+		return domain.Product{}, err
+	}
+
+	p.ID = product.ID
+	return p, nil
 }
 
-func (s *service) GetByName(name string) (domain.Product, error) {
-	return s.repository.GetByName(name)
+func (s *service) GetOne(id int) (domain.Product, error) {
+	product, err := s.product.GetOne(id)
+	if err != nil {
+		return domain.Product{}, err
+	}
+
+	return product, err
+}
+
+func (s *service) Update(product domain.Product) (domain.Product, error) {
+	product, err := s.product.Update(product)
+	if err != nil {
+		return domain.Product{}, err
+	}
+	return product, err
+}
+
+func (s *service) GetAll() ([]domain.Product, error) {
+	product, err := s.product.GetAll()
+	if err != nil {
+		return []domain.Product{}, err
+	}
+
+	return product, err
+}
+
+func (s *service) Delete(id int) error {
+	err := s.product.Delete(id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (s *service) GetFullData(id int) ([]domain.ProductAndWarehouse, error) {
+	productsAndWarehouses, err := s.product.GetFullData(id)
+	if err != nil {
+		return []domain.ProductAndWarehouse{}, err
+	}
+
+	return productsAndWarehouses, err
+}
+
+func (s *service) GetOneWithcontext(ctx context.Context, id int) (domain.Product, error) {
+	product, err := s.product.GetOneWithcontext(ctx, id)
+	if err != nil {
+		return domain.Product{}, err
+	}
+
+	return product, err
 }

@@ -13,6 +13,7 @@ import (
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -26,7 +27,7 @@ func createServer() *gin.Engine {
 	os.Setenv("DATABASE", "storage")
 
 	db := cnn.MySQLConnection()
-	repo := products.NewRepository(db)
+	repo := products.NewRepo(db)
 	serv := products.NewService(repo)
 
 	p := handler.NewProduct(serv)
@@ -34,7 +35,7 @@ func createServer() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	pr := r.Group("/api/v1/products")
-	pr.GET("/", p.GetByName())
+	//pr.GET("/", p.GetByName())
 	pr.POST("/", p.Store())
 
 	return r
@@ -49,10 +50,11 @@ func createRequest(method, url, body string) (*http.Request, *httptest.ResponseR
 
 func TestStoreProduct_Ok(t *testing.T) {
 	new := domain.Product{
-		Name:  "producto mas nuevo",
-		Type:  "producto otro tipo",
-		Count: 3,
-		Price: 84.4,
+		Name:      "producto mas nuevo",
+		Type:      "producto otro tipo",
+		Count:     3,
+		Price:     84.4,
+		Warehouse: 1,
 	}
 
 	product, err := json.Marshal(new)
