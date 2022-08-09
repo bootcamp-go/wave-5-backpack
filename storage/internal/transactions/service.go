@@ -37,7 +37,7 @@ func (s service) GetByID(ctx *gin.Context, id int) (models.Transaction, error) {
 }
 
 func (s service) Update(ctx *gin.Context, id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
-	return models.Transaction{}, nil
+	return s.repository.Update(ctx, id, monto, cod, moneda, emisor, receptor)
 }
 
 func (s service) Patch(ctx *gin.Context, id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {

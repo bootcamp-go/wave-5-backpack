@@ -14,6 +14,7 @@ type Repository interface {
 	GetByCod(ctx *gin.Context, cod string) (models.Transaction, error)
 	GetByID(ctx *gin.Context, id int) (models.Transaction, error)
 	GetAll(ctx *gin.Context) ([]models.Transaction, error)
+	Update(ctx *gin.Context, id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error)
 }
 
 func NewRepository(db *sql.DB) Repository {
@@ -29,6 +30,7 @@ const (
 	queryGetByCod = `SELECT id, monto, cod, moneda, emisor, receptor, fecha FROM transactions WHERE cod = ?;`
 	queryGetByID  = `SELECT id, monto, cod, moneda, emisor, receptor, fecha FROM transactions WHERE id = ?;`
 	queryGetAll   = `SELECT id, monto, cod, moneda, emisor, receptor, fecha FROM transactions;`
+	queryUpdate   = `UPDATE transactions SET monto = ?, cod = ?, moneda = ?, emisor = ?, receptor = ? WHERE id = ?;`
 )
 
 func (r *repository) Store(ctx *gin.Context, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
@@ -37,7 +39,7 @@ func (r *repository) Store(ctx *gin.Context, monto float64, cod, moneda, emisor,
 		return models.Transaction{}, err
 	}
 
-	transaction := models.Transaction{
+	t:= models.Transaction{
 		Monto:    monto,
 		Cod:      cod,
 		Emisor:   emisor,
@@ -45,7 +47,7 @@ func (r *repository) Store(ctx *gin.Context, monto float64, cod, moneda, emisor,
 		Fecha:    time.Now().Format("2006-01-01"),
 	}
 
-	res, err := stmt.Exec(monto, cod, moneda, emisor, receptor, transaction.Fecha)
+	res, err := stmt.Exec(monto, cod, moneda, emisor, receptor, t.Fecha)
 	if err != nil {
 		return models.Transaction{}, err
 	}
@@ -55,9 +57,9 @@ func (r *repository) Store(ctx *gin.Context, monto float64, cod, moneda, emisor,
 		return models.Transaction{}, err
 	}
 
-	transaction.ID = int(id)
+	t.ID = int(id)
 
-	return transaction, nil
+	return t, nil
 }
 
 func (r *repository) GetByCod(ctx *gin.Context, cod string) (models.Transaction, error) {
@@ -66,14 +68,14 @@ func (r *repository) GetByCod(ctx *gin.Context, cod string) (models.Transaction,
 		return models.Transaction{}, err
 	}
 
-	var transaction models.Transaction
+	var t models.Transaction
 	for rows.Next() {
-		if err := rows.Scan(&transaction); err != nil {
+		if err := rows.Scan(&t); err != nil {
 			return models.Transaction{}, err
 		}
 	}
 
-	return transaction, nil
+	return t, nil
 }
 
 func (r *repository) GetByID(ctx *gin.Context, id int) (models.Transaction, error) {
@@ -112,4 +114,27 @@ func (r *repository) GetAll(ctx *gin.Context) ([]models.Transaction, error) {
 	}
 
 	return transactions, nil
+}
+
+func (r *repository)	Update(ctx *gin.Context, id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
+	stmt, err := r.db.PrepareContext(ctx, queryUpdate)
+	if err != nil {
+		return models.Transaction{}, err
+	}
+
+	_, err = stmt.Exec(monto, cod, moneda, emisor, receptor, id)
+	if err != nil {
+		return models.Transaction{}, err
+	}
+
+	t := models.Transaction{
+		ID: id,
+		Monto: monto,
+		Cod: cod,
+		Moneda: moneda,
+		Emisor: emisor,
+		Receptor: receptor,
+	}
+
+	return t, nil
 }
