@@ -1,20 +1,20 @@
 package transactions
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"time"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/internal/models"
-	"github.com/gin-gonic/gin"
 )
 
 type Repository interface {
-	Store(ctx *gin.Context, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error)
-	GetByCod(ctx *gin.Context, cod string) (models.Transaction, error)
-	GetByID(ctx *gin.Context, id int) (models.Transaction, error)
-	GetAll(ctx *gin.Context) ([]models.Transaction, error)
-	Update(ctx *gin.Context, id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error)
+	Store(ctx context.Context, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error)
+	GetByCod(ctx context.Context, cod string) (models.Transaction, error)
+	GetByID(ctx context.Context, id int) (models.Transaction, error)
+	GetAll(ctx context.Context) ([]models.Transaction, error)
+	Update(ctx context.Context, id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error)
 }
 
 func NewRepository(db *sql.DB) Repository {
@@ -33,7 +33,7 @@ const (
 	queryUpdate   = `UPDATE transactions SET monto = ?, cod = ?, moneda = ?, emisor = ?, receptor = ? WHERE id = ?;`
 )
 
-func (r *repository) Store(ctx *gin.Context, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
+func (r *repository) Store(ctx context.Context, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
 	stmt, err := r.db.Prepare(queryStore)
 	if err != nil {
 		return models.Transaction{}, err
@@ -43,6 +43,7 @@ func (r *repository) Store(ctx *gin.Context, monto float64, cod, moneda, emisor,
 	t := models.Transaction{
 		Monto:    monto,
 		Cod:      cod,
+		Moneda:   moneda,
 		Emisor:   emisor,
 		Receptor: receptor,
 		Fecha:    time.Now().Format("2006-01-01"),
@@ -63,7 +64,7 @@ func (r *repository) Store(ctx *gin.Context, monto float64, cod, moneda, emisor,
 	return t, nil
 }
 
-func (r *repository) GetByCod(ctx *gin.Context, cod string) (models.Transaction, error) {
+func (r *repository) GetByCod(ctx context.Context, cod string) (models.Transaction, error) {
 	rows, err := r.db.QueryContext(ctx, queryGetByCod, cod)
 	if err != nil {
 		return models.Transaction{}, err
@@ -79,7 +80,7 @@ func (r *repository) GetByCod(ctx *gin.Context, cod string) (models.Transaction,
 	return t, nil
 }
 
-func (r *repository) GetByID(ctx *gin.Context, id int) (models.Transaction, error) {
+func (r *repository) GetByID(ctx context.Context, id int) (models.Transaction, error) {
 	rows, err := r.db.QueryContext(ctx, queryGetByID, id)
 	if err != nil {
 		return models.Transaction{}, err
@@ -99,7 +100,7 @@ func (r *repository) GetByID(ctx *gin.Context, id int) (models.Transaction, erro
 	return t, nil
 }
 
-func (r *repository) GetAll(ctx *gin.Context) ([]models.Transaction, error) {
+func (r *repository) GetAll(ctx context.Context) ([]models.Transaction, error) {
 	rows, err := r.db.QueryContext(ctx, queryGetAll)
 	if err != nil {
 		return []models.Transaction{}, err
@@ -117,7 +118,7 @@ func (r *repository) GetAll(ctx *gin.Context) ([]models.Transaction, error) {
 	return transactions, nil
 }
 
-func (r *repository) Update(ctx *gin.Context, id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
+func (r *repository) Update(ctx context.Context, id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
 	stmt, err := r.db.PrepareContext(ctx, queryUpdate)
 	if err != nil {
 		return models.Transaction{}, err
