@@ -3,10 +3,11 @@ package store
 import (
 	"database/sql"
 	"log"
+	"os"
 )
 
 func DBConnection() *sql.DB {
-	dataSource := "root@tcp(localhost:3306)/storage"
+	dataSource := os.Getenv("DATASOURCE")
 
 	storageDB, err := sql.Open("mysql", dataSource)
 	if err != nil {
