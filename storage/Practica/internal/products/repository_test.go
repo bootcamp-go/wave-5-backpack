@@ -36,11 +36,11 @@ func TestGetByName(t *testing.T) {
 
 	mockProduct := domain.Product{
 		Id:         1,
-		Name:       "test",
-		Color:      "Red",
+		Name:       "product 1",
+		Color:      "red",
 		Price:      10.99,
-		Stock:      10,
-		Code:       "JH7BU998G",
+		Stock:      100,
+		Code:       "HJ988BH",
 		Published:  true,
 		Created_at: "2022-08-09",
 	}
@@ -48,7 +48,7 @@ func TestGetByName(t *testing.T) {
 	// created, err := repo.Store(mockProduct)
 	// mockProduct.Id = created.Id
 	assert.Nil(t, err)
-	res, err := repo.GetByName("test")
+	res, err := repo.GetByName("product 1")
 	assert.Nil(t, err)
 	assert.Equal(t, mockProduct, res)
 }
