@@ -43,7 +43,7 @@ func NewProduct(s products.Service) *Product {
 // @Router /products [get]
 func (p *Product) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		pr, err := p.service.GetAll()
+		pr, err := p.service.GetAll(ctx)
 		if err != nil {
 			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
 			return
@@ -80,7 +80,7 @@ func (p *Product) Store() gin.HandlerFunc {
 			return
 		}
 
-		pr, err := p.service.Store(req.Nombre, req.Color, req.Precio, req.Stock, req.Codigo, req.Publicado, req.Fecha)
+		pr, err := p.service.Store(ctx, req.Nombre, req.Color, req.Precio, req.Stock, req.Codigo, req.Publicado, req.Fecha)
 		if err != nil {
 			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
 			return
@@ -123,7 +123,7 @@ func (p *Product) Update() gin.HandlerFunc {
 			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return
 		}
-		ps, err := p.service.Update(id, req.Nombre, req.Color, req.Precio, req.Stock, req.Codigo, req.Publicado, req.Fecha)
+		ps, err := p.service.Update(ctx, id, req.Nombre, req.Color, req.Precio, req.Stock, req.Codigo, req.Publicado, req.Fecha)
 		if err != nil {
 			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
 			return
@@ -154,7 +154,7 @@ func (p *Product) Delete() gin.HandlerFunc {
 			return
 		}
 
-		ps, err := p.service.Delete(id)
+		ps, err := p.service.Delete(ctx, id)
 		if err != nil {
 			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
 			return
@@ -203,7 +203,7 @@ func (p *Product) UpdateFields() gin.HandlerFunc {
 			return
 		}
 
-		ps, err := p.service.UpdateFields(id, req.Nombre, req.Precio)
+		ps, err := p.service.UpdateFields(ctx, id, req.Nombre, req.Precio)
 		if err != nil {
 			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
 			return
@@ -234,7 +234,7 @@ func (p *Product) GetById() gin.HandlerFunc {
 			return
 		}
 
-		producto, err := p.service.GetById(id)
+		producto, err := p.service.GetById(ctx, id)
 		if err != nil {
 			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
 			return
@@ -257,7 +257,7 @@ func (p *Product) GetById() gin.HandlerFunc {
 func (p *Product) GetByName() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		nombre := ctx.Param("nombre")
-		producto, err := p.service.GetByName(nombre)
+		producto, err := p.service.GetByName(ctx, nombre)
 		if err != nil {
 			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
 			return

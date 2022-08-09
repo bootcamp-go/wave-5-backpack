@@ -1,17 +1,18 @@
 package products
 
 import (
+	"context"
 	"products_project/internal/domain"
 )
 
 type Service interface {
-	GetAll() ([]domain.Product, error)
-	Store(nombre, color string, precio, stock int, codigo string, publicado bool, fecha string) (domain.Product, error)
-	Update(id int, nombre, color string, precio, stock int, codigo string, publicado bool, fecha string) (domain.Product, error)
-	Delete(id int) (domain.Product, error)
-	UpdateFields(id int, nombre string, precio int) (domain.Product, error)
-	GetById(id int) (domain.Product, error)
-	GetByName(nombre string) ([]domain.Product, error)
+	GetAll(ctx context.Context) ([]domain.Product, error)
+	Store(ctx context.Context, nombre, color string, precio, stock int, codigo string, publicado bool, fecha string) (domain.Product, error)
+	Update(ctx context.Context, id int, nombre, color string, precio, stock int, codigo string, publicado bool, fecha string) (domain.Product, error)
+	Delete(ctx context.Context, id int) (domain.Product, error)
+	UpdateFields(ctx context.Context, id int, nombre string, precio int) (domain.Product, error)
+	GetById(ctx context.Context, id int) (domain.Product, error)
+	GetByName(ctx context.Context, nombre string) ([]domain.Product, error)
 }
 
 type service struct {
@@ -24,30 +25,30 @@ func NewService(r Repository) Service {
 	}
 }
 
-func (s *service) GetAll() ([]domain.Product, error) {
-	return s.repository.GetAll()
+func (s *service) GetAll(ctx context.Context) ([]domain.Product, error) {
+	return s.repository.GetAll(ctx)
 }
 
-func (s *service) Store(nombre, color string, precio, stock int, codigo string, publicado bool, fecha string) (domain.Product, error) {
-	return s.repository.Store(nombre, color, precio, stock, codigo, publicado, fecha)
+func (s *service) Store(ctx context.Context, nombre, color string, precio, stock int, codigo string, publicado bool, fecha string) (domain.Product, error) {
+	return s.repository.Store(ctx, nombre, color, precio, stock, codigo, publicado, fecha)
 }
 
-func (s *service) Update(id int, nombre, color string, precio, stock int, codigo string, publicado bool, fecha string) (domain.Product, error) {
-	return s.repository.Update(id, nombre, color, precio, stock, codigo, publicado, fecha)
+func (s *service) Update(ctx context.Context, id int, nombre, color string, precio, stock int, codigo string, publicado bool, fecha string) (domain.Product, error) {
+	return s.repository.Update(ctx, id, nombre, color, precio, stock, codigo, publicado, fecha)
 }
 
-func (s *service) Delete(id int) (domain.Product, error) {
-	return s.repository.Delete(id)
+func (s *service) Delete(ctx context.Context, id int) (domain.Product, error) {
+	return s.repository.Delete(ctx, id)
 }
 
-func (s *service) UpdateFields(id int, nombre string, precio int) (domain.Product, error) {
-	return s.repository.UpdateFields(id, nombre, precio)
+func (s *service) UpdateFields(ctx context.Context, id int, nombre string, precio int) (domain.Product, error) {
+	return s.repository.UpdateFields(ctx, id, nombre, precio)
 }
 
-func (s *service) GetById(id int) (domain.Product, error) {
-	return s.repository.GetById(id)
+func (s *service) GetById(ctx context.Context, id int) (domain.Product, error) {
+	return s.repository.GetById(ctx, id)
 }
 
-func (s *service) GetByName(nombre string) ([]domain.Product, error) {
-	return s.repository.GetByName(nombre)
+func (s *service) GetByName(ctx context.Context, nombre string) ([]domain.Product, error) {
+	return s.repository.GetByName(ctx, nombre)
 }
