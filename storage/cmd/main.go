@@ -32,7 +32,7 @@ func main() {
 
 	group.GET("/", product.GetProductByName())
 	//group.GET("/", product.GetAll())
-	//group.POST("/", product.Store())
+	group.POST("/", product.Store())
 	//group.PUT("/:id", product.UpdateAll())
 	//group.PATCH("/:id", product.Update())
 	//group.DELETE("/:id", product.Delete())

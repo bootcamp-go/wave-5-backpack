@@ -7,7 +7,7 @@ import (
 )
 
 type Repository interface {
-	Store(name, color string, count int, price float64, code string, public int8) (domain.Product, error)
+	Store(p domain.Product) (int, error)
 	GetProductByName(name string) (domain.Product, error)
 	Update(product domain.Product) (domain.Product, error)
 	GetAll() ([]domain.Product, error)
@@ -24,8 +24,24 @@ func NewRepository(db *sql.DB) Repository {
 	}
 }
 
-func (r *repository) Store(name, color string, count int, price float64, code string, public int8) (domain.Product, error) {
-	return domain.Product{}, nil
+func (r *repository) Store(p domain.Product) (int, error) {
+	query := "INSERT INTO products(name, type, price, count, code, public) VALUES (?,?,?,?,?,?)"
+	stmt, err := r.db.Prepare(query)
+
+	if err != nil {
+		return 0, err
+	}
+
+	defer stmt.Close()
+
+	res, err := stmt.Exec(p.Name, p.Type, p.Price, p.Count, p.Code, p.Public)
+	if err != nil {
+		return 0, err
+	}
+
+	id, err := res.LastInsertId()
+
+	return int(id), nil
 }
 
 func (r *repository) GetProductByName(name string) (domain.Product, error) {
