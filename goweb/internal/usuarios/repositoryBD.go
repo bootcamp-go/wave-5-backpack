@@ -11,16 +11,36 @@ type repositoryBD struct {
 	dbBD *sql.DB
 }
 
+const (
+	GuardarUser   string = "INSERT INTO storage.users(nombre,apellido,email,edad,altura,activo,fechaCreacion) VALUES(?,?,?,?,?,?,?)"
+	GetByNameUser string = "SELECT id, nombre, apellido, email, edad, altura, activo, fechaCreacion FROM storage.users WHERE nombre =?"
+	GetAllUser    string = "SELECT id, nombre, apellido, email, edad, altura, activo, fechaCreacion FROM storage.users"
+)
+
 func NewRepositoryBD(dbb *sql.DB) Repository {
 	return &repositoryBD{
 		dbBD: dbb,
 	}
 }
 func (r *repositoryBD) GetAll() ([]domain.Usuarios, error) {
-	return nil, nil
+	var user domain.Usuarios
+	var listUser []domain.Usuarios
+	rows, err := r.dbBD.Query(GetAllUser)
+	fmt.Println(err)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		if err := rows.Scan(&user.Id, &user.Nombre, &user.Apellido, &user.Email, &user.Edad, &user.Altura, &user.Activo, &user.FechaCreacion); err != nil {
+			return nil, err
+		}
+		listUser = append(listUser, user)
+	}
+	return listUser, nil
 }
+
 func (r *repositoryBD) Guardar(id int, nombre string, apellido string, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error) {
-	stmt, err := r.dbBD.Prepare("INSERT INTO storage.users(nombre,apellido,email,edad,altura,activo,fechaCreacion) VALUES(?,?,?,?,?,?,?)")
+	stmt, err := r.dbBD.Prepare(GuardarUser)
 	if err != nil {
 		return domain.Usuarios{}, nil
 	}
@@ -60,7 +80,7 @@ func (r *repositoryBD) GetById(id int) (domain.Usuarios, error) {
 func (r *repositoryBD) GetByName(name string) ([]domain.Usuarios, error) {
 	var user domain.Usuarios
 	var listUser []domain.Usuarios
-	rows, err := r.dbBD.Query("SELECT id, nombre, apellido, email, edad, altura, activo, fechaCreacion FROM storage.users WHERE nombre =?", name)
+	rows, err := r.dbBD.Query(GetByNameUser, name)
 	fmt.Println(err)
 	if err != nil {
 		return nil, err
