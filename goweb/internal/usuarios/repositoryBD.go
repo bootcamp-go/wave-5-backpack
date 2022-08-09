@@ -18,6 +18,7 @@ const (
 	GetAllUser    string = "SELECT id, nombre, apellido, email, edad, altura, activo, fechaCreacion FROM storage.users"
 	GetAllUserTO  string = "SELECT SLEEP(10) FROM DUAL"
 	UpdateUser    string = "UPDATE storage.users SET nombre = ?, apellido = ?, email = ?, edad = ?, altura = ?, activo = ?, fechaCreacion = ? WHERE id = ?"
+	DeleteUser    string = "DELETE FROM storage.users WHERE id = ? "
 )
 
 func NewRepositoryBD(dbb *sql.DB) Repository {
@@ -88,9 +89,20 @@ func (r *repositoryBD) Update(ctx context.Context, id int, nombre, apellido, ema
 	userD.Id = id
 	return userD, nil
 }
+
 func (r *repositoryBD) Delete(id int) error {
+	stmt, err := r.dbBD.Prepare(DeleteUser)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	_, err2 := stmt.Exec(id)
+	if err2 != nil {
+		return err2
+	}
 	return nil
 }
+
 func (r *repositoryBD) UpdateNameAndLastName(id int, name string, apellido string) (domain.Usuarios, error) {
 	return domain.Usuarios{}, nil
 }
