@@ -28,6 +28,10 @@ func (s *service) Read(id int) (domain.Product, error) {
 		return domain.Product{}, err
 	}
 
+	if product.ID == 0 {
+		return domain.Product{}, errors.New("no existe un producto con ese id")
+	}
+
 	return product, nil
 }
 
@@ -35,6 +39,10 @@ func (s *service) ReadByName(name string) ([]domain.Product, error) {
 	products, err := s.r.GetByName(name)
 	if err != nil {
 		return []domain.Product{}, err
+	}
+
+	if len(products) == 0 {
+		return []domain.Product{}, errors.New("no se han encontrado productos en el listado")
 	}
 
 	return products, nil
@@ -45,9 +53,11 @@ func (s *service) ReadAll() ([]domain.Product, error) {
 	if err != nil {
 		return []domain.Product{}, err
 	}
+
 	if len(products) == 0 {
 		return []domain.Product{}, errors.New("no se han encontrado productos en el listado")
 	}
+
 	return products, nil
 }
 

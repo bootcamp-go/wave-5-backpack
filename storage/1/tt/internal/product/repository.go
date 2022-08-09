@@ -28,7 +28,7 @@ const (
 	GetAllProducts = "SELECT * FROM products"
 	GetProduct     = "SELECT * FROM products WHERE id = ?"
 	GetByName      = "SELECT * FROM products WHERE name = ?"
-	UpdateProduct  = "UPDATE produtcs SET name = ?, type = ?, count = ?, price = ?, WHERE id = ?"
+	UpdateProduct  = "UPDATE products SET name = ?, type = ?, count = ?, price = ? WHERE id = ?"
 	DeleteProduct  = "DELETE FROM products WHERE id = ?"
 )
 
@@ -115,7 +115,7 @@ func (r *repository) Update(product domain.Product) (domain.Product, error) {
 	}
 	defer stmt.Close()
 
-	_, err = stmt.Exec(product.Name, product.Type, product.Type, product.Count, product.Price, product.ID)
+	_, err = stmt.Exec(product.Name, product.Type, product.Count, product.Price, product.ID)
 	if err != nil {
 		return domain.Product{}, err
 	}

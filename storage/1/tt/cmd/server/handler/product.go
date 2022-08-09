@@ -38,7 +38,7 @@ func (h *Product) Read() gin.HandlerFunc {
 
 		product, err := h.s.Read(id)
 		if err != nil {
-			code := http.StatusInternalServerError
+			code := http.StatusNotFound
 			ctx.JSON(code, web.NewResponse(code, nil, err.Error()))
 			return
 		}
