@@ -15,8 +15,11 @@ func main() {
 
 	r := gin.Default()
 
+	r.GET("/prod", controller.GetAll())
 	r.GET("/prod/:name", controller.Search())
 	r.POST("/prod", controller.Store())
+	r.PATCH("/prod/:id", controller.Update())
+	r.DELETE("/prod/:id", controller.Delete())
 
 	r.Run()
 }

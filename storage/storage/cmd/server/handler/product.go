@@ -5,6 +5,7 @@ import (
 	"storage/internal/domain"
 	"storage/internal/product"
 	"storage/pkg/web"
+	"strconv"
 )
 
 type productRequest struct {
@@ -28,10 +29,21 @@ func NewProduct(s product.Service) *Product {
 	}
 }
 
+func (p *Product) GetAll() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		products, err := p.service.GetAll(c)
+		if err != nil {
+			web.Response(c, 500, err.Error(), nil)
+			return
+		}
+		web.Response(c, 200, "", products)
+	}
+}
+
 func (p *Product) Search() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		name := c.Param("name")
-		response, err := p.service.GetByName(name)
+		response, err := p.service.GetByName(c, name)
 		if err != nil {
 			web.Response(c, 500, err.Error(), nil)
 			return
@@ -57,11 +69,60 @@ func (p *Product) Store() gin.HandlerFunc {
 			Count: req.Count,
 			Price: req.Price,
 		}
-		result, err := p.service.Store(product)
+		result, err := p.service.Store(c, product)
 		if err != nil {
 			web.Response(c, 500, err.Error(), nil)
 			return
 		}
 		web.Response(c, 200, "", result)
+	}
+}
+
+func (p *Product) Update() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		idstr := c.Param("id")
+		id, err := strconv.Atoi(idstr)
+		if err != nil {
+			web.Response(c, 500, "invalid id", nil)
+			return
+		}
+		var req productRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
+			web.Response(c, 500, "invalid request", nil)
+			return
+		}
+		if !req.validateFields() {
+			web.Response(c, 500, "invalid request", nil)
+			return
+		}
+		product := domain.Product{
+			ID:    id,
+			Name:  req.Name,
+			Type:  req.Type,
+			Count: req.Count,
+			Price: req.Price,
+		}
+		result, err := p.service.Update(c, product)
+		if err != nil {
+			web.Response(c, 500, err.Error(), nil)
+			return
+		}
+		web.Response(c, 200, "", result)
+	}
+}
+
+func (p *Product) Delete() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		idstr := c.Param("id")
+		id, err := strconv.Atoi(idstr)
+		if err != nil {
+			web.Response(c, 500, "invalid id", nil)
+			return
+		}
+		if err = p.service.Delete(c, id); err != nil {
+			web.Response(c, 500, err.Error(), nil)
+			return
+		}
+		web.Response(c, 200, "", "eliminado correctamente")
 	}
 }
