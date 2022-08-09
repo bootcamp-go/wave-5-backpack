@@ -2,7 +2,6 @@ package product
 
 import (
 	"database/sql"
-	"log"
 	"testing"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -12,7 +11,7 @@ import (
 func TestGetAll(t *testing.T) {
 	db, err := sql.Open("mysql", "root:@tcp(localhost:3306)/storage")
 	if err != nil {
-		log.Fatal(err)
+		assert.Fail(t, "an error ocurred", err.Error())
 	}
 	r := NewRepository(db)
 	products, err := r.GetAll()
