@@ -12,12 +12,13 @@ import (
 )
 
 type Request struct {
-	Name      *string  `json:"name"`
-	Color     *string  `json:"color"`
-	Price     *float64 `json:"price"`
-	Stock     *uint64  `json:"stock"`
-	Code      *string  `json:"code"`
-	Published *bool    `json:"published"`
+	Name         *string  `json:"name"`
+	Color        *string  `json:"color"`
+	Price        *float64 `json:"price"`
+	Stock        *uint64  `json:"stock"`
+	Code         *string  `json:"code"`
+	Published    *bool    `json:"published"`
+	Warehouse_id *int     `json:"warehouse_id"`
 }
 
 type Product struct {
@@ -184,12 +185,12 @@ func (p *Product) Delete() gin.HandlerFunc {
 		if err != nil {
 			ctx.JSON(404, web.NewRespose(404, nil, err.Error()))
 		}
-		producto, err := p.service.Delete(ctx, idInt)
+		err = p.service.Delete(ctx, idInt)
 		if err != nil {
 			ctx.JSON(404, web.NewRespose(404, nil, fmt.Sprintf("product: %d not found", idInt)))
 			return
 		}
-		ctx.JSON(204, web.NewRespose(204, producto, ""))
+		ctx.JSON(204, web.NewRespose(204, "", ""))
 	}
 }
 

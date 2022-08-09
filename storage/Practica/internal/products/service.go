@@ -14,7 +14,7 @@ type Service interface {
 	GetById(ctx context.Context, id uint64) (domain.Product, error)
 	UpdateTotal(ctx context.Context, product domain.Product) (domain.Product, error)
 	UpdatePartial(ctx context.Context, product domain.Product) (domain.Product, error)
-	Delete(ctx context.Context, id uint64) (domain.Product, error)
+	Delete(ctx context.Context, id uint64) error
 }
 
 type service struct {
@@ -68,10 +68,10 @@ func (s *service) UpdatePartial(ctx context.Context, product domain.Product) (do
 	return producto, nil
 }
 
-func (s *service) Delete(ctx context.Context, id uint64) (domain.Product, error) {
-	producto, err := s.repository.Delete(ctx, id)
+func (s *service) Delete(ctx context.Context, id uint64) error {
+	err := s.repository.Delete(ctx, id)
 	if err != nil {
-		return domain.Product{}, fmt.Errorf("no se pudo encontrar el producto con el id: %d", id)
+		return fmt.Errorf("no se pudo encontrar el producto con el id: %d", id)
 	}
-	return producto, nil
+	return nil
 }
