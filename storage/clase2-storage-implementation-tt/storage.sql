@@ -54,3 +54,10 @@ ALTER TABLE transactions ADD `warehouse_id` INT NOT NULL AFTER `amount`;
 
 -- Asigno todos los productos al warehouse con id 1
 UPDATE `transactions` SET `warehouse_id`='1';
+
+-- Asignar al 'ID' y 'warehouse_ID' un valor de AutoIncrementar o Default, respectivamente.
+ALTER TABLE `transactions`
+	MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
+    
+ALTER TABLE `transactions`
+	MODIFY  `warehouse_id` INT NOT NULL DEFAULT  '1';
