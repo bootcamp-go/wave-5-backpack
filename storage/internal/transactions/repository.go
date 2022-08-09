@@ -39,7 +39,7 @@ func (r *repository) Store(ctx *gin.Context, monto float64, cod, moneda, emisor,
 		return models.Transaction{}, err
 	}
 
-	t:= models.Transaction{
+	t := models.Transaction{
 		Monto:    monto,
 		Cod:      cod,
 		Emisor:   emisor,
@@ -116,23 +116,23 @@ func (r *repository) GetAll(ctx *gin.Context) ([]models.Transaction, error) {
 	return transactions, nil
 }
 
-func (r *repository)	Update(ctx *gin.Context, id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
+func (r *repository) Update(ctx *gin.Context, id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
 	stmt, err := r.db.PrepareContext(ctx, queryUpdate)
 	if err != nil {
 		return models.Transaction{}, err
 	}
 
-	_, err = stmt.Exec(monto, cod, moneda, emisor, receptor, id)
+	_, err = stmt.ExecContext(ctx, monto, cod, moneda, emisor, receptor, id)
 	if err != nil {
 		return models.Transaction{}, err
 	}
 
 	t := models.Transaction{
-		ID: id,
-		Monto: monto,
-		Cod: cod,
-		Moneda: moneda,
-		Emisor: emisor,
+		ID:       id,
+		Monto:    monto,
+		Cod:      cod,
+		Moneda:   moneda,
+		Emisor:   emisor,
 		Receptor: receptor,
 	}
 
