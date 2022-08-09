@@ -159,7 +159,7 @@ func (c *Usuarios) Update() gin.HandlerFunc {
 // @Router /usuarios [get]
 func (c *Usuarios) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		u, erro := c.service.GetAll()
+		u, erro := c.service.GetAll(ctx)
 		if erro != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, "error al obtener los datos"))
 			return

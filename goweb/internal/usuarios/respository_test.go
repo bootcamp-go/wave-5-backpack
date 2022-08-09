@@ -1,6 +1,7 @@
 package usuarios
 
 import (
+	"context"
 	"errors"
 	"testing"
 
@@ -41,10 +42,14 @@ func TestGetAllRepo(t *testing.T) {
 		{Id: 2, Nombre: "Pedro", Apellido: "Juan", Altura: 3, FechaCreacion: "1232"},
 	}
 
-	user, err := repo.GetAll()
+	user, err := repo.GetAll(context.TODO())
 
 	assert.Equal(t, user, expected)
 	assert.Nil(t, err)
+}
+
+func TestGetAllWithContextTO(t *testing.T) {
+
 }
 
 func TestGetAllRepoErrRead(t *testing.T) {
@@ -54,7 +59,7 @@ func TestGetAllRepoErrRead(t *testing.T) {
 	repo := NewRepository(&myStubStore) //Probando el repository, yo le paso datos dummy a lo que quiero probar
 	expected := "error al leer la bd"
 
-	user, err := repo.GetAll()
+	user, err := repo.GetAll(context.TODO())
 
 	assert.EqualError(t, err, expected)
 	assert.Nil(t, user)

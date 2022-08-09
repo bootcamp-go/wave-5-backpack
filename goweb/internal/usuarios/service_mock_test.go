@@ -1,6 +1,7 @@
 package usuarios
 
 import (
+	"context"
 	"testing"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
@@ -11,7 +12,7 @@ type MockDB struct {
 	GetWasCalled bool
 }
 
-func (mdb *MockDB) GetAll() ([]domain.Usuarios, error) {
+func (mdb *MockDB) GetAll(ctx context.Context) ([]domain.Usuarios, error) {
 	sliceUsers := []domain.Usuarios{{Id: 1, Nombre: "Yvo", Apellido: "Pintos", Email: "yvo", Edad: 30, Altura: 3, Activo: true, FechaCreacion: "1992"}, {Id: 2, Nombre: "Mat", Apellido: "Fant", Email: "mat", Edad: 33, Altura: 3, Activo: true, FechaCreacion: "1990"}}
 	return sliceUsers, nil
 }
@@ -21,7 +22,7 @@ func (mdb *MockDB) GetById(id int) (domain.Usuarios, error) {
 }
 
 func (mdb *MockDB) UpdateNameAndLastName(id int, name string, last string) (domain.Usuarios, error) {
-	BeforeUpdate, _ := mdb.GetAll()
+	BeforeUpdate, _ := mdb.GetAll(context.TODO())
 	mdb.GetWasCalled = true
 	var user domain.Usuarios
 	for i := 0; i < len(BeforeUpdate)-1; i++ {

@@ -1,6 +1,7 @@
 package usuarios
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"testing"
@@ -15,7 +16,7 @@ type StubDB struct {
 	errSave string
 }
 
-func (sdb *StubDB) GetAll() ([]domain.Usuarios, error) {
+func (sdb *StubDB) GetAll(ctx context.Context) ([]domain.Usuarios, error) {
 	if sdb.errRead != "" {
 		return nil, errors.New("fail to getAll")
 	}
@@ -82,7 +83,7 @@ func TestGetAll(t *testing.T) {
 
 	sliceUsers := []domain.Usuarios{{Id: 1, Nombre: "Yvo", Apellido: "Pintos", Email: "yvo", Edad: 30, Altura: 3, Activo: true, FechaCreacion: "1992"}, {Id: 2, Nombre: "Mat", Apellido: "Fant", Email: "mat", Edad: 33, Altura: 3, Activo: true, FechaCreacion: "1990"}}
 
-	resultado, err := servi.GetAll()
+	resultado, err := servi.GetAll(context.TODO())
 
 	assert.Equal(t, sliceUsers, resultado)
 	assert.Nil(t, err)
@@ -93,7 +94,7 @@ func TestGetAllErrRead(t *testing.T) {
 		errRead: "fail to getAll",
 	}
 	servi := NewService(&myStubDB)
-	_, err := servi.GetAll()
+	_, err := servi.GetAll(context.TODO())
 
 	assert.EqualError(t, err, myStubDB.errRead)
 }

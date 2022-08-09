@@ -1,6 +1,7 @@
 package usuarios
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 
@@ -22,7 +23,7 @@ func NewRepositoryBD(dbb *sql.DB) Repository {
 		dbBD: dbb,
 	}
 }
-func (r *repositoryBD) GetAll() ([]domain.Usuarios, error) {
+func (r *repositoryBD) GetAll(ctx context.Context) ([]domain.Usuarios, error) {
 	var user domain.Usuarios
 	var listUser []domain.Usuarios
 	rows, err := r.dbBD.Query(GetAllUser)

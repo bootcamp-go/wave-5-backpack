@@ -9,6 +9,7 @@ OK Se deben implementar todos los métodos correspondientes a las operaciones a 
 package usuarios
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
@@ -22,7 +23,7 @@ const (
 )
 
 type Repository interface {
-	GetAll() ([]domain.Usuarios, error)
+	GetAll(ctx context.Context) ([]domain.Usuarios, error)
 	Guardar(id int, nombre string, apellido string, email string, edad int, altura float64, actico bool, fecha string) (domain.Usuarios, error)
 	LastId() (int, error)
 	Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error)
@@ -120,7 +121,7 @@ func (r *repository) Delete(id int) error {
 	return fmt.Errorf(UsuarioNotFound, id)
 }
 
-func (r *repository) GetAll() ([]domain.Usuarios, error) {
+func (r *repository) GetAll(ctx context.Context) ([]domain.Usuarios, error) {
 	var us []domain.Usuarios
 	if err := r.db.Read(&us); err != nil {
 		return nil, fmt.Errorf(FailReading)
