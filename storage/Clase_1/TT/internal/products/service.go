@@ -9,6 +9,8 @@ type Service interface {
 	GetByName(string) (domain.Product, error)
 	Store(domain.Product) (domain.Product, error)
 	GetAll(context.Context) ([]domain.Product, error)
+	GetFullDataById(context.Context, int) (domain.ProductAndWarehouse, error)
+	Update(context.Context, domain.Product) (domain.Product, error)
 }
 
 type service struct {
@@ -33,4 +35,12 @@ func (s *service) Store(product domain.Product) (domain.Product, error) {
 
 func (s *service) GetAll(ctx context.Context) ([]domain.Product, error) {
 	return s.repository.GetAll(ctx)
+}
+
+func (s *service) GetFullDataById(ctx context.Context, id int) (domain.ProductAndWarehouse, error) {
+	return s.repository.GetFullDataById(ctx, id)
+}
+
+func (s *service) Update(ctx context.Context, product domain.Product) (domain.Product, error) {
+	return s.repository.Update(ctx, product)
 }

@@ -2,7 +2,6 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 	"goweb/cmd/server/handler"
 	"goweb/internal/products"
 	"log"
@@ -22,7 +21,6 @@ func main() {
 	dataSource := "root:@tcp(localhost:3306)/storage"
 	StorageDB, err := sql.Open("mysql", dataSource)
 	if err != nil {
-		fmt.Println("estoy aqui 0")
 		log.Fatal(err)
 	}
 	if err = StorageDB.Ping(); err != nil {
@@ -31,12 +29,15 @@ func main() {
 	log.Println("database configured")
 
 	repository := products.NewRepository(StorageDB)
-	products := handler.NewProduct(repository)
+	service := products.NewService(repository)
+	products := handler.NewProduct(service)
 
 	router := gin.Default()
 
 	r := router.Group("/products")
-	r.GET("/:name", products.GetOneProductByName())
+	r.GET("/byName/:name", products.GetOneProductByName())
+	r.GET("/:id", products.GetById())
+	r.PATCH("/:id", products.Update())
 	r.GET("/", products.GetAll())
 	r.POST("/", products.Create())
 

@@ -8,3 +8,8 @@ type Product struct {
 	Price        float64 `json:"price"`
 	Id_warehouse int     `json:"id_warehouse"`
 }
+
+type ProductAndWarehouse struct {
+	Product
+	Warehouse Warehouse
+}
