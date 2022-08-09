@@ -1,11 +1,16 @@
 package domain
 
 type Product struct {
-	ID     int     `db:"ID"`
-	Name   string  `db:"name"`
-	Type   string  `db:"type"`
-	Price  float64 `db:"price"`
-	Count  int     `db:"count"`
-	Code   string  `db:"code"`
-	Public int8    `db:"public"`
+	ID     int     `json:"ID"`
+	Name   string  `json:"name"`
+	Type   string  `json:"type"`
+	Price  float64 `json:"price"`
+	Count  int     `json:"count"`
+	Code   string  `json:"code"`
+	Public int8    `json:"public"`
+}
+
+type Product_Warehouse struct {
+	Product
+	Warehouse Warehouse `json:"warehouse"`
 }

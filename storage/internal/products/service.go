@@ -1,14 +1,17 @@
 package products
 
 import (
+	"context"
+
 	"github.com/bootcamp-go/wave-5-backpack/storage/internal/domain"
 )
 
 type Service interface {
 	GetAll() ([]domain.Product, error)
 	GetProductByName(name string) (domain.Product, error)
+	GetProductAndWareHouse() ([]domain.Product_Warehouse, error)
 	Store(product domain.Product) (int, error)
-	UpdateAll(product domain.Product) (domain.Product, error)
+	UpdateAll(ctx context.Context, p domain.Product) error
 	Delete(id int) error
 	Update(id int, nombre string, precio float64) (domain.Product, error)
 }
@@ -24,7 +27,23 @@ func NewService(r Repository) Service {
 }
 
 func (s *service) GetAll() ([]domain.Product, error) {
-	return nil, nil
+	products, err := s.repository.GetAll()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return products, nil
+}
+
+func (s *service) GetProductAndWareHouse() ([]domain.Product_Warehouse, error) {
+	pW, err := s.repository.GetProductAndWareHouse()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return pW, nil
 }
 
 func (s *service) GetProductByName(name string) (domain.Product, error) {
@@ -47,8 +66,12 @@ func (s *service) Store(product domain.Product) (int, error) {
 	return id, nil
 }
 
-func (s *service) UpdateAll(product domain.Product) (domain.Product, error) {
-	return domain.Product{}, nil
+func (s *service) UpdateAll(ctx context.Context, p domain.Product) error {
+	if err := s.repository.Update(ctx, p); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *service) Delete(id int) error {
