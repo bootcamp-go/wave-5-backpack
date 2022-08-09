@@ -24,7 +24,7 @@ type service struct {
 }
 
 func (s service) Store(monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
-	return models.Transaction{}, nil
+	return s.repository.Store(monto, cod, moneda, emisor, receptor)
 }
 
 func (s service) GetAll() ([]models.Transaction, error) {
@@ -32,7 +32,7 @@ func (s service) GetAll() ([]models.Transaction, error) {
 }
 
 func (s service) GetByID(id int) (models.Transaction, error) {
-	return models.Transaction{}, nil
+	return s.repository.GetByID(id)
 }
 
 func (s service) Update(id int, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
