@@ -17,8 +17,7 @@ const (
 	//	Query	string = message
 	GetAllTransactions  = "SELECT id, codeTransaction, currency, amount, transmitter, receiver, date FROM transactions"
 	GetTransaction      = "SELECT codeTransaction, currency, amount, transmitter, receiver, date FROM transactions WHERE id = ?"
-	GetTransactionByID  = "SELECT * FROM transactions WHERE id = ?"
-	GetCodeTransaction  = "SELECT * FROM transactions WHERE codeTransaction = ?"
+	GetCodeTransaction  = "SELECT id, codeTransaction, currency, amount, transmitter, receiver, date FROM transactions WHERE codeTransaction = ?"
 	GetTransactionSleep = "SELECT SLEEP(5) FROM DUAL WHERE 0 < ?"
 
 	InsertTransaction = "INSERT INTO transactions(codeTransaction, currency, amount, transmitter, receiver, date) VALUES( ?, ?, ?, ?, ?, ? )"
