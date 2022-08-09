@@ -3,7 +3,6 @@ package transactions
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/internal/models"
