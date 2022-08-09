@@ -6,13 +6,14 @@ import (
 	"time"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/internal/models"
+	"github.com/gin-gonic/gin"
 )
 
 type Repository interface {
-	Store(monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error)
-	GetByCod(cod string) (models.Transaction, error)
-	GetByID(id int) (models.Transaction, error)
-	GetAll() ([]models.Transaction, error)
+	Store(ctx *gin.Context, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error)
+	GetByCod(ctx *gin.Context, cod string) (models.Transaction, error)
+	GetByID(ctx *gin.Context, id int) (models.Transaction, error)
+	GetAll(ctx *gin.Context) ([]models.Transaction, error)
 }
 
 func NewRepository(db *sql.DB) Repository {
@@ -30,7 +31,7 @@ const (
 	queryGetAll   = `SELECT id, monto, cod, moneda, emisor, receptor, fecha FROM transactions;`
 )
 
-func (r *repository) Store(monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
+func (r *repository) Store(ctx *gin.Context, monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
 	stmt, err := r.db.Prepare(queryStore)
 	if err != nil {
 		return models.Transaction{}, err
@@ -59,7 +60,7 @@ func (r *repository) Store(monto float64, cod, moneda, emisor, receptor string) 
 	return transaction, nil
 }
 
-func (r *repository) GetByCod(cod string) (models.Transaction, error) {
+func (r *repository) GetByCod(ctx *gin.Context, cod string) (models.Transaction, error) {
 	rows, err := r.db.Query(queryGetByCod, cod)
 	if err != nil {
 		return models.Transaction{}, err
@@ -75,7 +76,7 @@ func (r *repository) GetByCod(cod string) (models.Transaction, error) {
 	return transaction, nil
 }
 
-func (r *repository) GetByID(id int) (models.Transaction, error) {
+func (r *repository) GetByID(ctx *gin.Context, id int) (models.Transaction, error) {
 	rows, err := r.db.Query(queryGetByID, id)
 	if err != nil {
 		return models.Transaction{}, err
@@ -95,7 +96,7 @@ func (r *repository) GetByID(id int) (models.Transaction, error) {
 	return t, nil
 }
 
-func (r *repository) GetAll() ([]models.Transaction, error) {
+func (r *repository) GetAll(ctx *gin.Context) ([]models.Transaction, error) {
 	rows, err := r.db.Query(queryGetAll)
 	if err != nil {
 		return []models.Transaction{}, err

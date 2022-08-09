@@ -59,7 +59,7 @@ func (t Transaction) CreateTransaction(ctx *gin.Context) {
 		return
 	}
 
-	transaction, err := t.service.Store(req.Monto, req.Cod, req.Moneda, req.Emisor, req.Receptor)
+	transaction, err := t.service.Store(ctx, req.Monto, req.Cod, req.Moneda, req.Emisor, req.Receptor)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
 		return
@@ -88,7 +88,7 @@ func (t Transaction) GetAll(ctx *gin.Context) {
 		return
 	}
 
-	transactions, err := t.service.GetAll()
+	transactions, err := t.service.GetAll(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
 		return
@@ -124,7 +124,7 @@ func (t Transaction) GetByID(ctx *gin.Context) {
 		return
 	}
 
-	transaction, err := t.service.GetByID(id)
+	transaction, err := t.service.GetByID(ctx, id)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 		return
@@ -171,7 +171,7 @@ func (t Transaction) Update(ctx *gin.Context) {
 		return
 	}
 
-	transaction, err := t.service.Update(id, req.Monto, req.Cod, req.Moneda, req.Emisor, req.Receptor)
+	transaction, err := t.service.Update(ctx, id, req.Monto, req.Cod, req.Moneda, req.Emisor, req.Receptor)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 		return
@@ -214,7 +214,7 @@ func (t Transaction) Patch(ctx *gin.Context) {
 		return
 	}
 
-	transaction, err := t.service.Patch(id, req.Monto, req.Cod, req.Moneda, req.Emisor, req.Receptor)
+	transaction, err := t.service.Patch(ctx, id, req.Monto, req.Cod, req.Moneda, req.Emisor, req.Receptor)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, web.NewResponse(http.StatusInternalServerError, nil, err.Error()))
 		return
@@ -249,7 +249,7 @@ func (t Transaction) Delete(ctx *gin.Context) {
 		return
 	}
 
-	deleted, err := t.service.Delete(id)
+	deleted, err := t.service.Delete(ctx, id)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 		return
