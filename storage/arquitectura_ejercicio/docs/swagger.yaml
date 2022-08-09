@@ -1,0 +1,162 @@
+definitions:
+  handler.LastNameAgePatchRequest:
+    properties:
+      apellido:
+        type: string
+      edad:
+        type: integer
+    type: object
+  handler.request:
+    properties:
+      altura:
+        type: number
+      apellido:
+        type: string
+      edad:
+        type: integer
+      email:
+        type: string
+      nombre:
+        type: string
+    type: object
+  web.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      error:
+        type: string
+    type: object
+info:
+  contact:
+    name: API Support
+    url: https://developers.mercadolibre.com.ar/support
+  description: This API Handle MELI Products.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
+  title: MELI Bootcamp API
+  version: "1.0"
+paths:
+  /usuarios:
+    get:
+      description: Método que enlista a todos los usuarios registrados.
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/web.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: List of Usuarios
+      tags:
+      - Usuarios
+    patch:
+      consumes:
+      - application/json
+      description: Método que actualiza el apellido y la edad de un usuario.
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: User to patch
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handler.LastNameAgePatchRequest'
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/web.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Patch Usuarios
+      tags:
+      - Usuarios
+    post:
+      consumes:
+      - application/json
+      description: Método que guarda un usuario nuevo.
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: User to store
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/handler.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/web.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Store Usuarios
+      tags:
+      - Usuarios
+swagger: "2.0"
