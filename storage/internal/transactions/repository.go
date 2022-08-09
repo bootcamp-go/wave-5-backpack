@@ -2,6 +2,7 @@ package transactions
 
 import (
 	"database/sql"
+	"fmt"
 	"time"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/internal/models"
@@ -79,10 +80,10 @@ func (r *repository) GetByID(id int) (models.Transaction, error) {
 	}
 
 	var t models.Transaction
-	for rows.Next() {
-		if err := rows.Scan(&t.ID, &t.Monto, &t.Cod, &t.Moneda, &t.Emisor, &t.Receptor, &t.Fecha); err != nil {
-			return models.Transaction{}, err
-		}
+	rows.Scan(&t)
+
+	if t == (models.Transaction{}) {
+		return models.Transaction{}, fmt.Errorf("transaction by ID %v not found", id)
 	}
 
 	return t, nil

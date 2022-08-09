@@ -33,6 +33,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("error al conectar a la db: %v\n", err)
 	}
+	defer db.Close()
 
 	// Init capas de transactions
 	repo := transactions.NewRepository(db)
