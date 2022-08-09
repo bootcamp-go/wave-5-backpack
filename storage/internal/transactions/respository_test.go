@@ -8,6 +8,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestRepositoryGetByID(t *testing.T) {
+	//Arrange
+	db, err := db.NewConnection()
+	assert.Nil(t, err)
+	
+	repo := NewRepository(db)
+
+	//Act
+	transaction, err := repo.GetByID(&gin.Context{}, 1)
+
+	//Assert
+	assert.Nil(t, err)
+	assert.NotNil(t, transaction)
+}
+
 func TestRepositoryGetAll(t *testing.T) {
 	//Arrange
 	db, err := db.NewConnection()
