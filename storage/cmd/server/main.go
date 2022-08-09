@@ -51,10 +51,10 @@ func main() {
 	pr.Use(TokenAuthMiddleware())
 
 	pr.POST("/create", p.CreateProduct())
+	pr.GET("/", p.GetAll())
 	pr.GET("/:id", p.GetById())
 	pr.PUT("/:id", p.Update())
 	pr.DELETE("/:id", p.Delete())
-	pr.PATCH("/:id", p.UpdateOne())
 	if err := r.Run(); err != nil {
 		fmt.Println("error: ", err.Error())
 		return

@@ -41,6 +41,26 @@ func InitProduct(p products.Service) *Product {
 // @Param token header string true "token"
 // @Success 200 {object} web.Response
 // @Router /products [get]
+func (c *Product) GetAll() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		p, err := c.service.GetAll()
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
+			return
+		}
+		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, p, ""))
+	}
+}
+
+// ListOneProduct godoc
+// @Summary List product
+// @Tags Products
+// @Description get one product
+// @Accept json
+// @Produce json
+// @Param token header string true "token"
+// @Success 200 {object} web.Response
+// @Router /products/:id [get]
 func (c *Product) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
@@ -91,65 +111,18 @@ func (c *Product) CreateProduct() gin.HandlerFunc {
 
 func (c *Product) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		/* token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "token inválido",
-			})
-			return
-		} */
+		var productArray domain.Products
 		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
-		var req request
-		if err := ctx.ShouldBindJSON(&req); err != nil {
+		if err := ctx.ShouldBindJSON(&productArray); err != nil {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
 
-		/* if v := validador(req); v != "" {
-			ctx.JSON(400, web.NewResponse(400, nil, v))
-			return
-		} */
-		/* if req.Nombre == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "El nombre del producto es requerido",
-			})
-			return
-		}
-		if req.Color == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "El color del producto es requerido",
-			})
-			return
-		}
-		if req.Precio == 0 {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "El precio del producto es requerido",
-			})
-			return
-		}
-		if req.Stock == 0 {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "El stock del producto es requerido",
-			})
-			return
-		}
-		if req.Codigo == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "El código del producto es requerido",
-			})
-			return
-		}
-		if req.FechaCreacion == "" {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"error": "La fecha de creación del producto es requerida",
-			})
-			return
-		} */
-		p, err := c.service.Update(int(id), req.Nombre, req.Color, req.Precio, req.Stock, req.Codigo, req.Publicado, req.FechaCreacion)
+		p, err := c.service.Update(ctx, productArray, int(id))
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
@@ -180,43 +153,6 @@ func (c *Product) Delete() gin.HandlerFunc {
 		}
 		ctx.JSON(http.StatusOK,
 			web.NewResponse(http.StatusOK, nil, fmt.Sprintf("El producto %d ha sido eliminado", id)))
-	}
-
-}
-
-func (c *Product) UpdateOne() gin.HandlerFunc {
-	return func(ctx *gin.Context) {
-		/* token := ctx.GetHeader("token")
-		if token != os.Getenv("TOKEN") {
-			ctx.JSON(http.StatusUnauthorized, gin.H{
-				"error": "token inválido",
-			})
-			return
-		} */
-		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
-		if err != nil {
-			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "id inválido"))
-			return
-		}
-		var req request
-		if err := ctx.ShouldBindJSON(&req); err != nil {
-			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
-			return
-		}
-		if req.Nombre == "" {
-			ctx.JSON(400, web.NewResponse(400, nil, "El nombre del producto es requerido"))
-			return
-		}
-		if req.Precio == 0 {
-			ctx.JSON(400, web.NewResponse(400, nil, "El precio del producto es requerido"))
-			return
-		}
-		p, err := c.service.UpdateOne(int(id), req.Nombre, req.Precio)
-		if err != nil {
-			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
-			return
-		}
-		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, p, ""))
 	}
 
 }

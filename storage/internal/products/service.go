@@ -1,14 +1,16 @@
 package products
 
 import (
+	"context"
 	"fmt"
 	"storage/internal/domain"
 )
 
 type Service interface {
+	GetAll() ([]domain.Products, error)
 	GetById(id int) (domain.Products, error)
 	CreateProduct(product domain.Products) (domain.Products, error)
-	Update(id int, nombre, color string, precio float64, stock int, código string, publicado bool, fecha_de_creación string) (domain.Products, error)
+	Update(ctx context.Context, p domain.Products, id int) (domain.Products, error)
 	Delete(id int) error
 	UpdateOne(id int, nombre string, precio float64) (domain.Products, error)
 }
@@ -23,10 +25,17 @@ func InitService(r Repository) Service {
 	}
 }
 
+func (s *service) GetAll() ([]domain.Products, error) {
+	products, err := s.repository.GetAll()
+	fmt.Println(products)
+	if err != nil {
+		return []domain.Products{}, fmt.Errorf("no hay datos")
+	}
+	return products, nil
+}
+
 func (s *service) GetById(id int) (domain.Products, error) {
 	getProduct, err := s.repository.GetById(id)
-	fmt.Println(getProduct)
-	fmt.Println(err)
 
 	if err != nil {
 		return domain.Products{}, fmt.Errorf("no se ha encontrado el producto")
@@ -43,8 +52,32 @@ func (s *service) CreateProduct(product domain.Products) (domain.Products, error
 	return producto, nil
 }
 
-func (s *service) Update(id int, nombre, color string, precio float64, stock int, código string, publicado bool, fecha_de_creación string) (domain.Products, error) {
-	return s.repository.Update(id, nombre, color, precio, stock, código, publicado, fecha_de_creación)
+func (s *service) Update(ctx context.Context, p domain.Products, id int) (domain.Products, error) {
+	if id <= 0 {
+		return domain.Products{}, fmt.Errorf("el id no puede ser 0")
+	}
+	productData, err := s.GetById(id)
+	if err != nil {
+		return domain.Products{}, err
+	}
+	if p.Nombre != "" {
+		productData.Nombre = p.Nombre
+	}
+	if p.Color != "" {
+		productData.Color = p.Color
+	}
+	if p.Precio > 0 {
+		productData.Precio = p.Precio
+	}
+	if p.Stock >= 0 {
+		productData.Stock = p.Stock
+	}
+
+	if err := s.repository.Update(ctx, productData); err != nil {
+		return domain.Products{}, err
+	}
+
+	return productData, nil
 }
 
 func (s *service) Delete(id int) error {
