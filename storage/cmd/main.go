@@ -6,9 +6,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 
-	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/cmd/db"
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/cmd/handler"
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/internal/transactions"
+	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/pkg/db"
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/pkg/web"
 )
 

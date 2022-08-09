@@ -3,7 +3,7 @@ package transactions
 import (
 	"testing"
 
-	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/cmd/db"
+	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/pkg/db"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
