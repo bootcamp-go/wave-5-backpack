@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "nombre": "andrea1.7",
+    "apellido": "esquapovel",
+    "email": "an@gmail.com",
+    "edad": 100,
+    "altura": 153,
+    "activo": false,
+    "fecha_creacion": "2022-07-12 02:35:30.982275 -0400 -04 m=+4.639375710"
+  }
+]
