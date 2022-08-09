@@ -67,6 +67,20 @@ func (t *TransactionHandler) GetById() gin.HandlerFunc {
 	}
 }
 
+func (t *TransactionHandler) GetByCodigoTransaccion() gin.HandlerFunc {
+
+	return func(ctx *gin.Context) {
+		codigo := ctx.Query("codigo")
+		transaccion, err := t.service.GetByCodigoTransaccion(codigo)
+
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
+			return
+		}
+		ctx.JSON(http.StatusOK, web.NewResponse(http.StatusOK, transaccion, ""))
+	}
+}
+
 // @Summary Crea una nueva transacción
 // @Tags Transacciones
 // @Description post transaction

@@ -49,6 +49,7 @@ func main() {
 	{
 		gr.GET("/", handler.GetAll())
 		gr.GET("/:id", handler.GetById())
+		gr.GET("/filters", handler.GetByCodigoTransaccion())
 		gr.POST("/", handler.Create())
 		gr.PUT("/:id", handler.Update())
 		gr.PATCH("/:id", handler.UpdateParcial())

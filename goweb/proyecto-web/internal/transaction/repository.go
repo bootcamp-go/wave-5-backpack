@@ -3,6 +3,7 @@ package transaction
 import (
 	"fmt"
 	"proyecto-web/internal/domain"
+	"proyecto-web/internal/transaction/interfaces"
 	"proyecto-web/pkg/store"
 )
 
@@ -12,20 +13,11 @@ const (
 	FailWriting         = "cant write database"
 )
 
-type IRepository interface {
-	GetAll() ([]domain.Transaction, error)
-	Create(codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error)
-	GetById(id int) (domain.Transaction, error)
-	Update(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error)
-	UpdateParcial(id int, codigoTransaccion string, monto float64) (domain.Transaction, error)
-	Delete(id int) error
-}
-
 type repository struct {
 	bd store.Store
 }
 
-func NewRepository(store store.Store) IRepository {
+func NewRepository(store store.Store) interfaces.IRepository {
 	return &repository{bd: store}
 }
 
@@ -141,6 +133,11 @@ func (r *repository) Delete(id int) error {
 		return fmt.Errorf(FailWriting)
 	}
 	return nil
+}
+
+func (r *repository) GetByCodigoTransaccion(codigo string) (domain.Transaction, error) {
+	//not implemented. Only for bd repository
+	return domain.Transaction{}, nil
 }
 
 func (r *repository) generateId() int {
