@@ -21,6 +21,7 @@ func NewRepositoryDB(db *sql.DB) Repository {
 const (
 	queryByName = "SELECT id, name, lastname, email, age, height, active, doCreation FROM users WHERE name = ?"
 	queryAll    = "SELECT id, name, lastname, email, age, height, active, doCreation FROM users"
+	queryAllTimeOut    = "SELECT SLEEP(10) FROM DUAL"
 	queryStore  = "INSERT INTO users(name, lastname, email, age, height, active, doCreation) VALUES( ?, ?, ?, ?, ?, ?, ? )"
 	queryById   = "SELECT id, name, lastname, email, age, height, active, doCreation FROM users us WHERE us.id = ?"
 )

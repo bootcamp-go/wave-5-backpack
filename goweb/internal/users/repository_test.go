@@ -2,7 +2,10 @@ package users
 
 import (
 	"context"
+	"database/sql"
 	"testing"
+	"time"
+	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/bootcamp-go/wave-5-backpack/internal/domain"
 	"github.com/stretchr/testify/assert"
@@ -145,3 +148,18 @@ func TestUpdateNameUser(t *testing.T) {
 	assert.Equal(t, name, response.Name)
 }
 
+
+func TestGetAllContext(t *testing.T) {
+	db, err := sql.Open("mysql", "root@tcp(localhost:3306)/storage")
+	if err !=nil {
+		t.Log(err)
+	}
+	repo := NewRepositoryDB(db)
+	time := 5 * time.Second
+	ctx, cancel := context.WithTimeout(context.Background(), time)
+	defer cancel()
+	_, err = repo.GetAll(ctx)
+	if err != nil {
+		t.Errorf("shouldnt fail %v", err)
+	}
+}
