@@ -163,3 +163,7 @@ func TestGetAllContext(t *testing.T) {
 		t.Errorf("shouldnt fail %v", err)
 	}
 }
+
+func TestStoreConGO(t *testing.T) {
+
+}

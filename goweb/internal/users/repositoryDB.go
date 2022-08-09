@@ -19,11 +19,11 @@ func NewRepositoryDB(db *sql.DB) Repository {
 }
 
 const (
-	queryByName = "SELECT id, name, lastname, email, age, height, active, doCreation FROM users WHERE name = ?"
-	queryAll    = "SELECT id, name, lastname, email, age, height, active, doCreation FROM users"
-	queryAllTimeOut    = "SELECT SLEEP(10) FROM DUAL"
-	queryStore  = "INSERT INTO users(name, lastname, email, age, height, active, doCreation) VALUES( ?, ?, ?, ?, ?, ?, ? )"
-	queryById   = "SELECT id, name, lastname, email, age, height, active, doCreation FROM users us WHERE us.id = ?"
+	queryByName     = "SELECT id, name, lastname, email, age, height, active, doCreation FROM users WHERE name = ?"
+	queryAll        = "SELECT id, name, lastname, email, age, height, active, doCreation FROM users"
+	queryAllTimeOut = "SELECT SLEEP(10) FROM DUAL"
+	queryStore      = "INSERT INTO users(name, lastname, email, age, height, active, doCreation) VALUES( ?, ?, ?, ?, ?, ?, ? )"
+	queryById       = "SELECT id, name, lastname, email, age, height, active, doCreation FROM users us WHERE us.id = ?"
 )
 
 func (r *repositoryDB) GetAll(ctx context.Context) ([]domain.User, error) {
@@ -42,9 +42,10 @@ func (r *repositoryDB) GetAll(ctx context.Context) ([]domain.User, error) {
 
 	return allUsers, nil
 }
+
 func (r *repositoryDB) GetById(ctx context.Context, id int) (domain.User, error) {
 	var user domain.User
-	rows, err := r.db.QueryContext(ctx, queryById, id )
+	rows, err := r.db.QueryContext(ctx, queryById, id)
 	if err != nil {
 		return domain.User{}, err
 	}
@@ -66,7 +67,7 @@ func (r *repositoryDB) LastId() (int, error) {
 	return 0, nil
 }
 
-func (r *repositoryDB) GetByName(name string) ([]domain.User, error) {
+func (r *repositoryDB) GetByName(ctx context.Context, name string) ([]domain.User, error) {
 	var user domain.User
 	fmt.Println(name)
 	var listUser []domain.User

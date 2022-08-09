@@ -218,7 +218,7 @@ func (c *User) DeleteUser() gin.HandlerFunc {
 
 func (c *User) GetByName() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		u, err := c.service.GetByName(ctx.Param("name"))
+		u, err := c.service.GetByName(ctx, ctx.Param("name"))
 		if err != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, "no existen registros con el nombre indicado"))
 			return

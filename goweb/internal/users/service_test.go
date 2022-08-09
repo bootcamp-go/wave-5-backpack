@@ -239,7 +239,7 @@ func (st *StubDataBase) UpdateUser(id int, name, lastname, email string, age int
 func (st *StubDataBase) DeleteUser(id int) error {
 	return nil
 }
-func (st *StubDataBase) GetByName(name string) ([]domain.User, error) {
+func (st *StubDataBase) GetByName(ctx context.Context, name string) ([]domain.User, error) {
 	return []domain.User{}, nil
 }
 func (st *StubDataBase) UpdateLastnameAndAge(id int, lastname string, age int) (*domain.User, error) {

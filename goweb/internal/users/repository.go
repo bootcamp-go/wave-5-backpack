@@ -15,7 +15,7 @@ type Repository interface {
 	StoreUser(id int, name, lastname, email string, age int, height float32, active bool, doCreation string) (domain.User, error)
 	UpdateUser(id int, name, lastname, email string, age int, height float32, active bool, doCreation string) (domain.User, error)
 	DeleteUser(id int) error
-	GetByName(name string) ([]domain.User, error)
+	GetByName(ctx context.Context,name string) ([]domain.User, error)
 
 	UpdateLastnameAndAge(id int, lastname string, age int)(*domain.User, error)
 }
@@ -165,7 +165,7 @@ func (r *repository) UpdateLastnameAndAge(id int, lastname string, age int) (*do
 
 }
 
-func (r *repository) GetByName(name string) ([]domain.User, error) {
+func (r *repository) GetByName(ctx context.Context, name string) ([]domain.User, error) {
 	var users []domain.User
 	return users, nil
 }
