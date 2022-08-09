@@ -80,7 +80,11 @@ func (r *repository) GetByID(id int) (models.Transaction, error) {
 	}
 
 	var t models.Transaction
-	rows.Scan(&t)
+	for rows.Next() {
+		if err := rows.Scan(&t.ID, &t.Monto, &t.Cod, &t.Moneda, &t.Emisor, &t.Receptor, &t.Fecha); err != nil {
+			return models.Transaction{}, err
+		}
+	}
 
 	if t == (models.Transaction{}) {
 		return models.Transaction{}, fmt.Errorf("transaction by ID %v not found", id)
