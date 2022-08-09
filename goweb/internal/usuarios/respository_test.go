@@ -96,6 +96,41 @@ func TestSaveAndGetWithContext(t *testing.T) {
 	assert.Equal(t, user, users)
 }
 
+func TestUpdateBD(t *testing.T) {
+	txdb.Register("txdb", "mysql", "root@tcp(localhost:3306)/storage")
+	db, err := sql.Open("txdb", uuid.New().String())
+	assert.NoError(t, err)
+
+	repo := NewRepositoryBD(db)
+	user := domain.Usuarios{
+		Id:            15,
+		Nombre:        "TayronaT",
+		Apellido:      "Fante",
+		Email:         "titi",
+		Edad:          30,
+		Altura:        20,
+		Activo:        false,
+		FechaCreacion: "2020",
+	}
+	userO, er2 := repo.Update(context.TODO(), user.Id, user.Nombre, user.Apellido, user.Email, user.Edad, user.Altura, user.Activo, user.FechaCreacion)
+
+	assert.NoError(t, er2)
+	assert.NotZero(t, userO)
+	assert.Equal(t, user, userO)
+}
+
+func TestDeleteGetAllGetOne(t *testing.T) {
+	txdb.Register("txdb", "mysql", "root@tcp(localhost:3306)/storage")
+	db, err := sql.Open("txdb", uuid.New().String())
+	assert.NoError(t, err)
+
+	repo := NewRepositoryBD(db)
+	er2 := repo.Delete(9)
+
+	assert.Nil(t, er2)
+
+}
+
 func TestGetOneInexist(t *testing.T) {
 	txdb.Register("txdb", "mysql", "root@tcp(localhost:3306)/storage")
 	db, err := sql.Open("txdb", uuid.New().String())
