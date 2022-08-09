@@ -24,10 +24,6 @@ type repository struct {
 var queryStore string = "INSERT INTO transactions (monto, cod, moneda, emisor, receptor, fecha) VALUES (?, ?, ?, ?, ?, ?)"
 
 func (r *repository) Store(monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
-	if err := r.db.Ping(); err != nil {
-		return models.Transaction{}, err
-	}
-
 	stmt, err := r.db.Prepare(queryStore)
 	if err != nil {
 		return models.Transaction{}, err
