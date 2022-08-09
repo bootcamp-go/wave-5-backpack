@@ -7,3 +7,8 @@ type Product struct {
 	Count int     `json:"cantidad"`
 	Price float64 `json:"precio"`
 }
+
+type ProductAndWarehouse struct {
+	Product
+	Warehouse Warehouse `json:"warehouse"`
+}

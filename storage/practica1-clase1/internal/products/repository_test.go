@@ -1,6 +1,7 @@
 package products
 
 import (
+	"context"
 	"database/sql"
 	"practica1-clase1/internal/domain"
 	"testing"
@@ -39,8 +40,18 @@ func TestGetByName(t *testing.T) {
 	myRepo := NewRepository(StorageDB)
 
 	product, err := myRepo.GetByName("Producto 1")
-	if err != nil {
-		t.Errorf("Error al obtener el producto: %v", err)
-	}
+	assert.Nil(t, err)
 	assert.Equal(t, "Producto 1", product.Name)
+}
+
+func TestGetAll(t *testing.T) {
+	StorageDB, err := sql.Open("mysql", dataSource)
+	if err != nil {
+		panic(err)
+	}
+	myRepo := NewRepository(StorageDB)
+
+	products, err := myRepo.GetAll(context.TODO())
+	assert.Nil(t, err)
+	assert.Equal(t, 1, len(products))
 }
