@@ -28,7 +28,7 @@ func (s service) Store(monto float64, cod, moneda, emisor, receptor string) (mod
 }
 
 func (s service) GetAll() ([]models.Transaction, error) {
-	return []models.Transaction{}, nil
+	return s.repository.GetAll()
 }
 
 func (s service) GetByID(id int) (models.Transaction, error) {
