@@ -42,7 +42,7 @@ func NewProduct(s products.Service) *Product {
 // @Router /products [get]
 func (p *Product) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		products, err := p.service.GetAll()
+		products, err := p.service.GetAll(ctx)
 		if err != nil {
 			ctx.JSON(500, web.NewRespose(500, nil, "error consultando los datos"))
 			return
@@ -57,7 +57,7 @@ func (p *Product) GetById() gin.HandlerFunc {
 		if err != nil {
 			ctx.JSON(500, web.NewRespose(500, nil, err.Error()))
 		}
-		producto, err := p.service.GetById(idInt)
+		producto, err := p.service.GetById(ctx, idInt)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, web.NewRespose(404, nil, fmt.Sprintf("product with id %d not found", idInt)))
 			return
@@ -101,7 +101,7 @@ func (p *Product) Store() gin.HandlerFunc {
 			Published: *pr.Published,
 		}
 
-		created, err := p.service.Store(NewProduct)
+		created, err := p.service.Store(ctx, NewProduct)
 		if err != nil {
 			ctx.JSON(400, web.NewRespose(400, nil, err.Error()))
 			return
@@ -140,7 +140,7 @@ func (p *Product) UpdateTotal() gin.HandlerFunc {
 			Published: *pr.Published,
 		}
 
-		updated, err := p.service.UpdateTotal(NewProduct)
+		updated, err := p.service.UpdateTotal(ctx, NewProduct)
 		if err != nil {
 			ctx.JSON(500, web.NewRespose(400, nil, err.Error()))
 			return
@@ -170,7 +170,7 @@ func (p *Product) UpdatePartial() gin.HandlerFunc {
 			Code:      *pr.Code,
 			Published: *pr.Published,
 		}
-		updated, err := p.service.UpdatePartial(NewProduct)
+		updated, err := p.service.UpdatePartial(ctx, NewProduct)
 		if err != nil {
 			ctx.JSON(500, web.NewRespose(500, nil, err.Error()))
 		}
@@ -184,7 +184,7 @@ func (p *Product) Delete() gin.HandlerFunc {
 		if err != nil {
 			ctx.JSON(404, web.NewRespose(404, nil, err.Error()))
 		}
-		producto, err := p.service.Delete(idInt)
+		producto, err := p.service.Delete(ctx, idInt)
 		if err != nil {
 			ctx.JSON(404, web.NewRespose(404, nil, fmt.Sprintf("product: %d not found", idInt)))
 			return

@@ -1,8 +1,10 @@
 package products
 
 import (
+	"context"
 	"database/sql"
 	"testing"
+	"time"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/internal/domain"
 	_ "github.com/go-sql-driver/mysql"
@@ -23,8 +25,9 @@ func TestStore(t *testing.T) {
 		Published:    true,
 		Warehouse_id: 1,
 	}
-
-	res, err := repo.Store(mockProduct)
+	ctx, close := context.WithTimeout(context.Background(), time.Second*5)
+	defer close()
+	res, err := repo.Store(ctx, mockProduct)
 	mockProduct.Id = res.Id
 	assert.Nil(t, err)
 	assert.Equal(t, mockProduct, res)
@@ -47,7 +50,9 @@ func TestGetByName(t *testing.T) {
 		Warehouse_id: 1,
 	}
 	assert.Nil(t, err)
-	res, err := repo.GetByName("product 1")
+	ctx, close := context.WithTimeout(context.Background(), time.Second*5)
+	defer close()
+	res, err := repo.GetByName(ctx, "product 1")
 	assert.Nil(t, err)
 	assert.Equal(t, mockProduct, res)
 }
@@ -57,6 +62,8 @@ func TestGetAll(t *testing.T) {
 	assert.Nil(t, err)
 	repo := NewRepository(db)
 	assert.Nil(t, err)
-	_, err = repo.GetAll()
+	ctx, close := context.WithTimeout(context.Background(), time.Second*5)
+	defer close()
+	_, err = repo.GetAll(ctx)
 	assert.Nil(t, err)
 }

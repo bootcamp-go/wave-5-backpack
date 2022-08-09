@@ -1,6 +1,7 @@
 package products
 
 import (
+	"context"
 	"errors"
 	"fmt"
 
@@ -8,12 +9,12 @@ import (
 )
 
 type Service interface {
-	GetAll() ([]domain.Product, error)
-	Store(domain.Product) (domain.Product, error)
-	GetById(id uint64) (domain.Product, error)
-	UpdateTotal(product domain.Product) (domain.Product, error)
-	UpdatePartial(product domain.Product) (domain.Product, error)
-	Delete(id uint64) (domain.Product, error)
+	Store(ctx context.Context, product domain.Product) (domain.Product, error)
+	GetAll(ctx context.Context) ([]domain.Product, error)
+	GetById(ctx context.Context, id uint64) (domain.Product, error)
+	UpdateTotal(ctx context.Context, product domain.Product) (domain.Product, error)
+	UpdatePartial(ctx context.Context, product domain.Product) (domain.Product, error)
+	Delete(ctx context.Context, id uint64) (domain.Product, error)
 }
 
 type service struct {
@@ -26,16 +27,16 @@ func NewService(r Repository) Service {
 	}
 }
 
-func (s *service) GetAll() ([]domain.Product, error) {
-	products, err := s.repository.GetAll()
+func (s *service) GetAll(ctx context.Context) ([]domain.Product, error) {
+	products, err := s.repository.GetAll(ctx)
 	if err != nil {
 		return nil, errors.New("no se pudo obtener los productos")
 	}
 	return products, nil
 }
 
-func (s *service) Store(product domain.Product) (domain.Product, error) {
-	producto, err := s.repository.Store(product)
+func (s *service) Store(ctx context.Context, product domain.Product) (domain.Product, error) {
+	producto, err := s.repository.Store(ctx, product)
 	if err != nil {
 		return domain.Product{}, errors.New("no se pudo guardar el producto")
 	}
@@ -43,32 +44,32 @@ func (s *service) Store(product domain.Product) (domain.Product, error) {
 	return producto, nil
 }
 
-func (s *service) GetById(id uint64) (domain.Product, error) {
-	producto, err := s.repository.GetById(id)
+func (s *service) GetById(ctx context.Context, id uint64) (domain.Product, error) {
+	producto, err := s.repository.GetById(ctx, id)
 	if err != nil {
 		return domain.Product{}, fmt.Errorf("no se pudo encontrar el producto con el id: %d", id)
 	}
 	return producto, nil
 }
 
-func (s *service) UpdateTotal(product domain.Product) (domain.Product, error) {
-	producto, err := s.repository.Update(product)
+func (s *service) UpdateTotal(ctx context.Context, product domain.Product) (domain.Product, error) {
+	producto, err := s.repository.Update(ctx, product)
 	if err != nil {
 		return domain.Product{}, err
 	}
 	return producto, nil
 }
 
-func (s *service) UpdatePartial(product domain.Product) (domain.Product, error) {
-	producto, err := s.repository.Update(product)
+func (s *service) UpdatePartial(ctx context.Context, product domain.Product) (domain.Product, error) {
+	producto, err := s.repository.Update(ctx, product)
 	if err != nil {
 		return domain.Product{}, err
 	}
 	return producto, nil
 }
 
-func (s *service) Delete(id uint64) (domain.Product, error) {
-	producto, err := s.repository.Delete(id)
+func (s *service) Delete(ctx context.Context, id uint64) (domain.Product, error) {
+	producto, err := s.repository.Delete(ctx, id)
 	if err != nil {
 		return domain.Product{}, fmt.Errorf("no se pudo encontrar el producto con el id: %d", id)
 	}

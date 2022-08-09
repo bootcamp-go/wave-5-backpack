@@ -1,6 +1,7 @@
 package products
 
 import (
+	"context"
 	"database/sql"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/Ramos_Andres/goweb/practica/internal/domain"
@@ -13,12 +14,12 @@ var (
 )
 
 type Repository interface {
-	Store(domain.Product) (domain.Product, error)
-	GetAll() ([]domain.Product, error)
-	GetById(id uint64) (domain.Product, error)
-	GetByName(name string) (domain.Product, error)
-	Update(domain.Product) (domain.Product, error)
-	Delete(id uint64) (domain.Product, error)
+	Store(ctx context.Context, product domain.Product) (domain.Product, error)
+	GetAll(ctx context.Context) ([]domain.Product, error)
+	GetById(ctx context.Context, id uint64) (domain.Product, error)
+	GetByName(ctx context.Context, name string) (domain.Product, error)
+	Update(ctx context.Context, product domain.Product) (domain.Product, error)
+	Delete(ctx context.Context, id uint64) (domain.Product, error)
 }
 
 type repository struct {
@@ -31,7 +32,7 @@ func NewRepository(db *sql.DB) Repository {
 	}
 }
 
-func (r *repository) Store(product domain.Product) (domain.Product, error) {
+func (r *repository) Store(ctx context.Context, product domain.Product) (domain.Product, error) {
 	db := r.db
 	stmt, err := db.Prepare(createStmt)
 	if err != nil {
@@ -50,7 +51,7 @@ func (r *repository) Store(product domain.Product) (domain.Product, error) {
 	return product, nil
 }
 
-func (r *repository) GetAll() ([]domain.Product, error) {
+func (r *repository) GetAll(ctx context.Context) ([]domain.Product, error) {
 	db := r.db
 	rows, err := db.Query(getAllStmt)
 	if err != nil {
@@ -73,11 +74,11 @@ func (r *repository) GetAll() ([]domain.Product, error) {
 	return productList, nil
 }
 
-func (r *repository) GetById(id uint64) (domain.Product, error) {
+func (r *repository) GetById(ctx context.Context, id uint64) (domain.Product, error) {
 	return domain.Product{}, nil
 }
 
-func (r *repository) GetByName(name string) (domain.Product, error) {
+func (r *repository) GetByName(ctx context.Context, name string) (domain.Product, error) {
 	db := r.db
 	rows, err := db.Query(getByNameStmt, name)
 	if err != nil {
@@ -100,10 +101,10 @@ func (r *repository) GetByName(name string) (domain.Product, error) {
 	return productList[0], nil
 }
 
-func (r *repository) Update(domain.Product) (domain.Product, error) {
+func (r *repository) Update(ctx context.Context, product domain.Product) (domain.Product, error) {
 	return domain.Product{}, nil
 }
 
-func (r *repository) Delete(id uint64) (domain.Product, error) {
+func (r *repository) Delete(ctx context.Context, id uint64) (domain.Product, error) {
 	return domain.Product{}, nil
 }
