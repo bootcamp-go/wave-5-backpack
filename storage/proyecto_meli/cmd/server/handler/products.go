@@ -61,7 +61,7 @@ func NewProduct(p products.Service) *Product {
 // @Router /products [get]
 func (p *Product) GetAll() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		products, err := p.service.GetAll()
+		products, err := p.service.GetAll(c)
 		if err != nil {
 			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
@@ -86,7 +86,7 @@ func (p *Product) GetById() gin.HandlerFunc {
 			c.JSON(500, web.NewResponse(500, nil, BAD_ID))
 			return
 		}
-		product, err := p.service.GetById(id)
+		product, err := p.service.GetById(c, id)
 		if err != nil {
 			c.JSON(404, web.NewResponse(404, nil, PRODUCT_NOT_FOUND))
 			return
@@ -173,7 +173,7 @@ func (p *Product) FilterList() gin.HandlerFunc {
 			}
 		}
 
-		products, err := p.service.FilterList(id, name, color, price, stock, codigo, publicado, fecha)
+		products, err := p.service.FilterList(c, id, name, color, price, stock, codigo, publicado, fecha)
 		if err != nil {
 			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
@@ -242,7 +242,7 @@ func (p *Product) Store() gin.HandlerFunc {
 				return
 			}
 		}
-		product, err := p.service.Store(request.Nombre, request.Color, request.Precio, request.Stock, request.Codigo, request.Publicado, request.FechaCreacion)
+		product, err := p.service.Store(c, request.Nombre, request.Color, request.Precio, request.Stock, request.Codigo, request.Publicado, request.FechaCreacion)
 		if err != nil {
 			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
@@ -301,7 +301,7 @@ func (p *Product) Update() gin.HandlerFunc {
 				return
 			}
 		}
-		product, err := p.service.Update(id, request.Nombre, request.Color, request.Precio, request.Stock, request.Codigo, request.Publicado, request.FechaCreacion)
+		product, err := p.service.Update(c, id, request.Nombre, request.Color, request.Precio, request.Stock, request.Codigo, request.Publicado, request.FechaCreacion)
 		if err != nil {
 			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
@@ -326,7 +326,7 @@ func (p *Product) Delete() gin.HandlerFunc {
 			c.JSON(400, web.NewResponse(400, nil, BAD_ID))
 			return
 		}
-		err = p.service.Delete(id)
+		err = p.service.Delete(c, id)
 		if err != nil {
 			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
@@ -352,6 +352,7 @@ func (p *Product) Update_Name_Price() gin.HandlerFunc {
 
 		id, err := strconv.Atoi(c.Param("id"))
 		if err != nil {
+			fmt.Print(err)
 			c.JSON(400, web.NewResponse(400, nil, BAD_ID))
 			return
 		}
@@ -376,7 +377,7 @@ func (p *Product) Update_Name_Price() gin.HandlerFunc {
 				return
 			}
 		}
-		product, err := p.service.Update_Name_Price(id, request.Nombre, request.Precio)
+		product, err := p.service.Update_Name_Price(c, id, request.Nombre, request.Precio)
 		if err != nil {
 			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
@@ -390,7 +391,7 @@ func (p *Product) GetProductByName() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		name := c.Query("nombre")
 
-		products, err := p.service.GetProductByName(name)
+		products, err := p.service.GetProductByName(c, name)
 		if err != nil {
 			c.JSON(404, web.NewResponse(404, nil, "producto no encontrado"))
 			return
