@@ -38,7 +38,7 @@ func (sdb *StubDB) UpdateNameAndLastName(id int, name string, last string) (doma
 	return domain.Usuarios{}, nil
 }
 
-func (sdb *StubDB) Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error) {
+func (sdb *StubDB) Update(ctx context.Context, id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error) {
 	return domain.Usuarios{}, nil
 }
 

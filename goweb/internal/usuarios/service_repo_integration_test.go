@@ -1,6 +1,7 @@
 package usuarios
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"testing"
@@ -64,6 +65,7 @@ func TestIntegrationUpdate(t *testing.T) {
 	repo := NewRepository(&mockInte)
 	service := NewService(repo)
 	user, err := service.Update(
+		context.TODO(),
 		newUser.Id,
 		newUser.Nombre,
 		newUser.Apellido,
@@ -92,7 +94,7 @@ func TestIntegrationUpdateFailRead(t *testing.T) {
 	// act
 	repo := NewRepository(&mockInte)
 	service := NewService(repo)
-	user, err := service.Update(1, "", "", "", 0, 0, true, "")
+	user, err := service.Update(context.TODO(), 1, "", "", "", 0, 0, true, "")
 	// assert
 	assert.Equal(t, expectedError, err)
 	assert.Equal(t, user.Id, 0)
@@ -114,7 +116,7 @@ func TestIntegrationUpdateFailWrite(t *testing.T) {
 	// act
 	repo := NewRepository(&mockInte)
 	service := NewService(repo)
-	user, err := service.Update(1, "F", "F", "F", 3, 2, true, "F")
+	user, err := service.Update(context.TODO(), 1, "F", "F", "F", 3, 2, true, "F")
 	// assert
 	assert.Equal(t, expectedError, err)
 	assert.Equal(t, user.Id, 0)

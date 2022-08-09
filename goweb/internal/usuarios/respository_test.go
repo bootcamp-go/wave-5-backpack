@@ -2,10 +2,13 @@ package usuarios
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"testing"
+	"time"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -49,7 +52,18 @@ func TestGetAllRepo(t *testing.T) {
 }
 
 func TestGetAllWithContextTO(t *testing.T) {
-
+	db, err := sql.Open("mysql", "root@tcp(localhost:3306)/storage")
+	if err != nil {
+		t.Log(err)
+	}
+	repo := NewRepositoryBD(db)
+	time := 5 * time.Second
+	ctx, cancel := context.WithTimeout(context.Background(), time)
+	defer cancel()
+	_, err = repo.GetAll(ctx)
+	if err != nil {
+		t.Errorf("el error deberia ser nulo %v", err)
+	}
 }
 
 func TestGetAllRepoErrRead(t *testing.T) {

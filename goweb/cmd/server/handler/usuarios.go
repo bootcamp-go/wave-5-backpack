@@ -138,7 +138,7 @@ func (c *Usuarios) Update() gin.HandlerFunc {
 			}
 		}
 
-		user, err := c.service.Update(id, req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, req.Activo, req.FechaCreacion)
+		user, err := c.service.Update(ctx, id, req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, req.Activo, req.FechaCreacion)
 		if err != nil {
 			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
 			return

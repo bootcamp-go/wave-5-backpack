@@ -17,7 +17,7 @@ import (
 type Service interface {
 	GetAll(ctx context.Context) ([]domain.Usuarios, error)
 	Guardar(nombre string, apellido string, email string, edad int, altura float64, actico bool, fecha string) (domain.Usuarios, error)
-	Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error)
+	Update(ctx context.Context, id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error)
 	Delete(id int) error
 	UpdateNameAndLastName(id int, name string, apellido string) (domain.Usuarios, error)
 	GetById(id int) (domain.Usuarios, error)
@@ -42,8 +42,8 @@ func (s *service) Delete(id int) error {
 	return s.repository.Delete(id)
 }
 
-func (s *service) Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error) {
-	usuario, error := s.repository.Update(id, nombre, apellido, email, edad, altura, activo, fecha)
+func (s *service) Update(ctx context.Context, id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error) {
+	usuario, error := s.repository.Update(ctx, id, nombre, apellido, email, edad, altura, activo, fecha)
 	return usuario, error
 }
 

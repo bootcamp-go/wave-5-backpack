@@ -26,7 +26,7 @@ type Repository interface {
 	GetAll(ctx context.Context) ([]domain.Usuarios, error)
 	Guardar(id int, nombre string, apellido string, email string, edad int, altura float64, actico bool, fecha string) (domain.Usuarios, error)
 	LastId() (int, error)
-	Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error)
+	Update(ctx context.Context, id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error)
 	Delete(id int) error
 	UpdateNameAndLastName(id int, name string, apellido string) (domain.Usuarios, error)
 	GetById(id int) (domain.Usuarios, error)
@@ -76,7 +76,7 @@ func (r *repository) UpdateNameAndLastName(id int, name string, last string) (do
 	return domain.Usuarios{}, nil
 }
 
-func (r *repository) Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error) {
+func (r *repository) Update(ctx context.Context, id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error) {
 	var us []domain.Usuarios
 
 	if err := r.db.Read(&us); err != nil {

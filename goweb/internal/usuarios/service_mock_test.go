@@ -36,7 +36,7 @@ func (mdb *MockDB) UpdateNameAndLastName(id int, name string, last string) (doma
 	return user, nil
 }
 
-func (mdb *MockDB) Update(id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error) {
+func (mdb *MockDB) Update(ctx context.Context, id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error) {
 	return domain.Usuarios{}, nil
 }
 
