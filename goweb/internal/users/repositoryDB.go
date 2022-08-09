@@ -18,10 +18,18 @@ func NewRepositoryDB(db *sql.DB) Repository {
 	}
 }
 
+const (
+	GetAll       string = "SELECT id, name, last_name, email, age, height, active, creation_date FROM users"
+	TimeOut10Sec string = "SELECT SLEEP(10) FROM DUAL"
+	GetByName    string = "SELECT id, name, last_name, email, age, height, active, creation_date FROM users WHERE name = ?"
+	StoreUser    string = "INSERT INTO users(name, last_name, email, age, height, active, creation_date) VALUES( ?, ?, ?, ?, ?, ?, ? )"
+	UpdateUser   string = "UPDATE users SET name = ?, last_name = ?, email = ?, age = ?, height = ?, active = ?, creation_date = ? WHERE id = ?"
+)
+
 func (r *repositoryDB) GetAll(ctx context.Context) ([]domain.Users, error) {
 	var user domain.Users
 	var listUser []domain.Users
-	rows, err := r.db.Query("SELECT id, name, last_name, email, age, height, active, creation_date FROM users")
+	rows, err := r.db.QueryContext(ctx, GetAll)
 	if err != nil {
 		return nil, err
 	}
@@ -41,7 +49,7 @@ func (r *repositoryDB) LastID(ctx context.Context) (int, error) {
 func (r *repositoryDB) GetByName(ctx context.Context, name string) ([]domain.Users, error) {
 	var user domain.Users
 	var listUser []domain.Users
-	rows, err := r.db.Query("SELECT id, name, last_name, email, age, height, active, creation_date FROM users WHERE name = ?", name)
+	rows, err := r.db.QueryContext(ctx, GetByName, name)
 	if err != nil {
 		return nil, err
 	}
@@ -55,13 +63,13 @@ func (r *repositoryDB) GetByName(ctx context.Context, name string) ([]domain.Use
 }
 
 func (r *repositoryDB) Store(ctx context.Context, id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {
-	stmt, err := r.db.Prepare("INSERT INTO users(name, last_name, email, age, height, active, creation_date) VALUES( ?, ?, ?, ?, ?, ?, ? )")
+	stmt, err := r.db.PrepareContext(ctx, StoreUser)
 	if err != nil {
 		return domain.Users{}, err
 	}
 	defer stmt.Close()
 	var result sql.Result
-	result, err2 := stmt.Exec(name, lastName, email, age, height, active, creationDate)
+	result, err2 := stmt.ExecContext(ctx, name, lastName, email, age, height, active, creationDate)
 	if err2 != nil {
 		return domain.Users{}, err
 	}
@@ -72,7 +80,18 @@ func (r *repositoryDB) Store(ctx context.Context, id, age int, name, lastName, e
 }
 
 func (r *repositoryDB) Update(ctx context.Context, id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {
-	return domain.Users{}, fmt.Errorf(UserNotFound, id)
+	stmt, err := r.db.PrepareContext(ctx, UpdateUser)
+	if err != nil {
+		return domain.Users{}, err
+	}
+	defer stmt.Close()
+	_, err2 := stmt.ExecContext(ctx, name, lastName, email, age, height, active, creationDate, id)
+	if err2 != nil {
+		return domain.Users{}, err
+	}
+	user := domain.Users{
+		Id: id, Name: name, LastName: lastName, Email: email, Age: age, Height: height, Active: active, CreationDate: creationDate}
+	return user, nil
 }
 
 func (r *repositoryDB) UpdateLastNameAndAge(ctx context.Context, id, age int, lastName string) (domain.Users, error) {
