@@ -38,6 +38,7 @@ func (r *repository) Store(ctx *gin.Context, monto float64, cod, moneda, emisor,
 	if err != nil {
 		return models.Transaction{}, err
 	}
+	defer stmt.Close()
 
 	t := models.Transaction{
 		Monto:    monto,
@@ -47,7 +48,7 @@ func (r *repository) Store(ctx *gin.Context, monto float64, cod, moneda, emisor,
 		Fecha:    time.Now().Format("2006-01-01"),
 	}
 
-	res, err := stmt.Exec(monto, cod, moneda, emisor, receptor, t.Fecha)
+	res, err := stmt.ExecContext(ctx, monto, cod, moneda, emisor, receptor, t.Fecha)
 	if err != nil {
 		return models.Transaction{}, err
 	}
@@ -63,7 +64,7 @@ func (r *repository) Store(ctx *gin.Context, monto float64, cod, moneda, emisor,
 }
 
 func (r *repository) GetByCod(ctx *gin.Context, cod string) (models.Transaction, error) {
-	rows, err := r.db.Query(queryGetByCod, cod)
+	rows, err := r.db.QueryContext(ctx, queryGetByCod, cod)
 	if err != nil {
 		return models.Transaction{}, err
 	}
@@ -79,7 +80,7 @@ func (r *repository) GetByCod(ctx *gin.Context, cod string) (models.Transaction,
 }
 
 func (r *repository) GetByID(ctx *gin.Context, id int) (models.Transaction, error) {
-	rows, err := r.db.Query(queryGetByID, id)
+	rows, err := r.db.QueryContext(ctx, queryGetByID, id)
 	if err != nil {
 		return models.Transaction{}, err
 	}
@@ -99,7 +100,7 @@ func (r *repository) GetByID(ctx *gin.Context, id int) (models.Transaction, erro
 }
 
 func (r *repository) GetAll(ctx *gin.Context) ([]models.Transaction, error) {
-	rows, err := r.db.Query(queryGetAll)
+	rows, err := r.db.QueryContext(ctx, queryGetAll)
 	if err != nil {
 		return []models.Transaction{}, err
 	}
@@ -121,6 +122,7 @@ func (r *repository) Update(ctx *gin.Context, id int, monto float64, cod, moneda
 	if err != nil {
 		return models.Transaction{}, err
 	}
+	defer stmt.Close()
 
 	_, err = stmt.ExecContext(ctx, monto, cod, moneda, emisor, receptor, id)
 	if err != nil {

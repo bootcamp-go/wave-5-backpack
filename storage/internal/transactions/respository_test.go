@@ -12,7 +12,7 @@ func TestRepositoryGetByID(t *testing.T) {
 	//Arrange
 	db, err := db.NewConnection()
 	assert.Nil(t, err)
-	
+
 	repo := NewRepository(db)
 
 	//Act
