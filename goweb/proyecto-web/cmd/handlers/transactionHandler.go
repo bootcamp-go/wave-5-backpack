@@ -148,8 +148,7 @@ func (t *TransactionHandler) Update() gin.HandlerFunc {
 			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
 		}
-
-		updatedTransaction, err := t.service.Update(id, request.CodigoTransaccion, request.Moneda, request.Monto, request.Emisor, request.Receptor, request.FechaTransaccion)
+		updatedTransaction, err := t.service.Update(ctx, id, request.CodigoTransaccion, request.Moneda, request.Monto, request.Emisor, request.Receptor, request.FechaTransaccion)
 
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))

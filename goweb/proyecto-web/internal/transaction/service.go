@@ -1,6 +1,7 @@
 package transaction
 
 import (
+	"context"
 	"proyecto-web/internal/domain"
 	"proyecto-web/internal/transaction/interfaces"
 )
@@ -9,7 +10,7 @@ type ITransactionService interface {
 	GetAll() []domain.Transaction
 	Create(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error)
 	GetById(id int) (domain.Transaction, error)
-	Update(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error)
+	Update(ctx context.Context, id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error)
 	UpdateParcial(id int, codigoTransaccion string, monto float64) (domain.Transaction, error)
 	Delete(id int) error
 	GetByCodigoTransaccion(codigo string) (domain.Transaction, error)
@@ -38,8 +39,8 @@ func (s *transactionService) GetById(id int) (domain.Transaction, error) {
 	return s.repository.GetById(id)
 }
 
-func (s *transactionService) Update(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error) {
-	return s.repository.Update(id, codigoTransaccion, moneda, monto, emisor, receptor, fecha)
+func (s *transactionService) Update(ctx context.Context, id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error) {
+	return s.repository.Update(ctx, id, codigoTransaccion, moneda, monto, emisor, receptor, fecha)
 }
 
 func (s *transactionService) UpdateParcial(id int, codigoTransaccion string, monto float64) (domain.Transaction, error) {

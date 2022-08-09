@@ -1,6 +1,7 @@
 package transaction
 
 import (
+	"context"
 	"fmt"
 	"proyecto-web/internal/domain"
 	"proyecto-web/internal/transaction/interfaces"
@@ -67,7 +68,7 @@ func (r *repository) Create(codigoTransaccion string, moneda string, monto float
 	return nuevaTransaccion, nil
 }
 
-func (r *repository) Update(id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error) {
+func (r *repository) Update(ctx context.Context, id int, codigoTransaccion string, moneda string, monto float64, emisor string, receptor string, fecha string) (domain.Transaction, error) {
 	transacciones, err := r.GetAll()
 	if err != nil {
 		return domain.Transaction{}, err
