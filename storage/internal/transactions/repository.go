@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	failedReading = "hubo un error de lectura. "
-	failedWriting = "hubo un error de escritura. "
+    InsertTransaction string = "SELECT id, cod_transaction, currency, amount, sender, receiver, date_order FROM TRANSACTIONS WHERE sender = ?;"
+    GetTransactionBySender string = "INSERT INTO TRANSACTIONS (cod_transaction, currency, amount, sender, receiver, date_order) VALUES (?, ?, ?, ?, ?, ?)"
 )
 
 type IRepository interface {
@@ -41,7 +41,7 @@ func(repository *Repository) GetAll() ([]domain.Transaction, error) {
 
 func(repository *Repository) GetBySender(sender string) (domain.Transaction, error) {
 
-	stmt, err := repository.db.Prepare("SELECT id, cod_transaction, currency, amount, sender, receiver, date_order FROM TRANSACTIONS WHERE sender = ?;")
+	stmt, err := repository.db.Prepare(InsertTransaction)
 	if err != nil {
 		return domain.Transaction{}, fmt.Errorf(err.Error())
 	}
@@ -49,7 +49,7 @@ func(repository *Repository) GetBySender(sender string) (domain.Transaction, err
 	defer stmt.Close()
 
 	transaction := domain.Transaction{}
-	//Retorna un sql.Return y un error
+
 	err = stmt.QueryRow(sender).Scan(
 		&transaction.Id,
 		&transaction.CodTransaction,
@@ -68,7 +68,7 @@ func(repository *Repository) GetBySender(sender string) (domain.Transaction, err
 
 func (repository *Repository) Store(id int, codTransaction string, currency string, amount int, sender string, receiver string, dateOrder string) (domain.Transaction, error) {
 
-	stmt, err := repository.db.Prepare("INSERT INTO TRANSACTIONS (cod_transaction, currency, amount, sender, receiver, date_order) VALUES (?, ?, ?, ?, ?, ?)")
+	stmt, err := repository.db.Prepare(GetTransactionBySender)
 	if err != nil {
 		return domain.Transaction{}, fmt.Errorf(err.Error())
 	}
