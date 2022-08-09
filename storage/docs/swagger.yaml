@@ -1,0 +1,143 @@
+definitions:
+  requestdto.TransactionRequest:
+    properties:
+      amount:
+        type: integer
+      cod_transaction:
+        type: string
+      currency:
+        type: string
+      date_order:
+        type: string
+      receiver:
+        type: string
+      sender:
+        type: string
+    type: object
+info:
+  contact:
+    name: API Support
+    url: https://developers.mercadolibre.com.ar/support
+  description: This API handle MELI Transactions
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: MELI Bootcamp API
+  version: "1.0"
+paths:
+  /transactions:
+    get:
+      consumes:
+      - application/json
+      description: Get all transactions
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      summary: Get transactions
+      tags:
+      - Transactions
+    post:
+      consumes:
+      - application/json
+      description: store new Transactions
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Transaction to store
+        in: body
+        name: token
+        required: true
+        schema:
+          $ref: '#/definitions/requestdto.TransactionRequest'
+      produces:
+      - application/json
+      responses: {}
+      summary: Store transactions
+      tags:
+      - Transactions
+  /transactions/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete transaction
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      summary: Delete transaction by ID
+      tags:
+      - Transactions
+    patch:
+      consumes:
+      - application/json
+      description: update transaction (only amount)
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Transaction to store
+        in: body
+        name: token
+        required: true
+        schema:
+          $ref: '#/definitions/requestdto.TransactionRequest'
+      produces:
+      - application/json
+      responses: {}
+      summary: update transaction (only amount) by ID
+      tags:
+      - Transactions
+    put:
+      consumes:
+      - application/json
+      description: update transaction
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Transaction to store
+        in: body
+        name: token
+        required: true
+        schema:
+          $ref: '#/definitions/requestdto.TransactionRequest'
+      produces:
+      - application/json
+      responses: {}
+      summary: update transaction by ID
+      tags:
+      - Transactions
+swagger: "2.0"
