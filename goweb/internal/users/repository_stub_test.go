@@ -1,6 +1,7 @@
 package users
 
 import (
+	"context"
 	"testing"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
@@ -33,7 +34,7 @@ func TestGetAllRepo(t *testing.T) {
 		{Id: 1, Name: "Juan", LastName: "Perez", Height: 1.82, CreationDate: "1992"},
 		{Id: 2, Name: "Simon", LastName: "Fernandez", Height: 1.65, CreationDate: "1232"},
 	}
-	user, err := repo.GetAll()
+	user, err := repo.GetAll(context.TODO())
 
 	assert.Equal(t, user, expected)
 	assert.Nil(t, err)

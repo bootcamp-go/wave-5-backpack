@@ -1,6 +1,7 @@
 package users
 
 import (
+	"context"
 	"testing"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
@@ -11,7 +12,7 @@ type MockDB struct {
 	GetWasCalled bool
 }
 
-func (s *MockDB) GetAll() ([]domain.Users, error) {
+func (s *MockDB) GetAll(ctx context.Context) ([]domain.Users, error) {
 	users := []domain.Users{
 		{
 			Id:           1,
@@ -37,24 +38,24 @@ func (s *MockDB) GetAll() ([]domain.Users, error) {
 	return users, nil
 }
 
-func (s *MockDB) Store(id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {
+func (s *MockDB) Store(ctx context.Context, id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {
 	return domain.Users{}, nil
 }
 
-func (s *MockDB) Update(id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {
+func (s *MockDB) Update(ctx context.Context, id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {
 	return domain.Users{}, nil
 }
 
-func (s *MockDB) LastID() (int, error) {
+func (s *MockDB) LastID(ctx context.Context) (int, error) {
 	return 0, nil
 }
 
-func (s *MockDB) GetByName(name string) ([]domain.Users, error) {
+func (s *MockDB) GetByName(ctx context.Context, name string) ([]domain.Users, error) {
 	return []domain.Users{}, nil
 }
 
-func (s *MockDB) UpdateLastNameAndAge(id, age int, lastName string) (domain.Users, error) {
-	beforeUpdate, _ := s.GetAll()
+func (s *MockDB) UpdateLastNameAndAge(ctx context.Context, id, age int, lastName string) (domain.Users, error) {
+	beforeUpdate, _ := s.GetAll(ctx)
 	s.GetWasCalled = true
 
 	var user domain.Users
@@ -69,7 +70,7 @@ func (s *MockDB) UpdateLastNameAndAge(id, age int, lastName string) (domain.User
 	return domain.Users{}, nil
 }
 
-func (s *MockDB) Delete(id int) error {
+func (s *MockDB) Delete(ctx context.Context, id int) error {
 	return nil
 }
 
@@ -88,7 +89,7 @@ func TestUpdateLastNameAndAge(t *testing.T) {
 		CreationDate: "12/5/19",
 	}
 
-	result, _ := s.UpdateLastNameAndAge(1, 25, "Fernandez")
+	result, _ := s.UpdateLastNameAndAge(context.TODO(), 1, 25, "Fernandez")
 
 	assert.Equal(t, expected, result)
 	assert.True(t, r.GetWasCalled)
@@ -100,7 +101,7 @@ func TestUpdateLastNameAndAgeNotUpdated(t *testing.T) {
 
 	expected := domain.Users{}
 
-	result, _ := s.UpdateLastNameAndAge(5, 25, "Fernandez")
+	result, _ := s.UpdateLastNameAndAge(context.TODO(), 5, 25, "Fernandez")
 
 	assert.Equal(t, expected, result)
 	assert.True(t, r.GetWasCalled)

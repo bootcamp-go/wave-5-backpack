@@ -1,6 +1,7 @@
 package users
 
 import (
+	"context"
 	"testing"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
@@ -35,7 +36,7 @@ func TestUpdateNAL(t *testing.T) {
 	repo := NewRepository(&myMockStore)
 	expected := domain.Users{Id: 1, Name: "Juan", LastName: "Nuevo", Height: 1.82, Age: 15, CreationDate: "1992"}
 
-	user, err := repo.UpdateLastNameAndAge(1, 15, "Nuevo")
+	user, err := repo.UpdateLastNameAndAge(context.TODO(), 1, 15, "Nuevo")
 	assert.True(t, myMockStore.readWasCalled)
 	assert.Equal(t, user, expected)
 	assert.Nil(t, err)

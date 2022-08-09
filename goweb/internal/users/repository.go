@@ -1,6 +1,7 @@
 package users
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
@@ -14,13 +15,13 @@ const (
 )
 
 type Repository interface {
-	GetAll() ([]domain.Users, error)
-	GetByName(name string) ([]domain.Users, error)
-	Store(id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error)
-	LastID() (int, error)
-	Update(id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error)
-	UpdateLastNameAndAge(id, age int, lastName string) (domain.Users, error)
-	Delete(id int) error
+	GetAll(ctx context.Context) ([]domain.Users, error)
+	GetByName(ctx context.Context, name string) ([]domain.Users, error)
+	Store(ctx context.Context, id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error)
+	LastID(ctx context.Context) (int, error)
+	Update(ctx context.Context, id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error)
+	UpdateLastNameAndAge(ctx context.Context, id, age int, lastName string) (domain.Users, error)
+	Delete(ctx context.Context, id int) error
 }
 
 type repository struct {
@@ -33,7 +34,7 @@ func NewRepository(db store.Store) Repository {
 	}
 }
 
-func (r *repository) GetAll() ([]domain.Users, error) {
+func (r *repository) GetAll(ctx context.Context) ([]domain.Users, error) {
 	var users []domain.Users
 	if err := r.db.Read(&users); err != nil {
 		return nil, fmt.Errorf(FailReading)
@@ -41,12 +42,12 @@ func (r *repository) GetAll() ([]domain.Users, error) {
 	return users, nil
 }
 
-func (r *repository) GetByName(name string) ([]domain.Users, error) {
+func (r *repository) GetByName(ctx context.Context, name string) ([]domain.Users, error) {
 	var users []domain.Users
 	return users, nil
 }
 
-func (r *repository) LastID() (int, error) {
+func (r *repository) LastID(ctx context.Context) (int, error) {
 	var users []domain.Users
 	if err := r.db.Read(&users); err != nil {
 		return 0, fmt.Errorf(FailReading)
@@ -58,7 +59,7 @@ func (r *repository) LastID() (int, error) {
 	return users[len(users)-1].Id, nil
 }
 
-func (r *repository) Store(id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {
+func (r *repository) Store(ctx context.Context, id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {
 	var users []domain.Users
 
 	if err := r.db.Read(&users); err != nil {
@@ -76,7 +77,7 @@ func (r *repository) Store(id, age int, name, lastName, email, creationDate stri
 	return user, nil
 }
 
-func (r *repository) Update(id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {
+func (r *repository) Update(ctx context.Context, id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {
 	var users []domain.Users
 
 	if err := r.db.Read(&users); err != nil {
@@ -103,7 +104,7 @@ func (r *repository) Update(id, age int, name, lastName, email, creationDate str
 	return domain.Users{}, fmt.Errorf(UserNotFound, id)
 }
 
-func (r *repository) UpdateLastNameAndAge(id, age int, lastName string) (domain.Users, error) {
+func (r *repository) UpdateLastNameAndAge(ctx context.Context, id, age int, lastName string) (domain.Users, error) {
 	var users []domain.Users
 
 	if err := r.db.Read(&users); err != nil {
@@ -125,7 +126,7 @@ func (r *repository) UpdateLastNameAndAge(id, age int, lastName string) (domain.
 	return domain.Users{}, fmt.Errorf(UserNotFound, id)
 }
 
-func (r *repository) Delete(id int) error {
+func (r *repository) Delete(ctx context.Context, id int) error {
 	var users []domain.Users
 
 	if err := r.db.Read(&users); err != nil {

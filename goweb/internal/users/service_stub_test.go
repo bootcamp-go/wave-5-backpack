@@ -1,6 +1,7 @@
 package users
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -14,7 +15,7 @@ type StubDB struct {
 	errLastID  string
 }
 
-func (s *StubDB) GetAll() ([]domain.Users, error) {
+func (s *StubDB) GetAll(ctx context.Context) ([]domain.Users, error) {
 	users := []domain.Users{
 		{
 			Id:           1,
@@ -43,11 +44,11 @@ func (s *StubDB) GetAll() ([]domain.Users, error) {
 	return users, nil
 }
 
-func (s *StubDB) GetByName(name string) ([]domain.Users, error) {
+func (s *StubDB) GetByName(ctx context.Context, name string) ([]domain.Users, error) {
 	return []domain.Users{}, nil
 }
 
-func (s *StubDB) Store(id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {
+func (s *StubDB) Store(ctx context.Context, id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {
 	if s.errRead != "" {
 		return domain.Users{}, fmt.Errorf("error: %s", s.errRead)
 	}
@@ -67,11 +68,11 @@ func (s *StubDB) Store(id, age int, name, lastName, email, creationDate string, 
 	return user, nil
 }
 
-func (s *StubDB) Update(id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {
+func (s *StubDB) Update(ctx context.Context, id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {
 	return domain.Users{}, nil
 }
 
-func (s *StubDB) LastID() (int, error) {
+func (s *StubDB) LastID(ctx context.Context) (int, error) {
 	users := []domain.Users{
 		{
 			Id:           1,
@@ -90,11 +91,11 @@ func (s *StubDB) LastID() (int, error) {
 	return len(users), nil
 }
 
-func (s *StubDB) UpdateLastNameAndAge(id, age int, lastName string) (domain.Users, error) {
+func (s *StubDB) UpdateLastNameAndAge(ctx context.Context, id, age int, lastName string) (domain.Users, error) {
 	return domain.Users{}, nil
 }
 
-func (s *StubDB) Delete(id int) error {
+func (s *StubDB) Delete(ctx context.Context, id int) error {
 	return nil
 }
 
@@ -125,7 +126,7 @@ func TestGetAll(t *testing.T) {
 		},
 	}
 
-	result, _ := s.GetAll()
+	result, _ := s.GetAll(context.TODO())
 
 	assert.Equal(t, expected, result)
 }
@@ -134,7 +135,7 @@ func TestGetAllErrRead(t *testing.T) {
 	r := StubDB{errRead: "fail"}
 	s := NewService(&r)
 
-	_, err := s.GetAll()
+	_, err := s.GetAll(context.TODO())
 
 	assert.EqualError(t, err, "error: fail")
 }
@@ -143,7 +144,7 @@ func TestStore(t *testing.T) {
 	r := StubDB{}
 	s := NewService(&r)
 
-	result, err := s.Store(20, "new", "new", "new", "new", 1.80, true)
+	result, err := s.Store(context.TODO(), 20, "new", "new", "new", "new", 1.80, true)
 	expected := domain.Users{
 		Id:           2,
 		Age:          20,
@@ -162,7 +163,7 @@ func TestStoreErrLastId(t *testing.T) {
 	r := StubDB{errLastID: "fail"}
 	s := NewService(&r)
 
-	_, err := s.Store(20, "new", "new", "new", "new", 1.80, true)
+	_, err := s.Store(context.TODO(), 20, "new", "new", "new", "new", 1.80, true)
 	assert.EqualError(t, err, "error: fail")
 }
 
@@ -170,6 +171,6 @@ func TestStoreErrWriting(t *testing.T) {
 	r := StubDB{errWriting: "fail"}
 	s := NewService(&r)
 
-	_, err := s.Store(20, "new", "new", "new", "new", 1.80, true)
+	_, err := s.Store(context.TODO(), 20, "new", "new", "new", "new", 1.80, true)
 	assert.EqualError(t, err, "error: fail")
 }

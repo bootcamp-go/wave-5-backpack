@@ -45,7 +45,7 @@ func NewUser(p users.Service) *User {
 // @router /users [get]
 func (u *User) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		u, err := u.service.GetAll()
+		u, err := u.service.GetAll(ctx)
 		if err != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
@@ -57,7 +57,7 @@ func (u *User) GetAll() gin.HandlerFunc {
 func (c *User) GetByName() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		fmt.Println(ctx.Param("nombre"))
-		u, err := c.service.GetByName(ctx.Param("nombre"))
+		u, err := c.service.GetByName(ctx, ctx.Param("nombre"))
 		if err != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, "no existen registros con el nombre indicado"))
 			return
@@ -108,7 +108,7 @@ func (u *User) Store() gin.HandlerFunc {
 			}
 		}
 
-		u, err := u.service.Store(req.Age, req.Name, req.LastName, req.Email, req.CreationDate, req.Height, req.Active)
+		u, err := u.service.Store(ctx, req.Age, req.Name, req.LastName, req.Email, req.CreationDate, req.Height, req.Active)
 		if err != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
@@ -165,7 +165,7 @@ func (u *User) Update() gin.HandlerFunc {
 			}
 		}
 
-		u, err := u.service.Update(id, req.Age, req.Name, req.LastName, req.Email, req.CreationDate, req.Height, req.Active)
+		u, err := u.service.Update(ctx, id, req.Age, req.Name, req.LastName, req.Email, req.CreationDate, req.Height, req.Active)
 		if err != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
@@ -196,7 +196,7 @@ func (u *User) UpdateLastNameAndAge() gin.HandlerFunc {
 			}
 		}
 
-		u, err := u.service.UpdateLastNameAndAge(id, req.Age, req.LastName)
+		u, err := u.service.UpdateLastNameAndAge(ctx, id, req.Age, req.LastName)
 		if err != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
@@ -214,7 +214,7 @@ func (u *User) Delete() gin.HandlerFunc {
 			return
 		}
 
-		err = u.service.Delete(id)
+		err = u.service.Delete(ctx, id)
 		if err != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return

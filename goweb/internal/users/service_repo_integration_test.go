@@ -1,6 +1,7 @@
 package users
 
 import (
+	"context"
 	"fmt"
 	"testing"
 
@@ -53,6 +54,7 @@ func TestIntegrationUpdate(t *testing.T) {
 	repo := NewRepository(&mockInte)
 	service := NewService(repo)
 	user, err := service.Update(
+		context.TODO(),
 		updateUser.Id,
 		updateUser.Age,
 		updateUser.Name,
@@ -87,6 +89,7 @@ func TestIntegrationUpdateFailReading(t *testing.T) {
 	repo := NewRepository(&mockInte)
 	service := NewService(repo)
 	_, err := service.Update(
+		context.TODO(),
 		updateUser.Id,
 		updateUser.Age,
 		updateUser.Name,
@@ -118,6 +121,7 @@ func TestIntegrationUpdateFailWriting(t *testing.T) {
 	repo := NewRepository(&mockInte)
 	service := NewService(repo)
 	_, err := service.Update(
+		context.TODO(),
 		updateUser.Id,
 		updateUser.Age,
 		updateUser.Name,
@@ -145,7 +149,7 @@ func TestIntegrationDelete(t *testing.T) {
 	// act
 	repo := NewRepository(&mockInte)
 	service := NewService(repo)
-	err := service.Delete(1)
+	err := service.Delete(context.TODO(), 1)
 	// assert
 	assert.Nil(t, err)
 }
@@ -165,7 +169,7 @@ func TestIntegrationDeleteNotFound(t *testing.T) {
 	// act
 	repo := NewRepository(&mockInte)
 	service := NewService(repo)
-	errNotFound := service.Delete(30)
+	errNotFound := service.Delete(context.TODO(), 30)
 	// assert
 	assert.ErrorContains(t, errNotFound, writeErr.Error())
 }
