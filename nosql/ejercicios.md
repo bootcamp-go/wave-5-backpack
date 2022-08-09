@@ -102,7 +102,10 @@ db.restaurantes.aggregate([
 ```javascript
 db.restaurantes.aggregate([
   {
-     $unwind: "$grados"
+     $unwind: {path: "$grados"}
+  },
+  {
+   $match : {'grados.puntaje' :{ $gt : 3 } }
   },
   {
     $group:{
