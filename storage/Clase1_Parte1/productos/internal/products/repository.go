@@ -2,6 +2,7 @@ package products
 
 import (
 	"Clase1_Parte1/productos/internal/domain"
+	"context"
 	"database/sql"
 )
 
@@ -12,14 +13,27 @@ const (
 )
 
 type Repository interface {
-	GetAll() ([]domain.Product, error)
-	Store(nombre, color string, precio, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Product, error)
-	GetByID(id int) (domain.Product, error)
-	GetByName(nombre string) ([]domain.Product, error)
-	Update(id int, nombre, color string, precio, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Product, error)
-	UpdateNamePrice(id int, nombre string, precio int) (domain.Product, error)
-	Delete(id int) (domain.Product, error)
+	GetAll(ctx context.Context) ([]domain.Product, error)
+	Store(ctx context.Context, nombre, color string, precio, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Product, error)
+	GetByID(ctx context.Context, id int) (domain.Product, error)
+	GetByName(ctx context.Context, nombre string) ([]domain.Product, error)
+	Update(ctx context.Context, id int, nombre, color string, precio, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Product, error)
+	UpdateNamePrice(ctx context.Context, id int, nombre string, precio int) (domain.Product, error)
+	Delete(ctx context.Context, id int) (domain.Product, error)
 }
+
+const (
+	GetAllProducts         = "SELECT p.id, p.nombre, p.color, p.precio, p.stock, p.codigo, p.publicado, p.fecha_creacion FROM products p"
+	SaveProduct            = "INSERT INTO products(nombre, color, precio, stock, codigo, publicado, fecha_creacion) VALUES( ?, ?, ?, ?, ?, ?, ?)"
+	GetProdyctByID         = "SELECT p.id, p.nombre, p.color, p.precio, p.stock, p.codigo, p.publicado, p.fecha_creacion FROM products p WHERE p.id = ?"
+	GetProductByName       = "SELECT p.id, p.nombre, p.color, p.precio, p.stock, p.codigo, p.publicado, p.fecha_creacion FROM products p WHERE p.nombre = ?"
+	UpdateProduct          = "UPDATE products SET nombre = ?, color = ?, precio = ?, stock = ?, codigo = ?, publicado = ?, fecha_creacion = ? WHERE id = ?"
+	UpdateProductNamePrice = "UPDATE products SET nombre = ?, precio = ? WHERE id = ?"
+	DeleteProduct          = "DELETE FROM products WHERE id = ?"
+	GetFullData            = `SELECT p.id, p.name, p.type, p.count, p.price, w.id, w.name, w.address
+	FROM products AS p INNER JOIN warehouses AS w ON p.warehouse_id = w.id WHERE p.id = ?`
+	GetProductSleep = "SELECT sleep(10) FROM DUAL where 0 < ?"
+)
 
 type repository struct {
 	db *sql.DB
@@ -31,10 +45,10 @@ func NewRepository(db *sql.DB) Repository {
 	}
 }
 
-func (r *repository) GetAll() ([]domain.Product, error) {
+func (r *repository) GetAll(ctx context.Context) ([]domain.Product, error) {
 	var products []domain.Product
 	db := r.db
-	rows, err := db.Query("select * from products")
+	rows, err := db.Query(GetAllProducts)
 	if err != nil {
 		return nil, err
 	}
@@ -48,9 +62,9 @@ func (r *repository) GetAll() ([]domain.Product, error) {
 	return products, nil
 }
 
-func (r *repository) Store(nombre, color string, precio, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Product, error) {
+func (r *repository) Store(ctx context.Context, nombre, color string, precio, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Product, error) {
 	db := r.db
-	stmt, err := db.Prepare("INSERT INTO products(nombre, color, precio, stock, codigo, publicado, fecha_creacion) VALUES( ?, ?, ?, ?, ?, ?, ?)")
+	stmt, err := db.Prepare(SaveProduct)
 	if err != nil {
 		return domain.Product{}, err
 	}
@@ -74,10 +88,10 @@ func (r *repository) Store(nombre, color string, precio, stock int, codigo strin
 	return product, nil
 }
 
-func (r *repository) GetByID(id int) (domain.Product, error) {
+func (r *repository) GetByID(ctx context.Context, id int) (domain.Product, error) {
 	var product domain.Product
 	db := r.db
-	rows, err := db.Query("select * from products where id = ?", id)
+	rows, err := db.Query(GetProdyctByID, id)
 	if err != nil {
 		return product, err
 	}
@@ -89,10 +103,10 @@ func (r *repository) GetByID(id int) (domain.Product, error) {
 	return product, nil
 }
 
-func (r *repository) GetByName(nombre string) ([]domain.Product, error) {
+func (r *repository) GetByName(ctx context.Context, nombre string) ([]domain.Product, error) {
 	var products []domain.Product
 	db := r.db
-	rows, err := db.Query("select * from products where nombre = ?", nombre)
+	rows, err := db.Query(GetProductByName, nombre)
 	if err != nil {
 		return nil, err
 	}
@@ -106,14 +120,14 @@ func (r *repository) GetByName(nombre string) ([]domain.Product, error) {
 	return products, nil
 }
 
-func (r *repository) Update(id int, nombre, color string, precio, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Product, error) {
+func (r *repository) Update(ctx context.Context, id int, nombre, color string, precio, stock int, codigo string, publicado bool, fechaCreacion string) (domain.Product, error) {
 	db := r.db
-	stmt, err := db.Prepare("UPDATE products SET nombre = ?, color = ?, precio = ?, stock = ?, codigo = ?, publicado = ?, fecha_creacion = ? WHERE id = ?")
+	stmt, err := db.Prepare(UpdateProduct)
 	if err != nil {
 		return domain.Product{}, err
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(nombre, color, precio, stock, codigo, publicado, fechaCreacion, id)
+	_, err = stmt.ExecContext(ctx, nombre, color, precio, stock, codigo, publicado, fechaCreacion, id)
 	if err != nil {
 		return domain.Product{}, err
 	}
@@ -130,9 +144,9 @@ func (r *repository) Update(id int, nombre, color string, precio, stock int, cod
 	return product, nil
 }
 
-func (r *repository) UpdateNamePrice(id int, nombre string, precio int) (domain.Product, error) {
+func (r *repository) UpdateNamePrice(ctx context.Context, id int, nombre string, precio int) (domain.Product, error) {
 	db := r.db
-	stmt, err := db.Prepare("UPDATE products SET nombre = ?, precio = ? WHERE id = ?")
+	stmt, err := db.Prepare(UpdateProductNamePrice)
 	if err != nil {
 		return domain.Product{}, err
 	}
@@ -141,21 +155,21 @@ func (r *repository) UpdateNamePrice(id int, nombre string, precio int) (domain.
 	if err != nil {
 		return domain.Product{}, err
 	}
-	product, err := r.GetByID(id)
+	product, err := r.GetByID(ctx, id)
 	if err != nil {
 		return domain.Product{}, err
 	}
 	return product, nil
 }
 
-func (r *repository) Delete(id int) (domain.Product, error) {
+func (r *repository) Delete(ctx context.Context, id int) (domain.Product, error) {
 	db := r.db
-	stmt, err := db.Prepare("DELETE FROM products WHERE id = ?")
+	stmt, err := db.Prepare(DeleteProduct)
 	if err != nil {
 		return domain.Product{}, err
 	}
 	defer stmt.Close()
-	product, err := r.GetByID(id)
+	product, err := r.GetByID(ctx, id)
 	if err != nil {
 		return domain.Product{}, err
 	}

@@ -43,7 +43,7 @@ func NewProduct(s products.Service) *Product {
 // @Router /productos [get]
 func (p *Product) GetAll() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		p, err := p.service.GetAll()
+		p, err := p.service.GetAll(ctx)
 		if err != nil {
 			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
 			return
@@ -72,7 +72,7 @@ func (p *Product) GetByID() gin.HandlerFunc {
 			return
 		}
 
-		p, err := p.service.GetByID(id)
+		p, err := p.service.GetByID(ctx, id)
 		if err != nil {
 			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
 			return
@@ -96,7 +96,7 @@ func (p *Product) GetByName() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		nombre := ctx.Param("name")
 
-		p, err := p.service.GetByName(nombre)
+		p, err := p.service.GetByName(ctx, nombre)
 		if err != nil {
 			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
 			return
@@ -132,7 +132,7 @@ func (p *Product) Store() gin.HandlerFunc {
 			return
 		}
 
-		p, err := p.service.Store(req.Nombre, req.Color, req.Precio, req.Stock, req.Codigo, req.Publicado, req.FechaCreacion)
+		p, err := p.service.Store(ctx, req.Nombre, req.Color, req.Precio, req.Stock, req.Codigo, req.Publicado, req.FechaCreacion)
 		if err != nil {
 			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
 			return
@@ -175,7 +175,7 @@ func (p *Product) Update() gin.HandlerFunc {
 			return
 		}
 
-		p, err := p.service.Update(id, req.Nombre, req.Color, req.Precio, req.Stock, req.Codigo, req.Publicado, req.FechaCreacion)
+		p, err := p.service.Update(ctx, id, req.Nombre, req.Color, req.Precio, req.Stock, req.Codigo, req.Publicado, req.FechaCreacion)
 		if err != nil {
 			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
 			return
@@ -225,7 +225,7 @@ func (p *Product) UpdateNamePrice() gin.HandlerFunc {
 			return
 		}
 
-		p, err := p.service.UpdateNamePrice(id, req.Nombre, req.Precio)
+		p, err := p.service.UpdateNamePrice(ctx, id, req.Nombre, req.Precio)
 		if err != nil {
 			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
 			return
@@ -253,7 +253,7 @@ func (p *Product) Delete() gin.HandlerFunc {
 			return
 		}
 
-		p, err := p.service.Delete(id)
+		p, err := p.service.Delete(ctx, id)
 		if err != nil {
 			ctx.JSON(500, web.NewResponse(500, nil, err.Error()))
 			return
