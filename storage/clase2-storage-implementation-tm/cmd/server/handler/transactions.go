@@ -66,7 +66,7 @@ func (t *Transaction) GetAll() gin.HandlerFunc {
 			ctx.JSON(401, web.NewResponse(401, nil, InvalidToken))
 			return
 		}
-		p, err := t.service.GetAll()
+		p, err := t.service.GetAll(ctx)
 		if err != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
@@ -241,7 +241,7 @@ func (t *Transaction) Update() gin.HandlerFunc {
 			return
 		}
 
-		t, err := t.service.Update(int(id), req.CodigoTransaccion, req.Moneda,
+		t, err := t.service.Update(ctx, int(id), req.CodigoTransaccion, req.Moneda,
 			req.Monto, req.Emisor, req.Receptor, req.Fecha)
 		if err != nil {
 			ctx.JSON(400, web.NewResponse(400, nil, err.Error()))
