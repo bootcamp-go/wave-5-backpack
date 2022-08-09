@@ -57,19 +57,21 @@ func (r *repositoryBD) GetById(id int) (domain.Usuarios, error) {
 	return domain.Usuarios{}, nil
 }
 
-func (r *repositoryBD) GetByName(name string) (domain.Usuarios, error) {
+func (r *repositoryBD) GetByName(name string) ([]domain.Usuarios, error) {
 	var user domain.Usuarios
+	var listUser []domain.Usuarios
 	rows, err := r.dbBD.Query("SELECT id, nombre, apellido, email, edad, altura, activo, fechaCreacion FROM storage.users WHERE nombre =?", name)
 	fmt.Println(err)
 	if err != nil {
-		return domain.Usuarios{}, err
+		return nil, err
 	}
 	fmt.Println(user)
 	for rows.Next() {
 		if err := rows.Scan(&user.Id, &user.Nombre, &user.Apellido, &user.Email, &user.Edad, &user.Altura, &user.Activo, &user.FechaCreacion); err != nil {
-			return domain.Usuarios{}, err
+			return nil, err
 		}
+		listUser = append(listUser, user)
 	}
 	fmt.Println(user)
-	return user, nil
+	return listUser, nil
 }

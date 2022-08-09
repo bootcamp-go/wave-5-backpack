@@ -29,7 +29,7 @@ type Repository interface {
 	Delete(id int) error
 	UpdateNameAndLastName(id int, name string, apellido string) (domain.Usuarios, error)
 	GetById(id int) (domain.Usuarios, error)
-	GetByName(name string) (domain.Usuarios, error)
+	GetByName(name string) ([]domain.Usuarios, error)
 }
 
 type repository struct {
@@ -153,6 +153,6 @@ func (r *repository) LastId() (int, error) {
 	return us[len(us)-1].Id, nil
 }
 
-func (r *repository) GetByName(name string) (domain.Usuarios, error) {
-	return domain.Usuarios{}, nil
+func (r *repository) GetByName(name string) ([]domain.Usuarios, error) {
+	return nil, nil
 }

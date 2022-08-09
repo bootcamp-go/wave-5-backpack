@@ -44,11 +44,8 @@ func (sdb *StubDB) Update(id int, nombre, apellido, email string, edad int, altu
 func (sdb *StubDB) Delete(id int) error {
 	return nil
 }
-func (sdb *StubDB) GetByName(name string) (domain.Usuarios, error) {
-	return domain.Usuarios{}, nil
-}
-func (sdb *StubDB) Store(user domain.Usuarios) (domain.Usuarios, error) {
-	return domain.Usuarios{}, nil
+func (sdb *StubDB) GetByName(name string) ([]domain.Usuarios, error) {
+	return nil, nil
 }
 
 func (sdb *StubDB) Guardar(id int, nombre string, apellido string, email string, edad int, altura float64, actico bool, fecha string) (domain.Usuarios, error) {

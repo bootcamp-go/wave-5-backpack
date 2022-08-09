@@ -20,7 +20,7 @@ type Service interface {
 	Delete(id int) error
 	UpdateNameAndLastName(id int, name string, apellido string) (domain.Usuarios, error)
 	GetById(id int) (domain.Usuarios, error)
-	GetByName(name string) (domain.Usuarios, error)
+	GetByName(name string) ([]domain.Usuarios, error)
 }
 
 type service struct {
@@ -75,11 +75,10 @@ func (s *service) Guardar(nombre string, apellido string, email string, edad int
 	return usuario, nil
 }
 
-func (s *service) GetByName(name string) (domain.Usuarios, error) {
-	fmt.Print("llegamos aqui")
+func (s *service) GetByName(name string) ([]domain.Usuarios, error) {
 	us, err := s.repository.GetByName(name)
 	if err != nil {
-		return domain.Usuarios{}, err
+		return nil, err
 	}
 	return us, nil
 }
