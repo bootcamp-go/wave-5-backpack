@@ -1,6 +1,7 @@
 package users
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 
@@ -17,8 +18,25 @@ func NewRepositoryDB(db *sql.DB) Repository {
 	}
 }
 
-func (r *repositoryDB) GetAll() ([]domain.User, error) {
+const (
+	queryByName = "SELECT id, name, lastname, email, age, height, active, doCreation FROM users WHERE name = ?"
+	queryAll = "SELECT id, name, lastname, email, age, height, active, doCreation FROM users"
+	queryStore  = "INSERT INTO users(name, lastname, email, age, height, active, doCreation) VALUES( ?, ?, ?, ?, ?, ?, ? )"
+)
+
+func (r *repositoryDB) GetAll(ctx context.Context) ([]domain.User, error) {
 	var allUsers []domain.User
+	rows, err := r.db.Query(queryAll)
+	if err != nil {
+		return []domain.User{}, err
+	}
+	for rows.Next() {
+		var user domain.User
+		if err := rows.Scan(&user.ID, &user.Name, &user.Lastname, &user.Email, &user.Age, &user.Height, &user.Active, &user.DoCreation); err != nil {
+			return []domain.User{}, err
+		}
+		allUsers = append(allUsers, user)
+	}
 
 	return allUsers, nil
 }
@@ -35,10 +53,12 @@ func (r *repositoryDB) LastId() (int, error) {
 
 	return 0, nil
 }
+
 func (r *repositoryDB) GetByName(name string) ([]domain.User, error) {
 	var user domain.User
+	fmt.Println(name)
 	var listUser []domain.User
-	rows, err := r.db.Query("SELECT id, name, last_name, email, age, height, active, creation_date FROM users WHERE name = ?", name)
+	rows, err := r.db.Query(queryByName, name)
 	if err != nil {
 		return []domain.User{}, err
 	}
@@ -48,11 +68,13 @@ func (r *repositoryDB) GetByName(name string) ([]domain.User, error) {
 		}
 		listUser = append(listUser, user)
 	}
+	fmt.Println(listUser)
 	return listUser, nil
 }
+
 func (r *repositoryDB) StoreUser(id int, name, lastname, email string, age int, height float32, active bool, doCreation string) (domain.User, error) {
 
-	stmt, err := r.db.Prepare("INSERT INTO users(name, last_name, email, age, height, active, creation_date) VALUES( ?, ?, ?, ?, ?, ?, ? )")
+	stmt, err := r.db.Prepare(queryStore)
 	if err != nil {
 		return domain.User{}, err
 	}

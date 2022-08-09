@@ -1,13 +1,14 @@
 package users
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/bootcamp-go/wave-5-backpack/internal/domain"
 )
 
 type Service interface {
-	GetAll() ([]domain.User, error)
+	GetAll(ctx context.Context) ([]domain.User, error)
 	StoreUser(name, lastname, email string, age int, height float32, active bool, doCreation string) (domain.User, error)
 	GetById(id int) (domain.User, error)
 	UpdateUser(id int, name, lastname, email string, age int, height float32, active bool, doCreation string) (domain.User, error)
@@ -26,8 +27,8 @@ func NewService(r Repository) Service {
 	}
 }
 
-func (s *service) GetAll() ([]domain.User, error) {
-	us, err := s.repository.GetAll()
+func (s *service) GetAll(ctx context.Context) ([]domain.User, error) {
+	us, err := s.repository.GetAll(ctx)
 	if err != nil {
 		return nil, err
 	}

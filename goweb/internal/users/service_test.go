@@ -1,11 +1,13 @@
 package users
 
 import (
+	"context"
 	"errors"
 	"fmt"
+	"testing"
+
 	"github.com/bootcamp-go/wave-5-backpack/internal/domain"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 type MockStorage struct {
@@ -211,7 +213,7 @@ func TestGetAll(t *testing.T) {
 
 	//act
 	repo := NewRepository(&mockStorage)
-	response, err := repo.GetAll()
+	response, err := repo.GetAll(context.TODO())
 
 	//assert
 	assert.Nil(t, err)
@@ -244,7 +246,7 @@ func (st *StubDataBase) UpdateLastnameAndAge(id int, lastname string, age int) (
 	return &domain.User{}, nil
 }
 
-func (st *StubDataBase) GetAll() ([]domain.User, error) {
+func (st *StubDataBase) GetAll(ctx context.Context) ([]domain.User, error) {
 	allUsers := []domain.User{{
 		ID:         1,
 		Name:       "name1",
@@ -289,7 +291,7 @@ func TestGetAllUser(t *testing.T) {
 		Active:     true,
 		DoCreation: "02-03-2021",
 	}}
-	response, err := serv.GetAll()
+	response, err := serv.GetAll(context.TODO())
 	assert.Equal(t, expectedResponse, response)
 	assert.Nil(t, err)
 }

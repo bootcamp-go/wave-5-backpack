@@ -1,13 +1,15 @@
 package users
 
 import (
+	"context"
 	"fmt"
+
 	"github.com/bootcamp-go/wave-5-backpack/internal/domain"
 	"github.com/bootcamp-go/wave-5-backpack/pkg/store"
 )
 
 type Repository interface {
-	GetAll() ([]domain.User, error)
+	GetAll(ctx context.Context) ([]domain.User, error)
 	LastId() (int, error)
 	GetById(id int) (domain.User, error)
 	StoreUser(id int, name, lastname, email string, age int, height float32, active bool, doCreation string) (domain.User, error)
@@ -37,7 +39,7 @@ func NewRepository(db store.Store) Repository {
 // var allUsers []domain.User
 // var lastId int
 
-func (r *repository) GetAll() ([]domain.User, error) {
+func (r *repository) GetAll(ctx context.Context) ([]domain.User, error) {
 	var allUsers []domain.User
 	if err := r.db.Read(&allUsers); err != nil {
 		return nil, fmt.Errorf(FailReading)
@@ -46,7 +48,7 @@ func (r *repository) GetAll() ([]domain.User, error) {
 }
 func (r *repository) GetById(id int) (domain.User, error) {
 
-	allUsers, err := r.GetAll()
+	allUsers, err := r.GetAll(context.TODO())
 	if err != nil {
 		return domain.User{}, err
 	}
@@ -59,7 +61,7 @@ func (r *repository) GetById(id int) (domain.User, error) {
 	return domain.User{}, fmt.Errorf(UserNotFound, id)
 }
 func (r *repository) DeleteUser(id int) error {
-	allUsers, err := r.GetAll()
+	allUsers, err := r.GetAll(context.TODO())
 	if err != nil {
 		return err
 	}
@@ -78,7 +80,7 @@ func (r *repository) DeleteUser(id int) error {
 }
 
 func (r *repository) LastId() (int, error) {
-	allUsers, err := r.GetAll()
+	allUsers, err := r.GetAll(context.TODO())
 	if err != nil {
 		return 0, err
 	}
@@ -90,7 +92,7 @@ func (r *repository) LastId() (int, error) {
 }
 
 func (r *repository) StoreUser(id int, name, lastname, email string, age int, height float32, active bool, doCreation string) (domain.User, error) {
-	allUsers, err := r.GetAll()
+	allUsers, err := r.GetAll(context.TODO())
 	if err != nil {
 		return domain.User{}, err
 	}
@@ -113,7 +115,7 @@ func (r *repository) StoreUser(id int, name, lastname, email string, age int, he
 }
 
 func (r *repository) UpdateUser(id int, name, lastname, email string, age int, height float32, active bool, doCreation string) (domain.User, error) {
-	allUsers, err := r.GetAll()
+	allUsers, err := r.GetAll(context.TODO())
 	if err != nil {
 		return domain.User{}, err
 	}
@@ -142,7 +144,7 @@ func (r *repository) UpdateUser(id int, name, lastname, email string, age int, h
 }
 
 func (r *repository) UpdateLastnameAndAge(id int, lastname string, age int) (*domain.User, error) {
-	allUsers, err := r.GetAll()
+	allUsers, err := r.GetAll(context.TODO())
 	if err != nil {
 		return nil, err
 	}

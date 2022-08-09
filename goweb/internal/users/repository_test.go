@@ -1,9 +1,11 @@
 package users
 
 import (
+	"context"
+	"testing"
+
 	"github.com/bootcamp-go/wave-5-backpack/internal/domain"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 type StubStore struct{
@@ -73,7 +75,7 @@ func TestGetAllUsers(t *testing.T) {
 			DoCreation: "02-03-2021",
 		},
 	}
-	users, err := repo.GetAll()
+	users, err := repo.GetAll(context.TODO())
 	assert.Nil(t, err)
 	assert.Equal(t, expectedResponse, users)
 }
