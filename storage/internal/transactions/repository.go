@@ -24,8 +24,8 @@ type repository struct {
 
 const (
 	queryStore = `INSERT INTO transactions (monto, cod, moneda, emisor, receptor, fecha) VALUES (?, ?, ?, ?, ?, ?);`
-	getByCod   = `SELECT id, monto, cod, moneda, emisor, receptor, fecha FROM transactions WHERE cod = ?;`
-	getByID    = `SELECT id, monto, cod, moneda, emisor, receptor, fecha FROM transactions WHERE id = ?;`
+	queryGetByCod   = `SELECT id, monto, cod, moneda, emisor, receptor, fecha FROM transactions WHERE cod = ?;`
+	queryGetByID    = `SELECT id, monto, cod, moneda, emisor, receptor, fecha FROM transactions WHERE id = ?;`
 )
 
 func (r *repository) Store(monto float64, cod, moneda, emisor, receptor string) (models.Transaction, error) {
