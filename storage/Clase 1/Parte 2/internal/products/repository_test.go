@@ -28,3 +28,27 @@ func TestStore(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, mockProduct, res)
 }
+
+func TestGetByName(t *testing.T) {
+	db, err := sql.Open("mysql", "root@/storage")
+	assert.Nil(t, err)
+	repo := NewRepository(db)
+
+	mockProduct := domain.Product{
+		Id:         1,
+		Name:       "test",
+		Color:      "Red",
+		Price:      10.99,
+		Stock:      10,
+		Code:       "JH7BU998G",
+		Published:  true,
+		Created_at: "2022-08-09",
+	}
+
+	// created, err := repo.Store(mockProduct)
+	// mockProduct.Id = created.Id
+	assert.Nil(t, err)
+	res, err := repo.GetByName("test")
+	assert.Nil(t, err)
+	assert.Equal(t, mockProduct, res)
+}

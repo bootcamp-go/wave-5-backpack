@@ -52,7 +52,7 @@ func (s *service) GetById(id uint64) (domain.Product, error) {
 }
 
 func (s *service) UpdateTotal(product domain.Product) (domain.Product, error) {
-	producto, err := s.repository.UpdateTotal(product)
+	producto, err := s.repository.Update(product)
 	if err != nil {
 		return domain.Product{}, err
 	}
@@ -60,7 +60,7 @@ func (s *service) UpdateTotal(product domain.Product) (domain.Product, error) {
 }
 
 func (s *service) UpdatePartial(product domain.Product) (domain.Product, error) {
-	producto, err := s.repository.UpdatePartial(product)
+	producto, err := s.repository.Update(product)
 	if err != nil {
 		return domain.Product{}, err
 	}
