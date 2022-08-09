@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1000,
+    "codTransaction": "123cba",
+    "currency": "COP",
+    "amount": 100,
+    "sender": "Camila",
+    "receiver": "Michael",
+    "dateOrder": "10-12-22"
+  },
+  {
+    "id": 1002,
+    "codTransaction": "32190812",
+    "currency": "EUR",
+    "amount": 123456,
+    "sender": "Vale",
+    "receiver": "Michael",
+    "dateOrder": "10-12-23"
+  }
+]
