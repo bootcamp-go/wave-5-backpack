@@ -17,7 +17,7 @@ const (
 	GetByNameUser string = "SELECT id, nombre, apellido, email, edad, altura, activo, fechaCreacion FROM storage.users WHERE nombre =?"
 	GetAllUser    string = "SELECT id, nombre, apellido, email, edad, altura, activo, fechaCreacion FROM storage.users"
 	GetAllUserTO  string = "SELECT SLEEP(10) FROM DUAL"
-	UpdateUser    string = "UPDATE storage.users SET nombre = ?, apellido = ?, email = ?, edad = ?, altura = ?, activo = ?, fechaCreacion = ? WHERE  id = ?"
+	UpdateUser    string = "UPDATE storage.users SET nombre = ?, apellido = ?, email = ?, edad = ?, altura = ?, activo = ?, fechaCreacion = ? WHERE id = ?"
 )
 
 func NewRepositoryBD(dbb *sql.DB) Repository {
@@ -73,7 +73,7 @@ func (r *repositoryBD) Update(ctx context.Context, id int, nombre, apellido, ema
 		return domain.Usuarios{}, nil
 	}
 	defer stmt.Close()
-	_, err2 := stmt.ExecContext(ctx, id, nombre, apellido, email, edad, altura, activo, fecha)
+	_, err2 := stmt.ExecContext(ctx, nombre, apellido, email, edad, altura, activo, fecha, id)
 	if err2 != nil {
 		return domain.Usuarios{}, err2
 	}
