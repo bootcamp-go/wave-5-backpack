@@ -35,12 +35,12 @@ func (p *Product) GetOneProductByName() gin.HandlerFunc {
 		}
 
 		name := ctx.Param("name")
-		producto, err := p.service.GetByName(name)
+		product, err := p.service.GetByName(name)
 		if err != nil {
-			ctx.JSON(http.StatusBadRequest, web.NewResponse(404, producto, err.Error()))
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(404, nil, err.Error()))
 			return
 		}
-		ctx.JSON(http.StatusAccepted, web.NewResponse(200, producto, ""))
+		ctx.JSON(http.StatusAccepted, web.NewResponse(200, product, ""))
 
 	}
 }
@@ -72,5 +72,23 @@ func (p *Product) Create() gin.HandlerFunc {
 		}
 
 		ctx.JSON(http.StatusAccepted, web.NewResponse(201, product, ""))
+	}
+}
+
+func (p *Product) GetAll() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := os.Getenv("TOKEN")
+		if token != "12345" {
+			ctx.JSON(401, web.NewResponse(401, nil, "error: token inválido"))
+		}
+
+		products, err := p.service.GetAll(ctx)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(400, nil, err.Error()))
+			return
+		}
+
+		ctx.JSON(http.StatusAccepted, web.NewResponse(200, products, ""))
+
 	}
 }

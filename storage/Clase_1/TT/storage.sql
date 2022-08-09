@@ -28,8 +28,9 @@ CREATE TABLE `products` (
   `type` varchar(60) NOT NULL,
   `count` int NOT NULL,
   `price` float NOT NULL,
+  `id_warehouse` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,8 +39,33 @@ CREATE TABLE `products` (
 
 LOCK TABLES `products` WRITE;
 /*!40000 ALTER TABLE `products` DISABLE KEYS */;
-INSERT INTO `products` VALUES (4,'televisor','electro',3,399.99),(5,'laptop','electro',10,299.99),(6,'Lapiz','Libreria',50,990),(7,'Lapiz','Libreria',50,990);
+INSERT INTO `products` VALUES (4,'televisor','electro',3,399.99,1),(5,'laptop','electro',10,299.99,1),(6,'Lapiz','Libreria',50,990,1),(7,'Lapiz','Libreria',50,990,1),(8,'Ipad','Electronica',10,199.99,1),(9,'Botella','Otros',10,1.99,1),(10,'Cuchara','Hogar',100,290,1);
 /*!40000 ALTER TABLE `products` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `warehouses`
+--
+
+DROP TABLE IF EXISTS `warehouses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `warehouses` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(60) NOT NULL,
+  `adress` varchar(60) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `warehouses`
+--
+
+LOCK TABLES `warehouses` WRITE;
+/*!40000 ALTER TABLE `warehouses` DISABLE KEYS */;
+INSERT INTO `warehouses` VALUES (1,'Main Warehouse','221b Baker Street');
+/*!40000 ALTER TABLE `warehouses` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -51,4 +77,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-08-09 10:21:52
+-- Dump completed on 2022-08-09 11:16:26

@@ -37,6 +37,7 @@ func main() {
 
 	r := router.Group("/products")
 	r.GET("/:name", products.GetOneProductByName())
+	r.GET("/", products.GetAll())
 	r.POST("/", products.Create())
 
 	if err := router.Run("localhost:8080"); err != nil {
