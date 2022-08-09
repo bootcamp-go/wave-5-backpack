@@ -1,4 +1,4 @@
-package products
+package users
 
 import (
 	"database/sql"
@@ -11,6 +11,7 @@ type Repository interface {
 	GetByName(nombre string) (domain.Usuarios, error)
 	Store(domain.Usuarios) (domain.Usuarios, error)
 	Update(domain.Usuarios) (domain.Usuarios, error)
+	GetOne(id int) (domain.Usuarios, error)
 	// GetAll() ([]domain.Usuarios, error)
 	// Delete(id int) error
 }
@@ -34,7 +35,7 @@ func (r *repository) GetByName(nombre string) (domain.Usuarios, error) {
 	var usuario domain.Usuarios
 	//Consulta la información del usuario cuyo nombre coincida.
 	//TENER EN CUENTA: Es mejor especificar cada campo en vez de hacer uso del *
-	rows, err := r.db.Query("SELECT id, nombre, apellido, email, edad, altura, activo, fecha FROM usuarios WHERE nombre = ?", nombre)
+	rows, err := r.db.Query("SELECT id, nombre, apellido, email, edad, altura, activo, fecha FROM usuarios WHERE nombre=?", nombre)
 	if err != nil {
 		return domain.Usuarios{}, err
 	}
@@ -52,14 +53,14 @@ func (r *repository) GetByName(nombre string) (domain.Usuarios, error) {
 func (r *repository) Store(usuario domain.Usuarios) (domain.Usuarios, error) {
 
 	//Preparación de sentencia SQL
-	stmt, err := r.db.Prepare("INSERT INTO usuarios(nombre, apellido, email, edad, altura, activo, fecha) VALUES(?,?,?,?,?")
+	stmt, err := r.db.Prepare("INSERT INTO usuarios(nombre, apellido, email, edad, altura, activo, fecha) VALUES(?,?,?,?,?,?,?)")
 	if err != nil {
 		return domain.Usuarios{}, err
 	}
 	// Cierre de sentencia para evitar consumo de memoria
 	defer stmt.Close()
 	var result sql.Result
-	result, err = stmt.Exec(usuario.Nombre, usuario.Apellido, usuario.Email, usuario.Edad, usuario.Altura, usuario.Activo, usuario.Fecha)
+	result, err = stmt.Exec(usuario.Nombre, usuario.Apellido, usuario.Email, usuario.Edad, usuario.Altura, true, time.Now().Format(time.RFC3339))
 	if err != nil {
 		return domain.Usuarios{}, err
 	}
@@ -69,15 +70,35 @@ func (r *repository) Store(usuario domain.Usuarios) (domain.Usuarios, error) {
 	return usuario, nil
 }
 
+//Función para búsqueda por id de usuario
+func (r *repository) GetOne(id int) (domain.Usuarios, error) {
+	//Para asignación de valores de la consulta
+	var usuario domain.Usuarios
+	//Consulta la información del usuario cuyo nombre coincida.
+	//TENER EN CUENTA: Es mejor especificar cada campo en vez de hacer uso del *
+	rows, err := r.db.Query("SELECT id, nombre, apellido, email, edad, altura, activo, fecha FROM usuarios WHERE id = ?", id)
+	if err != nil {
+		return domain.Usuarios{}, err
+	}
+	//Asignación de valores
+	for rows.Next() {
+		if err := rows.Scan(&usuario.Id, &usuario.Nombre, &usuario.Apellido, &usuario.Email, &usuario.Edad, &usuario.Altura, &usuario.Activo, &usuario.Fecha); err != nil {
+			return domain.Usuarios{}, err
+		}
+	}
+	return usuario, nil
+}
+
+//Función para actualizar información de un usuario de acuerdo a su id
 func (r *repository) Update(usuario domain.Usuarios) (domain.Usuarios, error) {
 	//Preparando sentencia
-	stmt, err := r.db.Prepare("UPDATE products SET nombre = ?, apellido = ?, email = ?, edad = ?, altura = ?, activo = ?, fecha = ? WHERE id = ?")
+	stmt, err := r.db.Prepare("UPDATE usuarios SET nombre = ?, apellido = ?, email = ?, edad = ?, altura = ?, activo = ?, fecha = ? WHERE id = ?")
 	if err != nil {
 		log.Fatal(err)
 	}
 	//Se cierra la sentencia para evitar consumo de memoria
 	defer stmt.Close()
-	_, err = stmt.Exec(usuario.Nombre, usuario.Apellido, usuario.Email, usuario.Edad, usuario.Altura, true, time.Now(), usuario.Id)
+	_, err = stmt.Exec(usuario.Nombre, usuario.Apellido, usuario.Email, usuario.Edad, usuario.Altura, true, time.Now().Format(time.RFC3339), usuario.Id)
 	if err != nil {
 		return domain.Usuarios{}, err
 	}

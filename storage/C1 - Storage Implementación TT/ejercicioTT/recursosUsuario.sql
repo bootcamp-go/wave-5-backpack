@@ -8,8 +8,8 @@ CREATE TABLE `usuarios` (
   `email` varchar(60) NOT NULL,
   `edad` int(3) NOT NULL,
   `altura` float NOT NULL,
-  `activo` boolean NOT NULL DEFAULT 0,
-  `fecha` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `activo` boolean DEFAULT 1,
+  `fecha` datetime
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 ALTER TABLE `usuarios`

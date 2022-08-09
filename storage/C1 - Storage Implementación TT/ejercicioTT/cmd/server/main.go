@@ -1,14 +1,18 @@
-package db
+package main
 
 import (
 	"database/sql"
 	"ejercicioTT/cmd/server/handler"
 	"ejercicioTT/docs"
+	users "ejercicioTT/internal/users"
+	"ejercicioTT/pkg/web"
 	"log"
 	"os"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
+	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
@@ -28,10 +32,15 @@ var (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
 func main() {
-	dataSource := "root@tcp(localhost:3306)/storage"
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("error al intentar cargar archivo .env")
+	}
+
+	dataSource := "root@tcp(localhost:3306)/storage?parseTime=true"
 
 	// Open inicia un pool de conexiones. Sólo abrir una vez
-	var err error
+
 	StorageDB, err = sql.Open("mysql", dataSource)
 	if err != nil {
 		panic(err)
@@ -53,11 +62,37 @@ func main() {
 	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	us.Use(TokenAuthMiddleware())
-	us.GET("/", user.GetAll())
 	us.POST("/", user.Store())
-	us.PUT("/:id", user.Update())
-	us.PATCH("/:id", user.UpdateLastAge())
-	us.DELETE("/:id", user.Delete())
+	us.PUT("/", user.Update())
+	us.GET("/:id", user.GetOne())
+	us.GET("/byName/:nombre", user.GetByName())
+	//us.PATCH("/:id", user.UpdateLastAge())
+	//us.DELETE("/:id", user.Delete())
 
 	r.Run()
+}
+
+func TokenAuthMiddleware() gin.HandlerFunc {
+	requiredToken := os.Getenv("TOKEN")
+
+	if requiredToken == "" {
+		log.Fatal("no se encontró el token en variable de entorno")
+	}
+
+	return func(c *gin.Context) {
+		token := c.GetHeader("token")
+
+		if token == "" {
+			c.AbortWithStatusJSON(401, web.NewResponse(401, nil, "falta token en cabecera"))
+			return
+		}
+
+		if token != requiredToken {
+			c.AbortWithStatusJSON(401, web.NewResponse(401, nil, "token incorrecto"))
+			return
+		}
+
+		c.Next()
+	}
+
 }

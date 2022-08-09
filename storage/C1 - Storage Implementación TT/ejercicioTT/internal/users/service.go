@@ -1,4 +1,4 @@
-package products
+package users
 
 import (
 	"ejercicioTT/internal/domain"
@@ -9,6 +9,7 @@ type Service interface {
 	GetByName(nombre string) (domain.Usuarios, error)
 	Store(domain.Usuarios) (domain.Usuarios, error)
 	Update(domain.Usuarios) (domain.Usuarios, error)
+	GetOne(id int) (domain.Usuarios, error)
 }
 
 type service struct {
@@ -31,6 +32,14 @@ func (s *service) Store(usuario domain.Usuarios) (domain.Usuarios, error) {
 	usuario, err := s.repo.Store(usuario)
 	if err != nil {
 		return domain.Usuarios{}, fmt.Errorf("error creando usuario: %w", err)
+	}
+	return usuario, nil
+}
+
+func (s *service) GetOne(id int) (domain.Usuarios, error) {
+	usuario, err := s.repo.GetOne(id)
+	if err != nil {
+		return domain.Usuarios{}, err
 	}
 	return usuario, nil
 }

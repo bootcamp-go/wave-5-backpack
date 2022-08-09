@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"time"
 
+	"ejercicioTT/internal/domain"
 	users "ejercicioTT/internal/users"
 	"ejercicioTT/pkg/web"
 
@@ -14,13 +15,14 @@ import (
 
 //request que envío a cada JSON en swagger
 type request struct {
+	Id       int       `json:"id"`
 	Nombre   string    `json:"nombre"`
 	Apellido string    `json:"apellido"`
 	Email    string    `json:"email"`
 	Edad     int       `json:"edad"`
 	Altura   float64   `json:"altura"`
 	Activo   bool      `json:"activo"`
-	Fecha    time.Time `json:"fecha" example:"2022-07-12T00:53:16.535668Z" format:"date-time"`
+	Fecha    time.Time `json:"fecha"`
 }
 
 type Usuarios struct {
@@ -34,21 +36,20 @@ func NewUser(s users.Service) *Usuarios {
 // GetByName godoc
 // @Summary Get a user by Name
 // @Tags Usuarios
-// @ID get-user-by-name
 // @Produce json
 // @Param token header string true "token"
-// @Param nombre path string true "name from user to get"
+// @Param nombre path string true "nombre"
 // @Success 200 {object} web.Response
 // @Failure 404 {object} web.Response
-// @Router /usuarios/{id} [get]
-func (c *UsuariosBD) GetByName() gin.HandlerFunc {
+// @Router /usuarios/byName/{nombre} [get]
+func (u *Usuarios) GetByName() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		u, erro := c.service.GetByName(c.Param("nombre"))
-		if erro != nil {
+		usuario, err := u.service.GetByName(c.Param("nombre"))
+		if err != nil {
 			c.JSON(404, web.NewResponse(404, nil, "El usuario con el nombre ingresado no fue encontrado"))
 			return
 		}
-		c.JSON(200, web.NewResponse(200, u, ""))
+		c.JSON(200, web.NewResponse(200, usuario, ""))
 	}
 }
 
@@ -103,7 +104,8 @@ func (u *Usuarios) Store() gin.HandlerFunc {
 			return
 		}
 
-		u, err := u.service.Store(req)
+		user := domain.Usuarios(req)
+		u, err := u.service.Store(user)
 		if err != nil {
 			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
@@ -113,29 +115,48 @@ func (u *Usuarios) Store() gin.HandlerFunc {
 	}
 }
 
+// GetOne godoc
+// @Summary Get a user by id
+// @Tags Usuarios
+// @Produce json
+// @ID get-user-by-id
+// @Param token header string true "token"
+// @Param id path string true "user id"
+// @Success 200 {object} web.Response
+// @Failure 404 {object} web.Response
+// @Router /usuarios/{id} [get]
+func (u *Usuarios) GetOne() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.Atoi(c.Param("id"))
+		if err != nil {
+			c.JSON(400, web.NewResponse(400, nil, "error, Id inválido"))
+			return
+		}
+		usuario, err := u.service.GetOne(id)
+		if err != nil {
+			c.JSON(404, web.NewResponse(404, nil, "El usuario con el id ingresado no fue encontrado"))
+			return
+		}
+		c.JSON(200, web.NewResponse(200, usuario, ""))
+	}
+}
+
 // Update Users godoc
 // @Summary Update a user by Id
 // @Tags Usuarios
-// @ID update-user-by-id
 // @Accept  json
 // @Produce json
 // @Param token header string true "token"
-// @Param id path string true "id from user to update"
 // @Param usuario body request true "User to update"
 // @Success 200 {object} web.Response
 // @Failure 400 {object} web.Response
 // @Failure 409 {object} web.Response
-// @Router /usuarios/{id} [put]
+// @Router /usuarios [put]
 func (u *Usuarios) Update() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token := c.GetHeader("token")
 		if token != os.Getenv("TOKEN") {
 			c.JSON(http.StatusUnauthorized, web.NewResponse(http.StatusUnauthorized, nil, "error, Token inválido"))
-			return
-		}
-		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
-		if err != nil {
-			c.JSON(400, web.NewResponse(400, nil, "error, Id inválido"))
 			return
 		}
 
@@ -170,7 +191,8 @@ func (u *Usuarios) Update() gin.HandlerFunc {
 			return
 		}
 
-		u, err := u.service.Update(req)
+		user := domain.Usuarios(req)
+		u, err := u.service.Update(user)
 		if err != nil {
 			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
