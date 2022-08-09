@@ -224,7 +224,7 @@ func TestGetAll(t *testing.T) {
 //unit testing for services
 type StubDataBase struct{}
 
-func (st *StubDataBase) GetById(id int) (domain.User, error) {
+func (st *StubDataBase) GetById(ctx context.Context,id int) (domain.User, error) {
 	return domain.User{}, nil
 }
 func (st *StubDataBase) LastId() (int, error) {

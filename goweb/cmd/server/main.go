@@ -47,7 +47,7 @@ func main() {
 	{
 		users.Use(TokenAuthMiddleware())
 		users.GET("/", u.GetAll())
-		//users.GET("/:id", u.GetById())
+		users.GET("/:id", u.GetById())
 		users.GET("/name/:name", u.GetByName())
 
 		users.POST("/", u.StoreUser())

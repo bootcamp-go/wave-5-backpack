@@ -20,13 +20,14 @@ func NewRepositoryDB(db *sql.DB) Repository {
 
 const (
 	queryByName = "SELECT id, name, lastname, email, age, height, active, doCreation FROM users WHERE name = ?"
-	queryAll = "SELECT id, name, lastname, email, age, height, active, doCreation FROM users"
+	queryAll    = "SELECT id, name, lastname, email, age, height, active, doCreation FROM users"
 	queryStore  = "INSERT INTO users(name, lastname, email, age, height, active, doCreation) VALUES( ?, ?, ?, ?, ?, ?, ? )"
+	queryById   = "SELECT id, name, lastname, email, age, height, active, doCreation FROM users us WHERE us.id = ?"
 )
 
 func (r *repositoryDB) GetAll(ctx context.Context) ([]domain.User, error) {
 	var allUsers []domain.User
-	rows, err := r.db.Query(queryAll)
+	rows, err := r.db.QueryContext(ctx, queryAll)
 	if err != nil {
 		return []domain.User{}, err
 	}
@@ -40,10 +41,20 @@ func (r *repositoryDB) GetAll(ctx context.Context) ([]domain.User, error) {
 
 	return allUsers, nil
 }
-func (r *repositoryDB) GetById(id int) (domain.User, error) {
-
-	return domain.User{}, fmt.Errorf(UserNotFound, id)
+func (r *repositoryDB) GetById(ctx context.Context, id int) (domain.User, error) {
+	var user domain.User
+	rows, err := r.db.QueryContext(ctx, queryById, id )
+	if err != nil {
+		return domain.User{}, err
+	}
+	for rows.Next() {
+		if err := rows.Scan(&user.ID, &user.Name, &user.Lastname, &user.Email, &user.Age, &user.Height, &user.Active, &user.DoCreation); err != nil {
+			return domain.User{}, err
+		}
+	}
+	return user, nil
 }
+
 func (r *repositoryDB) DeleteUser(id int) error {
 
 	return nil

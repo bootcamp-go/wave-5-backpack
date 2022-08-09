@@ -11,7 +11,7 @@ import (
 type Repository interface {
 	GetAll(ctx context.Context) ([]domain.User, error)
 	LastId() (int, error)
-	GetById(id int) (domain.User, error)
+	GetById(ctx context.Context,id int) (domain.User, error)
 	StoreUser(id int, name, lastname, email string, age int, height float32, active bool, doCreation string) (domain.User, error)
 	UpdateUser(id int, name, lastname, email string, age int, height float32, active bool, doCreation string) (domain.User, error)
 	DeleteUser(id int) error
@@ -46,7 +46,7 @@ func (r *repository) GetAll(ctx context.Context) ([]domain.User, error) {
 	}
 	return allUsers, nil
 }
-func (r *repository) GetById(id int) (domain.User, error) {
+func (r *repository) GetById(ctx context.Context, id int) (domain.User, error) {
 
 	allUsers, err := r.GetAll(context.TODO())
 	if err != nil {

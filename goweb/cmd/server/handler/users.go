@@ -92,7 +92,7 @@ func (c *User) GetById() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 
 		id, _ := strconv.Atoi(ctx.Param("id"))
-		userFound, err := c.service.GetById(id)
+		userFound, err := c.service.GetById(ctx, id)
 		if err != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
 

@@ -10,7 +10,7 @@ import (
 type Service interface {
 	GetAll(ctx context.Context) ([]domain.User, error)
 	StoreUser(name, lastname, email string, age int, height float32, active bool, doCreation string) (domain.User, error)
-	GetById(id int) (domain.User, error)
+	GetById(ctx context.Context,id int) (domain.User, error)
 	UpdateUser(id int, name, lastname, email string, age int, height float32, active bool, doCreation string) (domain.User, error)
 	DeleteUser(id int) error
 	UpdateLastnameAndAge(id int, lastname string, age int) (*domain.User, error)
@@ -35,8 +35,8 @@ func (s *service) GetAll(ctx context.Context) ([]domain.User, error) {
 	return us, nil
 }
 
-func (s *service) GetById(id int) (domain.User, error) {
-	user, err := s.repository.GetById(id)
+func (s *service) GetById (ctx context.Context, id int) (domain.User, error) {
+	user, err := s.repository.GetById(ctx, id)
 	if err != nil {
 		return domain.User{}, err
 	}
