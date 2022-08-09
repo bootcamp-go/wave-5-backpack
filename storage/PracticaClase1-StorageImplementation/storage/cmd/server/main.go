@@ -21,7 +21,7 @@ func main() {
 	pr := r.Group("/api/v1/products")
 
 	pr.POST("/", p.Store())
-	// pr.GET("/", p.GetByName())
+	pr.GET("/", p.GetByName())
 
 	r.Run()
 }

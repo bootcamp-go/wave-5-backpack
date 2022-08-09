@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS `storage` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `storage`;
+CREATE DATABASE IF NOT EXISTS `storageC1TT` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `storageC1TT`;
 
 CREATE TABLE `products` (
   `id` int(11) NOT NULL,

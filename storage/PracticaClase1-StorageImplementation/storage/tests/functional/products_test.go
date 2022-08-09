@@ -2,6 +2,7 @@ package tests
 
 import (
 	"bytes"
+	"database/sql"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -75,10 +76,15 @@ func TestStoreProduct_Ok(t *testing.T) {
 	assert.Equal(t, new, p.Data)
 }
 
-func TestGetByNameProduct_Ok(t *testing.T) {
-	req, rr := createRequest(http.MethodGet, "/api/v1/products/", `{"nombre":"producto nuevo"}`)
-	s.ServeHTTP(rr, req)
+func TestGetByName(t *testing.T) {
+	var dataSource = "root@tcp(localhost:3306)/storageC1TT"
+	StorageDB, err := sql.Open("mysql", dataSource)
+	if err != nil {
+		panic(err)
+	}
+	myRepo := products.NewRepository(StorageDB)
 
-	// assert code
-	assert.Equal(t, http.StatusOK, rr.Code)
+	product, err := myRepo.GetByName("Computador")
+	assert.Nil(t, err)
+	assert.Equal(t, "Computador", product.Name)
 }

@@ -2,14 +2,14 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
-	"os"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 func MySQLConnection() *sql.DB {
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@/%s", os.Getenv("USERNAME"), os.Getenv("PASSWORD"), os.Getenv("DATABASE")))
+	dataSource := "root@tcp(localhost:3306)/storageC1TT"
+
+	db, err := sql.Open("mysql", dataSource)
 	if err != nil {
 		panic(err)
 	}
