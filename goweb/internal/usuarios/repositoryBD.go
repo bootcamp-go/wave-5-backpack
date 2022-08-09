@@ -68,16 +68,15 @@ func (r *repositoryBD) LastId() (int, error) {
 	return 0, nil
 }
 func (r *repositoryBD) Update(ctx context.Context, id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error) {
-	stmt, err := r.dbBD.Prepare(GuardarUser)
+	stmt, err := r.dbBD.Prepare(UpdateUser)
 	if err != nil {
 		return domain.Usuarios{}, nil
 	}
 	defer stmt.Close()
-	result, err2 := stmt.Exec(nombre, apellido, email, edad, altura, activo, fecha)
+	_, err2 := stmt.ExecContext(ctx, id, nombre, apellido, email, edad, altura, activo, fecha)
 	if err2 != nil {
 		return domain.Usuarios{}, err2
 	}
-	insertId, _ := result.LastInsertId()
 	var userD domain.Usuarios
 	userD.Nombre = nombre
 	userD.Apellido = apellido
@@ -86,7 +85,7 @@ func (r *repositoryBD) Update(ctx context.Context, id int, nombre, apellido, ema
 	userD.Altura = altura
 	userD.Activo = activo
 	userD.FechaCreacion = fecha
-	userD.Id = int(insertId)
+	userD.Id = id
 	return userD, nil
 }
 func (r *repositoryBD) Delete(id int) error {
