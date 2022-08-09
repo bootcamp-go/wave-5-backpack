@@ -27,9 +27,9 @@ CREATE TABLE `warehouses` (
 INSERT INTO `warehouses` (`id`, `name`, `adress`) VALUES
 (1, 'Main Warehouse', '221b Baker Street');
 
-ALTER TABLE `products` ADD `id_warehouse` INT NOT NULL;
+ALTER TABLE `products` ADD `warehouse_id` INT NOT NULL;
 
-UPDATE `products` SET `id_warehouse` = '1';
+UPDATE `products` SET `warehouse_id` = '1';
 
 
 SELECT * FROM products;

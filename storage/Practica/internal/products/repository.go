@@ -7,8 +7,9 @@ import (
 )
 
 var (
-	createStmt    = "INSERT INTO PRODUCTS (Name, Color, Price, Stock, Code, Published, Created_at) VALUES (?, ?, ?, ?, ?, ?, CURDATE())"
-	getByNameStmt = "SELECT ID, Name, Color, Price, Stock, Code, Published, Created_at FROM PRODUCTS WHERE name = ?"
+	createStmt    = "INSERT INTO products (name, color, price, stock, code, published, created_at, warehouse_id) VALUES (?, ?, ?, ?, ?, ?, CURDATE(), ?)"
+	getAllStmt    = "SELECT ID, name, color, price, stock, code, published, created_at, warehouse_id FROM products"
+	getByNameStmt = "SELECT ID, name, color, price, stock, code, published, created_at, warehouse_id FROM products WHERE name = ?"
 )
 
 type Repository interface {
@@ -37,7 +38,7 @@ func (r *repository) Store(product domain.Product) (domain.Product, error) {
 		return domain.Product{}, err
 	}
 	defer stmt.Close()
-	sqlRes, err := stmt.Exec(product.Name, product.Color, product.Price, product.Stock, product.Code, product.Published)
+	sqlRes, err := stmt.Exec(product.Name, product.Color, product.Price, product.Stock, product.Code, product.Published, product.Warehouse_id)
 	if err != nil {
 		return domain.Product{}, err
 	}
@@ -50,7 +51,26 @@ func (r *repository) Store(product domain.Product) (domain.Product, error) {
 }
 
 func (r *repository) GetAll() ([]domain.Product, error) {
-	return []domain.Product{}, nil
+	db := r.db
+	rows, err := db.Query(getAllStmt)
+	if err != nil {
+		return []domain.Product{}, err
+	}
+	defer rows.Close()
+
+	productList := []domain.Product{}
+
+	for rows.Next() {
+		var product domain.Product
+		if err := rows.Scan(&product.Id, &product.Name, &product.Color, &product.Price, &product.Stock, &product.Code, &product.Published, &product.Created_at, &product.Warehouse_id); err != nil {
+			return productList, err
+		}
+		productList = append(productList, product)
+	}
+	if err := rows.Err(); err != nil {
+		return []domain.Product{}, err
+	}
+	return productList, nil
 }
 
 func (r *repository) GetById(id uint64) (domain.Product, error) {
@@ -65,19 +85,19 @@ func (r *repository) GetByName(name string) (domain.Product, error) {
 	}
 	defer rows.Close()
 
-	prList := []domain.Product{}
+	productList := []domain.Product{}
 
 	for rows.Next() {
-		var pr domain.Product
-		if err := rows.Scan(&pr.Id, &pr.Name, &pr.Color, &pr.Price, &pr.Stock, &pr.Code, &pr.Published, &pr.Created_at); err != nil {
-			return prList[0], err
+		var product domain.Product
+		if err := rows.Scan(&product.Id, &product.Name, &product.Color, &product.Price, &product.Stock, &product.Code, &product.Published, &product.Created_at, &product.Warehouse_id); err != nil {
+			return productList[0], err
 		}
-		prList = append(prList, pr)
+		productList = append(productList, product)
 	}
 	if err := rows.Err(); err != nil {
 		return domain.Product{}, err
 	}
-	return prList[0], nil
+	return productList[0], nil
 }
 
 func (r *repository) Update(domain.Product) (domain.Product, error) {
@@ -86,25 +106,4 @@ func (r *repository) Update(domain.Product) (domain.Product, error) {
 
 func (r *repository) Delete(id uint64) (domain.Product, error) {
 	return domain.Product{}, nil
-}
-
-func partialUpdate(oldProduct domain.Product, newProduct domain.Product) domain.Product {
-	if newProduct.Name != "" {
-		oldProduct.Name = newProduct.Name
-	}
-
-	if newProduct.Color != "" {
-		oldProduct.Color = newProduct.Color
-	}
-
-	if newProduct.Price != 0 {
-		oldProduct.Price = newProduct.Price
-	}
-
-	oldProduct.Stock = newProduct.Stock
-
-	if newProduct.Code != "" {
-		oldProduct.Code = newProduct.Code
-	}
-	return oldProduct
 }

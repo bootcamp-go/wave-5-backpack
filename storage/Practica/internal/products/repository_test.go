@@ -15,12 +15,13 @@ func TestStore(t *testing.T) {
 	repo := NewRepository(db)
 
 	mockProduct := domain.Product{
-		Name:      "test",
-		Color:     "Red",
-		Price:     10.99,
-		Stock:     10,
-		Code:      "JH7BU998G",
-		Published: true,
+		Name:         "test",
+		Color:        "Red",
+		Price:        10.99,
+		Stock:        10,
+		Code:         "JH7BU998G",
+		Published:    true,
+		Warehouse_id: 1,
 	}
 
 	res, err := repo.Store(mockProduct)
@@ -35,20 +36,27 @@ func TestGetByName(t *testing.T) {
 	repo := NewRepository(db)
 
 	mockProduct := domain.Product{
-		Id:         1,
-		Name:       "product 1",
-		Color:      "red",
-		Price:      10.99,
-		Stock:      100,
-		Code:       "HJ988BH",
-		Published:  true,
-		Created_at: "2022-08-09",
+		Id:           1,
+		Name:         "product 1",
+		Color:        "red",
+		Price:        10.99,
+		Stock:        100,
+		Code:         "HJ988BH",
+		Published:    true,
+		Created_at:   "2022-08-09",
+		Warehouse_id: 1,
 	}
-
-	// created, err := repo.Store(mockProduct)
-	// mockProduct.Id = created.Id
 	assert.Nil(t, err)
 	res, err := repo.GetByName("product 1")
 	assert.Nil(t, err)
 	assert.Equal(t, mockProduct, res)
+}
+
+func TestGetAll(t *testing.T) {
+	db, err := sql.Open("mysql", "root@/storage")
+	assert.Nil(t, err)
+	repo := NewRepository(db)
+	assert.Nil(t, err)
+	_, err = repo.GetAll()
+	assert.Nil(t, err)
 }
