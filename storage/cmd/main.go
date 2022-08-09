@@ -2,14 +2,9 @@ package main
 
 import (
 	"log"
-	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-
-	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/docs"
-	"github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/cmd/db"
 	"github.com/bootcamp-go/wave-5-backpack/tree/lopez_cristian/storage/cmd/handler"
@@ -42,10 +37,6 @@ func main() {
 
 	gin.SetMode("test")
 	router := gin.Default()
-
-	// Router docu
-	docs.SwaggerInfo.Host = os.Getenv("HOST")
-	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	// Middleware
 	router.Use(web.TokenAuthMiddleware()) // el orden declarado de los Middleware afecta a su llamado
