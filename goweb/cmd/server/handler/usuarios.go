@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strconv"
 
+	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/usuarios"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/pkg/web"
 	"github.com/gin-gonic/gin"
@@ -35,6 +36,42 @@ type Usuarios struct {
 
 func NewUsuario(u usuarios.Service) *Usuarios {
 	return &Usuarios{service: u}
+}
+
+func (c *Usuarios) GetByName() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		fmt.Print(ctx.Param("nombre"))
+		u, erro := c.service.GetByName(ctx.Param("nombre"))
+		if erro != nil {
+			ctx.JSON(404, web.NewResponse(404, nil, "no existen registros con el nombre indicado"))
+			return
+		}
+		ctx.JSON(200, web.NewResponse(200, u, ""))
+	}
+}
+
+func (c *Usuarios) Save() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var req request
+		if err := ctx.ShouldBindJSON(&req); err != nil {
+			fmt.Print(err)
+		}
+		var user domain.Usuarios
+		user.Nombre = req.Nombre
+		user.Apellido = req.Apellido
+		user.Email = req.Email
+		user.Edad = req.Edad
+		user.Altura = req.Altura
+		user.Activo = req.Activo
+		user.FechaCreacion = req.FechaCreacion
+
+		user, err := c.service.Store(user)
+		if err != nil {
+			ctx.JSON(404, web.NewResponse(404, nil, err.Error()))
+			return
+		}
+		ctx.JSON(200, web.NewResponse(200, user, ""))
+	}
 }
 
 // ListUsers godoc
@@ -212,4 +249,5 @@ func (c *Usuarios) Guardar() gin.HandlerFunc {
 		ctx.JSON(200, web.NewResponse(200, user, ""))
 
 	}
+
 }

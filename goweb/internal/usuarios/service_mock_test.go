@@ -49,6 +49,12 @@ func (mdb *MockDB) Guardar(id int, nombre string, apellido string, email string,
 func (mdb *MockDB) LastId() (int, error) {
 	return 0, nil
 }
+func (mdb *MockDB) GetByName(name string) (domain.Usuarios, error) {
+	return domain.Usuarios{}, nil
+}
+func (mdb *MockDB) Store(userD domain.Usuarios) (domain.Usuarios, error) {
+	return domain.Usuarios{}, nil
+}
 
 func TestUpdate(t *testing.T) {
 	myMock := MockDB{}
