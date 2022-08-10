@@ -71,6 +71,21 @@ func TestGetAllWithContextTO(t *testing.T) {
 	}
 }
 
+func TestGetAllConflict(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	assert.NoError(t, err)
+	defer db.Close()
+
+	mock.ExpectQuery("SELECT id, nombre, apellido, email, edad, altura, activo, fechaCreacion FROM storage.users").WillReturnError(sql.ErrConnDone)
+	repo := NewRepositoryBD(db)
+
+	listUser, err := repo.GetAll(context.TODO())
+	assert.Empty(t, listUser)
+	assert.Error(t, err)
+	assert.Equal(t, sql.ErrConnDone, err)
+	assert.NoError(t, mock.ExpectationsWereMet())
+}
+
 func TestSaveMock(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	assert.NoError(t, err)
@@ -121,6 +136,51 @@ func TestSaveErrorMock(t *testing.T) {
 	//assert.Error(t, fmt.Errorf("Ocurrio un error al ejecutar la BBDD"))
 	assert.Error(t, er2)
 	assert.Zero(t, userO)
+}
+
+func TestDeleteMock(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	assert.NoError(t, err)
+
+	id := 1
+	defer db.Close()
+	mock.ExpectPrepare(regexp.QuoteMeta("DELETE FROM storage.users WHERE id = ? "))
+	mock.ExpectExec(regexp.QuoteMeta("DELETE FROM storage.users WHERE id = ? ")).WithArgs(id).WillReturnResult(sqlmock.NewResult(1, 1))
+
+	repo := NewRepositoryBD(db)
+
+	err = repo.Delete(id)
+	assert.NoError(t, err)
+	assert.NoError(t, mock.ExpectationsWereMet())
+}
+
+func TestGetOneMock(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	assert.NoError(t, err)
+	defer db.Close()
+
+	user := domain.Usuarios{
+		Id:            1232,
+		Nombre:        "TayronaT",
+		Apellido:      "Fante",
+		Email:         "titi",
+		Edad:          30,
+		Altura:        20,
+		Activo:        false,
+		FechaCreacion: "2020",
+	}
+
+	rows := sqlmock.NewRows([]string{"id", "nombre", "apellido", "email", "edad", "altura", "activo", "fechaCreacion"})
+
+	rows.AddRow(user.Id, user.Nombre, user.Apellido, user.Email, user.Edad, user.Altura, user.Activo, user.FechaCreacion)
+	mock.ExpectQuery(regexp.QuoteMeta("SELECT id, nombre, apellido, email, edad, altura, activo, fechaCreacion FROM storage.users WHERE id = ?")).WithArgs(user.Id).WillReturnRows(rows)
+	repo := NewRepositoryBD(db)
+
+	result, err := repo.GetById(context.TODO(), user.Id)
+	assert.Equal(t, user, result)
+	assert.NoError(t, err)
+	assert.NoError(t, mock.ExpectationsWereMet())
+
 }
 
 func TestSaveAndGetWithContext(t *testing.T) {
@@ -194,6 +254,7 @@ func TestDeleteGetAllGetOne(t *testing.T) {
 	assert.Nil(t, er)
 	assert.Nil(t, er2)
 	assert.Nil(t, er3)
+
 }
 
 func TestGetOneInexist(t *testing.T) {
