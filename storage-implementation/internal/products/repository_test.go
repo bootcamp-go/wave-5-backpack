@@ -36,3 +36,32 @@ func TestSqlRepositoryStoreMock(t *testing.T)  {
   assert.Equal(t, product, p)
   assert.Equal(t, product.ID, p.ID)
 }
+
+func TestSqlRepositoryGetOneMock(t *testing.T) {
+	//Arrange
+	db, mock, err := sqlmock.New()
+	assert.NoError(t, err)
+
+	repo := NewRepo(db)
+
+	product := domain.Product{
+		ID: 1,
+		Name: "destornillador",
+		Type: "ferreteria",
+		Count: 100,
+		Price: 1000,
+	}
+
+	columns := []string{"id", "name", "type", "count", "price"}
+	rows := mock.NewRows(columns)
+	rows.AddRow(product.ID, product.Name, product.Type, product.Count, product.Price)
+
+	mock.ExpectQuery(regexp.QuoteMeta("SELECT id, name, type, count, price FROM products WHERE id = ?")).WithArgs(product.ID).WillReturnRows(rows)
+
+	//Act
+	p, err := repo.GetOne(1)
+
+	//Assert
+	assert.NoError(t, err)
+	assert.Equal(t, product, p)
+}
