@@ -1,0 +1,239 @@
+definitions:
+  handler.request:
+    properties:
+      activo:
+        type: boolean
+      altura:
+        type: number
+      apellido:
+        type: string
+      edad:
+        type: integer
+      email:
+        type: string
+      fecha:
+        type: string
+      id:
+        type: integer
+      nombre:
+        type: string
+    type: object
+  web.Response:
+    properties:
+      code:
+        type: string
+      data: {}
+      error:
+        type: string
+    type: object
+info:
+  contact:
+    name: API Support
+    url: https://developers.mercadolibre.com.ar/support
+  description: This API Handle MELI Users.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: https://developers.mercadolibre.com.ar/es_ar/terminos-y-condiciones
+  title: MELI Bootcamp API
+  version: "1.0"
+paths:
+  /usuarios:
+    get:
+      consumes:
+      - application/json
+      description: get usuarios
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: List users
+      tags:
+      - Usuarios
+    post:
+      consumes:
+      - application/json
+      description: store usuarios
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: User to store
+        in: body
+        name: usuario
+        required: true
+        schema:
+          $ref: '#/definitions/handler.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Store usuarios
+      tags:
+      - Usuarios
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: User to update
+        in: body
+        name: usuario
+        required: true
+        schema:
+          $ref: '#/definitions/handler.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/web.Response'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Update a user by Id
+      tags:
+      - Usuarios
+  /usuarios/{id}:
+    delete:
+      operationId: delete-user-by-id
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: id from user to delete
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Delete a user by Id
+      tags:
+      - Usuarios
+    get:
+      operationId: get-user-by-id
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: user id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Get a user by id
+      tags:
+      - Usuarios
+  /usuarios/byName/{nombre}:
+    get:
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: nombre
+        in: path
+        name: nombre
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Get a user by Name
+      tags:
+      - Usuarios
+  /usuarios/userware/{id}:
+    get:
+      operationId: get-data-by-id
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: user and warehouse id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Get data from warehouse and user by id
+      tags:
+      - Usuarios
+swagger: "2.0"

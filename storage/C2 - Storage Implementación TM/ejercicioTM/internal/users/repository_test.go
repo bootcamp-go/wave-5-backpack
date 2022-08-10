@@ -10,11 +10,11 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var dataSource = "root@tcp(localhost:3306)/storage?parseTime=true"
+var conn = "root@tcp(localhost:3306)/storage?parseTime=true"
 
 func TestGetByName(t *testing.T) {
 	//Arrange
-	StorageDB, err := sql.Open("mysql", dataSource)
+	StorageDB, err := sql.Open("mysql", conn)
 	if err != nil {
 		panic(err)
 	}
@@ -37,7 +37,7 @@ func TestRepositoryStore(t *testing.T) {
 		Edad:     34,
 		Altura:   1.60,
 	}
-	StorageDB, err := sql.Open("mysql", dataSource)
+	StorageDB, err := sql.Open("mysql", conn)
 	if err != nil {
 		panic(err)
 	}
@@ -55,7 +55,7 @@ func TestRepositoryStore(t *testing.T) {
 
 func TestGetOne(t *testing.T) {
 	//Arrange
-	StorageDB, err := sql.Open("mysql", dataSource)
+	StorageDB, err := sql.Open("mysql", conn)
 	if err != nil {
 		panic(err)
 	}
@@ -80,7 +80,7 @@ func TestUpdate(t *testing.T) {
 		Edad:     61,
 		Altura:   1.65,
 	}
-	StorageDB, err := sql.Open("mysql", dataSource)
+	StorageDB, err := sql.Open("mysql", conn)
 	if err != nil {
 		panic(err)
 	}
@@ -98,7 +98,7 @@ func TestUpdate(t *testing.T) {
 
 func TestGetAll(t *testing.T) {
 	//Arrange
-	StorageDB, err := sql.Open("mysql", dataSource)
+	StorageDB, err := sql.Open("mysql", conn)
 	if err != nil {
 		panic(err)
 	}
