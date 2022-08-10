@@ -1,4 +1,4 @@
-module practica2-clase2
+module clase2-practica2
 
 go 1.18
 
