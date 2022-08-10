@@ -148,3 +148,25 @@ func TestUpdate(t *testing.T) {
 	// Verificando que el producto obtenido corresponda a lo esperado
 	assert.Equal(t, product, p)
 }
+
+func TestDelete(t *testing.T) {
+
+	txdb.Register("txdb", "mysql", "root:@tcp(localhost:3306)/storage")
+	db, err := sql.Open("txdb", uuid.New().String())
+	assert.NoError(t, err)
+
+	repo := NewRepository(db)
+	ctx := context.TODO()
+	id := 4
+
+	err = repo.Delete(ctx, id)
+
+	// Verificar producto actualizado en el Store
+	assert.NoError(t, err)
+
+	// Verificando que el producto eliminado no se encuentre
+	getProductNonExist, err := repo.GetOne(ctx, id)
+	assert.NoError(t, err)
+	assert.Zero(t, getProductNonExist)
+
+}
