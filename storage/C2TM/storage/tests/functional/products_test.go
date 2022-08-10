@@ -88,3 +88,12 @@ func TestGetByName(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, "Computador", product.Name)
 }
+
+func TestGetAll(t *testing.T) {
+	db := cnn.MySQLConnection()
+	repo := products.NewRepository(db)
+	products, err := repo.GetAll()
+
+	assert.NoError(t, err)
+	assert.True(t, len(products) > 0)
+}
