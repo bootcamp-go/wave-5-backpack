@@ -9,32 +9,32 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSqlRepositoryStoreMock(t *testing.T)  {
-  //Arrange
-  db, mock, err := sqlmock.New()
-  assert.NoError(t, err)
-  
-  repo := NewRepo(db)
+func TestSqlRepositoryStoreMock(t *testing.T) {
+	//Arrange
+	db, mock, err := sqlmock.New()
+	assert.NoError(t, err)
 
-  product := domain.Product{
-    ID: 1,
-    Name: "destornillador",
-    Type: "ferreteria",
-    Count: 100,
-    Price: 1000,
-    Warehouse: "abc123",
-    WarehouseAdress: "Calle Falsa 123",
-  }
+	repo := NewRepo(db)
 
-  mock.ExpectPrepare(regexp.QuoteMeta("INSERT INTO products(name, type, count, price) VALUES( ?, ?, ?, ? )"))
-  mock.ExpectExec("").WithArgs(product.Name, product.Type, product.Count, product.Price).WillReturnResult(sqlmock.NewResult(1,1)) 
-  //Act
-  p, err := repo.Store(product)
+	product := domain.Product{
+		ID:              1,
+		Name:            "destornillador",
+		Type:            "ferreteria",
+		Count:           100,
+		Price:           1000,
+		Warehouse:       "abc123",
+		WarehouseAdress: "Calle Falsa 123",
+	}
 
-  //Assert
-  assert.NoError(t, err)
-  assert.Equal(t, product, p)
-  assert.Equal(t, product.ID, p.ID)
+	mock.ExpectPrepare(regexp.QuoteMeta("INSERT INTO products(name, type, count, price) VALUES( ?, ?, ?, ? )"))
+	mock.ExpectExec("").WithArgs(product.Name, product.Type, product.Count, product.Price).WillReturnResult(sqlmock.NewResult(1, 1))
+	//Act
+	p, err := repo.Store(product)
+
+	//Assert
+	assert.NoError(t, err)
+	assert.Equal(t, product, p)
+	assert.Equal(t, product.ID, p.ID)
 }
 
 func TestSqlRepositoryGetOneMock(t *testing.T) {
@@ -45,9 +45,9 @@ func TestSqlRepositoryGetOneMock(t *testing.T) {
 	repo := NewRepo(db)
 
 	product := domain.Product{
-		ID: 1,
-		Name: "destornillador",
-		Type: "ferreteria",
+		ID:    1,
+		Name:  "destornillador",
+		Type:  "ferreteria",
 		Count: 100,
 		Price: 1000,
 	}
@@ -74,18 +74,18 @@ func TestSqlRepositoryUpdateMock(t *testing.T) {
 	repo := NewRepo(db)
 
 	product := domain.Product{
-		ID: 1,
-		Name: "destornillador",
-		Type: "ferreteria",
+		ID:    1,
+		Name:  "destornillador",
+		Type:  "ferreteria",
 		Count: 100,
 		Price: 1000,
 	}
 
 	mock.ExpectPrepare(regexp.QuoteMeta("UPDATE products SET name = ?, type = ?, count = ?, price = ? WHERE id = ?"))
-  mock.ExpectExec("").WithArgs(product.Name, product.Type, product.Count, product.Price, product.ID).WillReturnResult(sqlmock.NewResult(1,1)) 
+	mock.ExpectExec("").WithArgs(product.Name, product.Type, product.Count, product.Price, product.ID).WillReturnResult(sqlmock.NewResult(1, 1))
 
 	//Act
-	p, err := repo.Update(product.ID, product.Name, product.Type, product.Count,product.Price)
+	p, err := repo.Update(product.ID, product.Name, product.Type, product.Count, product.Price)
 
 	//Assert
 	assert.NoError(t, err)
@@ -102,7 +102,7 @@ func TestSqlRepositoryDeleteMock(t *testing.T) {
 	productID := 1
 
 	mock.ExpectPrepare(regexp.QuoteMeta("DELETE FROM products WHERE id = ?"))
-  mock.ExpectExec("").WithArgs(productID).WillReturnResult(sqlmock.NewResult(1,1)) 
+	mock.ExpectExec("").WithArgs(productID).WillReturnResult(sqlmock.NewResult(1, 1))
 
 	//Act
 	err = repo.Delete(productID)
