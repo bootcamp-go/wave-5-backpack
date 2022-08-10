@@ -9,9 +9,10 @@ import (
 )
 
 const (
-	GetAllTransactions string = "SELECT id, cod_transaction, currency, amount, sender, receiver, date_order FROM TRANSACTIONS"
+	GetAllTransactions string = "SELECT id, cod_transaction, currency, amount, sender, receiver, date_order FROM TRANSACTIONS;"
 	GetTransactionBySender string = "SELECT id, cod_transaction, currency, amount, sender, receiver, date_order FROM TRANSACTIONS WHERE sender = ?;"
-    InsertTransaction string = "INSERT INTO TRANSACTIONS (cod_transaction, currency, amount, sender, receiver, date_order) VALUES (?, ?, ?, ?, ?, ?)"
+    InsertTransaction string = "INSERT INTO TRANSACTIONS (cod_transaction, currency, amount, sender, receiver, date_order) VALUES (?, ?, ?, ?, ?, ?);"
+    UpdateTransaction string = "UPDATE TRANSACTIONS SET currency = ?, amount = ?, sender = ?, receiver = ?, date_order = ? WHERE id = ?;"
 )
 
 type IRepository interface {
@@ -115,7 +116,29 @@ func (repository *Repository) Store(ctx context.Context, id int, codTransaction 
 }
 
 func (repository *Repository) Update(ctx context.Context, id int, codTransaction string, currency string, amount int, sender string, receiver string, dateOrder string) (domain.Transaction, error) {
-	return domain.Transaction{}, nil
+
+	stmt, err := repository.db.PrepareContext(ctx, UpdateTransaction)
+	if err != nil {
+		return domain.Transaction{}, err
+	}
+	//Cierro la instancia. Si se quedan abiertos se generan consumos de memoria innecesarios.
+	defer stmt.Close()
+
+	_, err = stmt.ExecContext(ctx, currency, amount, sender, receiver, dateOrder, id)
+	if err != nil {
+		return domain.Transaction{}, err
+	}
+
+	transaction := domain.Transaction{
+		Id:             id,
+		CodTransaction: codTransaction,
+		Currency:       currency,
+		Amount:         amount,
+		Sender:         sender,
+		Receiver:       receiver,
+		DateOrder:      dateOrder,
+	}
+	return transaction, nil
 }
 
 func (repository *Repository) UpdateAmount(ctx context.Context, id, amount int) (domain.Transaction, error) {

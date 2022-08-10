@@ -16,5 +16,8 @@ func TestRepository_GetAll(t *testing.T) {
 
 	//Act
 	transactions, err := repository.GetAll(ctx)
+
 	//Assert
+	assert.NotNil(t, transactions)
+	assert.Nil(t, err)
 }
