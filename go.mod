@@ -12,7 +12,10 @@ require (
 	github.com/swaggo/swag v1.8.3
 )
 
-require github.com/DATA-DOG/go-txdb v0.1.5 // indirect
+require (
+	github.com/DATA-DOG/go-sqlmock v1.5.0 // indirect
+	github.com/DATA-DOG/go-txdb v0.1.5 // indirect
+)
 
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect

@@ -3,6 +3,7 @@ package products
 import (
 	"context"
 	"database/sql"
+	"errors"
 
 	"github.com/bootcamp-go/wave-5-backpack/storage/internal/domain"
 )
@@ -122,5 +123,23 @@ func (r *repository) GetAll() ([]domain.Product, error) {
 }
 
 func (r *repository) Delete(id int) error {
+	query := Delete
+	stmt, err := r.db.Prepare(query)
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	res, err := stmt.Exec(id)
+	if err != nil {
+		return err
+	}
+
+	affect, err := res.RowsAffected()
+	if affect < 1 {
+		return errors.New("no fue posible eliminar el producto")
+	}
+
 	return nil
 }

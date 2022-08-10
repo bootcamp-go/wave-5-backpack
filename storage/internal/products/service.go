@@ -75,6 +75,10 @@ func (s *service) UpdateAll(ctx context.Context, p domain.Product) error {
 }
 
 func (s *service) Delete(id int) error {
+	if err := s.repository.Delete(id); err != nil {
+		return err
+	}
+
 	return nil
 }
 

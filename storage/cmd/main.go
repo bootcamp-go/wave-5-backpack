@@ -30,7 +30,7 @@ func main() {
 	group.POST("/", product.Store())
 	group.PUT("/:id", product.UpdateAll())
 	//group.PATCH("/:id", product.Update())
-	//group.DELETE("/:id", product.Delete())
+	group.DELETE("/:id", product.Delete())
 
 	//group.GET("/", GetFilter)
 

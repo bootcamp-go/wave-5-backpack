@@ -169,3 +169,25 @@ func (p *Product) UpdateAll() gin.HandlerFunc {
 
 	}
 }
+
+func (p *Product) Delete() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		id, err := strconv.ParseInt(ctx.Param("id"), 10, 64)
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, web.NewResponse(
+				404, nil, "ID invalido",
+			))
+			return
+		}
+
+		err = p.service.Delete(int(id))
+		if err != nil {
+			ctx.JSON(http.StatusNotFound, web.NewResponse(
+				404, nil, "No fue posible eliminar el producto",
+			))
+			return
+		}
+
+		ctx.JSON(http.StatusOK, web.NewResponse(204, "", ""))
+	}
+}
