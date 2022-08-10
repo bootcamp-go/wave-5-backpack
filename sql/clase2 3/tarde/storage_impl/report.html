@@ -1,0 +1,318 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>products: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/bootcamp-go/storage/internal/products/repository.go (24.1%)</option>
+				
+				<option value="file1">github.com/bootcamp-go/storage/internal/products/service.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">no coverage</span>
+				<span class="cov1">low coverage</span>
+				<span class="cov2">*</span>
+				<span class="cov3">*</span>
+				<span class="cov4">*</span>
+				<span class="cov5">*</span>
+				<span class="cov6">*</span>
+				<span class="cov7">*</span>
+				<span class="cov8">*</span>
+				<span class="cov9">*</span>
+				<span class="cov10">high coverage</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package products
+
+import (
+        "context"
+        "database/sql"
+        "fmt"
+
+        "github.com/bootcamp-go/storage/internal/domains"
+)
+
+type Repository interface {
+        Store(context.Context, domains.Product) (int, error)
+        GetAll(context.Context, int) ([]domains.Products, error)
+        Get(context.Context, int) (domains.Product, error)
+        GetByName(context.Context, string) (domains.Product, error)
+        Update(context.Context, domains.Product) error
+        Exists(ctx context.Context, id int) bool
+}
+
+func NewRepository(db *sql.DB) Repository <span class="cov8" title="1">{
+        return &amp;repository{db: db}
+}</span>
+
+type repository struct {
+        db *sql.DB
+}
+
+func (r *repository) Get(ctx context.Context, id int) (domains.Product, error) <span class="cov0" title="0">{
+        stmt, err := r.db.Prepare(GET_BY_ID_QUERY)
+        if err != nil </span><span class="cov0" title="0">{
+                return domains.Product{}, fmt.Errorf("error al preparar la consulta - error %v", err)
+        }</span>
+        <span class="cov0" title="0">defer stmt.Close()
+
+        var p domains.Product // id, name, type, count, price, id_warehouse
+        err = stmt.QueryRowContext(ctx, id).Scan(&amp;p.ID, &amp;p.Name, &amp;p.Type, &amp;p.Count, &amp;p.Price, &amp;p.WarehouseId)
+        if err != nil </span><span class="cov0" title="0">{
+                return domains.Product{}, err
+        }</span>
+
+        <span class="cov0" title="0">return p, nil</span>
+}
+
+func (r *repository) GetAll(ctx context.Context, id int) ([]domains.Products, error) <span class="cov8" title="1">{
+        stmt, err := r.db.Prepare(GET_ALL_QUERY)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer stmt.Close()
+
+        rows, err := stmt.QueryContext(ctx, id)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">var products []domains.Products
+        for rows.Next() </span><span class="cov8" title="1">{
+                var p domains.Products
+                err := rows.Scan(&amp;p.ID, &amp;p.Name, &amp;p.Type, &amp;p.Count, &amp;p.Price, &amp;p.WarehouseName, &amp;p.WarehouseAddress)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+
+                <span class="cov8" title="1">products = append(products, p)</span>
+        }
+
+        <span class="cov8" title="1">if err := rows.Err(); err != nil </span><span class="cov0" title="0">{
+                return nil, rows.Err()
+        }</span>
+
+        <span class="cov8" title="1">return products, nil</span>
+}
+
+func (r *repository) Store(ctx context.Context, p domains.Product) (int, error) <span class="cov0" title="0">{
+        stmt, err := r.db.Prepare(INSERT_QUERY)
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, fmt.Errorf("error al preparar la consulta - error %v", err)
+        }</span>
+        <span class="cov0" title="0">defer stmt.Close()
+
+        result, err := stmt.ExecContext(ctx, p.Name, p.Type, p.Count, p.Price, p.WarehouseId)
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, fmt.Errorf("error al ejecutar la consulta - error %v", err)
+        }</span>
+
+        <span class="cov0" title="0">id, err := result.LastInsertId()
+        if err != nil </span><span class="cov0" title="0">{
+                return 0, fmt.Errorf("error al obtener último id - error %v", err)
+        }</span>
+
+        <span class="cov0" title="0">return int(id), nil</span>
+}
+
+func (r *repository) GetByName(ctx context.Context, name string) (domains.Product, error) <span class="cov0" title="0">{
+        stmt, err := r.db.Prepare(GET_BY_NAME_QUERY)
+        if err != nil </span><span class="cov0" title="0">{
+                return domains.Product{}, fmt.Errorf("error al preparar la consulta - error %v", err)
+        }</span>
+        <span class="cov0" title="0">defer stmt.Close()
+
+        var product domains.Product
+        err = stmt.QueryRowContext(ctx, name).Scan(&amp;product.ID, &amp;product.Name, &amp;product.Type, &amp;product.Count, &amp;product.Price)
+        if err != nil </span><span class="cov0" title="0">{
+                return domains.Product{}, fmt.Errorf("no registros para %s - error %v", name, err)
+        }</span>
+
+        <span class="cov0" title="0">return product, nil</span>
+}
+
+func (r *repository) Update(ctx context.Context, p domains.Product) error <span class="cov0" title="0">{
+        stmt, err := r.db.Prepare(UPDATE_QUERY)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("error al preparar la consulta - error %v", err)
+        }</span>
+        <span class="cov0" title="0">defer stmt.Close()
+
+        _, err = stmt.ExecContext(ctx, p.Name, p.Type, p.Count, p.Price, p.WarehouseId, p.ID)
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("error al ejecutar la consulta - error %v", err)
+        }</span>
+
+        <span class="cov0" title="0">return nil</span>
+}
+
+func (r *repository) Exists(ctx context.Context, id int) bool <span class="cov0" title="0">{
+        row := r.db.QueryRow(EXISTS_QUERY, id)
+        err := row.Scan(&amp;id)
+        return err == nil
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package products
+
+import (
+        "context"
+        "fmt"
+
+        "github.com/bootcamp-go/storage/internal/domains"
+)
+
+type Service interface {
+        Get(context.Context, int) (domains.Product, error)
+        GetAll(context.Context, int) ([]domains.Products, error)
+        Store(context.Context, domains.Product) (int, error)
+        GetByName(context.Context, string) (domains.Product, error)
+        Update(context.Context, domains.Product) error
+}
+
+type service struct {
+        repository Repository
+}
+
+func NewService(r Repository) Service <span class="cov0" title="0">{
+        return &amp;service{repository: r}
+}</span>
+
+func (s *service) Get(ctx context.Context, id int) (domains.Product, error) <span class="cov0" title="0">{
+        return s.repository.Get(ctx, id)
+}</span>
+
+func (s *service) GetAll(ctx context.Context, id int) ([]domains.Products, error) <span class="cov0" title="0">{
+        return s.repository.GetAll(ctx, id)
+}</span>
+
+func (s *service) Store(ctx context.Context, p domains.Product) (int, error) <span class="cov0" title="0">{
+        return s.repository.Store(ctx, p)
+}</span>
+
+func (s *service) GetByName(ctx context.Context, name string) (domains.Product, error) <span class="cov0" title="0">{
+        return s.repository.GetByName(ctx, name)
+}</span>
+
+func (s *service) Update(ctx context.Context, p domains.Product) error <span class="cov0" title="0">{
+        if !s.repository.Exists(ctx, p.ID) </span><span class="cov0" title="0">{
+                return fmt.Errorf("not exists product id %v", p.ID)
+        }</span>
+
+        <span class="cov0" title="0">product, err := s.repository.Get(ctx, p.ID)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">if p.Name == "" </span><span class="cov0" title="0">{
+                p.Name = product.Name
+        }</span>
+
+        <span class="cov0" title="0">if p.Count == 0 </span><span class="cov0" title="0">{
+                p.Count = product.Count
+        }</span>
+
+        <span class="cov0" title="0">if p.Type == "" </span><span class="cov0" title="0">{
+                p.Type = product.Type
+        }</span>
+
+        <span class="cov0" title="0">if p.Price == 0 </span><span class="cov0" title="0">{
+                p.Price = product.Price
+        }</span>
+
+        <span class="cov0" title="0">if p.WarehouseId == 0 </span><span class="cov0" title="0">{
+                p.WarehouseId = product.WarehouseId
+        }</span>
+
+        <span class="cov0" title="0">return s.repository.Update(ctx, p)</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
