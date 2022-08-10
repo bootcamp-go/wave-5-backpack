@@ -43,7 +43,7 @@ func(repository *Repository) GetAll(ctx context.Context) ([]domain.Transaction, 
 	if err != nil {
 		return []domain.Transaction{}, fmt.Errorf(err.Error())
 	}
-	transactions := []domain.Transaction{}
+	var transactions []domain.Transaction
 
 	for rows.Next() {
 		transaction := domain.Transaction{}
