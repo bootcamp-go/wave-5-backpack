@@ -1,6 +1,7 @@
 package users
 
 import (
+	"context"
 	"database/sql"
 	"ejercicioTM/internal/domain"
 	"testing"
@@ -86,7 +87,7 @@ func TestUpdate(t *testing.T) {
 	repositorio := NewRepository(StorageDB)
 
 	//Act
-	resultUsuario, err := repositorio.Update(usuario)
+	resultUsuario, err := repositorio.Update(context.TODO(), usuario)
 	if err != nil {
 		t.Errorf("Error al actualizar el usuario: %v", err)
 	}

@@ -1,6 +1,7 @@
 package users
 
 import (
+	"context"
 	"ejercicioTM/internal/domain"
 	"fmt"
 )
@@ -9,7 +10,7 @@ type Service interface {
 	GetFullData(id int) ([]domain.UserAndWarehouse, error)
 	GetByName(nombre string) (domain.Usuarios, error)
 	Store(domain.Usuarios) (domain.Usuarios, error)
-	Update(domain.Usuarios) (domain.Usuarios, error)
+	Update(ctx context.Context, usuario domain.Usuarios) (domain.Usuarios, error)
 	GetOne(id int) (domain.Usuarios, error)
 	GetAll() ([]domain.UserAndWarehouse, error)
 	Delete(id int) error
@@ -47,8 +48,8 @@ func (s *service) GetOne(id int) (domain.Usuarios, error) {
 	return usuario, nil
 }
 
-func (s *service) Update(usuario domain.Usuarios) (domain.Usuarios, error) {
-	usuario, err := s.repo.Update(usuario)
+func (s *service) Update(ctx context.Context, usuario domain.Usuarios) (domain.Usuarios, error) {
+	usuario, err := s.repo.Update(ctx, usuario)
 	if err != nil {
 		return domain.Usuarios{}, fmt.Errorf("error actualizando usuario %w", err)
 	}

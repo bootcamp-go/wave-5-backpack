@@ -127,6 +127,33 @@ paths:
       tags:
       - Usuarios
   /usuarios/{id}:
+    delete:
+      operationId: delete-user-by-id
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: id from user to delete
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Delete a user by Id
+      tags:
+      - Usuarios
     get:
       operationId: get-user-by-id
       parameters:
@@ -179,6 +206,34 @@ paths:
           schema:
             $ref: '#/definitions/web.Response'
       summary: Get a user by Name
+      tags:
+      - Usuarios
+  /usuarios/userware/{id}:
+    get:
+      operationId: get-data-by-id
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: user and warehouse id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.Response'
+      summary: Get data from warehouse and user by id
       tags:
       - Usuarios
 swagger: "2.0"

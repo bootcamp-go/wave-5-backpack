@@ -1,6 +1,7 @@
 package users
 
 import (
+	"context"
 	"database/sql"
 	"ejercicioTM/internal/domain"
 	"log"
@@ -11,7 +12,7 @@ type Repository interface {
 	GetFullData(id int) ([]domain.UserAndWarehouse, error)
 	GetByName(nombre string) (domain.Usuarios, error)
 	Store(domain.Usuarios) (domain.Usuarios, error)
-	Update(domain.Usuarios) (domain.Usuarios, error)
+	Update(ctx context.Context, usuario domain.Usuarios) (domain.Usuarios, error)
 	GetOne(id int) (domain.Usuarios, error)
 	GetAll() ([]domain.UserAndWarehouse, error)
 	Delete(id int) error
@@ -99,7 +100,7 @@ func (r *repository) GetOne(id int) (domain.Usuarios, error) {
 }
 
 //Función para actualizar información de un usuario de acuerdo a su id
-func (r *repository) Update(usuario domain.Usuarios) (domain.Usuarios, error) {
+func (r *repository) Update(ctx context.Context, usuario domain.Usuarios) (domain.Usuarios, error) {
 	//Preparando sentencia
 	stmt, err := r.db.Prepare(UpdateUsuario)
 	if err != nil {
@@ -107,7 +108,7 @@ func (r *repository) Update(usuario domain.Usuarios) (domain.Usuarios, error) {
 	}
 	//Se cierra la sentencia para evitar consumo de memoria
 	defer stmt.Close()
-	_, err = stmt.Exec(usuario.Nombre, usuario.Apellido, usuario.Email, usuario.Edad, usuario.Altura, true, time.Now().Format(time.RFC3339), usuario.Id)
+	_, err = stmt.ExecContext(ctx, usuario.Nombre, usuario.Apellido, usuario.Email, usuario.Edad, usuario.Altura, true, time.Now().Format(time.RFC3339), usuario.Id)
 	if err != nil {
 		return domain.Usuarios{}, err
 	}

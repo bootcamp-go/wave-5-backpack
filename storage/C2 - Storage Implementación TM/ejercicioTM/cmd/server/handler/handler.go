@@ -193,7 +193,7 @@ func (u *Usuarios) Update() gin.HandlerFunc {
 		}
 
 		user := domain.Usuarios(req)
-		u, err := u.service.Update(user)
+		u, err := u.service.Update(c, user)
 		if err != nil {
 			c.JSON(404, web.NewResponse(404, nil, err.Error()))
 			return
