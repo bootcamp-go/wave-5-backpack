@@ -8,8 +8,9 @@ import (
 )
 
 const (
-    InsertTransaction string = "SELECT id, cod_transaction, currency, amount, sender, receiver, date_order FROM TRANSACTIONS WHERE sender = ?;"
-    GetTransactionBySender string = "INSERT INTO TRANSACTIONS (cod_transaction, currency, amount, sender, receiver, date_order) VALUES (?, ?, ?, ?, ?, ?)"
+	GetAllTransactions string = "SELECT id, cod_transaction, currency, amount, sender, receiver, date_order FROM TRANSACTIONS"
+	GetTransactionBySender string = "SELECT id, cod_transaction, currency, amount, sender, receiver, date_order FROM TRANSACTIONS WHERE sender = ?;"
+    InsertTransaction string = "INSERT INTO TRANSACTIONS (cod_transaction, currency, amount, sender, receiver, date_order) VALUES (?, ?, ?, ?, ?, ?)"
 )
 
 type IRepository interface {
@@ -36,12 +37,27 @@ func(repository *Repository) Delete(id int) error {
 	return nil
 }
 func(repository *Repository) GetAll() ([]domain.Transaction, error) {
-	return []domain.Transaction{}, nil
+
+	rows, err := repository.db.Query(GetAllTransactions)
+	if err != nil {
+		return []domain.Transaction{}, fmt.Errorf(err.Error())
+	}
+	transactions := []domain.Transaction{}
+
+	for rows.Next() {
+		transaction := domain.Transaction{}
+		if err := rows.Scan(&transaction.Id, &transaction.CodTransaction, &transaction.Currency, &transaction.Amount, &transaction.Sender, &transaction.Receiver, &transaction.DateOrder); err != nil {
+			return nil, err
+		}
+		transactions =append(transactions, transaction)
+	}
+
+	return transactions, nil
 }
 
 func(repository *Repository) GetBySender(sender string) (domain.Transaction, error) {
 
-	stmt, err := repository.db.Prepare(InsertTransaction)
+	stmt, err := repository.db.Prepare(GetTransactionBySender)
 	if err != nil {
 		return domain.Transaction{}, fmt.Errorf(err.Error())
 	}
@@ -68,7 +84,7 @@ func(repository *Repository) GetBySender(sender string) (domain.Transaction, err
 
 func (repository *Repository) Store(id int, codTransaction string, currency string, amount int, sender string, receiver string, dateOrder string) (domain.Transaction, error) {
 
-	stmt, err := repository.db.Prepare(GetTransactionBySender)
+	stmt, err := repository.db.Prepare(InsertTransaction)
 	if err != nil {
 		return domain.Transaction{}, fmt.Errorf(err.Error())
 	}
