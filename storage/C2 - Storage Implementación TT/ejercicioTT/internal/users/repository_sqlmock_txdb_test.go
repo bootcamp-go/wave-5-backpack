@@ -29,6 +29,9 @@ func TestRepositoryStoreMock(t *testing.T) {
 	//Nos pide un string que es la query, se va a matchear por strings, por lo que la consulta resulta exitosa de esta manera porque no entiende la expresión ?,?,...
 
 	//Si quiero usar toda la sentencia, utilizo regexp.QuoteMeta
+
+	//Prepare para los que modifican la BD
+	//Query para los select
 	mock.ExpectPrepare("INSERT INTO usuarios")
 	//inserta y afecta a una columna
 	//id 1, 1 row afectado

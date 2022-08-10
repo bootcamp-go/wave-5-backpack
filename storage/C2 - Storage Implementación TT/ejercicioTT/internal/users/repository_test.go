@@ -3,7 +3,7 @@ package users
 import (
 	"context"
 	"database/sql"
-	"ejercicioTM/internal/domain"
+	"ejercicioTT/internal/domain"
 	"testing"
 
 	_ "github.com/go-sql-driver/mysql"
