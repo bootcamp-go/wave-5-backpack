@@ -19,6 +19,7 @@ const (
 	GetAllUserTO  string = "SELECT SLEEP(10) FROM DUAL"
 	UpdateUser    string = "UPDATE storage.users SET nombre = ?, apellido = ?, email = ?, edad = ?, altura = ?, activo = ?, fechaCreacion = ? WHERE id = ?"
 	DeleteUser    string = "DELETE FROM storage.users WHERE id = ? "
+	GetById       string = "SELECT id, nombre, apellido, email, edad, altura, activo, fechaCreacion FROM storage.users WHERE id = ?"
 )
 
 func NewRepositoryBD(dbb *sql.DB) Repository {
@@ -106,8 +107,19 @@ func (r *repositoryBD) Delete(id int) error {
 func (r *repositoryBD) UpdateNameAndLastName(id int, name string, apellido string) (domain.Usuarios, error) {
 	return domain.Usuarios{}, nil
 }
-func (r *repositoryBD) GetById(id int) (domain.Usuarios, error) {
-	return domain.Usuarios{}, nil
+
+//VALIDAR QUE ESTO NO ESTA ANDANDO
+func (r *repositoryBD) GetById(ctx context.Context, id int) (domain.Usuarios, error) {
+	var user domain.Usuarios
+	rows, _ := r.dbBD.QueryContext(ctx, GetById, id)
+	fmt.Println(rows)
+	for rows.Next() {
+		if err := rows.Scan(&user.Id, &user.Nombre, &user.Apellido, &user.Email, &user.Edad, &user.Altura, &user.Activo, &user.FechaCreacion); err != nil {
+			fmt.Println(user)
+			return domain.Usuarios{}, err
+		}
+	}
+	return user, nil
 }
 
 func (r *repositoryBD) GetByName(name string) ([]domain.Usuarios, error) {

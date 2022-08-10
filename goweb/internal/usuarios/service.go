@@ -20,7 +20,7 @@ type Service interface {
 	Update(ctx context.Context, id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error)
 	Delete(id int) error
 	UpdateNameAndLastName(id int, name string, apellido string) (domain.Usuarios, error)
-	GetById(id int) (domain.Usuarios, error)
+	GetById(ctx context.Context, id int) (domain.Usuarios, error)
 	GetByName(name string) ([]domain.Usuarios, error)
 }
 
@@ -55,8 +55,8 @@ func (s *service) GetAll(ctx context.Context) ([]domain.Usuarios, error) {
 	return us, nil
 }
 
-func (s *service) GetById(id int) (domain.Usuarios, error) {
-	us, err := s.repository.GetById(id)
+func (s *service) GetById(ctx context.Context, id int) (domain.Usuarios, error) {
+	us, err := s.repository.GetById(ctx, id)
 	if err != nil {
 		return domain.Usuarios{}, err
 	}

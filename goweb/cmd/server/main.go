@@ -75,10 +75,10 @@ func main() {
 	//Aca ponemos los corchetes para dar una tabulacion
 	{
 		///////////////BBDD/////////////////
-		us.GET("/:nombre", u.GetByName())
+		us.GET("/name/:nombre", u.GetByName())
 		///////////////BBDD/////////////////
 		us.PUT("/:id", u.Update())
-		//us.GET("/:id", u.GetById())
+		us.GET("/:id", u.GetById())
 		us.POST("/", u.Guardar())
 		us.GET("/", u.GetAll())
 		us.DELETE("/:id", u.Delete())

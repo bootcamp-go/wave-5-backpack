@@ -17,7 +17,7 @@ func (mdb *MockDB) GetAll(ctx context.Context) ([]domain.Usuarios, error) {
 	return sliceUsers, nil
 }
 
-func (mdb *MockDB) GetById(id int) (domain.Usuarios, error) {
+func (mdb *MockDB) GetById(ctx context.Context, id int) (domain.Usuarios, error) {
 	return domain.Usuarios{}, nil
 }
 

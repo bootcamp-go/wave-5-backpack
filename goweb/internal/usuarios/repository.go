@@ -29,7 +29,7 @@ type Repository interface {
 	Update(ctx context.Context, id int, nombre, apellido, email string, edad int, altura float64, activo bool, fecha string) (domain.Usuarios, error)
 	Delete(id int) error
 	UpdateNameAndLastName(id int, name string, apellido string) (domain.Usuarios, error)
-	GetById(id int) (domain.Usuarios, error)
+	GetById(ctx context.Context, id int) (domain.Usuarios, error)
 	GetByName(name string) ([]domain.Usuarios, error)
 }
 
@@ -43,7 +43,7 @@ func NewRepository(db store.Store) Repository {
 	}
 }
 
-func (r *repository) GetById(id int) (domain.Usuarios, error) {
+func (r *repository) GetById(ctx context.Context, id int) (domain.Usuarios, error) {
 	var us []domain.Usuarios
 	if err := r.db.Read(&us); err != nil {
 		return domain.Usuarios{}, fmt.Errorf(FailReading)

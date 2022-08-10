@@ -39,7 +39,7 @@ func NewUsuario(u usuarios.Service) *Usuarios {
 
 func (c *Usuarios) GetByName() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		fmt.Print(ctx.Param("nombre"))
+		fmt.Print(ctx.Param("/name/nombre"))
 		u, erro := c.service.GetByName(ctx.Param("nombre"))
 		if erro != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, "no existen registros con el nombre indicado"))
@@ -174,7 +174,7 @@ func (c *Usuarios) GetById() gin.HandlerFunc {
 			ctx.JSON(401, web.NewResponse(401, nil, "el id es invalido"))
 			return
 		}
-		u, erro := c.service.GetById(id)
+		u, erro := c.service.GetById(ctx, id)
 		if erro != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, "el id ingresado es inexistente"))
 			return

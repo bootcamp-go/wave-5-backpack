@@ -24,7 +24,7 @@ func (sdb *StubDB) GetAll(ctx context.Context) ([]domain.Usuarios, error) {
 	return sliceUsers, nil
 }
 
-func (sdb *StubDB) GetById(id int) (domain.Usuarios, error) {
+func (sdb *StubDB) GetById(ctx context.Context, id int) (domain.Usuarios, error) {
 	sliceUsers := []domain.Usuarios{{Id: 1, Nombre: "Yvo", Apellido: "Pintos", Email: "yvo", Edad: 30, Altura: 3, Activo: true, FechaCreacion: "1992"}, {Id: 2, Nombre: "Mat", Apellido: "Fant", Email: "mat", Edad: 33, Altura: 3, Activo: true, FechaCreacion: "1990"}}
 	for i := 0; i < len(sliceUsers); i++ {
 		if sliceUsers[i].Id == id {
@@ -138,7 +138,7 @@ func TestGetById(t *testing.T) {
 
 	user := domain.Usuarios{Id: 1, Nombre: "Yvo", Apellido: "Pintos", Email: "yvo", Edad: 30, Altura: 3, Activo: true, FechaCreacion: "1992"}
 	servi := NewService(&myStubDB)
-	result, err := servi.GetById(1)
+	result, err := servi.GetById(context.TODO(), 1)
 
 	assert.Equal(t, result, user)
 	assert.Nil(t, err)
@@ -147,7 +147,7 @@ func TestGetByIdNotFound(t *testing.T) {
 	expectedError := "error al encontrar el user"
 	myStubDB := StubDB{}
 	servi := NewService(&myStubDB)
-	result, err := servi.GetById(12)
+	result, err := servi.GetById(context.TODO(), 12)
 
 	assert.Equal(t, result, domain.Usuarios{})
 	assert.EqualError(t, err, expectedError)
