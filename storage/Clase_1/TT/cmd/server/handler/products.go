@@ -113,6 +113,24 @@ func (p *Product) GetById() gin.HandlerFunc {
 	}
 }
 
+func (p *Product) Delete() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		token := os.Getenv("TOKEN")
+		if token != "12345" {
+			ctx.JSON(401, web.NewResponse(401, nil, "error: token inválido"))
+		}
+		id, _ := strconv.Atoi(ctx.Param("id"))
+		err := p.service.Delete(ctx, id)
+		if err != nil {
+			ctx.JSON(http.StatusBadRequest, web.NewResponse(404, nil, err.Error()))
+			return
+		}
+
+		ctx.JSON(http.StatusAccepted, web.NewResponse(200, "product deleted", ""))
+
+	}
+}
+
 func (p *Product) Update() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 

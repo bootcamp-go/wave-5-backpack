@@ -40,6 +40,7 @@ func main() {
 	r.PATCH("/:id", products.Update())
 	r.GET("/", products.GetAll())
 	r.POST("/", products.Create())
+	r.DELETE("/:id", products.Delete())
 
 	if err := router.Run("localhost:8080"); err != nil {
 		panic("err")

@@ -12,6 +12,7 @@ type Service interface {
 	GetOne(context.Context, int) (domain.Product, error)
 	GetOneFullData(context.Context, int) (domain.ProductAndWarehouse, error)
 	Update(context.Context, domain.Product) (domain.Product, error)
+	Delete(context.Context, int) error
 }
 
 type service struct {
@@ -48,4 +49,8 @@ func (s *service) GetOneFullData(ctx context.Context, id int) (domain.ProductAnd
 
 func (s *service) Update(ctx context.Context, product domain.Product) (domain.Product, error) {
 	return s.repository.Update(ctx, product)
+}
+
+func (s *service) Delete(ctx context.Context, id int) error {
+	return s.repository.Delete(ctx, id)
 }

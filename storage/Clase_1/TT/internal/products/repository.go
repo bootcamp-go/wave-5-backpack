@@ -15,6 +15,7 @@ const (
 	GetFullDataById string = "SELECT p.id,p.name,p.type,p.count,p.price,p.id_warehouse, w.id,w.name,w.adress FROM products AS p INNER JOIN warehouses AS w ON p.id_warehouse=w.id WHERE p.id=? "
 	queryUpdate     string = "UPDATE products SET name=?, type=?, count=?,price=?,id_warehouse=? WHERE id=?"
 	queryGetOnE     string = "SELECT id,name,type,count,price,id_warehouse FROM products WHERE id=?"
+	queryDelete     string = "DELETE FROM products WHERE id=?"
 )
 
 type Repository interface {
@@ -24,6 +25,7 @@ type Repository interface {
 	GetOne(ctx context.Context, id int) (domain.Product, error)
 	GetOneFullData(ctx context.Context, id int) (domain.ProductAndWarehouse, error)
 	Update(context.Context, domain.Product) (domain.Product, error)
+	Delete(context.Context, int) error
 }
 
 type repository struct {
@@ -152,4 +154,22 @@ func (r *repository) Update(ctx context.Context, product domain.Product) (domain
 	}
 
 	return product, nil
+}
+
+func (r *repository) Delete(ctx context.Context, id int) error {
+
+	stmt, err := r.db.Prepare(queryDelete)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.ExecContext(ctx, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
