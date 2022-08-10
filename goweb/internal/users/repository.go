@@ -17,6 +17,7 @@ const (
 type Repository interface {
 	GetAll(ctx context.Context) ([]domain.Users, error)
 	GetByName(ctx context.Context, name string) ([]domain.Users, error)
+	GetOne(ctx context.Context, id int) (domain.Users, error)
 	Store(ctx context.Context, id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error)
 	LastID(ctx context.Context) (int, error)
 	Update(ctx context.Context, id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error)
@@ -45,6 +46,10 @@ func (r *repository) GetAll(ctx context.Context) ([]domain.Users, error) {
 func (r *repository) GetByName(ctx context.Context, name string) ([]domain.Users, error) {
 	var users []domain.Users
 	return users, nil
+}
+
+func (r *repository) GetOne(ctx context.Context, id int) (domain.Users, error) {
+	return domain.Users{}, nil
 }
 
 func (r *repository) LastID(ctx context.Context) (int, error) {

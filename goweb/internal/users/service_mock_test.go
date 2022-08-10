@@ -54,6 +54,10 @@ func (s *MockDB) GetByName(ctx context.Context, name string) ([]domain.Users, er
 	return []domain.Users{}, nil
 }
 
+func (r *MockDB) GetOne(ctx context.Context, id int) (domain.Users, error) {
+	return domain.Users{}, nil
+}
+
 func (s *MockDB) UpdateLastNameAndAge(ctx context.Context, id, age int, lastName string) (domain.Users, error) {
 	beforeUpdate, _ := s.GetAll(ctx)
 	s.GetWasCalled = true

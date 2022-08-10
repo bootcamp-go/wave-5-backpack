@@ -22,6 +22,7 @@ const (
 	GetAll       string = "SELECT id, name, last_name, email, age, height, active, creation_date FROM users"
 	TimeOut10Sec string = "SELECT SLEEP(10) FROM DUAL"
 	GetByName    string = "SELECT id, name, last_name, email, age, height, active, creation_date FROM users WHERE name = ?"
+	GetById      string = "SELECT id, name, last_name, email, age, height, active, creation_date FROM users WHERE id = ?"
 	StoreUser    string = "INSERT INTO users(name, last_name, email, age, height, active, creation_date) VALUES( ?, ?, ?, ?, ?, ?, ? )"
 	UpdateUser   string = "UPDATE users SET name = ?, last_name = ?, email = ?, age = ?, height = ?, active = ?, creation_date = ? WHERE id = ?"
 )
@@ -60,6 +61,15 @@ func (r *repositoryDB) GetByName(ctx context.Context, name string) ([]domain.Use
 		listUser = append(listUser, user)
 	}
 	return listUser, nil
+}
+
+func (r *repositoryDB) GetOne(ctx context.Context, id int) (domain.Users, error) {
+	var user domain.Users
+	row := r.db.QueryRowContext(ctx, GetById, id)
+	if err := row.Scan(&user.Id, &user.Name, &user.LastName, &user.Email, &user.Age, &user.Height, &user.Active, &user.CreationDate); err != nil {
+		return domain.Users{}, err
+	}
+	return user, nil
 }
 
 func (r *repositoryDB) Store(ctx context.Context, id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {

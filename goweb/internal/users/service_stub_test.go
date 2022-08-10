@@ -48,6 +48,10 @@ func (s *StubDB) GetByName(ctx context.Context, name string) ([]domain.Users, er
 	return []domain.Users{}, nil
 }
 
+func (r *StubDB) GetOne(ctx context.Context, id int) (domain.Users, error) {
+	return domain.Users{}, nil
+}
+
 func (s *StubDB) Store(ctx context.Context, id, age int, name, lastName, email, creationDate string, height float64, active bool) (domain.Users, error) {
 	if s.errRead != "" {
 		return domain.Users{}, fmt.Errorf("error: %s", s.errRead)
