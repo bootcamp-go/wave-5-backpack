@@ -3,41 +3,43 @@ package users
 import (
 	"context"
 	"database/sql"
+	"regexp"
 	"testing"
 	"time"
+
+	"github.com/DATA-DOG/go-sqlmock"
 	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/bootcamp-go/wave-5-backpack/internal/domain"
 	"github.com/stretchr/testify/assert"
 )
 
-type StubStore struct{
-
+type StubStore struct {
 }
 
 func (ss *StubStore) Read(data interface{}) error {
 	userDB := data.(*[]domain.User)
 	*userDB = []domain.User{{
-			ID:         1,
-			Name:       "name1",
-			Lastname:   "lastname1",
-			Email:      "1@mail.com",
-			Age:        22,
-			Height:     1.55,
-			Active:     true,
-			DoCreation: "02-03-2020",
-		},{
-			ID:         2,
-			Name:       "name2",
-			Lastname:   "lastname2",
-			Email:      "2@mail.com",
-			Age:        23,
-			Height:     1.56,
-			Active:     true,
-			DoCreation: "02-03-2021",
-		},
+		ID:         1,
+		Name:       "name1",
+		Lastname:   "lastname1",
+		Email:      "1@mail.com",
+		Age:        22,
+		Height:     1.55,
+		Active:     true,
+		DoCreation: "02-03-2020",
+	}, {
+		ID:         2,
+		Name:       "name2",
+		Lastname:   "lastname2",
+		Email:      "2@mail.com",
+		Age:        23,
+		Height:     1.56,
+		Active:     true,
+		DoCreation: "02-03-2021",
+	},
 	}
-		
+
 	return nil
 }
 
@@ -96,6 +98,7 @@ También debe validarse que el método Read haya sido ejecutado durante el test.
 type MockStore struct {
 	ReadOk bool
 }
+
 func (fs *MockStore) Ping() error {
 	return nil
 }
@@ -132,15 +135,14 @@ func (fs *MockStore) Read(data interface{}) error {
 	return nil
 }
 
-
 /* Test with Mock */
 func TestUpdateNameUser(t *testing.T) {
 	id, name := 1, "After Update"
-	
+
 	mock := MockStore{}
 
 	r := NewRepository(&mock)
-	response, err := r.UpdateUser(id, name, "","",22, 1.88,true,"")
+	response, err := r.UpdateUser(id, name, "", "", 22, 1.88, true, "")
 	assert.Nil(t, err)
 
 	assert.True(t, true, mock.ReadOk)
@@ -148,10 +150,9 @@ func TestUpdateNameUser(t *testing.T) {
 	assert.Equal(t, name, response.Name)
 }
 
-
 func TestGetAllContext(t *testing.T) {
 	db, err := sql.Open("mysql", "root@tcp(localhost:3306)/storage")
-	if err !=nil {
+	if err != nil {
 		t.Log(err)
 	}
 	repo := NewRepositoryDB(db)
@@ -164,6 +165,38 @@ func TestGetAllContext(t *testing.T) {
 	}
 }
 
-func TestStoreConGO(t *testing.T) {
+func TestStoreConMock(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	assert.NoError(t, err)
+	defer db.Close()
 
+	//hay que ver que estamos buscando en cada caso sino puede ser sin el parentesis como esta comentado
+	//mock.ExpectPrepare("INSERT INTO users)
+
+	mock.ExpectPrepare(regexp.QuoteMeta("INSERT INTO users(name, lastname, email, age, height, active, doCreation) VALUES( ?, ?, ?, ?, ?, ?, ? )"))
+
+	mock.ExpectExec("INSERT INTO users").WillReturnResult(sqlmock.NewResult(1, 1))
+
+	userID := 1
+
+	repo := NewRepositoryDB(db)
+	userNew :=
+		domain.User{
+			ID:         userID,
+			Name:       "rober",
+			Lastname:   "to",
+			Email:      "ro@ber.com",
+			Age:        22,
+			Height:     1.77,
+			Active:     true,
+			DoCreation: "10/03/2010",
+		}
+
+	us, err := repo.StoreUser(userID, userNew.Name, userNew.Lastname, userNew.Email, userNew.Age, userNew.Height, userNew.Active, userNew.DoCreation)
+
+	assert.NoError(t, err)
+	assert.NotZero(t,us)
+	assert.Equal(t, userNew.ID, us.ID)
+
+	
 }
