@@ -43,7 +43,7 @@ func (transaction *Transaction) Delete() gin.HandlerFunc {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, "id invalido"))
 			return
 		}
-		err = transaction.service.Delete(int(id))
+		err = transaction.service.Delete(ctx, int(id))
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 			return
@@ -68,7 +68,7 @@ func (transaction *Transaction) GetAll() gin.HandlerFunc {
 		}
 
 		//Envio la peticion al servicio y almaceno las respuestas que me envien en 2 variables
-		p, err := transaction.service.GetAll()
+		p, err := transaction.service.GetAll(ctx)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 			return
@@ -95,7 +95,7 @@ func (transaction *Transaction) GetBySender() gin.HandlerFunc {
 
 		sender := ctx.Param("sender")
 
-		t, err := transaction.service.GetBySender(sender)
+		t, err := transaction.service.GetBySender(ctx, sender)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 			return
@@ -127,7 +127,7 @@ func (transaction *Transaction) Store() gin.HandlerFunc {
 			})
 			return
 		}
-		t, err := transaction.service.Store(req.CodTransaction, req.Currency, req.Amount, req.Sender, req.Receiver, req.DateOrder)
+		t, err := transaction.service.Store(ctx, req.CodTransaction, req.Currency, req.Amount, req.Sender, req.Receiver, req.DateOrder)
 		if err != nil {
 			ctx.JSON(http.StatusNotFound, web.NewResponse(http.StatusNotFound, nil, err.Error()))
 			return
@@ -191,7 +191,7 @@ func (transaction *Transaction) Upddate() gin.HandlerFunc {
 		}
 
 		//Envio la soliciutd al servicio y espero la respuesta del respositiorio en 2 variables
-		t, err := transaction.service.Update(int(id), transactionRequest.CodTransaction, transactionRequest.Currency, transactionRequest.Amount, transactionRequest.Sender, transactionRequest.Receiver, transactionRequest.DateOrder)
+		t, err := transaction.service.Update(ctx, int(id), transactionRequest.CodTransaction, transactionRequest.Currency, transactionRequest.Amount, transactionRequest.Sender, transactionRequest.Receiver, transactionRequest.DateOrder)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return
@@ -236,7 +236,7 @@ func (transaction *Transaction) UpdateAmount() gin.HandlerFunc {
 		}
 
 		//Envio la soliciutd al servicio y espero la respuesta del respositiorio en 2 variables
-		t, err := transaction.service.UpdateAmount(int(id), transactionRequest.Amount)
+		t, err := transaction.service.UpdateAmount(ctx, int(id), transactionRequest.Amount)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(http.StatusBadRequest, nil, err.Error()))
 			return

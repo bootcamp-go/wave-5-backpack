@@ -1,6 +1,7 @@
 package transactions
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 
@@ -14,13 +15,13 @@ const (
 )
 
 type IRepository interface {
-	Delete(int) error
-	GetAll() ([]domain.Transaction, error)
-	GetBySender(string) (domain.Transaction, error)
-	Store(int, string, string, int, string, string, string) (domain.Transaction, error)
-	Update(int, string, string, int, string, string, string) (domain.Transaction, error)
-	UpdateAmount(int, int) (domain.Transaction, error)
-	LastID() (int, error)
+	Delete(context.Context, int) error
+	GetAll(context.Context) ([]domain.Transaction, error)
+	GetBySender(context.Context, string) (domain.Transaction, error)
+	Store(context.Context, int, string, string, int, string, string, string) (domain.Transaction, error)
+	Update(context.Context, int, string, string, int, string, string, string) (domain.Transaction, error)
+	UpdateAmount(context.Context, int, int) (domain.Transaction, error)
+	LastID(context.Context) (int, error)
 }
 
 type Repository struct {
@@ -33,10 +34,10 @@ func NewRepository(db *sql.DB) IRepository {
 	}
 }
 
-func(repository *Repository) Delete(id int) error {
+func(repository *Repository) Delete(ctx context.Context, id int) error {
 	return nil
 }
-func(repository *Repository) GetAll() ([]domain.Transaction, error) {
+func(repository *Repository) GetAll(ctx context.Context) ([]domain.Transaction, error) {
 
 	rows, err := repository.db.Query(GetAllTransactions)
 	if err != nil {
@@ -55,7 +56,7 @@ func(repository *Repository) GetAll() ([]domain.Transaction, error) {
 	return transactions, nil
 }
 
-func(repository *Repository) GetBySender(sender string) (domain.Transaction, error) {
+func(repository *Repository) GetBySender(ctx context.Context, sender string) (domain.Transaction, error) {
 
 	stmt, err := repository.db.Prepare(GetTransactionBySender)
 	if err != nil {
@@ -82,7 +83,7 @@ func(repository *Repository) GetBySender(sender string) (domain.Transaction, err
 	return transaction, nil
 }
 
-func (repository *Repository) Store(id int, codTransaction string, currency string, amount int, sender string, receiver string, dateOrder string) (domain.Transaction, error) {
+func (repository *Repository) Store(ctx context.Context, id int, codTransaction string, currency string, amount int, sender string, receiver string, dateOrder string) (domain.Transaction, error) {
 
 	stmt, err := repository.db.Prepare(InsertTransaction)
 	if err != nil {
@@ -113,15 +114,15 @@ func (repository *Repository) Store(id int, codTransaction string, currency stri
 	return transaction, nil
 }
 
-func (repository *Repository) Update(id int, codTransaction string, currency string, amount int, sender string, receiver string, dateOrder string) (domain.Transaction, error) {
+func (repository *Repository) Update(ctx context.Context, id int, codTransaction string, currency string, amount int, sender string, receiver string, dateOrder string) (domain.Transaction, error) {
 	return domain.Transaction{}, nil
 }
 
-func (repository *Repository) UpdateAmount(id, amount int) (domain.Transaction, error) {
+func (repository *Repository) UpdateAmount(ctx context.Context, id, amount int) (domain.Transaction, error) {
 	return domain.Transaction{}, nil
 }
 
-func (repository *Repository) LastID() (int, error) {
+func (repository *Repository) LastID(ctx context.Context) (int, error) {
 	return 0, nil
 }
 
