@@ -1,6 +1,7 @@
 package usuarios
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
@@ -11,12 +12,11 @@ import (
 
 type Repository interface {
 	GetAll() ([]domain.Usuario, error)
-	GetById(id int) domain.Usuario
+	GetById(id int) (domain.Usuario, error)
 	GetByName(name string) domain.Usuario
 	Store(usuario domain.Usuario) (domain.Usuario, error)
-	Save(Nombre, Apellido, Email, Fecha_creacion string, Id, Edad, Altura int, Activo bool) (domain.Usuario, error)
 	LastId() (int, error)
-	UpdateUsuario(Nombre, Apellido, Email, Fecha_creacion string, Id, Edad, Altura int, Activo bool) (domain.Usuario, error)
+	UpdateUsuario(ctx context.Context, usuario domain.Usuario) (domain.Usuario, error)
 	UpdateAtributos(Nombre, Apellido, Email, Fecha_creacion string, Id, Edad, Altura int, Activo *bool) (domain.Usuario, error)
 	DeleteUsuario(Id int) error
 }
@@ -26,15 +26,33 @@ type repository struct {
 	dbReal *sql.DB
 }
 
+const (
+	qGetAll        string = "select id,nombre,apellido,email,edad,altura,activo,fecha_creacion from usuario"
+	qGetById       string = "select id,nombre,apellido,email,edad,altura,activo,fecha_creacion from usuario where id = ?"
+	qGetByName     string = "select id,nombre,apellido,email,edad,altura,activo,fecha_creacion from usuario where nombre = ?"
+	qStore         string = "INSERT INTO usuario(nombre,apellido,email,edad,altura,activo,fecha_creacion) VALUES( ?, ?, ?, ?,?,?,? )"
+	qUpdateUsuario string = "UPDATE usuario SET nombre=?, apellido=?, email=?, edad=?, altura=?, activo=?, fecha_creacion=? WHERE id=?"
+	qDeleteUsuario string = "DELETE FROM usuario WHERE id = ?"
+)
+
 func (r *repository) GetAll() ([]domain.Usuario, error) {
-	var ListUsuarios []domain.Usuario
-	if err := r.db.Read(&ListUsuarios); err != nil {
-		return ListUsuarios, err
+	var usuarios []domain.Usuario
+	rows, err := r.dbReal.Query(qGetAll)
+	if err != nil {
+		log.Println(err)
+		return usuarios, err
 	}
-	if len(ListUsuarios) == 0 {
-		return ListUsuarios, fmt.Errorf("lista vacia perdone usted")
+	fmt.Println("prueba")
+	println(rows)
+	for rows.Next() {
+		usuario := domain.Usuario{}
+		if err := rows.Scan(&usuario.Id, &usuario.Nombre, &usuario.Apellido, &usuario.Email, &usuario.Edad, &usuario.Altura, &usuario.Activo, &usuario.Fecha_creacion); err != nil {
+			log.Println(err.Error())
+			return nil, err
+		}
+		usuarios = append(usuarios, usuario)
 	}
-	return ListUsuarios, nil
+	return usuarios, nil
 }
 
 // `id` int(11) NOT NULL,
@@ -46,27 +64,28 @@ func (r *repository) GetAll() ([]domain.Usuario, error) {
 // `activo` tinyint(1) NOT NULL,
 // `Fecha_creacion` timestamp NOT NULL
 
-func (r *repository) GetById(id int) domain.Usuario {
+func (r *repository) GetById(id int) (domain.Usuario, error) {
 	var usuario domain.Usuario
-	rows, err := r.dbReal.Query("select id,nombre,apellido,email,edad,altura,activo,fecha_creacion from usuario where id = ?", id)
+	rows, err := r.dbReal.Query(qGetById, id)
 	if err != nil {
 		log.Println(err)
-		return usuario
+		return usuario, err
 	}
 	fmt.Println("prueba")
 	println(rows)
 	for rows.Next() {
 		if err := rows.Scan(&usuario.Id, &usuario.Nombre, &usuario.Apellido, &usuario.Email, &usuario.Edad, &usuario.Altura, &usuario.Activo, &usuario.Fecha_creacion); err != nil {
 			log.Println(err.Error())
-			return usuario
+			nullUsuario := domain.Usuario{}
+			return nullUsuario, err
 		}
 	}
-	return usuario
+	return usuario, nil
 }
 
 func (r *repository) GetByName(name string) domain.Usuario {
 	var usuario domain.Usuario
-	rows, err := r.dbReal.Query("select id,nombre,apellido,email,edad,altura,activo,fecha_creacion from usuario where nombre = ?", name)
+	rows, err := r.dbReal.Query(qGetByName, name)
 	if err != nil {
 		log.Println(err)
 		return usuario
@@ -83,7 +102,7 @@ func (r *repository) GetByName(name string) domain.Usuario {
 }
 
 func (r *repository) Store(usuario domain.Usuario) (domain.Usuario, error) {
-	stmt, err := r.dbReal.Prepare("INSERT INTO usuario(nombre,apellido,email,edad,altura,activo,fecha_creacion) VALUES( ?, ?, ?, ?,?,?,? )") // se prepara el SQL
+	stmt, err := r.dbReal.Prepare(qStore) // se prepara el SQL
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -99,36 +118,6 @@ func (r *repository) Store(usuario domain.Usuario) (domain.Usuario, error) {
 	}
 	insertedId, _ := result.LastInsertId() // del sql.Resul devuelto en la ejecución obtenemos el Id insertado
 	usuario.Id = int(insertedId)
-
-	return usuario, nil
-}
-
-func (r *repository) Save(Nombre, Apellido, Email, Fecha_creacion string, Id, Edad, Altura int, Activo bool) (domain.Usuario, error) {
-	var ListUsuarios []domain.Usuario
-	if err := r.db.Read(&ListUsuarios); err != nil {
-		usuarioNulo := domain.Usuario{}
-		fmt.Println(err)
-		return usuarioNulo, err
-	}
-	if Nombre == "" || Apellido == "" || Email == "" || Fecha_creacion == "" || Id <= 0 || Edad < 0 || Altura <= 0 {
-		usuarioNulo := domain.Usuario{}
-		return usuarioNulo, fmt.Errorf("campo invalido o campos invalidos")
-	}
-	usuario := domain.Usuario{
-		Id:             Id,
-		Nombre:         Nombre,
-		Apellido:       Apellido,
-		Email:          Email,
-		Edad:           Edad,
-		Altura:         Altura,
-		Activo:         Activo,
-		Fecha_creacion: Fecha_creacion,
-	}
-	ListUsuarios = append(ListUsuarios, usuario)
-	if err := r.db.Write(ListUsuarios); err != nil {
-		usuarioNulo := domain.Usuario{}
-		return usuarioNulo, err
-	}
 	return usuario, nil
 }
 func (r *repository) LastId() (int, error) {
@@ -148,32 +137,29 @@ func NewRepository(db store.Store, dbReal *sql.DB) Repository {
 	return &repository{db, dbReal}
 }
 
-func (r *repository) UpdateUsuario(Nombre, Apellido, Email, Fecha_creacion string, Id, Edad, Altura int, Activo bool) (domain.Usuario, error) {
-	usuario := domain.Usuario{
-		Nombre:         Nombre,
-		Apellido:       Apellido,
-		Email:          Email,
-		Edad:           Edad,
-		Altura:         Altura,
-		Activo:         Activo,
-		Fecha_creacion: Fecha_creacion,
+func (r *repository) UpdateUsuario(ctx context.Context, usuarioCambiado domain.Usuario) (domain.Usuario, error) {
+	stmt, err := r.dbReal.Prepare(qUpdateUsuario) // se prepara la sentencia SQL a ejecutar
+	if err != nil {
+		log.Fatal(err)
 	}
-	var ListUsuarios []domain.Usuario
-	if err := r.db.Read(&ListUsuarios); err != nil {
+	defer stmt.Close() // se cierra la sentencia al terminar. Si quedan abiertas se genera consumos de memoria
+	//nombre=?, apellido=?, email=?, edad=?, altura=?, activo=?, fecha_creacion=?
+	result, err := stmt.ExecContext(ctx,
+		usuarioCambiado.Nombre,
+		usuarioCambiado.Apellido,
+		usuarioCambiado.Email,
+		usuarioCambiado.Edad,
+		usuarioCambiado.Altura,
+		usuarioCambiado.Activo,
+		usuarioCambiado.Fecha_creacion,
+		usuarioCambiado.Id,
+	)
+	fmt.Println("mira este resultado de put")
+	fmt.Println(result)
+	if err != nil {
 		return domain.Usuario{}, err
 	}
-	for i := 0; i < len(ListUsuarios); i++ {
-		if Id == ListUsuarios[i].Id {
-			usuario.Id = Id
-			ListUsuarios[i] = usuario
-			if err := r.db.Write(ListUsuarios); err != nil {
-				return domain.Usuario{}, err
-			}
-			return usuario, nil
-		}
-	}
-	usuarioNulo := domain.Usuario{}
-	return usuarioNulo, fmt.Errorf("ese Id pareciera no existir dentro de nuestra BD")
+	return usuarioCambiado, nil
 }
 
 func (r *repository) UpdateAtributos(Nombre, Apellido, Email, Fecha_creacion string, Id, Edad, Altura int, Activo *bool) (domain.Usuario, error) {
@@ -203,21 +189,20 @@ func (r *repository) UpdateAtributos(Nombre, Apellido, Email, Fecha_creacion str
 	return usuarioNulo, fmt.Errorf("ese Id pareciera no existir dentro de nuestra BD")
 }
 
-func (r *repository) DeleteUsuario(Id int) error {
-	var ListUsuarios []domain.Usuario
-	if err := r.db.Read(&ListUsuarios); err != nil {
+func (r *repository) DeleteUsuario(id int) error {
+	stmt, err := r.dbReal.Prepare(qDeleteUsuario) // se prepara la sentencia SQL a ejecutar
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close() // se cierra la sentencia al terminar. Si quedan abiertas se genera consumos de memoria
+
+	_, err = stmt.Exec(id) // retorna un sql.Result y un error
+
+	if err != nil {
 		return err
 	}
-	for i := 0; i < len(ListUsuarios); i++ {
-		if ListUsuarios[i].Id == Id {
-			ListUsuarios = append(ListUsuarios[:i], ListUsuarios[i+1:]...)
-			if err := r.db.Write(ListUsuarios); err != nil {
-				return fmt.Errorf("problemas al intentar escribir para borrar el elemento de id %d: %e", Id, err)
-			}
-			return nil
-		}
-	}
-	return fmt.Errorf("no se encontro esa direccion id")
+
+	return nil
 }
 
 // Nombre, Apellido, Email, Fecha_creacion string

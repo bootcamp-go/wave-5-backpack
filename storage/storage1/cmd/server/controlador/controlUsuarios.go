@@ -6,6 +6,7 @@ import (
 	"os"
 	"strconv"
 
+	"github.com/del_rio/web-server/internal/domain"
 	"github.com/del_rio/web-server/internal/usuarios"
 	"github.com/del_rio/web-server/pkg/web"
 	"github.com/gin-gonic/gin"
@@ -88,7 +89,21 @@ func (u *Usuario) AgregarUsuarios() gin.HandlerFunc {
 			ctx.JSON(404, web.NewResponse(404, nil, "problema usando bind: "+err.Error()))
 			return
 		}
-		usuario, err := u.service.Save(req.Nombre, req.Apellido, req.Email, req.Edad, req.Altura, *req.Activo)
+		if req.Nombre == "" || req.Apellido == "" || req.Email == "" || req.Edad < 0 || req.Altura <= 0 || req.Activo == nil {
+			ctx.JSON(404, web.NewResponse(404, nil, "uno o mas atributos son invalidos"))
+			return
+		}
+		usuario := domain.Usuario{
+			Id:             -1,
+			Nombre:         req.Nombre,
+			Apellido:       req.Apellido,
+			Email:          req.Email,
+			Edad:           req.Edad,
+			Altura:         req.Altura,
+			Activo:         *req.Activo,
+			Fecha_creacion: "",
+		}
+		usuario, err := u.service.Save(usuario)
 		if err != nil {
 			ctx.JSON(404, web.NewResponse(404, nil, "problema en funcion save : "+err.Error()))
 			return
@@ -119,13 +134,12 @@ func (u *Usuario) ActualizarUsuario() gin.HandlerFunc {
 			})
 			return
 		}
-		usuario, err := u.service.UpdateUsuario(req.Nombre, req.Apellido, req.Email, req.Fecha_creacion, id, req.Edad, req.Altura, *req.Activo)
+		usuario, err := u.service.UpdateUsuario(ctx, req.Nombre, req.Apellido, req.Email, req.Fecha_creacion, id, req.Edad, req.Altura, req.Activo)
 		if err != nil {
 			ctx.JSON(404, err.Error())
 			return
 		}
 		ctx.JSON(200, usuario)
-		return
 	}
 }
 
