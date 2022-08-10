@@ -5,9 +5,11 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"regexp"
 	"testing"
 	"time"
 
+	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/DATA-DOG/go-txdb"
 	"github.com/bootcamp-go/wave-5-backpack/goweb/internal/domain"
 	_ "github.com/go-sql-driver/mysql"
@@ -69,6 +71,32 @@ func TestGetAllWithContextTO(t *testing.T) {
 	}
 }
 
+func TestSaveMock(t *testing.T) {
+	db, mock, err := sqlmock.New()
+	assert.NoError(t, err)
+
+	defer db.Close()
+	mock.ExpectPrepare(regexp.QuoteMeta("INSERT INTO storage.users(nombre,apellido,email,edad,altura,activo,fechaCreacion) VALUES(?,?,?,?,?,?,?)"))
+	mock.ExpectExec("INSERT INTO storage.users").WillReturnResult(sqlmock.NewResult(12, 1))
+
+	repo := NewRepositoryBD(db)
+	user := domain.Usuarios{
+		Id:            12,
+		Nombre:        "TayronaT",
+		Apellido:      "Fante",
+		Email:         "titi",
+		Edad:          30,
+		Altura:        20,
+		Activo:        false,
+		FechaCreacion: "2020",
+	}
+	userO, er2 := repo.Guardar(user.Id, user.Nombre, user.Apellido, user.Email, user.Edad, user.Altura, user.Activo, user.FechaCreacion)
+
+	assert.NoError(t, er2)
+	assert.NotZero(t, userO)
+	assert.Equal(t, user.Id, userO.Id)
+}
+
 func TestSaveAndGetWithContext(t *testing.T) {
 	txdb.Register("txdb", "mysql", "root@tcp(localhost:3306)/storage")
 	db, err := sql.Open("txdb", uuid.New().String())
@@ -123,10 +151,19 @@ func TestDeleteGetAllGetOne(t *testing.T) {
 	txdb.Register("txdb", "mysql", "root@tcp(localhost:3306)/storage")
 	db, err := sql.Open("txdb", uuid.New().String())
 	assert.NoError(t, err)
+	var exist bool
 
 	repo := NewRepositoryBD(db)
 	er2 := repo.Delete(9)
 
+	listUsers, er := repo.GetAll(context.TODO())
+	for i := 0; i < len(listUsers); i++ {
+		if listUsers[i].Id == 9 {
+			exist = true
+		}
+	}
+	assert.False(t, exist)
+	assert.Nil(t, er)
 	assert.Nil(t, er2)
 
 }
