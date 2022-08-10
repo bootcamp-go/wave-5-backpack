@@ -108,7 +108,6 @@ func (r *repositoryBD) UpdateNameAndLastName(id int, name string, apellido strin
 	return domain.Usuarios{}, nil
 }
 
-//VALIDAR QUE ESTO NO ESTA ANDANDO
 func (r *repositoryBD) GetById(ctx context.Context, id int) (domain.Usuarios, error) {
 	var user domain.Usuarios
 	rows, _ := r.dbBD.QueryContext(ctx, GetById, id)

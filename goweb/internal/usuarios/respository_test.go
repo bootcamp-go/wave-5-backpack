@@ -188,10 +188,12 @@ func TestDeleteGetAllGetOne(t *testing.T) {
 			exist = true
 		}
 	}
+	userOne, er3 := repo.GetById(context.TODO(), 9)
 	assert.False(t, exist)
+	assert.Zero(t, userOne)
 	assert.Nil(t, er)
 	assert.Nil(t, er2)
-
+	assert.Nil(t, er3)
 }
 
 func TestGetOneInexist(t *testing.T) {
