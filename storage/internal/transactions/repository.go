@@ -40,7 +40,7 @@ func(repository *Repository) Delete(ctx context.Context, id int) error {
 }
 func(repository *Repository) GetAll(ctx context.Context) ([]domain.Transaction, error) {
 
-	rows, err := repository.db.Query(GetAllTransactions)
+	rows, err := repository.db.QueryContext(ctx, GetAllTransactions)
 	if err != nil {
 		return []domain.Transaction{}, fmt.Errorf(err.Error())
 	}
@@ -59,7 +59,7 @@ func(repository *Repository) GetAll(ctx context.Context) ([]domain.Transaction, 
 
 func(repository *Repository) GetBySender(ctx context.Context, sender string) (domain.Transaction, error) {
 
-	stmt, err := repository.db.Prepare(GetTransactionBySender)
+	stmt, err := repository.db.PrepareContext(ctx, GetTransactionBySender)
 	if err != nil {
 		return domain.Transaction{}, fmt.Errorf(err.Error())
 	}
@@ -86,7 +86,7 @@ func(repository *Repository) GetBySender(ctx context.Context, sender string) (do
 
 func (repository *Repository) Store(ctx context.Context, id int, codTransaction string, currency string, amount int, sender string, receiver string, dateOrder string) (domain.Transaction, error) {
 
-	stmt, err := repository.db.Prepare(InsertTransaction)
+	stmt, err := repository.db.PrepareContext(ctx, InsertTransaction)
 	if err != nil {
 		return domain.Transaction{}, fmt.Errorf(err.Error())
 	}
@@ -95,7 +95,7 @@ func (repository *Repository) Store(ctx context.Context, id int, codTransaction 
 
 	var result sql.Result
 	//Retorna un sql.Return y un error
-	result, err = stmt.Exec(codTransaction, currency, amount, sender, receiver, dateOrder)
+	result, err = stmt.ExecContext(ctx, codTransaction, currency, amount, sender, receiver, dateOrder)
 	if err != nil {
 		return domain.Transaction{}, err
 	}
