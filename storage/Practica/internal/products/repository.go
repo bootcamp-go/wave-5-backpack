@@ -90,12 +90,15 @@ func (r *repository) GetById(ctx context.Context, id uint64) (domain.Product, er
 	for rows.Next() {
 		var product domain.Product
 		if err := rows.Scan(&product.Id, &product.Name, &product.Color, &product.Price, &product.Stock, &product.Code, &product.Published, &product.Created_at, &product.Warehouse_id); err != nil {
-			return productList[0], err
+			return domain.Product{}, err
 		}
 		productList = append(productList, product)
 	}
 	if err := rows.Err(); err != nil {
 		return domain.Product{}, err
+	}
+	if len(productList) < 1 {
+		return domain.Product{}, nil
 	}
 	return productList[0], nil
 }
@@ -125,20 +128,18 @@ func (r *repository) GetByName(ctx context.Context, name string) (domain.Product
 
 func (r *repository) Update(ctx context.Context, product domain.Product) (domain.Product, error) {
 	db := r.db
-	stmt, err := db.PrepareContext(ctx, createStmt)
+	stmt, err := db.PrepareContext(ctx, updateStmt)
 	if err != nil {
 		return domain.Product{}, err
 	}
 	defer stmt.Close()
-	sqlRes, err := stmt.ExecContext(ctx, product.Name, product.Color, product.Price, product.Stock, product.Code, product.Published, product.Warehouse_id, product.Id)
+	_, err = stmt.ExecContext(ctx, product.Name, product.Color, product.Price, product.Stock, product.Code, product.Published, product.Warehouse_id, product.Id)
 	if err != nil {
 		return domain.Product{}, err
 	}
-	insertedId, err := sqlRes.LastInsertId()
 	if err != nil {
 		return domain.Product{}, err
 	}
-	product.Id = uint64(insertedId)
 	return product, nil
 }
 
