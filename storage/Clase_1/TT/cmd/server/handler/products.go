@@ -102,7 +102,7 @@ func (p *Product) GetById() gin.HandlerFunc {
 			ctx.JSON(401, web.NewResponse(401, nil, "error: token inválido"))
 		}
 		id, _ := strconv.Atoi(ctx.Param("id"))
-		product, err := p.service.GetFullDataById(ctx, id)
+		product, err := p.service.GetOne(ctx, id)
 		if err != nil {
 			ctx.JSON(http.StatusBadRequest, web.NewResponse(400, nil, err.Error()))
 			return

@@ -9,7 +9,8 @@ type Service interface {
 	GetByName(string) (domain.Product, error)
 	Store(domain.Product) (domain.Product, error)
 	GetAll(context.Context) ([]domain.Product, error)
-	GetFullDataById(context.Context, int) (domain.ProductAndWarehouse, error)
+	GetOne(context.Context, int) (domain.Product, error)
+	GetOneFullData(context.Context, int) (domain.ProductAndWarehouse, error)
 	Update(context.Context, domain.Product) (domain.Product, error)
 }
 
@@ -37,8 +38,12 @@ func (s *service) GetAll(ctx context.Context) ([]domain.Product, error) {
 	return s.repository.GetAll(ctx)
 }
 
-func (s *service) GetFullDataById(ctx context.Context, id int) (domain.ProductAndWarehouse, error) {
-	return s.repository.GetFullDataById(ctx, id)
+func (s *service) GetOne(ctx context.Context, id int) (domain.Product, error) {
+	return s.repository.GetOne(ctx, id)
+}
+
+func (s *service) GetOneFullData(ctx context.Context, id int) (domain.ProductAndWarehouse, error) {
+	return s.repository.GetOneFullData(ctx, id)
 }
 
 func (s *service) Update(ctx context.Context, product domain.Product) (domain.Product, error) {

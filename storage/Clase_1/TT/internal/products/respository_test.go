@@ -7,7 +7,9 @@ import (
 	"testing"
 	"time"
 
+	"github.com/DATA-DOG/go-txdb"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/google/uuid"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -83,5 +85,43 @@ func TestGetAll(t *testing.T) {
 	productsResult, err := myRepo.GetAll(ctx)
 	assert.Nil(t, err)
 	assert.Equal(t, products, productsResult)
+
+}
+
+func TestStoreAndGetOneTXDB(t *testing.T) {
+
+	txdb.Register("textdb", "mysql", "root:@tcp(localhost:3306)/storage")
+	db, err := sql.Open("textdb", uuid.New().String())
+	assert.NoError(t, err)
+
+	repo := NewRepository(db)
+	ctx := context.TODO()
+	product := domain.Product{
+		Name:         "Iphone",
+		Type:         "Electro",
+		Count:        253,
+		Price:        599.990,
+		Id_warehouse: 1,
+	}
+
+	p, err := repo.Store(product)
+	product.Id = p.Id
+
+	// Crear nuevo producto en el Store
+	assert.NoError(t, err)
+	assert.NotZero(t, p)
+
+	// Verificando que el producto obtenido corresponda a lo esperado
+	getProductExist, err := repo.GetOne(ctx, p.Id)
+	assert.NoError(t, err)
+	assert.Equal(t, product, getProductExist)
+
+	// Se verifica que si el producto no existe se obtenga producto vacío
+	getProductNonExist, err := repo.GetOne(ctx, 100)
+	assert.NoError(t, err)
+	assert.Zero(t, getProductNonExist)
+}
+
+func TestUpdate7(t *testing.T) {
 
 }
