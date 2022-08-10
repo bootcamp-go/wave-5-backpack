@@ -22,6 +22,7 @@ type request struct {
 	Codigo        string  `json:"Codigo" binding:"required"`
 	Publicado     *int8   `json:"Publicado" binding:"required"`
 	FechaCreacion string  `json:"FechaCreacion" binding:"-"`
+	WarehouseID   int     `json:"warehouse_id" binding:"required"`
 }
 
 type Product struct {
@@ -97,12 +98,13 @@ func (p *Product) Store() gin.HandlerFunc {
 		}
 
 		var product = domain.Product{
-			Name:   r.Nombre,
-			Type:   r.Color,
-			Price:  r.Precio,
-			Count:  r.Stock,
-			Code:   r.Codigo,
-			Public: *r.Publicado,
+			Name:        r.Nombre,
+			Type:        r.Color,
+			Price:       r.Precio,
+			Count:       r.Stock,
+			Code:        r.Codigo,
+			Public:      *r.Publicado,
+			WarehouseID: r.WarehouseID,
 		}
 
 		id, err := p.service.Store(product)

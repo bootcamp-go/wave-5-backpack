@@ -12,6 +12,8 @@ require (
 	github.com/swaggo/swag v1.8.3
 )
 
+require github.com/DATA-DOG/go-txdb v0.1.5 // indirect
+
 require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
@@ -25,6 +27,7 @@ require (
 	github.com/go-playground/validator v9.31.0+incompatible
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/goccy/go-json v0.9.8 // indirect
+	github.com/google/uuid v1.3.0
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect

@@ -36,7 +36,7 @@ func (r *repository) Store(p domain.Product) (int, error) {
 
 	defer stmt.Close()
 
-	res, err := stmt.Exec(p.Name, p.Type, p.Price, p.Count, p.Code, p.Public)
+	res, err := stmt.Exec(p.Name, p.Type, p.Price, p.Count, p.Code, p.Public, p.WarehouseID)
 	if err != nil {
 		return 0, err
 	}
@@ -71,7 +71,7 @@ func (r *repository) GetProductByName(name string) (domain.Product, error) {
 	row := r.db.QueryRow(query, name)
 	p := domain.Product{}
 
-	if err := row.Scan(&p.ID, &p.Name, &p.Type, &p.Price, &p.Count, &p.Code, &p.Public); err != nil {
+	if err := row.Scan(&p.ID, &p.Name, &p.Type, &p.Price, &p.Count, &p.Code, &p.Public, &p.WarehouseID); err != nil {
 		return domain.Product{}, err
 	}
 
