@@ -150,7 +150,8 @@ func TestUpdateSQLMock(t *testing.T) {
 	assert.NoError(t, err)
 	defer db.Close()
 
-	mock.ExpectPrepare("UPDATE products SET")
+	//mock.ExpectPrepare("UPDATE products SET")
+	mock.ExpectPrepare(regexp.QuoteMeta("UPDATE products SET name = ?, type = ?, count = ?, price = ? WHERE id = ?"))
 	mock.ExpectExec("UPDATE products SET").WillReturnResult(sqlmock.NewResult(1, 1))
 
 	repo := NewRepository(db)
@@ -174,7 +175,8 @@ func TestDeleteSQLMock(t *testing.T) {
 	assert.NoError(t, err)
 	defer db.Close()
 
-	mock.ExpectPrepare("DELETE FROM products WHERE")
+	//mock.ExpectPrepare("DELETE FROM products WHERE")
+	mock.ExpectPrepare(regexp.QuoteMeta("DELETE FROM products WHERE id = ?"))
 	mock.ExpectExec("DELETE FROM products WHERE").WillReturnResult(sqlmock.NewResult(1, 1))
 
 	repo := NewRepository(db)
@@ -190,7 +192,8 @@ func TestUpdateSQLMockError(t *testing.T) {
 	assert.NoError(t, err)
 	defer db.Close()
 
-	mock.ExpectPrepare("UPDATE products SET")
+	//mock.ExpectPrepare("UPDATE products SET")
+	mock.ExpectPrepare(regexp.QuoteMeta("UPDATE products SET name = ?, type = ?, count = ?, price = ? WHERE id = ?"))
 	mock.ExpectExec("UPDATE products SET").WillReturnError(fmt.Errorf("error updating"))
 
 	repo := NewRepository(db)

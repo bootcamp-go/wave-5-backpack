@@ -77,3 +77,47 @@ func (r *repository) GetOne(ctx context.Context, id int) (*domain.Product, error
 
 	return itemToProduct(result.Item)
 }
+
+func (r *repository) Update(ctx context.Context, product domain.Product) (*domain.Product, error) {
+	av, err := dynamodbattribute.MarshalMap(product)
+	if err != nil {
+		return nil, err
+	}
+
+	input := &dynamodb.UpdateItemInput{
+		TableName:                 aws.String(r.table),
+		ExpressionAttributeValues: av,
+		UpdateExpression:          aws.String("set nombre = :nombre, tipo = :tipo, cantidad = :cantidad, precio = :precio"),
+		ReturnValues:              aws.String("UPDATED_NEW"),
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(fmt.Sprintf("%d", product.ID)),
+			},
+		},
+	}
+
+	result, err := r.dynamo.UpdateItemWithContext(ctx, input)
+	if err != nil {
+		return nil, err
+	}
+
+	return itemToProduct(result.Attributes)
+}
+
+func (r *repository) Delete(ctx context.Context, id int) error {
+	input := &dynamodb.DeleteItemInput{
+		TableName: aws.String(r.table),
+		Key: map[string]*dynamodb.AttributeValue{
+			"id": {
+				S: aws.String(fmt.Sprintf("%d", id)),
+			},
+		},
+	}
+
+	_, err := r.dynamo.DeleteItemWithContext(ctx, input)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
