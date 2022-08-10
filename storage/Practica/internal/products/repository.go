@@ -12,7 +12,7 @@ var (
 	getAllStmt    = "SELECT id, name, color, price, stock, code, published, created_at, warehouse_id FROM products"
 	getByNameStmt = "SELECT id, name, color, price, stock, code, published, created_at, warehouse_id FROM products WHERE name = ?"
 	getByIdStmt   = "SELECT id, name, color, price, stock, code, published, created_at, warehouse_id FROM products WHERE id = ?"
-	updateStmt    = "UPDATE products SET name = ?, color = ?, price = ?, stock = ?, code = ?, published = ?, created_at = ?, warehouse_id = ? WHERE id = ?"
+	updateStmt    = "UPDATE products SET name = ?, color = ?, price = ?, stock = ?, code = ?, published = ?, warehouse_id = ? WHERE id = ?"
 	deleteStmt    = "DELETE FROM products WHERE id = ?"
 )
 

@@ -38,4 +38,16 @@ var MockProductOne domain.Product = domain.Product{
 	Warehouse_id: 1,
 }
 
+var MockProductUpdated domain.Product = domain.Product{
+	Id:           1,
+	Name:         "product 1 modified",
+	Color:        "red",
+	Price:        100.99,
+	Stock:        1000,
+	Code:         "HJ988BH",
+	Created_at:   "2022-08-10",
+	Published:    false,
+	Warehouse_id: 1,
+}
+
 var MockProductEmpty domain.Product = domain.Product{}
