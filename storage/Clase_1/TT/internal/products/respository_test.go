@@ -4,9 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"goweb/internal/domain"
+	"regexp"
 	"testing"
 	"time"
 
+	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/DATA-DOG/go-txdb"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/google/uuid"
@@ -122,7 +124,7 @@ func TestStoreAndGetOneTXDB(t *testing.T) {
 	assert.Zero(t, getProductNonExist)
 }
 
-func TestUpdate(t *testing.T) {
+func TestUpdateTXDB(t *testing.T) {
 
 	txdb.Register("textdb", "mysql", "root:@tcp(localhost:3306)/storage")
 	db, err := sql.Open("textdb", uuid.New().String())
@@ -149,7 +151,7 @@ func TestUpdate(t *testing.T) {
 	assert.Equal(t, product, p)
 }
 
-func TestDelete(t *testing.T) {
+func TestDeleteTXDB(t *testing.T) {
 
 	txdb.Register("txdb", "mysql", "root:@tcp(localhost:3306)/storage")
 	db, err := sql.Open("txdb", uuid.New().String())
@@ -157,7 +159,7 @@ func TestDelete(t *testing.T) {
 
 	repo := NewRepository(db)
 	ctx := context.TODO()
-	id := 4
+	id := 5
 
 	err = repo.Delete(ctx, id)
 
@@ -168,5 +170,74 @@ func TestDelete(t *testing.T) {
 	getProductNonExist, err := repo.GetOne(ctx, id)
 	assert.NoError(t, err)
 	assert.Zero(t, getProductNonExist)
+
+}
+
+func TestStoreAndGetOneSQLMOCK(t *testing.T) {
+
+	db, mock, err := sqlmock.New()
+	assert.NoError(t, err)
+	defer db.Close()
+
+	mock.ExpectPrepare(regexp.QuoteMeta("INSERT INTO products (name,type,count,price,id_warehouse) VALUES(?,?,?,?,?)"))
+	mock.ExpectExec("INSERT INTO products").WillReturnResult(sqlmock.NewResult(1, 1))
+
+	columns := []string{"id", "name", "type", "count", "price", "id_warehouse"}
+	rows := sqlmock.NewRows(columns)
+	newId := 1
+	rows.AddRow(newId, "Iphone", "Electro", "2", "599.990", "1")
+	mock.ExpectQuery("SELECT id,name,type,count,price,id_warehouse FROM products").WithArgs(newId).WillReturnRows(rows)
+
+	repo := NewRepository(db)
+
+	ctx := context.TODO()
+	product := domain.Product{
+		Name:         "Iphone",
+		Type:         "Electro",
+		Count:        2,
+		Price:        599.990,
+		Id_warehouse: 1,
+	}
+
+	product.Id = 1
+	pObtenido, err := repo.GetOne(ctx, 1)
+
+	//Obtener producto no creado y verificar que indique error y contenido igual a 0.
+	assert.Error(t, err)
+	assert.Zero(t, pObtenido)
+
+	p, err := repo.Store(product)
+
+	// Crear nuevo producto en el Store.
+	assert.NoError(t, err)
+	assert.NotZero(t, p)
+	assert.Equal(t, product.Id, p.Id)
+
+	pObtenido, err = repo.GetOne(ctx, 1)
+
+	// Obtener producto creado.
+	assert.NoError(t, err)
+	assert.NotNil(t, pObtenido)
+	assert.Equal(t, product.Id, pObtenido.Id)
+	assert.Equal(t, product, pObtenido)
+
+}
+
+func TestGetAllConflic(t *testing.T) {
+
+	db, mock, err := sqlmock.New()
+	assert.NoError(t, err)
+	defer db.Close()
+
+	mock.ExpectQuery("SELECT id,name,type,count,price,id_warehouse FROM products").WillReturnError(sql.ErrConnDone)
+
+	repo := NewRepository(db)
+
+	ctx := context.TODO()
+	result, err := repo.GetAll(ctx)
+
+	assert.NoError(t, mock.ExpectationsWereMet())
+	assert.Equal(t, sql.ErrConnDone, err)
+	assert.Nil(t, result)
 
 }
