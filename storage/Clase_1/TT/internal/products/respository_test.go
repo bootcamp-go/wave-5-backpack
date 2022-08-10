@@ -122,6 +122,29 @@ func TestStoreAndGetOneTXDB(t *testing.T) {
 	assert.Zero(t, getProductNonExist)
 }
 
-func TestUpdate7(t *testing.T) {
+func TestUpdate(t *testing.T) {
 
+	txdb.Register("textdb", "mysql", "root:@tcp(localhost:3306)/storage")
+	db, err := sql.Open("textdb", uuid.New().String())
+	assert.NoError(t, err)
+
+	repo := NewRepository(db)
+	ctx := context.TODO()
+	product := domain.Product{
+		Id:           9,
+		Name:         "PS5",
+		Type:         "Electro",
+		Count:        20,
+		Price:        799.990,
+		Id_warehouse: 1,
+	}
+
+	p, err := repo.Update(ctx, product)
+
+	// Verificar producto actualizado en el Store
+	assert.NoError(t, err)
+	assert.NotZero(t, p)
+
+	// Verificando que el producto obtenido corresponda a lo esperado
+	assert.Equal(t, product, p)
 }
