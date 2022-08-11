@@ -25,7 +25,7 @@ var (
 	ErrNotImplemented = fmt.Errorf("método no implementado")
 )
 
-//Funciona con GetOne
+//Para manipulación por item tipo User
 func itemToUser(input map[string]*dynamodb.AttributeValue) (User, error) {
 	var item User
 	err := dynamodbattribute.UnmarshalMap(input, &item)
@@ -35,6 +35,7 @@ func itemToUser(input map[string]*dynamodb.AttributeValue) (User, error) {
 	return item, nil
 }
 
+//Repository con sus métodos
 type Repository interface {
 	Store(ctx context.Context, model *User) error
 	GetOne(ctx context.Context, id string) (User, error)
@@ -54,8 +55,13 @@ func NewRepository(dynamo *dynamodb.DynamoDB, table string) Repository {
 	}
 }
 
+//EJERCICIO 1
+//Implementar Store() y GetOne()
+
+//Implementación GetOne()
 func (receiver *repository) GetOne(ctx context.Context, id string) (User, error) {
 	result, err := receiver.dynamo.GetItemWithContext(ctx, &dynamodb.GetItemInput{
+		//Pasamos nombre de la tabla y el id
 		TableName: aws.String(receiver.table),
 		Key: map[string]*dynamodb.AttributeValue{
 			"id": {
@@ -71,9 +77,11 @@ func (receiver *repository) GetOne(ctx context.Context, id string) (User, error)
 	if result.Item == nil {
 		return User{}, nil
 	}
+	//Si no ocurren errores, devuelve el usuario
 	return itemToUser(result.Item)
 }
 
+//Implementación Store()
 func (receiver *repository) Store(ctx context.Context, model *User) error {
 	av, err := dynamodbattribute.MarshalMap(model)
 
@@ -81,11 +89,13 @@ func (receiver *repository) Store(ctx context.Context, model *User) error {
 		return err
 	}
 
+	//Paso item que será del tipo de la estructura de arriba y el nombre de la tabla
 	input := &dynamodb.PutItemInput{
 		Item:      av,
 		TableName: aws.String(receiver.table),
 	}
 
+	//Se agrega el elemento
 	_, err = receiver.dynamo.PutItemWithContext(ctx, input)
 
 	if err != nil {
@@ -95,7 +105,12 @@ func (receiver *repository) Store(ctx context.Context, model *User) error {
 	return nil
 }
 
+//EJERCICIO 2
+//Implementar Update() y Delete()
+
+//Implementación del Delete
 func (receiver *repository) Delete(ctx context.Context, id string) error {
+	//Elimino el elemento por id
 	result, err := receiver.dynamo.DeleteItemWithContext(ctx, &dynamodb.DeleteItemInput{
 		TableName: aws.String(receiver.table),
 		Key: map[string]*dynamodb.AttributeValue{
@@ -105,6 +120,7 @@ func (receiver *repository) Delete(ctx context.Context, id string) error {
 		},
 	})
 
+	//Manejo de errores
 	if err != nil {
 		return err
 	}
@@ -116,17 +132,20 @@ func (receiver *repository) Delete(ctx context.Context, id string) error {
 	return fmt.Errorf("error al eliminar elemento")
 }
 
+//Implementación del Update
 func (receiver *repository) Update(id string, nombre string, apellido string, email string, edad int, altura float64, activo bool) (User, error) {
 
+	//Struct para asignación en el SET del Update
 	type UserUpdate struct {
-		Nombre   string  `json:"nombre"`
-		Apellido string  `json:"apellido"`
-		Email    string  `json:"email"`
-		Edad     int     `json:"edad"`
-		Altura   float64 `json:"altura"`
-		Activo   bool    `json:"activo"`
+		Nombre   string  `json:":no"`
+		Apellido string  `json:":ap"`
+		Email    string  `json:":em"`
+		Edad     int     `json:":ed"`
+		Altura   float64 `json:":al"`
+		Activo   bool    `json:":ac"`
 	}
 
+	//Map con información actual
 	updateData, err := dynamodbattribute.MarshalMap(UserUpdate{
 		Nombre:   nombre,
 		Apellido: apellido,
@@ -148,12 +167,15 @@ func (receiver *repository) Update(id string, nombre string, apellido string, em
 				S: aws.String(id),
 			},
 		},
-		TableName:                 aws.String(receiver.table),
+		TableName: aws.String(receiver.table),
+		//Asignación de valores ingresados al updateString
 		ExpressionAttributeValues: updateData,
 		UpdateExpression:          aws.String(updateString),
-		ReturnValues:              aws.String("UPDATED_NEW"),
+		//Retorna atributos actualizados, tal como aparecen después de la operación UpdateItem
+		ReturnValues: aws.String("UPDATED_NEW"),
 	}
 
+	//Con UpdateItem se editan los atributos del elemento existente
 	result, err := receiver.dynamo.UpdateItem(input)
 	if err != nil {
 		return User{}, err

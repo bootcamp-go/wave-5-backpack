@@ -7,6 +7,7 @@ import (
 	"github.com/google/uuid"
 )
 
+//Implementación de métodos de repository
 type Service interface {
 	GetOne(id string) (User, error)
 	Store(nombre string, apellido string, email string, edad int, altura float64) (User, error)
@@ -34,6 +35,7 @@ func (s *service) GetOne(id string) (User, error) {
 }
 
 func (s *service) Store(nombre string, apellido string, email string, edad int, altura float64) (User, error) {
+	//Asignación de identificador
 	id := uuid.New().String()
 	user := User{
 		Id:       id,
