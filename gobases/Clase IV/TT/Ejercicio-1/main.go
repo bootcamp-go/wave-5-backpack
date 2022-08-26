@@ -7,27 +7,27 @@ import (
 
 func leerTXT() {
 
-	data, err := os.ReadFile("./customerss.txt")
-
 	defer func() {
 		err := recover()
 		if err != nil {
-			fmt.Println(err)
-		} else {
-			fmt.Println(string(data))
+			fmt.Println("error:", err)
 		}
-		fmt.Println("ejecución finalizada")
 
 	}()
+
+	data, err := os.ReadFile("./customers2.txt")
 
 	if err != nil {
 		panic("el archivo indicado no fue encontrado o está dañado")
 	}
+
+	fmt.Println(string(data))
 
 }
 
 func main() {
 
 	leerTXT()
+	fmt.Println("ejecución finalizada")
 
 }
